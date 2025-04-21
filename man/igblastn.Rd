@@ -27,9 +27,9 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
 
 \arguments{
   \item{query}{
-    A single string that is the path to the FASTA file containing
-    the query sequences. Alternatively \code{query} can be a named
-    \link[Biostrings]{DNAStringSet} object.
+    A single string that is the path to the FASTA file (possible
+    gz-compressed) containing the query sequences. Alternatively
+    \code{query} can be a named \link[Biostrings]{DNAStringSet} object.
   }
   \item{outfmt}{
     One of \code{"AIRR"}, \code{3}, \code{4}, \code{7}, or \code{19}.

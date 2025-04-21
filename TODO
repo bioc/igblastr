@@ -1,3 +1,9 @@
+- Advertize igblastr once it's accepted:
+  - Announce on various bioc-community Slack channels.
+  - Announce on the FH-Data Slack (on channels r-user-comm and general).
+  - Try to get an entry in the next R Journal advertizing igblastr.
+  - Bioinformatics accepts short articles introducing new software.
+
 - Add bibliography to vignette. See AuthoringRmdVignettes.Rmd vignette in
   BiocStyle for how to do this.
 
