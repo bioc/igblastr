@@ -304,39 +304,62 @@ sort_db_names <- function(db_names, decreasing=FALSE)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### get_db_in_use()
+### set_db_in_use()
 ###
+
+### NOTE: Early versions of igblastr (prior to submission to Bioconductor)
+### were recording the selection of the germline and constant region dbs in a
+### persistent manner in a file located in the 'dbs_path' folder called 'USING'.
+### This was obviously a very bad idea because it meant that:
+### - If the user was using igblastr in more than one R session, then all
+###   sessions were forced to use the same dbs.
+### - Changing the selection in one session would change it for all other
+###   sessions, which was hugely problematic!
+### So, starting with igblastr 0.99.0, the db selection is recorded in memory
+### (in the '.DB_IN_USE_cache' environment below) rather than in a file. This
+### means that it is now remembered for the duration of the session only, and
+### does not persist across sessions. It also means that the user now needs to
+### specify the selection at the beginning of each session, which is actually
+### a good thing!
+.DB_IN_USE_cache <- new.env(parent=emptyenv())
 
 ### Returns "" if no db is currently in use.
 get_db_in_use <- function(dbs_path, what=c("germline", "C-region"))
 {
     stopifnot(isSingleNonWhiteString(dbs_path), dir.exists(dbs_path))
     what <- match.arg(what)
-    if (what == "germline") {
-        fun <- "use_germline_db"
-    } else {
-        fun <- "use_c_region_db"
-    }
-    repair_with <- paste0("Try to repair with ", fun, "(\"<db_name>\").")
-    see <- paste0("See '?", fun, "' for more information.")
+    db_name <- .DB_IN_USE_cache[[what]]
+    if (is.null(db_name) || db_name == "")
+        return("")  # no db is currently in use
 
-    using_path <- file.path(dbs_path, "USING")
-    if (!file.exists(using_path))
-        return("")
-    db_name <- readLines(using_path)
-    if (length(db_name) != 1L)
-        stop(wmsg("Anomaly: file '", using_path, "' is corrupted."),
-             "\n  ",
-             wmsg("File should contain exactly one line. ",
-                  repair_with, " ", see))
     db_path <- file.path(dbs_path, db_name)
-    if (!dir.exists(db_path))
-        stop(wmsg("Anomaly: file '", using_path, "' is invalid."),
-             "\n  ",
-             wmsg("File content ('", db_name, "') is not the name ",
+    if (!dir.exists(db_path)) {
+        if (what == "germline") {
+            fun <- "use_germline_db"
+        } else {
+            fun <- "use_c_region_db"
+        }
+        repair_with <- paste0("Try to repair with ", fun, "(\"<db_name>\").")
+        see <- paste0("See '?", fun, "' for more information.")
+        stop(wmsg("Anomaly: \"", db_name, "\" is not the name ",
                   "of a cached ", what, " db. ",
                   repair_with, " ", see))
+    }
     db_path
 }
+
+set_db_in_use <- function(what=c("germline", "C-region"), db_name="")
+{
+    stopifnot(isSingleString(db_name))
+    what <- match.arg(what)
+    .DB_IN_USE_cache[[what]] <- db_name
+    invisible(db_name)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### print_dbs_df()
+###
 
 ### Used by print.germline_dbs_df() and print.c_region_dbs_df().
 print_dbs_df <- function(dbs_df, dbs_path, what=c("germline", "C-region"))

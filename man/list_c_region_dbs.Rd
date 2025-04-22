@@ -13,7 +13,8 @@
   persistent cache.
 
   Use \code{use_c_region_db()} to select the local C-region db to use with
-  \code{\link{igblastn}()}. This choice will be remembered across R sessions.
+  \code{\link{igblastn}()}. This choice will be remembered for the duration
+  of the current R session but can be changed anytime.
 
   Use \code{load_c_region_db()} to load the nucleotide sequences of the
   gene regions stored in a local C-region db.

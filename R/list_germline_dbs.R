@@ -125,6 +125,8 @@ list_germline_dbs <- function(builtin.only=FALSE, names.only=FALSE)
     if (!isTRUEorFALSE(names.only))
         stop(wmsg("'names.only' must be TRUE or FALSE"))
     germline_dbs_path <- get_germline_dbs_path(TRUE)  # guaranteed to exist
+    ## Excluding the 'USING' file for backward compatibility reasons.
+    ## See NOTE above '.DB_IN_USE_cache' in R/utils.R
     all_db_names <- setdiff(list.files(germline_dbs_path), "USING")
     if (builtin.only)
         all_db_names <- all_db_names[has_prefix(all_db_names, "_")]
@@ -206,10 +208,7 @@ use_germline_db <- function(db_name=NULL)
     germline_dbs_path <- get_germline_dbs_path()  # guaranteed to exist
     db_path <- file.path(germline_dbs_path, db_name)
     make_blastdbs(db_path)
-
-    using_path <- file.path(germline_dbs_path, "USING")
-    writeLines(db_name, using_path)
-    invisible(db_name)
+    set_db_in_use("germline", db_name)
 }
 
 

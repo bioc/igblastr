@@ -105,6 +105,8 @@ list_c_region_dbs <- function(builtin.only=FALSE, names.only=FALSE)
     if (!isTRUEorFALSE(names.only))
         stop(wmsg("'names.only' must be TRUE or FALSE"))
     c_region_dbs_path <- .get_c_region_dbs_path(TRUE)  # guaranteed to exist
+    ## Excluding the 'USING' file for backward compatibility reasons.
+    ## See NOTE above '.DB_IN_USE_cache' in R/utils.R
     all_db_names <- setdiff(list.files(c_region_dbs_path), "USING")
     if (builtin.only)
         all_db_names <- all_db_names[has_prefix(all_db_names, "_")]
@@ -157,24 +159,15 @@ use_c_region_db <- function(db_name=NULL)
     if (!isSingleString(db_name))
         stop(wmsg("'db_name' must be a single string"))
 
-    if (db_name == "") {
-        ## Cancel the current selection.
-        c_region_dbs_path <- .get_c_region_dbs_path()  # NOT guaranteed to exist
-        if (dir.exists(c_region_dbs_path)) {
-            using_path <- file.path(c_region_dbs_path, "USING")
-            unlink(using_path)
-        }
-    } else {
+    if (db_name != "") {
         all_db_names <- list_c_region_dbs(names.only=TRUE)
         if (!(db_name %in% all_db_names))
             .stop_on_invalid_c_region_db_name(db_name)
         c_region_dbs_path <- .get_c_region_dbs_path()  # guaranteed to exist
         db_path <- file.path(c_region_dbs_path, db_name)
         make_blastdbs(db_path)
-        using_path <- file.path(c_region_dbs_path, "USING")
-        writeLines(db_name, using_path)
     }
-    invisible(db_name)
+    set_db_in_use("C-region", db_name)
 }
 
 
