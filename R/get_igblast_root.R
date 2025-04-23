@@ -5,11 +5,6 @@
 ### Unless stated otherwise, nothing in this file is exported.
 
 
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### Low-level helpers used by set_internal_igblast_root(),
-### get_igblast_root(), and get_igblast_exe()
-###
-
 .stop_on_invalid_igblast_root <- function(igblast_root, details)
 {
     msg <- c("Invalid IgBLAST installation at '", igblast_root, "'")
@@ -24,18 +19,63 @@
     stop(wmsg(msg), ".\n  ", wmsg(details))
 }
 
-### Returns "<igblast_root>/bin". Guaranteed to return a valid path.
-.get_igblast_root_bin <- function(igblast_root)
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### get_igblast_root_subdir()
+###
+
+### Returns "<igblast_root>/<subdir>" as an absolute path.
+### Guaranteed to return a valid path.
+get_igblast_root_subdir <- function(igblast_root, subdir)
 {
-    if (!dir.exists(igblast_root))
-        .stop_on_invalid_igblast_root(igblast_root,
-                                      "Directory does not exist.")
-    bin_dir <- file.path(igblast_root, "bin")
-    if (!dir.exists(bin_dir))
-        .stop_on_invalid_igblast_root(igblast_root,
-                                      "Directory has no 'bin' subdirectory.")
-    bin_dir
+    if (!isSingleNonWhiteString(igblast_root))
+        stop(wmsg("'igblast_root' must be a single (non-empty) string"))
+    stopifnot(isSingleNonWhiteString(subdir))
+    if (!dir.exists(igblast_root)) {
+        details <- "Directory does not exist."
+        .stop_on_invalid_igblast_root(igblast_root, details)
+    }
+    path <- file.path(file_path_as_absolute(igblast_root), subdir)
+    if (!dir.exists(path)) {
+        details <- paste0("Directory has no '", subdir, "' subdirectory.")
+        .stop_on_invalid_igblast_root(igblast_root, details)
+    }
+    path
 }
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### get_igblast_exe()
+###
+
+### If 'check' is set to TRUE, then get_igblast_exe() checks that the
+### executable is working. This check takes between 0.5 and 1 second.
+### If 'check' is set to FALSE, then get_igblast_exe() returns almost
+### instantly.
+get_igblast_exe <- function(cmd=c("igblastn", "igblastp", "makeblastdb"),
+                            igblast_root=get_igblast_root(),
+                            OS=get_OS_arch()[["OS"]],
+                            check=TRUE)
+{
+    stopifnot(isTRUEorFALSE(check))
+    cmd <- add_exe_suffix_on_Windows(match.arg(cmd), OS=OS)
+    bin_dir <- get_igblast_root_subdir(igblast_root, "bin")
+    cmd_path <- file.path(bin_dir, cmd)
+    if (!file.exists(cmd_path) || dir.exists(cmd_path)) {
+        details <- c("No '", cmd, "' command in 'bin' subdirectory.")
+        .stop_on_invalid_igblast_root(igblast_root, details)
+    }
+    if (check && !system_command_works(cmd_path, "-version")) {
+        details <- c("'", cmd_path, " -version' does not work.")
+        .stop_on_invalid_igblast_root(igblast_root, details)
+    }
+    cmd_path
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .check_igblast_installation()
+###
 
 .required_igblast_root_bin_files <- function(OS)
 {
@@ -44,30 +84,11 @@
     c(files, "edit_imgt_file.pl")
 }
 
-### Guaranteed to return the path to a working executable.
-make_igblast_exe_path <- function(igblast_root,
-                                  cmd=c("igblastn", "igblastp", "makeblastdb"),
-                                  OS=get_OS_arch()[["OS"]])
-{
-    bin_dir <- .get_igblast_root_bin(igblast_root)
-    cmd <- add_exe_suffix_on_Windows(match.arg(cmd), OS=OS)
-    cmd_path <- file.path(bin_dir, cmd)
-    if (!file.exists(cmd_path)) {
-        details <- c("No '", cmd, "' command in 'bin' subdirectory.")
-        .stop_on_invalid_igblast_root(igblast_root, details)
-    }
-    if (!system_command_works(cmd_path, "-version")) {
-        details <- c("'", cmd_path, " -version' does not work.")
-        .stop_on_invalid_igblast_root(igblast_root, details)
-    }
-    cmd_path
-}
-
 ### Returns 'igblast_root' if IgBLAST installation is valid. Otherwise raises
 ### an error.
 .check_igblast_installation <- function(igblast_root)
 {
-    bin_dir <- .get_igblast_root_bin(igblast_root)
+    bin_dir <- get_igblast_root_subdir(igblast_root, "bin")
     ## Check content of 'bin_dir'.
     bin_files <- list.files(bin_dir)
     OS <- get_OS_arch()[["OS"]]
@@ -80,8 +101,8 @@ make_igblast_exe_path <- function(igblast_root,
     }
     ## We ignore the returned path. Only purpose is to check that the
     ## igblastn and igblastp executables work.
-    make_igblast_exe_path(igblast_root, cmd="igblastn", OS=OS)
-    make_igblast_exe_path(igblast_root, cmd="igblastp", OS=OS)
+    get_igblast_exe("igblastn", igblast_root=igblast_root, OS=OS)
+    get_igblast_exe("igblastp", igblast_root=igblast_root, OS=OS)
     igblast_root
 }
 
@@ -302,25 +323,13 @@ set_igblast_root <- function(version_or_path)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### get_igblast_exe()
-###
-
-get_igblast_exe <- function(cmd=c("igblastn", "igblastp", "makeblastdb"))
-{
-    igblast_root <- get_igblast_root()
-    cmd <- match.arg(cmd)
-    make_igblast_exe_path(igblast_root, cmd=cmd)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### get_edit_imgt_file_Perl_script()
 ###
 
 get_edit_imgt_file_Perl_script <- function()
 {
     igblast_root <- get_igblast_root()
-    bin_dir <- .get_igblast_root_bin(igblast_root)
+    bin_dir <- get_igblast_root_subdir(igblast_root, "bin")
     script <- file.path(bin_dir, "edit_imgt_file.pl")
     if (!file.exists(script)) {
         details <- c("Perl script 'edit_imgt_file.pl' (needed ",

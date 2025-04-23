@@ -177,7 +177,7 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
 .show_igblastn_command <- function(igblast_root, exe_args,
                                    show.in.browser=FALSE)
 {
-    igblastn_exe <- make_igblast_exe_path(igblast_root, "igblastn")
+    igblastn_exe <- get_igblast_exe("igblastn", igblast_root=igblast_root)
     cmd <- c(igblastn_exe, exe_args)
     cmd_in_1string <- paste(cmd, collapse=" ")
     outfile <- if (show.in.browser) tempfile() else ""
@@ -217,7 +217,7 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
 .run_igblastn_exe <- function(igblast_root, exe_args)
 {
     stopifnot(is.character(exe_args))
-    igblastn_exe <- make_igblast_exe_path(igblast_root, "igblastn")
+    igblastn_exe <- get_igblast_exe("igblastn", igblast_root=igblast_root)
     oldwd <- getwd()
     setwd(igblast_root)
     on.exit(setwd(oldwd))
@@ -312,7 +312,7 @@ igblastn_help <- function(long.help=FALSE, show.in.browser=FALSE)
         stop(wmsg("'show.in.browser' must be TRUE or FALSE"))
 
     igblast_root <- get_igblast_root()
-    igblastn_exe <- make_igblast_exe_path(igblast_root, "igblastn")
+    igblastn_exe <- get_igblast_exe("igblastn", igblast_root=igblast_root)
     exe_args <- if (long.help) "-help" else "-h"
 
     oldwd <- getwd()

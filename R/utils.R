@@ -480,15 +480,21 @@ add_exe_suffix_on_Windows <- function(files, OS=get_OS_arch()[["OS"]])
     paste0(files, ".exe")
 }
 
+### To use on the result of 'try(system2(..., stdout=TRUE, stderr=TRUE))'.
+system_command_worked <- function(out)
+{
+    if (inherits(out, "try-error"))
+        return(FALSE)
+    status <- attr(out, "status")
+    is.null(status) || isTRUE(all.equal(status, 0L))
+}
+
 system_command_works <- function(command, args=character())
 {
     out <- try(suppressWarnings(system2(command, args=args,
                                         stdout=TRUE, stderr=TRUE)),
                silent=TRUE)
-    if (inherits(out, "try-error"))
-        return(FALSE)
-    status <- attr(out, "status")
-    is.null(status) || isTRUE(all.equal(status, 0L))
+    system_command_worked(out)
 }
 
 has_perl <- function() system_command_works("perl", args="-v")

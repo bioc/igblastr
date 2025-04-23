@@ -72,7 +72,7 @@ export(
     ## igblast_info.R:
     has_igblast,
     list_igblast_organisms,
-    igblast_version, igblast_info,
+    igblastn_version, makeblastdb_version, igblast_build, igblast_info,
 
     ## auxiliary-data-utils.R:
     get_igblast_auxiliary_data,

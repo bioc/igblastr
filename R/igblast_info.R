@@ -19,10 +19,9 @@ has_igblast <- function()
 ### list_igblast_organisms()
 ###
 
-list_igblast_organisms <- function()
+list_igblast_organisms <- function(igblast_root=get_igblast_root())
 {
-    igblast_root <- get_igblast_root()
-    internal_data <- file.path(igblast_root, "internal_data")
+    internal_data <- get_igblast_root_subdir(igblast_root, "internal_data")
     if (!dir.exists(internal_data))
         return(character(0))
     list.files(internal_data)
@@ -44,20 +43,54 @@ normalize_igblast_organism <- function(organism)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### igblast_version()
+### igblastn_version()
+### makeblastdb_version()
+### igblast_build()
 ### igblast_info()
 ###
 
-.extract_version_from_cmd_output <- function(output)
+.extract_version_string_from_raw_version <- function(raw_version)
 {
-    sub("^igblastn: *", "", output[[1L]])
+    sub("[^:]*: *", "", raw_version[[1L]])
 }
 
-igblast_version <- function()
+.extract_build_from_raw_version <- function(raw_version)
 {
-    igblastn_exe <- get_igblast_exe("igblastn")
-    out <- system2(igblastn_exe, "-version", stdout=TRUE)
-    .extract_version_from_cmd_output(out)
+    sub("^ *Package: ", "", raw_version[[2L]])
+}
+
+.get_igblast_exe_version <- function(cmd, igblast_root, raw.version)
+{
+    if (!isTRUEorFALSE(raw.version))
+        stop(wmsg("'raw.version' must be TRUE or FALSE"))
+    cmd <- get_igblast_exe(cmd, igblast_root=igblast_root, check=FALSE)
+    raw_version <- try(suppressWarnings(system2(cmd, "-version",
+                                                stdout=TRUE, stderr=TRUE)),
+                       silent=TRUE)
+    if (!system_command_worked(raw_version))
+        stop(wmsg("command '", cmd, " -version' failed"))
+    if (raw.version)
+        return(raw_version)
+    .extract_version_string_from_raw_version(raw_version)
+}
+
+igblastn_version <- function(igblast_root=get_igblast_root(),
+                             raw.version=FALSE)
+{
+    .get_igblast_exe_version("igblastn", igblast_root, raw.version)
+}
+
+makeblastdb_version <- function(igblast_root=get_igblast_root(),
+                                raw.version=FALSE)
+{
+    .get_igblast_exe_version("makeblastdb", igblast_root, raw.version)
+}
+
+### Returns a string of the form "igblast 1.22.0, build Oct 11 2023 16:06:20".
+igblast_build <- function(igblast_root=get_igblast_root())
+{
+    raw_version <- igblastn_version(igblast_root, raw.version=TRUE)
+    .extract_build_from_raw_version(raw_version)
 }
 
 print.igblast_info <- function(x, ...)
@@ -67,19 +100,14 @@ print.igblast_info <- function(x, ...)
     cat(x, sep="\n")
 }
 
-igblast_info <- function()
+igblast_info <- function(igblast_root=get_igblast_root())
 {
-    igblast_root <- get_igblast_root()
+    raw_version <- igblastn_version(igblast_root, raw.version=TRUE)
+    igblast_bui <- .extract_build_from_raw_version(raw_version)
+    igblastn_ver <- .extract_version_string_from_raw_version(raw_version)
+    makeblastdb_ver <- makeblastdb_version(igblast_root)
     OS_arch <- get_OS_arch()
-    OS <- OS_arch[["OS"]]
-    igblastn_exe <- make_igblast_exe_path(igblast_root, cmd="igblastn", OS=OS)
-    igblastn_version <- system2(igblastn_exe, "-version", stdout=TRUE)
-    version <- .extract_version_from_cmd_output(igblastn_version)
-    #igblastp_exe <- make_igblast_exe_path(igblast_root, cmd="igblastp", OS=OS)
-    #igblastp_version <- system2(igblastp_exe, "-version", stdout=TRUE)
-    build <- igblastn_version[[2L]]  # should be same as igblastp_version[[2L]]
-    build <- sub("^ *Package: ", "", build)
-    all_organisms <- list_igblast_organisms()
+    all_organisms <- list_igblast_organisms(igblast_root)
     if (length(all_organisms) == 0L) {
         organisms <- "none!"
     } else {
@@ -88,13 +116,14 @@ igblast_info <- function()
 
     ans <- list(
         igblast_root=igblast_root,
-        Version=version,
+        igblast_build=igblast_bui,
+        igblastn_version=igblastn_ver,
+        makeblastdb_version=makeblastdb_ver,
         `OS/arch`=paste(OS_arch, collapse="/"),
-        Build=build,
         #igblastn_exe=igblastn_exe,
-        #igblastn_version=igblastn_version[[1L]],
+        #igblastn_version=raw_version[[1L]],
         #igblastp_exe=igblastp_exe,
-        #igblastp_version=igblastp_version[[1L]],
+        #igblastp_version=igblastp_ver[[1L]],
         organisms=organisms
     )
     class(ans) <- "igblast_info"
