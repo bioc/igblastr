@@ -23,7 +23,7 @@
 \usage{
 list_germline_dbs(builtin.only=FALSE, names.only=FALSE)
 
-use_germline_db(db_name=NULL)
+use_germline_db(db_name=NULL, verbose=FALSE)
 
 load_germline_db(db_name, region_types=NULL)
 }
@@ -57,6 +57,10 @@ load_germline_db(db_name, region_types=NULL)
     A single string specifying the name of the local germline db
     from which to load the V, D, and/or J regions. Use
     \code{list_germline_dbs()} to list all the local germline dbs.
+  }
+  \item{verbose}{
+    If set to \code{TRUE}, then \code{use_germline_db()} will display
+    some information about its internal operations.
   }
   \item{region_types}{
     The types of regions (V, D, and/or J) to load from the database.

@@ -348,11 +348,29 @@ get_db_in_use <- function(dbs_path, what=c("germline", "C-region"))
     db_path
 }
 
-set_db_in_use <- function(what=c("germline", "C-region"), db_name="")
+set_db_in_use <- function(what=c("germline", "C-region"), db_name="",
+                          verbose=FALSE)
 {
-    stopifnot(isSingleString(db_name))
     what <- match.arg(what)
+    stopifnot(isSingleString(db_name), isTRUEorFALSE(verbose))
+    print_ok <- FALSE
+    if (verbose) {
+        if (db_name == "") {
+            old_db_name <- .DB_IN_USE_cache[[what]]
+            if (!(is.null(old_db_name) || old_db_name == "")) {
+                message("Cancelling the current ", what, " selection ... ",
+                        appendLF=FALSE)
+                print_ok <- TRUE
+            }
+        } else {
+            message("Selecting ", what, " db ", db_name, " for use ",
+                    "with igblastn() ... ", appendLF=FALSE)
+            print_ok <- TRUE
+        }
+    }
     .DB_IN_USE_cache[[what]] <- db_name
+    if (print_ok)
+        message("ok")
     invisible(db_name)
 }
 

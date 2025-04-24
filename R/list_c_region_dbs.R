@@ -131,13 +131,13 @@ print.c_region_dbs_df <- function(x, ...)
 ###
 
 ### Returns "" if no db is currently in use.
-.get_c_region_db_in_use <- function()
+.get_c_region_db_in_use <- function(verbose=FALSE)
 {
     c_region_dbs_path <- .get_c_region_dbs_path(TRUE)  # guaranteed to exist
     db_path <- get_db_in_use(c_region_dbs_path, what="C-region")
     if (db_path == "")
         return(db_path)
-    make_blastdbs(db_path)
+    make_blastdbs(db_path, verbose=verbose)
     basename(db_path)
 }
 
@@ -150,10 +150,12 @@ print.c_region_dbs_df <- function(x, ...)
 }
 
 ### Passing 'db_name=""' will cancel the current selection.
-use_c_region_db <- function(db_name=NULL)
+use_c_region_db <- function(db_name=NULL, verbose=FALSE)
 {
+    if (!isTRUEorFALSE(verbose))
+        stop(wmsg("'verbose' must be TRUE or FALSE"))
     if (is.null(db_name))
-        return(.get_c_region_db_in_use())
+        return(.get_c_region_db_in_use(verbose=verbose))
 
     ## Check 'db_name'.
     if (!isSingleString(db_name))
@@ -165,9 +167,10 @@ use_c_region_db <- function(db_name=NULL)
             .stop_on_invalid_c_region_db_name(db_name)
         c_region_dbs_path <- .get_c_region_dbs_path()  # guaranteed to exist
         db_path <- file.path(c_region_dbs_path, db_name)
-        make_blastdbs(db_path)
+        make_blastdbs(db_path, verbose=verbose)
     }
-    set_db_in_use("C-region", db_name)
+    ## Returns 'db_name' invisibly.
+    set_db_in_use("C-region", db_name, verbose=verbose)
 }
 
 
@@ -190,7 +193,7 @@ load_c_region_db <- function(db_name)
 ### clean_c_region_blastdbs()
 ###
 
-### Not exported!
+### Not used at the moment and not exported!
 clean_c_region_blastdbs <- function()
 {
     c_region_dbs_path <- .get_c_region_dbs_path()  # NOT guaranteed to exist

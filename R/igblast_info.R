@@ -59,16 +59,23 @@ normalize_igblast_organism <- function(organism)
     sub("^ *Package: ", "", raw_version[[2L]])
 }
 
-.get_igblast_exe_version <- function(cmd, igblast_root, raw.version)
+.IGBLAST_VERSION_cache <- new.env(parent=emptyenv())
+
+.get_igblast_exe_version <- function(cmdname, igblast_root, raw.version)
 {
     if (!isTRUEorFALSE(raw.version))
         stop(wmsg("'raw.version' must be TRUE or FALSE"))
-    cmd <- get_igblast_exe(cmd, igblast_root=igblast_root, check=FALSE)
-    raw_version <- try(suppressWarnings(system2(cmd, "-version",
-                                                stdout=TRUE, stderr=TRUE)),
-                       silent=TRUE)
-    if (!system_command_worked(raw_version))
-        stop(wmsg("command '", cmd, " -version' failed"))
+    ## 'cmdpath' is guaranteed to be an absolute path.
+    cmdpath <- get_igblast_exe(cmdname, igblast_root=igblast_root, check=FALSE)
+    raw_version <- .IGBLAST_VERSION_cache[[cmdpath]]
+    if (is.null(raw_version)) {
+        raw_version <- try(suppressWarnings(system2(cmdpath, "-version",
+                                                    stdout=TRUE, stderr=TRUE)),
+                           silent=TRUE)
+        if (!system_command_worked(raw_version))
+            stop(wmsg("command '", cmdpath, " -version' failed"))
+	.IGBLAST_VERSION_cache[[cmdpath]] <- raw_version
+    }
     if (raw.version)
         return(raw_version)
     .extract_version_string_from_raw_version(raw_version)

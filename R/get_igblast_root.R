@@ -48,28 +48,29 @@ get_igblast_root_subdir <- function(igblast_root, subdir)
 ### get_igblast_exe()
 ###
 
+### Returns the path to the specified executable as an absolute path.
 ### If 'check' is set to TRUE, then get_igblast_exe() checks that the
 ### executable is working. This check takes between 0.5 and 1 second.
 ### If 'check' is set to FALSE, then get_igblast_exe() returns almost
 ### instantly.
-get_igblast_exe <- function(cmd=c("igblastn", "igblastp", "makeblastdb"),
+get_igblast_exe <- function(cmdname=c("igblastn", "igblastp", "makeblastdb"),
                             igblast_root=get_igblast_root(),
                             OS=get_OS_arch()[["OS"]],
                             check=TRUE)
 {
     stopifnot(isTRUEorFALSE(check))
-    cmd <- add_exe_suffix_on_Windows(match.arg(cmd), OS=OS)
+    filename <- add_exe_suffix_on_Windows(match.arg(cmdname), OS=OS)
     bin_dir <- get_igblast_root_subdir(igblast_root, "bin")
-    cmd_path <- file.path(bin_dir, cmd)
-    if (!file.exists(cmd_path) || dir.exists(cmd_path)) {
-        details <- c("No '", cmd, "' command in 'bin' subdirectory.")
+    cmdpath <- file.path(bin_dir, filename)
+    if (!file.exists(cmdpath) || dir.exists(cmdpath)) {
+        details <- c("No '", filename, "' command in 'bin' subdirectory.")
         .stop_on_invalid_igblast_root(igblast_root, details)
     }
-    if (check && !system_command_works(cmd_path, "-version")) {
-        details <- c("'", cmd_path, " -version' does not work.")
+    if (check && !system_command_works(cmdpath, "-version")) {
+        details <- c("'", cmdpath, " -version' does not work.")
         .stop_on_invalid_igblast_root(igblast_root, details)
     }
-    cmd_path
+    cmdpath
 }
 
 
@@ -146,8 +147,8 @@ get_igblast_exe <- function(cmd=c("igblastn", "igblastp", "makeblastdb"),
     igblast_root <- file_path_as_absolute(path)
     .check_igblast_installation(igblast_root)
     options(igblast_root=igblast_root)
-    clean_germline_blastdbs()
-    clean_c_region_blastdbs()
+    #clean_germline_blastdbs()
+    #clean_c_region_blastdbs()
     igblast_root
 }
 
@@ -171,8 +172,8 @@ set_internal_igblast_root <- function(version)
     .check_igblast_installation(igblast_root)
     using_path <- file.path(internal_roots, "USING")
     writeLines(version, using_path)
-    clean_germline_blastdbs()
-    clean_c_region_blastdbs()
+    #clean_germline_blastdbs()
+    #clean_c_region_blastdbs()
     igblast_root
 }
 

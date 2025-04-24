@@ -23,7 +23,7 @@
 \usage{
 list_c_region_dbs(builtin.only=FALSE, names.only=FALSE)
 
-use_c_region_db(db_name=NULL)
+use_c_region_db(db_name=NULL, verbose=FALSE)
 
 load_c_region_db(db_name)
 }
@@ -60,6 +60,10 @@ load_c_region_db(db_name)
     A single string specifying the name of the local C-region db
     from which to load the gene regions. Use \code{list_c_region_dbs()}
     to list all the local C-region dbs.
+  }
+  \item{verbose}{
+    If set to \code{TRUE}, then \code{use_c_region_db()} will display
+    some information about its internal operations.
   }
 }
 

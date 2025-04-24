@@ -167,7 +167,7 @@ print.germline_dbs_df <- function(x, ...)
     stop(wmsg(msg))
 }
 
-.get_germline_db_in_use <- function()
+.get_germline_db_in_use <- function(verbose=FALSE)
 {
     all_db_names <- list_germline_dbs(names.only=TRUE)
     if (length(all_db_names) == 0L)
@@ -176,7 +176,7 @@ print.germline_dbs_df <- function(x, ...)
     db_path <- get_db_in_use(germline_dbs_path, what="germline")
     if (db_path == "")
         .stop_on_no_selected_germline_db_yet()
-    make_blastdbs(db_path)
+    make_blastdbs(db_path, verbose=verbose)
     basename(db_path)
 }
 
@@ -191,24 +191,28 @@ print.germline_dbs_df <- function(x, ...)
     stop(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", wmsg(msg3))
 }
 
-use_germline_db <- function(db_name=NULL)
+use_germline_db <- function(db_name=NULL, verbose=FALSE)
 {
+    if (!isTRUEorFALSE(verbose))
+        stop(wmsg("'verbose' must be TRUE or FALSE"))
     if (is.null(db_name))
-        return(.get_germline_db_in_use())
+        return(.get_germline_db_in_use(verbose=verbose))
 
     ## Check 'db_name'.
     if (!isSingleNonWhiteString(db_name))
         stop(wmsg("'db_name' must be a single (non-empty) string"))
+
     all_db_names <- list_germline_dbs(names.only=TRUE)
     if (length(all_db_names) == 0L)
         .stop_on_no_installed_germline_db_yet()
     if (!(db_name %in% all_db_names))
         .stop_on_invalid_germline_db_name(db_name)
-
     germline_dbs_path <- get_germline_dbs_path()  # guaranteed to exist
     db_path <- file.path(germline_dbs_path, db_name)
-    make_blastdbs(db_path)
-    set_db_in_use("germline", db_name)
+    make_blastdbs(db_path, verbose=verbose)
+
+    ## Returns 'db_name' invisibly.
+    set_db_in_use("germline", db_name, verbose=verbose)
 }
 
 
@@ -252,7 +256,7 @@ load_germline_db <- function(db_name, region_types=NULL)
 ### clean_germline_blastdbs()
 ###
 
-### Not exported!
+### Not used at the moment and not exported!
 clean_germline_blastdbs <- function()
 {
     germline_dbs_path <- get_germline_dbs_path()  # NOT guaranteed to exist

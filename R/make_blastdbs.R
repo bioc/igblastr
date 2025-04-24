@@ -5,23 +5,59 @@
 ### Nothing in this file is exported.
 
 
+.infer_region_type_from_fasta_filename <- function(fasta_file)
+{
+    stopifnot(isSingleNonWhiteString(fasta_file),
+              has_suffix(fasta_file, ".fasta"))
+    sub("\\.fasta$", "", fasta_file)
+}
+
+.make_blastdb_hidden_filename <- function(region_type, suffix)
+{
+    stopifnot(isSingleNonWhiteString(region_type),
+              isSingleNonWhiteString(suffix))
+    paste0(".", region_type, "_makeblastdb_", suffix)
+}
+
+.make_makeblastdb_version_filename <- function(region_type)
+    .make_blastdb_hidden_filename(region_type, "version")
+
+.make_makeblastdb_output_filename <- function(region_type)
+    .make_blastdb_hidden_filename(region_type, "output")
+
+.make_makeblastdb_errors_filename <- function(region_type)
+    .make_blastdb_hidden_filename(region_type, "errors")
+
 .BLASTDB_SUFFIXES <- c("ndb", "nhr", "nin", "njs", "nog",
                        "nos", "not", "nsq", "ntf", "nto")
 
 .expected_blastdb_filenames <- function(fasta_file)
 {
-    region_type <- sub("\\.fasta$", "", fasta_file)
+    region_type <- .infer_region_type_from_fasta_filename(fasta_file)
     paste0(region_type, ".", .BLASTDB_SUFFIXES)
 }
 
-### We determine whether a FASTA file needs compilation or not simply
-### by looking at the presence of the expected compilation products.
-### We don't look at timestamps!
+### A FASTA file is considered to NOT need compilation if the two following
+### conditions are satisfied:
+###   1. The "makeblastdb version" file associated with the FASTA file
+###      is present and contains the same makeblastdb version than
+###      reported by makeblastdb_version().
+###   2. The expected compilation products are present.
+### Note that we don't look at timestamps!
 .fasta_file_needs_compilation <- function(db_path, fasta_file)
 {
-    expected_filenames <- .expected_blastdb_filenames(fasta_file)
+    region_type <- .infer_region_type_from_fasta_filename(fasta_file)
+    verfile <- .make_makeblastdb_version_filename(region_type)
+    expected_filenames <- c(verfile, .expected_blastdb_filenames(fasta_file))
     paths <- file.path(db_path, expected_filenames)
-    !all(file.exists(paths))
+    if (!all(file.exists(paths)))
+        return(TRUE)
+    raw_version1 <- readLines(paths[[1L]])
+    if (length(raw_version1) == 0L)
+        return(TRUE)
+    version1 <- raw_version1[[1L]]
+    version2 <- makeblastdb_version(raw.version=TRUE)[[1L]]
+    !identical(version1, version2)
 }
 
 .clean_blastdb_files <- function(db_path, fasta_file)
@@ -33,7 +69,7 @@
 
 .check_blastdb_files <- function(db_path, fasta_file)
 {
-    region_type <- sub("\\.fasta$", "", fasta_file)
+    region_type <- .infer_region_type_from_fasta_filename(fasta_file)
     pattern <- paste0("^", region_type, "\\.n")
     blastdb_files <- list.files(db_path, pattern=pattern)
     if (length(blastdb_files) == 0L)
@@ -52,26 +88,36 @@
     FALSE
 }
 
-### Use the 'makeblastdb' executable distributed with NCBI IgBLAST to "compile"
-### a FASTA file into a db usable with igblastn(). This is the last step
-### of the 3-step procedure to create a germline or C-region db from a
-### collection of FASTA files. See
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .run_makeblastdb_on_fasta_file()
+###
+
+### Uses the 'makeblastdb' standalone executable distributed with NCBI IgBLAST
+### to "compile" a FASTA file into a db usable with igblastn(). This is the
+### last step of the 3-step procedure to create a germline or C-region db from
+### a collection of FASTA files. See
 ###   https://ncbi.github.io/igblast/cook/How-to-set-up.html
 ### for more information.
 ### This "compilation" produces 10 files per FASTA file!
-.run_makeblastdb_on_fasta_file <- function(fasta_file, makeblastdb_exe)
+.run_makeblastdb_on_fasta_file <- function(fasta_file, makeblastdb_exe,
+                                           verbose=FALSE)
 {
-    region_type <- sub("\\.fasta$", "", fasta_file)
+    region_type <- .infer_region_type_from_fasta_filename(fasta_file)
+    if (verbose)
+        message("Making ", region_type, " blast db in ", getwd(), "/ ... ",
+                appendLF=FALSE)
+    outfile <- .make_makeblastdb_output_filename(region_type)
+    errfile <- .make_makeblastdb_errors_filename(region_type)
     args <- c("-parse_seqids", "-dbtype nucl",
               paste("-in", fasta_file), paste("-out", region_type))
-
-    outfile <- paste0(".", region_type, "_makeblastdb_output")
-    errfile <- paste0(".", region_type, "_makeblastdb_errors")
     system3(makeblastdb_exe, outfile, errfile, args=args)
 
     ## Record 'makeblastdb' version in local file.
-    verfile <- paste0(".", region_type, "_makeblastdb_version")
+    verfile <- .make_makeblastdb_version_filename(region_type)
     system3(makeblastdb_exe, verfile, errfile, args="-version")
+    if (verbose)
+        message("ok")
 }
 
 
@@ -104,35 +150,39 @@ clean_blastdbs <- function(db_path)
 .get_fasta_files_statuses <- function(db_path)
 {
     fasta_files <- list.files(db_path, pattern="\\.fasta$")
-    statuses <- vapply(fasta_files,
-                       function(f) .fasta_file_needs_compilation(db_path, f),
-                       logical(1))
-    setNames(statuses, fasta_files)
+    vapply(fasta_files,
+        function(f) .fasta_file_needs_compilation(db_path, f),
+        logical(1), USE.NAMES=TRUE)
 }
 
 ### Compiles only the FASTA files that are not already compiled, so it's a
 ### very fast no-op if all the FASTA files in the db are already compiled.
 ### Returns the named logical vector obtained with .get_fasta_files_statuses()
 ### above.
-make_blastdbs <- function(db_path)
+make_blastdbs <- function(db_path, force=FALSE, verbose=FALSE)
 {
     if (!isSingleNonWhiteString(db_path))
         stop(wmsg("'db_path' must be a single (non-empty) string"))
-    if (isTRUEorFALSE(force))
-        stop(wmsg("'force' must be TRUE or FALSE"))
     if (!dir.exists(db_path))
         stop(wmsg("directory ", db_path, " not found"))
+    if (!isTRUEorFALSE(force))
+        stop(wmsg("'force' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(verbose))
+        stop(wmsg("'verbose' must be TRUE or FALSE"))
 
     statuses <- .get_fasta_files_statuses(db_path)
-    if (any(statuses)) {
-        fasta_files <- names(statuses)[statuses]
-        makeblastdb_exe <- get_igblast_exe("makeblastdb")
+    if (force || any(statuses)) {
+        fasta_files <- names(statuses)
+        if (!force)
+            fasta_files <- fasta_files[statuses]
+        makeblastdb_exe <- get_igblast_exe("makeblastdb", check=FALSE)
         oldwd <- getwd()
         setwd(db_path)
         on.exit(setwd(oldwd))
         for (f in fasta_files) {
-            if (.fasta_file_needs_compilation(db_path, f)) {
-                .run_makeblastdb_on_fasta_file(f, makeblastdb_exe)
+            if (force || .fasta_file_needs_compilation(db_path, f)) {
+                .run_makeblastdb_on_fasta_file(f, makeblastdb_exe,
+                                               verbose=verbose)
                 .check_blastdb_files(db_path, f)
             }
         }
