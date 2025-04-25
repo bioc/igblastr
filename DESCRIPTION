@@ -30,6 +30,7 @@ SystemRequirements: Perl (for install_IMGT_germline_db() only)
 VignetteBuilder: knitr
 Collate:
 	utils.R
+	long_to_wide_airr.R
 	file-utils.R
 	db-utils.R
 	IMGT-utils.R
