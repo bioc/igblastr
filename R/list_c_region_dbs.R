@@ -78,44 +78,17 @@ get_c_region_db_path <- function(db_name)
 ### list_c_region_dbs()
 ###
 
-### Returns a named integer vector with GENE_LOCI as names.
-.tabulate_c_region_db_by_locus <- function(db_name)
+### 'long.listing' is ignored when 'names.only' is TRUE.
+### Returns a c_region_dbs_df object (data.frame extension) by default.
+list_c_region_dbs <- function(builtin.only=FALSE,
+                              names.only=FALSE, long.listing=FALSE)
 {
-    db_path <- get_c_region_db_path(db_name)
-    fasta_file <- get_db_fasta_file(db_path, "C")
-    seqids <- names(fasta.seqlengths(fasta_file))
-    tabulate_c_region_seqids_by_locus(seqids)
-}
-
-### Returns a matrix with 1 row per C-region db and 1 column per locus.
-.tabulate_c_region_dbs_by_locus <- function(db_names)
-{
-    all_counts <- lapply(db_names, .tabulate_c_region_db_by_locus)
-    data <- unlist(all_counts, use.names=FALSE)
-    if (is.null(data))
-        data <- integer(0)
-    matrix(data, ncol=length(GENE_LOCI), byrow=TRUE,
-           dimnames=list(NULL, GENE_LOCI))
-}
-
-list_c_region_dbs <- function(builtin.only=FALSE, names.only=FALSE)
-{
-    if (!isTRUEorFALSE(builtin.only))
-        stop(wmsg("'builtin.only' must be TRUE or FALSE"))
-    if (!isTRUEorFALSE(names.only))
-        stop(wmsg("'names.only' must be TRUE or FALSE"))
     c_region_dbs_path <- .get_c_region_dbs_path(TRUE)  # guaranteed to exist
-    ## Excluding the 'USING' file for backward compatibility reasons.
-    ## See NOTE above '.DB_IN_USE_cache' in R/utils.R
-    all_db_names <- setdiff(list.files(c_region_dbs_path), "USING")
-    if (builtin.only)
-        all_db_names <- all_db_names[has_prefix(all_db_names, "_")]
-    all_db_names <- sort_db_names(all_db_names)
-    if (names.only)
-        return(all_db_names)
-    basic_stats <- .tabulate_c_region_dbs_by_locus(all_db_names)
-    ans <- data.frame(db_name=all_db_names, basic_stats)
-    class(ans) <- c("c_region_dbs_df", class(ans))
+    ans <- list_dbs(c_region_dbs_path, what="C-region",
+                    builtin.only=builtin.only,
+                    names.only=names.only, long.listing=long.listing)
+    if (is.data.frame(ans))
+        class(ans) <- c("c_region_dbs_df", class(ans))
     ans
 }
 

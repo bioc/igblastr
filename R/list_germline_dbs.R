@@ -86,56 +86,17 @@ get_germline_db_path <- function(db_name)
 ### list_germline_dbs()
 ###
 
-### Returns a named integer vector with GERMLINE_GROUPS as names.
-.tabulate_germline_db_by_group <- function(db_name)
+### 'long.listing' is ignored when 'names.only' is TRUE.
+### Returns a germline_dbs_df object (data.frame extension) by default.
+list_germline_dbs <- function(builtin.only=FALSE,
+                              names.only=FALSE, long.listing=FALSE)
 {
-    db_path <- get_germline_db_path(db_name)
-    region_types <- c("V", "D", "J")
-    all_counts <- lapply(region_types,
-        function(region_type) {
-            fasta_file <- get_db_fasta_file(db_path, region_type)
-            seqids <- names(fasta.seqlengths(fasta_file))
-            counts <- tabulate_germline_seqids_by_group(seqids)
-            if (!all(has_suffix(names(counts)[counts != 0L], region_type)))
-                warning(wmsg("some seq ids in '" , fasta_file, "' don't look ",
-                             "like ", region_type, "-region germline seq ids"))
-            counts
-        })
-    data <- unlist(all_counts, use.names=FALSE)
-    m <- matrix(data, ncol=length(GERMLINE_GROUPS), byrow=TRUE,
-                dimnames=list(region_types, GERMLINE_GROUPS))
-    colSums(m)
-}
-
-### Returns a matrix with 1 row per germline db and 1 column per group.
-.tabulate_germline_dbs_by_group <- function(db_names)
-{
-    all_counts <- lapply(db_names, .tabulate_germline_db_by_group)
-    data <- unlist(all_counts, use.names=FALSE)
-    if (is.null(data))
-        data <- integer(0)
-    matrix(data, ncol=length(GERMLINE_GROUPS), byrow=TRUE,
-           dimnames=list(NULL, GERMLINE_GROUPS))
-}
-
-list_germline_dbs <- function(builtin.only=FALSE, names.only=FALSE)
-{
-    if (!isTRUEorFALSE(builtin.only))
-        stop(wmsg("'builtin.only' must be TRUE or FALSE"))
-    if (!isTRUEorFALSE(names.only))
-        stop(wmsg("'names.only' must be TRUE or FALSE"))
     germline_dbs_path <- get_germline_dbs_path(TRUE)  # guaranteed to exist
-    ## Excluding the 'USING' file for backward compatibility reasons.
-    ## See NOTE above '.DB_IN_USE_cache' in R/utils.R
-    all_db_names <- setdiff(list.files(germline_dbs_path), "USING")
-    if (builtin.only)
-        all_db_names <- all_db_names[has_prefix(all_db_names, "_")]
-    all_db_names <- sort_db_names(all_db_names)
-    if (names.only)
-        return(all_db_names)
-    basic_stats <- .tabulate_germline_dbs_by_group(all_db_names)
-    ans <- data.frame(db_name=all_db_names, basic_stats)
-    class(ans) <- c("germline_dbs_df", class(ans))
+    ans <- list_dbs(germline_dbs_path, what="germline",
+                    builtin.only=builtin.only,
+                    names.only=names.only, long.listing=long.listing)
+    if (is.data.frame(ans))
+        class(ans) <- c("germline_dbs_df", class(ans))
     ans
 }
 
@@ -223,7 +184,7 @@ use_germline_db <- function(db_name=NULL, verbose=FALSE)
 .normarg_region_types <- function(region_types=NULL)
 {
     if (is.null(region_types))
-        return(c("V", "D", "J"))
+        return(VDJ_REGION_TYPES)
     if (!is.character(region_types) || anyNA(region_types))
         stop(wmsg("'region_types' must be NULL or ",
                   "a character vector with no NAs"))
@@ -233,7 +194,7 @@ use_germline_db <- function(db_name=NULL, verbose=FALSE)
     } else if (any(nchar(region_types) != 1L)) {
         stop(wmsg("'region_types' must have single-letter elements"))
     }
-    if (!all(region_types %in% c("V", "D", "J")))
+    if (!all(region_types %in% VDJ_REGION_TYPES))
         stop(wmsg("'region_types' can only contain letters V, D, or J"))
     region_types
 }

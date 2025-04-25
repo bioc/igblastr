@@ -21,7 +21,7 @@
 }
 
 \usage{
-list_germline_dbs(builtin.only=FALSE, names.only=FALSE)
+list_germline_dbs(builtin.only=FALSE, names.only=FALSE, long.listing=FALSE)
 
 use_germline_db(db_name=NULL, verbose=FALSE)
 
@@ -39,6 +39,15 @@ load_germline_db(db_name, region_types=NULL)
     By default \code{list_germline_dbs()} returns the list of local
     germline dbs in a data.frame with one db per row. Set \code{names.only}
     to \code{TRUE} to return only the db names in a character vector.
+  }
+  \item{long.listing}{
+    \code{TRUE} or \code{FALSE}. If set to \code{TRUE}, then
+    \code{list_germline_dbs()} returns a named list with one
+    list element per germline db. Each list element is an integer
+    matrix that indicates the number of germline sequences per locus
+    and region type.
+
+    Ignored if \code{names.only} is set to \code{TRUE}.
   }
   \item{db_name}{
     For \code{use_germline_db()}:
@@ -96,8 +105,8 @@ load_germline_db(db_name, region_types=NULL)
   \code{list_germline_dbs()} returns the list of all local germline dbs
   in a data.frame with one db per row (if \code{names.only} is \code{FALSE},
   which is the default), or in a character vector (if \code{names.only}
-  is \code{TRUE}). Columns IGHV, IGHD, IGHJ, IGKV, IGKJ, IGLV, and IGLJ
-  in the data.frame indicate the number of sequences from each group.
+  is \code{TRUE}). Columns V, D, J in the data.frame indicate the number
+  of germline sequences for each region in each db.
 
   Built-in dbs are prefixed with an underscore (\code{_}).
   Note that the germline built-in dbs from AIRR were obtained from
@@ -145,16 +154,21 @@ if (!has_igblast()) install_igblast()
 list_germline_dbs(builtin.only=TRUE)
 list_germline_dbs(builtin.only=TRUE, names.only=TRUE)  # db names only
 
+## Long listing:
+list_germline_dbs(long.listing=TRUE)
+
 ## Install Mouse germline db from IMGT (Perl required!):
 install_IMGT_germline_db("202506-1", "Mus_musculus", force=TRUE)
 
 list_germline_dbs()  # all germline dbs
 
+## Select germline db to use with igblastn():
 db_name <- "IMGT-202506-1.Mus_musculus.IGH+IGK+IGL"
-use_germline_db(db_name)
+use_germline_db(db_name)  # select germline db to use
 
-use_germline_db()
+use_germline_db()  # get current selection
 
+## Load germline sequences:
 load_germline_db(db_name)
 load_germline_db(db_name, region_types="D")
 load_germline_db(db_name, region_types="DJ")

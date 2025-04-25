@@ -137,7 +137,7 @@
               all(has_prefix(seqid, locus)))
     pos <- nchar(locus) + 1L
     region_type <- substr(seqid, pos, pos)
-    stopifnot(all(region_type %in% c("V", "D", "J")))
+    stopifnot(all(region_type %in% VDJ_REGION_TYPES))
     region_type
 }
 
@@ -195,13 +195,13 @@ download_germline_sequences_from_OGRDB <-
 
     from <- paste0("germline set ", set_name, " (", species, ")")
     file_count <- 0L
-    for (type in c("V", "D", "J")) {
-        selected_seqs <- ungapped_seqs[seq_region_types == type]
+    for (region_type in VDJ_REGION_TYPES) {
+        selected_seqs <- ungapped_seqs[seq_region_types == region_type]
         if (length(selected_seqs) == 0L)
             next
-        filename <- paste0(locus, type, ".fasta")
+        filename <- paste0(locus, region_type, ".fasta")
         destfile <- file.path(destdir, filename)
-        message("Write ", length(selected_seqs), " ", type, " regions ",
+        message("Write ", length(selected_seqs), " ", region_type, " regions ",
                 "from ", from, " to ", filename, " ... ", appendLF=FALSE)
         if (file.exists(destfile))
             stop(wmsg(filename, " file already exists in ", destdir, "/"))

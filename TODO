@@ -12,6 +12,10 @@
   but Bioconductor does not have biocViews terms for this. Request their
   addition.
 
+- Talk to Koshlan Mayer-Blackwell about using IgBLAST to analyze TCR
+  sequences. Seems like none is using IgBLAST for that. Some people
+  use mixeR.
+
 - Clarify provenance of 1279067_1_Paired_sequences.fasta.gz and its licence.
   Give appropriate credit. See https://opig.stats.ox.ac.uk/webapps/oas/
 

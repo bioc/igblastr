@@ -100,7 +100,7 @@
 {
     stopifnot(isSingleNonWhiteString(region_db_path))
     .germline_db_is_internal(dirname(region_db_path)) &&
-        basename(region_db_path) %in% c("V", "D", "J")
+        basename(region_db_path) %in% VDJ_REGION_TYPES
 }
 
 ### Assumes that 'region_db_path' is pointing to an **internally** managed
@@ -135,7 +135,7 @@
 }
 
 .normarg_seqidlist <- function(seqidlist, region_db_path,
-                               region_type=c("V", "D", "J"))
+                               region_type=VDJ_REGION_TYPES)
 {
     region_type <- match.arg(region_type)
     if (is.null(seqidlist))

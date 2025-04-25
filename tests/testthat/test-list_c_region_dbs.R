@@ -10,7 +10,7 @@ test_that("use_c_region_db()", {
 test_that("list_c_region_dbs()", {
     df <- list_c_region_dbs()
     expect_true(is.data.frame(df))
-    expected_colnames <- c("db_name", "IGH", "IGK", "IGL")
+    expected_colnames <- c("db_name", "C")
     expect_identical(colnames(df), expected_colnames)
 
     use_c_region_db("")

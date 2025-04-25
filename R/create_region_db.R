@@ -23,7 +23,7 @@
 ### Compilation (with makeblastdb) will happen at a latter time.
 .combine_and_edit_fasta_files <-
     function(fasta_files, destdir, edit_fasta_script,
-             region_type=c("V", "D", "J", "C"))
+             region_type=c(VDJ_REGION_TYPES, "C"))
 {
     if (!is.character(fasta_files) || anyNA(fasta_files))
         stop(wmsg("'fasta_files' must be a character vector with no NAs"))
@@ -76,7 +76,7 @@
 ###         .combine_and_edit_fasta_files() on the files in V_original_fasta/,
 ###         with allele names disambiguated if needed.
 create_region_db <- function(fasta_files, destdir,
-                             region_type=c("V", "D", "J", "C"),
+                             region_type=c(VDJ_REGION_TYPES, "C"),
                              edit_fasta_script=NULL)
 {
     if (!is.character(fasta_files) || anyNA(fasta_files))

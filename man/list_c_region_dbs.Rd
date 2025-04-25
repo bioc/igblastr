@@ -21,7 +21,7 @@
 }
 
 \usage{
-list_c_region_dbs(builtin.only=FALSE, names.only=FALSE)
+list_c_region_dbs(builtin.only=FALSE, names.only=FALSE, long.listing=FALSE)
 
 use_c_region_db(db_name=NULL, verbose=FALSE)
 
@@ -39,6 +39,14 @@ load_c_region_db(db_name)
     By default \code{list_c_region_dbs()} returns the list of local
     C-region dbs in a data.frame with one db per row. Set \code{names.only}
     to \code{TRUE} to return only the db names in a character vector.
+  }
+  \item{long.listing}{
+    \code{TRUE} or \code{FALSE}. If set to \code{TRUE}, then
+    \code{list_c_region_dbs()} returns a named list with one
+    list element per C-region db. Each list element is a named integer
+    vector that indicates the number of C-region sequences per locus.
+
+    Ignored if \code{names.only} is set to \code{TRUE}.
   }
   \item{db_name}{
     For \code{use_c_region_db()}:
@@ -92,8 +100,8 @@ load_c_region_db(db_name)
   \code{list_c_region_dbs()} returns the list of all local C-region dbs
   in a data.frame with one db per row (if \code{names.only} is \code{FALSE},
   which is the default), or in a character vector (if \code{names.only}
-  is \code{TRUE}). Columns IGH, IGK, and IGL in the data.frame indicate
-  the number of sequences from each locus.
+  is \code{TRUE}). Column C in the data.frame indicates the number of
+  C-region sequences in each db.
 
   Built-in dbs are prefixed with an underscore (\code{_}).
   Note that the C-region built-in dbs from IMGT were downloaded from
@@ -138,14 +146,18 @@ list_c_region_dbs()
 
 list_c_region_dbs(names.only=TRUE)  # db names only
 
+list_c_region_dbs(long.listing=TRUE)  # long listing
+
+## Select C-region db to use with igblastn():
 use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
 
+use_c_region_db()  # get current selection
+
+use_c_region_db("")  # cancel current selection
+
 use_c_region_db()
 
-use_c_region_db("")  # cancel the current selection
-
-use_c_region_db()
-
+## Load C-region sequences:
 load_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
 load_c_region_db("_IMGT.mouse.IGH.202412")
 }

@@ -8,7 +8,7 @@
 
 ### A thin wrapper around create_region_db().
 .create_region_db2 <- function(fastadir, destdir, list_files_FUN,
-                               edit_fasta_script, region_type=c("V", "D", "J"))
+                               edit_fasta_script, region_type=VDJ_REGION_TYPES)
 {
     region_type <- match.arg(region_type)
     fasta_files <- list_files_FUN(fastadir)
@@ -21,7 +21,7 @@
 ### .list_D_fasta_files()
 ### .list_J_fasta_files()
 
-.list_fasta_files <- function(dirpath, region_type=c("V", "D", "J"),
+.list_fasta_files <- function(dirpath, region_type=VDJ_REGION_TYPES,
                               expected_files)
 {
     region_type <- match.arg(region_type)
