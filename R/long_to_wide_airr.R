@@ -8,6 +8,11 @@ long_to_wide_airr <- function(df)
               "sequence_id" %in% colnames(df),
               "locus" %in% colnames(df))
 
+    if (is_tibble(df)) {
+        if (!requireNamespace("dplyr", quietly=TRUE))
+            stop("dplyr is required when the input is a tibble")
+    }
+
     ## Infer the chain from the locus.
     locus <- sub("^IG", "", df$locus)
     stopifnot(locus %in% c("H", "K", "L"))
@@ -22,8 +27,11 @@ long_to_wide_airr <- function(df)
     if (!all(S4Vectors::runLength(rle) == 2L))
         stop("not all rows are properly paired")
 
-    heavy_df <- df[c(TRUE, FALSE), ]  # extract odd rows
-    light_df <- df[c(FALSE, TRUE), ]  # extract even rows
+    ans_nrow <- nrow(df) %/% 2L
+    light_idx <- seq_len(ans_nrow) * 2L
+    heavy_idx <- light_idx - 1L
+    heavy_df <- df[heavy_idx, ]  # extract odd rows
+    light_df <- df[light_idx, ]  # extract even rows
 
     ## Sanity checks.
     heavy_locus <- sub("^IG", "", heavy_df$locus)
@@ -42,6 +50,10 @@ long_to_wide_airr <- function(df)
     ## Make and return the wide data.frame.
     colnames(heavy_df) <- paste0(colnames(heavy_df), "_heavy")
     colnames(light_df) <- paste0(colnames(light_df), "_light")
-    cbind(sequence_id=sequence_id, heavy_df, light_df)
+    if (is_tibble(df)) {
+        dplyr::bind_cols(sequence_id=sequence_id, heavy_df, light_df)
+    } else {
+        cbind(sequence_id=sequence_id, heavy_df, light_df)
+    }
 }
 
