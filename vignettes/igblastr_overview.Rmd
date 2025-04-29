@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 17 April 2025"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 29 April 2025"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -392,7 +392,8 @@ Some future developments include:
 
 # Session information
 
-
+Here is the output of `sessionInfo()` on the system on which this document
+was compiled:
 ```{r}
 sessionInfo()
 ```

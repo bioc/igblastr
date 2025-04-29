@@ -1,9 +1,15 @@
+.sorry_we_ve_moved <- function(fun)
+    c("The ", fun, " function has moved to the bcrutils package available ",
+      "at https://github.com/HyrienLab/bcrutils and will be removed ",
+      "from igblastr soon. Please install bcrutils and use ",
+      "bcrutils::", fun, " instead.")
 
 ### Assumes that the input data.frame has at least columns "sequence_id"
 ### and "locus". The pairing of the rows will be inferred from these
 ### two columns.
 long_to_wide_airr <- function(df)
 {
+    .Deprecated(msg=wmsg(.sorry_we_ve_moved("long_to_wide_airr()")))
     stopifnot(is.data.frame(df),
               "sequence_id" %in% colnames(df),
               "locus" %in% colnames(df))
@@ -60,6 +66,7 @@ long_to_wide_airr <- function(df)
 
 wide_to_long_airr <- function(df)
 {
+    .Deprecated(msg=wmsg(.sorry_we_ve_moved("wide_to_long_airr()")))
     stopifnot(is.data.frame(df))
 
     if (is_tibble(df)) {
