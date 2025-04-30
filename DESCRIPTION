@@ -7,7 +7,7 @@ Description: The igblastr package provides functions to conveniently install
 biocViews: CellBiology, ImmunoOncology
 URL: https://bioconductor.org/packages/igblastr
 BugReports: https://github.com/HyrienLab/igblastr/issues
-Version: 0.99.1
+Version: 0.99.2
 License: Artistic-2.0
 Encoding: UTF-8
 Authors@R: c(
@@ -25,7 +25,8 @@ Depends: R (>= 4.4.0), tibble, Biostrings
 Imports: methods, utils, stats, tools,
 	R.utils, httr, xml2, rvest, xtable, jsonlite,
 	S4Vectors, IRanges, GenomeInfoDb
-Suggests: testthat, knitr, rmarkdown, BiocStyle, ggplot2, dplyr, ggseqlogo
+Suggests: parallel, testthat, knitr, rmarkdown, BiocStyle,
+	ggplot2, dplyr, scales, ggseqlogo
 SystemRequirements: Perl (for install_IMGT_germline_db() only)
 VignetteBuilder: knitr
 Collate:

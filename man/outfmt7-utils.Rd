@@ -63,8 +63,8 @@ if (!has_igblast()) install_igblast()
 ## File 'catnap_bnabs.fasta' contains a small BCR sequencing data set
 ## made of 1000 heavy- and light-chains associated with bnAbs downloaded
 ## from the CATNAP database:
-catnap_bnabs <- system.file(package="igblastr", "extdata",
-                            "catnap_bnabs.fasta")
+catnap_bnabs <- system.file(package="igblastr",
+                            "extdata", "catnap_bnabs.fasta")
 query <- head(readDNAStringSet(catnap_bnabs), n=10)
 
 db_name <- install_IMGT_germline_db("202506-1", "Homo_sapiens", force=TRUE)

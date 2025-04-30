@@ -3,6 +3,7 @@
 ### -------------------------------------------------------------------------
 
 
+### Not used at the moment.
 .get_igblastr_tempdir <- function()
 {
     dirpath <- file.path(tempdir(), "igblastr")
@@ -39,7 +40,7 @@
     if (isSingleNonWhiteString(query)) {
         path <- file_path_as_absolute(query)
         if (has_suffix(path, ".gz")) {
-            destname <- file.path(.get_igblastr_tempdir(), "query.fasta")
+            destname <- tempfile("igblastn_query_", fileext=".fasta")
             gunzip(path, destname=destname, overwrite=TRUE, remove=FALSE)
             path <- destname
         }
@@ -48,7 +49,7 @@
         if (is.null(names(query)))
             stop(wmsg("DNAStringSet object 'query' must have names"))
         .check_query_seq_lengths(setNames(width(query), names(query)))
-        path <- tempfile(fileext=".fasta")
+        path <- tempfile("igblastn_query_", fileext=".fasta")
         writeXStringSet(query, path)
     } else {
         stop(wmsg("'query' must be a single (non-empty) string ",
@@ -140,14 +141,17 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
 .normarg_out <- function(out)
 {
     if (is.null(out))
-        return(file.path(.get_igblastr_tempdir(), "blastn_out.txt"))
+        return(tempfile("igblastn_out_", fileext=".txt"))
     if (!isSingleNonWhiteString(out))
         stop(wmsg("'out' must be NULL or a single (non-empty) string"))
     dirpath <- dirname(out)
     if (!dir.exists(dirpath))
         stop(wmsg(dirpath, ": no such directory"))
     dirpath <- file_path_as_absolute(dirpath)
-    file.path(dirpath, basename(out))
+    out <- file.path(dirpath, basename(out))
+    if (file.exists(out))
+        stop(wmsg(out, ": file exists"))
+    out
 }
 
 
@@ -155,11 +159,32 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
 ### .parse_igblastn_out()
 ###
 
+.fix_AIRR_logical_cols <- function(AIRR_df)
+{
+    stopifnot(is.data.frame(AIRR_df))
+    LOGICAL_COLS <- c("stop_codon", "vj_in_frame", "v_frameshift",
+                      "productive", "rev_comp", "complete_vdj", "d_frame")
+    for (colname in LOGICAL_COLS)
+        AIRR_df[ , colname] <- as.logical(AIRR_df[ , colname])
+    AIRR_df
+}
+
 ### TODO: Parse output format 3 and 4.
 .parse_igblastn_out <- function(out, outfmt_nb)
 {
     stopifnot(isSingleNonWhiteString(out),
-              isSingleInteger(outfmt_nb), outfmt_nb %in% c(3L, 4L, 7L))
+              isSingleInteger(outfmt_nb), outfmt_nb %in% c(3L, 4L, 7L, 19L))
+    if (outfmt_nb == 19L) {
+        ## Make sure to use 'tryLogical=FALSE'. By default, i.e.
+        ## when 'tryLogical=TRUE', there's the risk that read.table()
+        ## will erroneously decide to interpret some columns as logical!
+        ## For example this can happen to column "d_sequence_alignment_aa"
+        ## if it contains only single-letter amino acid sequences T (Thr)
+        ## or F (Phe).
+        AIRR_df <- read.table(out, header=TRUE, sep="\t",
+                              tryLogical=FALSE, na.strings="")
+        return(.fix_AIRR_logical_cols(AIRR_df))
+    }
     out_lines <- readLines(out)
     if (outfmt_nb == 7L)
         return(parse_outfmt7(out_lines))
@@ -180,7 +205,8 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
     igblastn_exe <- get_igblast_exe("igblastn", igblast_root=igblast_root)
     cmd <- c(igblastn_exe, exe_args)
     cmd_in_1string <- paste(cmd, collapse=" ")
-    outfile <- if (show.in.browser) tempfile() else ""
+    outfile <- if (show.in.browser)
+               tempfile("igblastn_command_", fileext=".txt") else ""
     cat(cmd_in_1string, "\n", file=outfile, sep="")
     if (show.in.browser)
         display_local_file_in_browser(outfile)
@@ -222,7 +248,7 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
     setwd(igblast_root)
     on.exit(setwd(oldwd))
 
-    stderr_file <- tempfile()
+    stderr_file <- tempfile("igblastn_stderr_", fileext=".txt")
     status <- system2(igblastn_exe, args=exe_args, stderr=stderr_file)
     .parse_and_issue_warnings(stderr_file)
     if (status != 0)
@@ -239,6 +265,8 @@ igblastn <- function(query, outfmt="AIRR",
                      out=NULL, parse.out=TRUE,
                      show.in.browser=FALSE, show.command.only=FALSE)
 {
+    if (is.null(out))
+        on.exit(unlink(out))
     out <- .normarg_out(out)
     if (!isTRUEorFALSE(parse.out))
         stop(wmsg("'parse.out' must be TRUE or FALSE"))
@@ -275,8 +303,8 @@ igblastn <- function(query, outfmt="AIRR",
     .run_igblastn_exe(igblast_root, exe_args)
 
     if (outfmt_nb == 19L) {
-        ## AIRR output format is tabulated.
-        AIRR_df <- read.table(out, header=TRUE, sep="\t")
+        if (show.in.browser || parse.out)
+            AIRR_df <- .parse_igblastn_out(out, outfmt_nb)
         if (show.in.browser)
             display_data_frame_in_browser(AIRR_df)
         if (parse.out) {
@@ -318,7 +346,8 @@ igblastn_help <- function(long.help=FALSE, show.in.browser=FALSE)
     oldwd <- getwd()
     setwd(igblast_root)
     on.exit(setwd(oldwd))
-    outfile <- if (show.in.browser) tempfile() else ""
+    outfile <- if (show.in.browser)
+               tempfile("igblastn_help_", fileext=".txt") else ""
     status <- system2(igblastn_exe, args=exe_args, stdout=outfile)
     if (status != 0)
         stop(wmsg("'igblastn' returned an error"))

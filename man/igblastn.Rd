@@ -27,7 +27,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
 
 \arguments{
   \item{query}{
-    A single string that is the path to the FASTA file (possible
+    A single string that is the path to the FASTA file (possibly
     gz-compressed) containing the query sequences. Alternatively
     \code{query} can be a named \link[Biostrings]{DNAStringSet} object.
   }
@@ -42,7 +42,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
   \item{germline_db_V}{
     \code{"auto"} (the default), or the path to a V-region db.
 
-    Note that by default (i.e. when \code{germline_db_V} is omitted or set
+    Note that, by default (i.e. when \code{germline_db_V} is omitted or set
     to \code{"auto"}), \code{igblastn()} uses the V-region db that belongs
     to the local germline db currently selected.
     See \code{?\link{use_germline_db}} for how to select the local
@@ -72,7 +72,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     rhesus_monkey. Use \code{\link{list_igblast_organisms}()} to obtain
     this list programmatically.
 
-    Note that by default (i.e. when \code{organism} is omitted or set
+    Note that, by default (i.e. when \code{organism} is omitted or set
     to \code{"auto"}), \code{igblastn()} infers the organism from the
     name of the local germline db currently selected.
     See \code{?\link{use_germline_db}} for how to select the local
@@ -81,8 +81,8 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
   \item{c_region_db}{
     \code{"auto"} (the default), \code{NULL}, or the path to a C-region db.
 
-    Note that by default (i.e. when \code{c_region_db} is omitted or set
-    to \code{"auto"}), \code{igblastn()} uses the local C-region db
+    Note that, by default (i.e. when \code{c_region_db} is omitted or
+    set to \code{"auto"}), \code{igblastn()} uses the local C-region db
     currently selected.
     See \code{?\link{use_c_region_db}} for how to select the local
     C-region db to use with \code{igblastn()}.
@@ -92,7 +92,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     coding frame start positions for the sequences in the J-region db,
     or \code{NULL}.
 
-    Note that by default (i.e. when \code{auxiliary_data} is omitted or
+    Note that, by default (i.e. when \code{auxiliary_data} is omitted or
     set to \code{"auto"}), \code{igblastn()} uses one of the auxiliary
     data files included in the IgBLAST installation used by \pkg{igblastr}.
     More precisely, \code{igblastn()} uses \code{get_igblast_auxiliary_data()}
@@ -132,7 +132,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     \code{NULL} (the default), or the path to the file where the
     \code{igblastn} \emph{standalone executable} should write its output.
 
-    Note that by default (i.e. when \code{out} is omitted or set
+    Note that, by default (i.e. when \code{out} is omitted or set
     to \code{NULL}), \code{igblastn()} instructs the \code{igblastn}
     \emph{standalone executable} to write its output to a temporary file.
   }
@@ -238,8 +238,8 @@ igblast_info()
 ## File 'catnap_bnabs.fasta' contains a small BCR sequencing data set
 ## made of 1000 heavy- and light-chains associated with bnAbs downloaded
 ## from the CATNAP database:
-catnap_bnabs <- system.file(package="igblastr", "extdata",
-                            "catnap_bnabs.fasta")
+catnap_bnabs <- system.file(package="igblastr",
+                            "extdata", "catnap_bnabs.fasta")
 
 ## Install Human germline db from IMGT (Perl required!):
 db_name <- install_IMGT_germline_db("202506-1", "Homo_sapiens", force=TRUE)
