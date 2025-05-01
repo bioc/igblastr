@@ -25,7 +25,9 @@ test_that("igblastn()", {
     if (.Platform$OS.type != "windows") {
         ## Call igblastn() on first 10 sequences in parallel using 4 workers.
         library(parallel)
-        res <- mclapply(1:10, function(i) igblastn(query[i]), mc.cores=4)
+        limit_cores <- isTRUE(as.logical(Sys.getenv("_R_CHECK_LIMIT_CORES_")))
+        mc.cores <- if (limit_cores) 2L else 4L
+        res <- mclapply(1:10, function(i) igblastn(query[i]), mc.cores=mc.cores)
         for (i in 1:10) {
             out_i <- res[[i]]
             expect_true(is_tibble(out_i))
