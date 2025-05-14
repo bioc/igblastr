@@ -1,12 +1,18 @@
+- Add functionality to install/use the updated internal and/or auxiliary
+  files that are sometimes made available at:
+    https://ftp.ncbi.nih.gov/blast/executables/igblast/release/patch/
+  See https://ncbi.github.io/igblast/cook/How-to-set-up.html for the details.
+
+- Add bibliography to vignette. See AuthoringRmdVignettes.Rmd vignette in
+  BiocStyle for how to do this.
+
 - Advertize igblastr once it's accepted:
   - Announce on various bioc-community Slack channels.
   - Announce on the FH-Data Slack (fhdata.slack.com) on channels
     #r-user-comm and #general.
+  - Announce on LinkedIn.
   - Try to get an entry in the next R Journal advertizing igblastr.
   - Bioinformatics accepts short articles introducing new software.
-
-- Add bibliography to vignette. See AuthoringRmdVignettes.Rmd vignette in
-  BiocStyle for how to do this.
 
 - IgBLAST is typically used in the field of immunology and immunogenetics
   but Bioconductor does not have biocViews terms for this. Request their

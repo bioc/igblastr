@@ -96,6 +96,20 @@ strslice <- function(x, width)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### interweave()
+###
+
+### 'x' and 'y' must be vectors or vector-like objects of the same length.
+### They must support c() and subsetting.
+interweave <- function(x, y)
+{
+    N <- length(x)
+    stopifnot(length(y) == N)
+    c(x, y)[S4Vectors:::make_XYZxyz_to_XxYyZz_subscript(N)]
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### align_vectors_by_names()
 ###
 
@@ -164,6 +178,14 @@ scrape_html_dir_index <- function(url, css="body", suffix=NULL)
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Miscellaneous stuff
 ###
+
+websiteIsUp <- function(url)
+{
+    if (!has_internet())
+        stop("no internet")
+    response <- try(HEAD(url, user_agent("igblastr")), silent=TRUE)
+    !inherits(response, "try-error")
+}
 
 urlExists <- function(url)
 {

@@ -60,15 +60,19 @@ parse_outfmt7(out_lines)
 \examples{
 if (!has_igblast()) install_igblast()
 
-## File 'catnap_bnabs.fasta' contains a small BCR sequencing data set
-## made of 1000 heavy- and light-chains associated with bnAbs downloaded
-## from the CATNAP database:
-catnap_bnabs <- system.file(package="igblastr",
-                            "extdata", "catnap_bnabs.fasta")
-query <- head(readDNAStringSet(catnap_bnabs), n=10)
+## Files 'heavy_sequences.fasta' and 'light_sequences.fasta' included
+## in igblastr contain 250 paired heavy- and light- chain sequences (125
+## sequences in each file) downloaded from OAS (the Observed Antibody
+## Space database):
+filenames <- paste0(c("heavy", "light"), "_sequences.fasta")
+query <- system.file(package="igblastr", "extdata", filenames)
 
-db_name <- install_IMGT_germline_db("202506-1", "Homo_sapiens", force=TRUE)
-use_germline_db(db_name)
+## Keep only the first 10 sequences from each file:
+query <- c(head(readDNAStringSet(query[[1L]]), n=10),
+           head(readDNAStringSet(query[[2L]]), n=10))
+
+## Select the germline and C-region dbs to use with igblastn():
+use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
 use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
 
 ## ---------------------------------------------------------------------
@@ -82,7 +86,7 @@ out_lines  # raw output
 out <- parse_outfmt7(out_lines)  # parse the output
 
 ## Output contains one record per query sequence:
-length(out$records)  # 10
+length(out$records)  # 20
 
 ## Each record can have 5 or 6 sections:
 ##   1. query_details

@@ -1,9 +1,8 @@
 test_that("igblastn()", {
     use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
     use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
-    catnap_bnabs <- system.file(package="igblastr",
-                                "extdata", "catnap_bnabs.fasta")
-    query <- readDNAStringSet(catnap_bnabs)
+    query <- system.file(package="igblastr", "extdata", "heavy_sequences.fasta")
+    query <- readDNAStringSet(query)
 
     ## Call igblastn() on first 10 sequences.
     out0 <- igblastn(head(query, n=10L))

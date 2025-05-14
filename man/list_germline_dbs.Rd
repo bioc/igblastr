@@ -157,21 +157,23 @@ list_germline_dbs(builtin.only=TRUE, names.only=TRUE)  # db names only
 ## Long listing:
 list_germline_dbs(long.listing=TRUE)
 
-## Install Mouse germline db from IMGT (Perl required!):
-install_IMGT_germline_db("202506-1", "Mus_musculus", force=TRUE)
+if (IMGT_is_up()) {
+  ## Install Mouse germline db from IMGT (Perl required!):
+  install_IMGT_germline_db("202506-1", "Mus_musculus", force=TRUE)
 
-list_germline_dbs()  # all germline dbs
+  list_germline_dbs()  # all germline dbs
 
-## Select germline db to use with igblastn():
-db_name <- "IMGT-202506-1.Mus_musculus.IGH+IGK+IGL"
-use_germline_db(db_name)  # select germline db to use
+  ## Select germline db to use with igblastn():
+  db_name <- "IMGT-202506-1.Mus_musculus.IGH+IGK+IGL"
+  use_germline_db(db_name)  # select germline db to use
 
-use_germline_db()  # get current selection
+  use_germline_db()  # get current selection
 
-## Load germline sequences:
-load_germline_db(db_name)
-load_germline_db(db_name, region_types="D")
-load_germline_db(db_name, region_types="DJ")
+  ## Load germline sequences:
+  load_germline_db(db_name)
+  load_germline_db(db_name, region_types="D")
+  load_germline_db(db_name, region_types="DJ")
+}
 }
 
 \keyword{utilities}

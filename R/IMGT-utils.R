@@ -6,8 +6,10 @@
 ###
 
 
+IMGT_URL <- "https://www.imgt.org"
+
 ### Do not remove the trailing slash.
-.VQUEST_DOWNLOAD_ROOT_URL <- "https://www.imgt.org/download/V-QUEST/"
+.VQUEST_DOWNLOAD_ROOT_URL <- paste0(IMGT_URL, "/download/V-QUEST/")
 
 ### .VQUEST_REFERENCE_DIRECTORY
 .VQUEST_REFERENCE_DIRECTORY <- "IMGT_V-QUEST_reference_directory"
@@ -16,8 +18,7 @@
     paste0(.VQUEST_DOWNLOAD_ROOT_URL, "IMGT_vquest_release.txt")
 
 ### Do not remove the trailing slash.
-.VQUEST_ARCHIVES_URL <-
-    paste0(.VQUEST_DOWNLOAD_ROOT_URL, "archives/")
+.VQUEST_ARCHIVES_URL <- paste0(.VQUEST_DOWNLOAD_ROOT_URL, "archives/")
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

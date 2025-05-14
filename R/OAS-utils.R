@@ -79,20 +79,18 @@ extract_sequences_from_paired_OAS_df <- function(df, add.prefix=FALSE)
     if (!isTRUEorFALSE(add.prefix))
         stop(wmsg("'add.prefix' must be TRUE or FALSE"))
     df <- .extract_paired_OAS_core_columns(df)
+    heavy_ids <- df$sequence_id_heavy
+    light_ids <- df$sequence_id_light
     ## Should never fail, unless OAS is doing something weird.
-    stopifnot(anyDuplicated(df$sequence_id_heavy) == 0L,
-              anyDuplicated(df$sequence_id_light) == 0L)
-    sequences <- sequence_ids <- character(2L * nrow(df))
-    sequences[c(TRUE, FALSE)] <- df$sequence_heavy
-    sequences[c(FALSE, TRUE)] <- df$sequence_light
-    sequence_ids[c(TRUE, FALSE)] <- df$sequence_id_heavy
-    sequence_ids[c(FALSE, TRUE)] <- df$sequence_id_light
-    ans <- DNAStringSet(setNames(sequences, sequence_ids))
+    stopifnot(anyDuplicated(heavy_ids) == 0L,
+              anyDuplicated(light_ids) == 0L)
     if (add.prefix) {
-        ans_names <- paste0(c("heavy", "light"), "_chain_", names(ans))
-        names(ans) <- ans_names
+        heavy_ids <- paste0("heavy_chain_", heavy_ids)
+        light_ids <- paste0("light_chain_", light_ids)
     }
-    ans
+    heavy_sequences <- DNAStringSet(setNames(df$sequence_heavy, heavy_ids))
+    light_sequences <- DNAStringSet(setNames(df$sequence_light, light_ids))
+    interweave(heavy_sequences, light_sequences)
 }
 
 

@@ -4,6 +4,13 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### IMGT_is_up()
+###
+
+IMGT_is_up <- function() websiteIsUp(IMGT_URL)
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### list_IMGT_releases()
 ###
 

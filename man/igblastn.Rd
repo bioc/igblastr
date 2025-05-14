@@ -27,9 +27,24 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
 
 \arguments{
   \item{query}{
-    A single string that is the path to the FASTA file (possibly
-    gz-compressed) containing the query sequences. Alternatively
-    \code{query} can be a named \link[Biostrings]{DNAStringSet} object.
+    A character vector containing the paths to the input files (FASTA),
+    or a \emph{named} \link[Biostrings]{DNAStringSet} object.
+
+    If a character vector, then \code{query} must be of length >= 1 and
+    each vector element must be the path to a FASTA file (possibly
+    gz-compressed). In the context of IgBLAST, the DNA sequences in the
+    FASTA files are referred to as \emph{the query sequences}, and the
+    sequence names found in the description lines of the FASTA records
+    are referred to as \emph{the query sequence ids}.
+
+    Note that the query sequences are typically (but not always) stored
+    in a single file, in which case \code{query} will be a single string.
+    If more than one FASTA file is specified via \code{query}, then
+    \code{igblastn()} will concatenate all the files together and pass
+    the resulting file to the \code{igblastn} \emph{standalone executable}.
+
+    If \code{query} is a \link[Biostrings]{DNAStringSet} object, then it
+    must have names on it. These will be considered the query sequence ids.
   }
   \item{outfmt}{
     One of \code{"AIRR"}, \code{3}, \code{4}, \code{7}, or \code{19}.
@@ -235,11 +250,12 @@ if (!has_igblast()) install_igblast()
 
 igblast_info()
 
-## File 'catnap_bnabs.fasta' contains a small BCR sequencing data set
-## made of 1000 heavy- and light-chains associated with bnAbs downloaded
-## from the CATNAP database:
-catnap_bnabs <- system.file(package="igblastr",
-                            "extdata", "catnap_bnabs.fasta")
+## Files 'heavy_sequences.fasta' and 'light_sequences.fasta' included
+## in igblastr contain 250 paired heavy- and light- chain sequences (125
+## sequences in each file) downloaded from OAS (the Observed Antibody
+## Space database):
+filenames <- paste0(c("heavy", "light"), "_sequences.fasta")
+query <- system.file(package="igblastr", "extdata", filenames)
 
 ## Install Human germline db from IMGT (Perl required!):
 db_name <- install_IMGT_germline_db("202506-1", "Homo_sapiens", force=TRUE)
@@ -255,7 +271,7 @@ use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
 ## ---------------------------------------------------------------------
 
 ## We don't specify the 'outfmt' argument so output will be in AIRR format.
-out <- igblastn(catnap_bnabs)
+out <- igblastn(query)
 out
 
 ## The result is a tibble with one row per query sequence:

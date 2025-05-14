@@ -34,29 +34,63 @@
     }
 }
 
-### Returns **absolute** path to FASTA file containing the query sequences.
+### Returns **absolute** path to FASTA file containing all the query sequences.
+### The path is returned in a string with possibly the 'safe_to_remove'
+### attribute on it indicating whether the caller can safely remove the
+### FASTA file once it's done using it.
+.normalize_character_query <- function(query)
+{
+    stopifnot(is.character(query))
+    if (length(query) == 0L)
+        stop(wmsg("character vector 'query' cannot be empty"))
+    if (anyNA(query))
+        stop(wmsg("character vector 'query' cannot contain NAs"))
+    paths <- character(length(query))
+    was_gz <- logical(length(query))
+    for (i in seq_along(query)) {
+        path <- file_path_as_absolute(query[[i]])
+        .check_query_seq_lengths(fasta.seqlengths(path))
+        if (has_suffix(path, ".gz")) {
+	    was_gz[[i]] <- TRUE
+            destpath <- tempfile("igblastn_query_", fileext=".fasta")
+            gunzip(path, destname=destpath, overwrite=TRUE, remove=FALSE)
+            path <- destpath
+        }
+        paths[[i]] <- path
+    }
+    if (length(query) == 1L) {
+        ## 'paths' and 'was_gz' have length 1.
+        if (was_gz)
+            attr(paths, "safe_to_remove") <- TRUE
+        return(paths)
+    }
+    path <- tempfile("igblastn_query_", fileext=".fasta")
+    concatenate_files(paths, out=path)
+    if (any(was_gz))
+        unlink(paths[was_gz])
+    attr(path, "safe_to_remove") <- TRUE
+    path
+}
+
+### Returns **absolute** path to FASTA file containing all the query sequences.
+### See comment for .normalize_character_query() above for the meaning
+### of the 'safe_to_remove' attribute.
 .normarg_query <- function(query)
 {
-    if (isSingleNonWhiteString(query)) {
-        path <- file_path_as_absolute(query)
-        if (has_suffix(path, ".gz")) {
-            destname <- tempfile("igblastn_query_", fileext=".fasta")
-            gunzip(path, destname=destname, overwrite=TRUE, remove=FALSE)
-            path <- destname
-        }
-        .check_query_seq_lengths(fasta.seqlengths(path))
-    } else if (is(query, "DNAStringSet")) {
+    if (is.character(query))
+        return(.normalize_character_query(query))
+    if (is(query, "DNAStringSet")) {
         if (is.null(names(query)))
             stop(wmsg("DNAStringSet object 'query' must have names"))
         .check_query_seq_lengths(setNames(width(query), names(query)))
         path <- tempfile("igblastn_query_", fileext=".fasta")
         writeXStringSet(query, path)
-    } else {
-        stop(wmsg("'query' must be a single (non-empty) string ",
-                  "that contains the path to the input file (FASTA) ",
-                  "or a named DNAStringSet object"))
+        attr(path, "safe_to_remove") <- TRUE
+        return(path)
     }
-    path
+    stop(wmsg("'query' must be a character vector that contains ",
+              "the paths to the input files (FASTA), or a named ",
+              "DNAStringSet object"))
 }
 
 
@@ -277,6 +311,8 @@ igblastn <- function(query, outfmt="AIRR",
 
     igblast_root <- get_igblast_root()
     query <- .normarg_query(query)
+    if (isTRUE(attr(query, "safe_to_remove")))
+        on.exit(unlink(query), add=TRUE)
     outfmt <- .normarg_outfmt(outfmt)
     outfmt_nb <- .extract_outfmt_nb(outfmt)
     cmd_args <- make_igblastn_command_line_args(

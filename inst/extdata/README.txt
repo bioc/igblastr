@@ -8,10 +8,10 @@ Content
 
 - README.txt: This file.
 
-- 1279067_1_Paired_sequences.fasta.gz: FASTA file containing 8437 pairs of
-  human antibody sequences (16874 individual sequences) retrieved from OAS (the
-  Observed Antibody Space database). The file was obtained programmatically
-  by running the following code in this folder on March 26, 2025:
+- 1279067_1_Paired_sequences.fasta.gz: FASTA file containing 8,437 pairs of
+  human antibody sequences (16,874 individual sequences) downloaded from OAS
+  (the Observed Antibody Space database). The file was obtained programmati-
+  cally by running the following code in this folder on March 26, 2025:
 
     library(igblastr)
     download_paired_OAS_units("Jaffe_2022", "1279067_1_Paired_All.csv.gz")
@@ -25,8 +25,23 @@ Content
   This file was obtained by downloading 1279067_1_Paired_All.json directly
   from https://opig.stats.ox.ac.uk/webapps/ngsdb/paired/Jaffe_2022/json/
 
-- catnap_bnabs.fasta: FASTA file containing 1000 heavy- and light-chains
-  associated with bnAbs downloaded from the CATNAP database.
+- heavy_sequences.fasta, light_sequences.fasta: Two FASTA files containing
+  a small random set of heavy- and light-chain sequences extracted from
+  1279067_1_Paired_sequences.fasta.gz, for use in the man page examples
+  and unit tests of igblastr. Each file contains 125 sequences and
+  the two files are paired, that is, the i-th heavy-chain sequence in
+  heavy_sequences.fasta is paired with the i-th light-chain sequence in
+  light_sequences.fasta. The two files were obtained programmatically with:
+
+    library(igblastr)
+    sequences <- readDNAStringSet("1279067_1_Paired_sequences.fasta.gz")
+    num_pairs <- length(sequences) %/% 2L
+    set.seed(2009)
+    pair_selection <- sample(num_pairs, 125)
+    heavy_sequences <- sequences[2L*pair_selection - 1L]
+    light_sequences <- sequences[2L*pair_selection]
+    writeXStringSet(heavy_sequences, "heavy_sequences.fasta")
+    writeXStringSet(light_sequences, "light_sequences.fasta")
 
 - constant_regions/: See README.txt in constant_regions/ subfolder.
 
