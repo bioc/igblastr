@@ -271,12 +271,16 @@ use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
 ## ---------------------------------------------------------------------
 
 ## We don't specify the 'outfmt' argument so output will be in AIRR format.
-out <- igblastn(query)
-out
+AIRR_df <- igblastn(query)
+AIRR_df
 
 ## The result is a tibble with one row per query sequence:
-class(out)
-dim(out)
+class(AIRR_df)
+dim(AIRR_df)
+
+## Note that this tibble can easily be converted to an ordinary data.frame
+## with 'as.data.frame()', or to a DataFrame with 'as(., "DataFrame")':
+as(AIRR_df, "DataFrame")
 
 ## ---------------------------------------------------------------------
 ## More examples

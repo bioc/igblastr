@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 29 April 2025"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 15 May 2025"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -275,15 +275,12 @@ Now, let's call `igblastn()`. Since we are only interested in the best
 alignment for each query sequence, we set `num_alignments_V` to 1. This
 may take up to around 3 min on a standard laptop:
 ```{r}
-out <- igblastn(query, num_alignments_V=1)
-```
-```{r, include=FALSE}
-#out <- readRDS(file.path("precomputed_results", "out.rds"))
+AIRR_df <- igblastn(query, num_alignments_V=1)
 ```
 
-By default, the output is a tibble in AIRR format:
+By default, the result is a tibble in AIRR format:
 ```{r}
-out
+AIRR_df
 ```
 
 See `?igblastn` for more information.
@@ -304,7 +301,7 @@ percent mutation across BCR sequences. Here we analyze the percent mutation
 in the V segments of each chain type (heavy, kappa, and lambda).
 Note that V percent mutation is 100 - v\_identity.
 ```{r}
-out |>
+AIRR_df |>
     ggplot(aes(locus, 100 - v_identity)) +
     theme_bw(base_size=14) +
     geom_point(position = position_jitter(width = 0.3), alpha = 0.1) +
@@ -317,8 +314,8 @@ Another common analysis is to investigate the distribution of germline
 genes (e.g., V genes). In this case, we typically stratify the analysis
 by locus or chain type.
 ```{r}
-plot_gene_dist <- function(out, loc) {
-    df_v_gene <- out |>
+plot_gene_dist <- function(AIRR_df, loc) {
+    df_v_gene <- AIRR_df |>
         filter(locus == loc) |>
         mutate(v_gene = sub("\\*[0-9]*", "", v_call)) |> # drop allele info
         group_by(v_gene) |>
@@ -334,21 +331,21 @@ plot_gene_dist <- function(out, loc) {
 }
 ```
 ```{r, fig.height=8}
-plot_gene_dist(out, "IGH")
+plot_gene_dist(AIRR_df, "IGH")
 ```
 ```{r, fig.height=5.9}
-plot_gene_dist(out, "IGK")
+plot_gene_dist(AIRR_df, "IGK")
 ```
 ```{r, fig.height=5.3}
-plot_gene_dist(out, "IGL")
+plot_gene_dist(AIRR_df, "IGL")
 ```
 
 A third category of analysis focuses on CDR3 sequences, including their
 lengths and motifs, which are often visualized using sequence logo plots.
 ```{r, fig.height=4.5}
-out$cdr3_aa_length <- nchar(out$cdr3_aa)
+AIRR_df$cdr3_aa_length <- nchar(AIRR_df$cdr3_aa)
 
-out |>
+AIRR_df |>
     group_by(locus, cdr3_aa_length) |>
     summarize(n = n(), .groups = "drop") |>
     ggplot(aes(cdr3_aa_length, n)) +
@@ -359,7 +356,7 @@ out |>
 ```
 
 ```{r}
-out |>
+AIRR_df |>
     filter(locus == "IGK", cdr3_aa_length == 9) |>
     pull(cdr3_aa) |>
     ggseqlogo(method = "probability") +
