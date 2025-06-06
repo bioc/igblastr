@@ -3,6 +3,14 @@
     https://ftp.ncbi.nih.gov/blast/executables/igblast/release/patch/
   See https://ncbi.github.io/igblast/cook/How-to-set-up.html for the details.
 
+- Documentation should mention the usage report feature implemented in
+  the NCBI BLAST+ and IgBLAST software, and provide the following
+  link https://www.ncbi.nlm.nih.gov/books/NBK569851/ for more
+  information about this feature.
+  Also document how to disable this feature, by setting environment
+  variable BLAST_USAGE_REPORT to false. This can be done from outside
+  R (persistent) or from within R (for the current session only).
+
 - Add bibliography to vignette. See AuthoringRmdVignettes.Rmd vignette in
   BiocStyle for how to do this.
 
@@ -13,10 +21,6 @@
   - Announce on LinkedIn.
   - Try to get an entry in the next R Journal advertizing igblastr.
   - Bioinformatics accepts short articles introducing new software.
-
-- IgBLAST is typically used in the field of immunology and immunogenetics
-  but Bioconductor does not have biocViews terms for this. Request their
-  addition.
 
 - Talk to Koshlan Mayer-Blackwell about using IgBLAST to analyze TCR
   sequences. Seems like none is using IgBLAST for that. Some people

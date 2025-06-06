@@ -1,5 +1,8 @@
-**igblastr** is an R package that provides functions to conveniently install
-and use a local IgBLAST installation from R.
+[<img src="https://www.bioconductor.org/images/logo/jpg/bioconductor_logo_rgb.jpg" width="200" align="right"/>](https://bioconductor.org/)
+
+**igblastr** is an R/Bioconductor package that provides functions to conveniently install and use a local IgBLAST installation from within R.
+
+See https://bioconductor.org/packages/igblastr for more information including how to install the release version of the package (please refrain from installing directly from GitHub).
 
 IgBLAST is described at https://pubmed.ncbi.nlm.nih.gov/23671333/
 
@@ -20,8 +23,7 @@ provide feedback, request features, etc...
 if (!require("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("remotes")
-BiocManager::install("HyrienLab/igblastr")
+BiocManager::install("igblastr")
 ```
 
 #### Load igblastr

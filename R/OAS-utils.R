@@ -118,6 +118,15 @@ list_paired_OAS_studies <- function(as.df=FALSE, recache=FALSE)
     listing
 }
 
+.make_OAS_study_csv_url <- function(study)
+{
+    study_url <- paste0(.PAIRED_OAS_URL, study)
+    url <- paste0(study_url, "/csv_paired/")
+    if (urlExists(url))
+        return(url)
+    paste0(study_url, "/csv/")
+}
+
 ### 'study' must be the name a subfolder in .PAIRED_OAS_URL e.g. "Jaffe_2022".
 ### If 'as.df' is TRUE then the listing is returned as a data.frame
 ### with 3 columns (Name, Last modified, Size) and 1 row per .csv.gz file.
@@ -131,9 +140,7 @@ list_paired_OAS_units <- function(study, as.df=FALSE, recache=FALSE)
         stop(wmsg("'recache' must be TRUE or FALSE"))
     listing <- .OAS_cache[[study]]
     if (is.null(listing) || recache) {
-        study_url <- paste0(.PAIRED_OAS_URL, study)
-        csv_subdir <- if (study == "Phad_2022") "csv_paired" else "csv"
-        url <- paste0(study_url, "/", csv_subdir, "/")
+        url <- .make_OAS_study_csv_url(study)
         listing <- scrape_html_dir_index(url, suffix=".csv.gz")
         .OAS_cache[[study]] <- listing
     }
@@ -157,7 +164,7 @@ download_paired_OAS_units <- function(study, units=NULL, destdir=".", ...)
             stop(wmsg("'units' must be NULL or a character vector"))
     }
     for (unit in units) {
-        url <- paste0(.PAIRED_OAS_URL, study, "/csv/", unit)
+        url <- paste0(.make_OAS_study_csv_url(study), unit)
         destfile <- file.path(destdir, unit)
         download.file(url, destfile, ...)
     }

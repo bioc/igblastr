@@ -1,13 +1,13 @@
 Package: igblastr
 Title: User-friendly R Wrapper to IgBLAST
 Description: The igblastr package provides functions to conveniently install
-	and use a local IgBLAST installation from R.
+	and use a local IgBLAST installation from within R.
 	IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>.
 	Online IgBLAST: <https://www.ncbi.nlm.nih.gov/igblast/>.
-biocViews: CellBiology, ImmunoOncology
+biocViews: Immunology, Immunogenetics, ImmunoOncology, CellBiology
 URL: https://bioconductor.org/packages/igblastr
 BugReports: https://github.com/HyrienLab/igblastr/issues
-Version: 0.99.5
+Version: 0.99.6
 License: Artistic-2.0
 Encoding: UTF-8
 Authors@R: c(

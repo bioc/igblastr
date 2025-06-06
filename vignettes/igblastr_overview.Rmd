@@ -36,7 +36,7 @@ of complementarity-determining regions (CDR1–CDR3) and framework
 regions (FR1–FR4); and both nucleotide and protein-level alignments.
 
 `r Biocpkg("igblastr")` is an R/Bioconductor package that provides functions
-to conveniently install and run a local IgBLAST installation from within R.
+to conveniently install and use a local IgBLAST installation from within R.
 The package is designed to make it as easy as possible to use IgBLAST in R
 by streamlining the installation of both IgBLAST and its associated germline
 databases. In particular, these installations can be performed with a single
