@@ -265,40 +265,6 @@ add_exe_suffix_on_Windows <- function(files, OS=get_OS_arch()[["OS"]])
     paste0(files, ".exe")
 }
 
-### To use on the result of 'try(system2(..., stdout=TRUE, stderr=TRUE))'.
-system_command_worked <- function(out)
-{
-    if (inherits(out, "try-error"))
-        return(FALSE)
-    status <- attr(out, "status")
-    is.null(status) || isTRUE(all.equal(status, 0L))
-}
-
-system_command_works <- function(command, args=character())
-{
-    out <- try(suppressWarnings(system2(command, args=args,
-                                        stdout=TRUE, stderr=TRUE)),
-               silent=TRUE)
-    system_command_worked(out)
-}
-
-has_perl <- function() system_command_works("perl", args="-v")
-
-system3 <- function(command, outfile, errfile, args=character())
-{
-    status <- system2(command, args=args, stdout=outfile, stderr=errfile)
-    if (file.exists(errfile)) {
-        errmsg <- readLines(errfile)
-        if (length(errmsg) != 0L)
-            stop(paste(errmsg, collapse="\n"))
-        unlink(errfile)
-    }
-    if (status != 0) {
-        cmd_in_1string <- paste(c(command, args), collapse=" ")
-        stop(wmsg("command '", cmd_in_1string, "' failed"))
-    }
-}
-
 display_local_file_in_browser <- function(file)
 {
     top_html <- tempfile()
@@ -318,4 +284,65 @@ display_data_frame_in_browser <- function(df)
     temp_url <- paste0("file://", temp_html)
     browseURL(temp_url)
 }
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### system2e(), system3(), and related utils
+###
+
+### Returns TRUE if environment variable BLAST_USAGE_REPORT is set to true,
+### and FALSE in **any** other case (i.e. if BLAST_USAGE_REPORT is not set,
+### or is set to false or gibberish).
+get_igblastr_usage_report_from_BLAST_USAGE_REPORT <- function()
+{
+    usage_report <- Sys.getenv("BLAST_USAGE_REPORT")
+    nzchar(usage_report) && isTRUE(as.logical(toupper(usage_report)))
+}
+
+system2e <- function(...)
+{
+    igblastr_usage_report <- getOption("igblastr_usage_report")
+    old_BLAST_USAGE_REPORT <- Sys.getenv("BLAST_USAGE_REPORT")
+    on.exit(Sys.setenv(BLAST_USAGE_REPORT=old_BLAST_USAGE_REPORT))
+    if (isTRUE(igblastr_usage_report)) {
+        Sys.setenv(BLAST_USAGE_REPORT="true")
+    } else {
+        Sys.setenv(BLAST_USAGE_REPORT="false")
+    }
+    system2(...)
+}
+
+### To use on the result of 'try(system2e(..., stdout=TRUE, stderr=TRUE))'.
+system_command_worked <- function(out)
+{
+    if (inherits(out, "try-error"))
+        return(FALSE)
+    status <- attr(out, "status")
+    is.null(status) || isTRUE(all.equal(status, 0L))
+}
+
+system_command_works <- function(command, args=character())
+{
+    out <- try(suppressWarnings(system2e(command, args=args,
+                                         stdout=TRUE, stderr=TRUE)),
+               silent=TRUE)
+    system_command_worked(out)
+}
+
+system3 <- function(command, outfile, errfile, args=character())
+{
+    status <- system2e(command, args=args, stdout=outfile, stderr=errfile)
+    if (file.exists(errfile)) {
+        errmsg <- readLines(errfile)
+        if (length(errmsg) != 0L)
+            stop(paste(errmsg, collapse="\n"))
+        unlink(errfile)
+    }
+    if (status != 0) {
+        cmd_in_1string <- paste(c(command, args), collapse=" ")
+        stop(wmsg("command '", cmd_in_1string, "' failed"))
+    }
+}
+
+has_perl <- function() system_command_works("perl", args="-v")
 

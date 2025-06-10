@@ -38,9 +38,7 @@
   The exact way to do this is OS-dependent e.g. on Linux and Mac you
   can define it in your user's \code{.profile} by adding the following
   line to it:
-  \preformatted{
-      export IGBLAST_ROOT="path/to/igblast_root"
-  }
+  \preformatted{    export IGBLAST_ROOT="path/to/igblast_root"}
 }
 
 \seealso{

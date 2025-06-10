@@ -69,8 +69,8 @@ normalize_igblast_organism <- function(organism)
     cmdpath <- get_igblast_exe(cmdname, igblast_root=igblast_root, check=FALSE)
     raw_version <- .IGBLAST_VERSION_cache[[cmdpath]]
     if (is.null(raw_version)) {
-        raw_version <- try(suppressWarnings(system2(cmdpath, "-version",
-                                                    stdout=TRUE, stderr=TRUE)),
+        raw_version <- try(suppressWarnings(system2e(cmdpath, "-version",
+                                                     stdout=TRUE, stderr=TRUE)),
                            silent=TRUE)
         if (!system_command_worked(raw_version))
             stop(wmsg("command '", cmdpath, " -version' failed"))

@@ -207,6 +207,19 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
   }
 }
 
+\note{
+  By default, the NCBI BLAST+ and IgBLAST programs will "call home" to
+  report usage when they run on a computer with internet access. See
+  \url{https://www.ncbi.nlm.nih.gov/books/NBK569851/} for the details.
+  This can induce a significant slowdown in some situations e.g. when
+  the \code{igblastn} \emph{standalone executable} is called in a loop
+  on a small set of query sequences at each iteration.
+
+  For this reason, the "call home" feature is disabled in \pkg{igblastr}
+  by default, unless environment variable BLAST_USAGE_REPORT is set to true.
+  See \code{?\link{igblastr_usage_report}} for more information.
+}
+
 \seealso{
   \itemize{
     \item IgBLAST is described at
@@ -238,6 +251,8 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
 
     \item \link[tibble]{tibble} objects implemented in the
           \pkg{tibble} package.
+
+    \item \link{igblastr_usage_report} to turn "Usage Reporting" on or off.
   }
 }
 
