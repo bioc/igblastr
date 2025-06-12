@@ -94,6 +94,19 @@ strslice <- function(x, width)
         character(1), USE.NAMES=FALSE)
 }
 
+check_seqlens <- function(seqlens, varname)
+{
+    stopifnot(is.integer(seqlens))
+    seqids <- names(seqlens)
+    stopifnot(!is.null(seqids))
+    empty_idx <- which(seqlens == 0L)
+    if (length(empty_idx) != 0L) {
+        in1string <- paste(seqids[empty_idx], collapse=", ")
+        stop(wmsg("the following sequences in '", varname, "' ",
+                  "are empty (showing seq ids): ", in1string))
+    }
+}
+
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### interweave()

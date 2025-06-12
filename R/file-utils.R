@@ -198,3 +198,48 @@ concatenate_files <- function(files, out=stdout(), n=50000L)
     }
 }
 
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### fasta_files_as_one_uncompressed_file()
+###
+
+### Returns **absolute** path to the **uncompressed** FASTA file
+### containing the sequences from all the input FASTA files.
+### The path is returned in a string with possibly the 'safe_to_remove'
+### attribute on it indicating whether the caller can safely remove the
+### FASTA file once it's done using it.
+fasta_files_as_one_uncompressed_file <- function(fasta_files, varname)
+{
+    stopifnot(is.character(fasta_files))
+    if (length(fasta_files) == 0L)
+        stop(wmsg("character vector '", varname, "' cannot be empty"))
+    if (anyNA(fasta_files))
+        stop(wmsg("character vector '", varname, "' cannot contain NAs"))
+    temp_file_pattern <- paste0(varname, "_")
+    paths <- character(length(fasta_files))
+    was_gz <- logical(length(fasta_files))
+    for (i in seq_along(fasta_files)) {
+        path <- file_path_as_absolute(fasta_files[[i]])
+        check_seqlens(fasta.seqlengths(path), varname)
+        if (has_suffix(path, ".gz")) {
+            was_gz[[i]] <- TRUE
+            destpath <- tempfile(temp_file_pattern, fileext=".fasta")
+            gunzip(path, destname=destpath, overwrite=TRUE, remove=FALSE)
+            path <- destpath
+        }
+        paths[[i]] <- path
+    }
+    if (length(fasta_files) == 1L) {
+        ## 'paths' and 'was_gz' have length 1.
+        if (was_gz)
+            attr(paths, "safe_to_remove") <- TRUE
+        return(paths)
+    }
+    path <- tempfile(temp_file_pattern, fileext=".fasta")
+    concatenate_files(paths, out=path)
+    if (any(was_gz))
+        unlink(paths[was_gz])
+    attr(path, "safe_to_remove") <- TRUE
+    path
+}
+

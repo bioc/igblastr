@@ -10,20 +10,40 @@
 ### .normarg_germline_db_X() and .normarg_c_region_db()
 ###
 
-### The igblastn executable expects a "region db path" for any of
-### its 'germline_db_[VDJ]' or 'c_region_db' argument. This is a path
-### that does NOT point to an existing file but has a dirname() part
-### that points to an existing directory.
-.normalize_region_db_path <- function(region_db_path, what)
+### The 'germline_db_[VDJ]' and 'c_region_db' arguments of the 'igblastn'
+### standalone executable must be "database names" or, more precisely,
+### paths to local "blast dbs".
+### Note that the path to a local "blast db" must be supplied as something
+### that **looks** like the path to a local file, except that, instead of
+### pointing to an existing file, it points to a collection of files that
+### makes up the "blast db". More precisely, the path to a local "blast db"
+### looks like this:
+###   1. Its dirname() part must point to the directory where the "blast db"
+###      is located.
+###   2. Its basename() part must be the name of an existing "blast db"
+###      located in the dirname() directory. This "blast db" consists of
+###      a collection of 10 binary files that were usually produced by
+###      the 'makeblastdb' standalone executable. All these files are
+###      expected to have a name of the form <bdb-name>.<suffix> where
+###      <bdb-name> is the name of the "blast db" and <suffix> a 3 letter
+###      suffix (see .BLASTDB_SUFFIXES in R/make_blastdbs.R for the list
+###      of all known suffixes).
+.normalize_bdb_path <- function(bdb_path, region_type)
 {
-    stopifnot(isSingleNonWhiteString(region_db_path))
-    if (file.exists(region_db_path))
-        stop(wmsg(region_db_path, ": not the path to a ", what))
-    dirpath <- dirname(region_db_path)
-    if (!dir.exists(dirpath))
-        stop(wmsg(dirpath, ": no such directory"))
-    dirpath <- file_path_as_absolute(dirpath)
-    file.path(dirpath, basename(region_db_path))
+    stopifnot(isSingleNonWhiteString(bdb_path))
+    if (dir.exists(bdb_path)) {
+        ## 'bdb_path' contains no "blast db" name so we default
+        ## to 'region_type' (i.e. V, D, J, or C) for the "blast db" name.
+        bdb_dirname <- bdb_path
+        bdb_name <- region_type
+    } else {
+        bdb_dirname <- dirname(bdb_path)
+        if (!dir.exists(bdb_dirname))
+            stop(wmsg(bdb_dirname, ": no such directory"))
+        bdb_name <- basename(bdb_path)
+    }
+    bdb_dirname <- file_path_as_absolute(bdb_dirname)
+    file.path(bdb_dirname, bdb_name)
 }
 
 .normarg_germline_db_X <- function(germline_db_X, region_type)
@@ -35,9 +55,9 @@
         stop(wmsg("'", argname, "' must be \"auto\" or a single string ",
                   "containing the path to a ", what))
     if (germline_db_X != "auto")
-        return(.normalize_region_db_path(germline_db_X, what))
+        return(.normalize_bdb_path(germline_db_X, region_type))
     db_name <- use_germline_db()  # cannot be ""
-    db_path <- get_germline_db_path(db_name)
+    db_path <- make_germline_db_path(db_name)
     file.path(db_path, region_type)
 }
 
@@ -50,11 +70,11 @@
         stop(wmsg("'c_region_db' must be \"auto\", NULL, or a single string ",
                   "containing the path to a ", what))
     if (c_region_db != "auto")
-        return(.normalize_region_db_path(c_region_db, what))
+        return(.normalize_bdb_path(c_region_db, "C"))
     db_name <- use_c_region_db()  # can be ""
     if (db_name == "")
         return(NULL)
-    db_path <- get_c_region_db_path(db_name)
+    db_path <- make_c_region_db_path(db_name)
     file.path(db_path, "C")
 }
 

@@ -44,7 +44,6 @@
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .get_c_region_dbs_path()
-### get_c_region_db_path()
 ###
 
 ### Returns path to C_REGION_DBS cache compartment (see R/cache-utils.R for
@@ -62,15 +61,6 @@
     if (!dir.exists(c_region_dbs_path) && init.path)
         .create_builtin_c_region_dbs(c_region_dbs_path)
     c_region_dbs_path
-}
-
-### Note that the returned path is NOT guaranteed to exist.
-### Not exported!
-get_c_region_db_path <- function(db_name)
-{
-    stopifnot(isSingleNonWhiteString(db_name), db_name != "USING")
-    c_region_dbs_path <- .get_c_region_dbs_path(TRUE)  # guaranteed to exist
-    file.path(c_region_dbs_path, db_name)              # NOT guaranteed to exist
 }
 
 
@@ -100,6 +90,44 @@ print.c_region_dbs_df <- function(x, ...)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .check_c_region_db_name()
+###
+
+.stop_on_invalid_c_region_db_name <- function(db_name)
+{
+    msg1 <- c("\"", db_name, "\" is not the name of a cached C-region db.")
+    msg2 <- c("Use list_c_region_dbs() to list the C-region dbs ",
+              "currently installed in the cache (see '?list_c_region_dbs').")
+    stop(wmsg(msg1), "\n  ", wmsg(msg2))
+}
+
+.check_c_region_db_name <- function(db_name)
+{
+    if (!isSingleNonWhiteString(db_name))
+        stop(wmsg("'db_name' must be a single (non-empty) string"))
+    all_db_names <- list_c_region_dbs(names.only=TRUE)
+    if (!(db_name %in% all_db_names))
+        .stop_on_invalid_c_region_db_name(db_name)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### make_c_region_db_path()
+###
+
+### Not exported!
+### Note that the returned path is NOT guaranteed to exist.
+make_c_region_db_path <- function(db_name)
+{
+    if (!isSingleNonWhiteString(db_name))
+        stop(wmsg("'db_name' must be a single (non-empty) string"))
+    stopifnot(db_name != "USING")
+    c_region_dbs_path <- .get_c_region_dbs_path(TRUE)  # guaranteed to exist
+    file.path(c_region_dbs_path, db_name)              # NOT guaranteed to exist
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### use_c_region_db()
 ###
 
@@ -114,14 +142,6 @@ print.c_region_dbs_df <- function(x, ...)
     basename(db_path)
 }
 
-.stop_on_invalid_c_region_db_name <- function(db_name)
-{
-    msg1 <- c("\"", db_name, "\" is not the name of a cached C-region db.")
-    msg2 <- c("Use list_c_region_dbs() to list the C-region dbs ",
-              "currently installed in the cache (see '?list_c_region_dbs').")
-    stop(wmsg(msg1), "\n  ", wmsg(msg2))
-}
-
 ### Passing 'db_name=""' will cancel the current selection.
 use_c_region_db <- function(db_name=NULL, verbose=FALSE)
 {
@@ -130,16 +150,12 @@ use_c_region_db <- function(db_name=NULL, verbose=FALSE)
     if (is.null(db_name))
         return(.get_c_region_db_in_use(verbose=verbose))
 
-    ## Check 'db_name'.
     if (!isSingleString(db_name))
         stop(wmsg("'db_name' must be a single string"))
 
     if (db_name != "") {
-        all_db_names <- list_c_region_dbs(names.only=TRUE)
-        if (!(db_name %in% all_db_names))
-            .stop_on_invalid_c_region_db_name(db_name)
-        c_region_dbs_path <- .get_c_region_dbs_path()  # guaranteed to exist
-        db_path <- file.path(c_region_dbs_path, db_name)
+        .check_c_region_db_name(db_name)
+        db_path <- make_c_region_db_path(db_name)
         make_blastdbs(db_path, verbose=verbose)
     }
     ## Returns 'db_name' invisibly.
@@ -154,9 +170,8 @@ use_c_region_db <- function(db_name=NULL, verbose=FALSE)
 ### Returns the C regions in a DNAStringSet object.
 load_c_region_db <- function(db_name)
 {
-    db_path <- get_c_region_db_path(db_name)
-    if (!dir.exists(db_path))
-        .stop_on_invalid_c_region_db_name(db_name)
+    .check_c_region_db_name(db_name)
+    db_path <- make_c_region_db_path(db_name)
     fasta_file <- get_db_fasta_file(db_path, "C")
     readDNAStringSet(fasta_file)
 }
@@ -173,7 +188,7 @@ clean_c_region_blastdbs <- function()
     if (dir.exists(c_region_dbs_path)) {
         all_db_names <- list_c_region_dbs(names.only=TRUE)
         for (db_name in all_db_names) {
-            db_path <- get_c_region_db_path(db_name)
+            db_path <- make_c_region_db_path(db_name)
             clean_blastdbs(db_path)
         }
     }

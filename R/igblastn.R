@@ -21,68 +21,17 @@
 ### .normarg_query()
 ###
 
-.check_query_seq_lengths <- function(seqlens)
-{
-    stopifnot(is.integer(seqlens))
-    seqids <- names(seqlens)
-    stopifnot(!is.null(seqids))
-    empty_idx <- which(seqlens == 0L)
-    if (length(empty_idx) != 0L) {
-        in1string <- paste(seqids[empty_idx], collapse=", ")
-        stop(wmsg("the following sequences in 'query' are empty ",
-                  "(showing seq ids): ", in1string))
-    }
-}
-
-### Returns **absolute** path to FASTA file containing all the query sequences.
-### The path is returned in a string with possibly the 'safe_to_remove'
-### attribute on it indicating whether the caller can safely remove the
-### FASTA file once it's done using it.
-.normalize_character_query <- function(query)
-{
-    stopifnot(is.character(query))
-    if (length(query) == 0L)
-        stop(wmsg("character vector 'query' cannot be empty"))
-    if (anyNA(query))
-        stop(wmsg("character vector 'query' cannot contain NAs"))
-    paths <- character(length(query))
-    was_gz <- logical(length(query))
-    for (i in seq_along(query)) {
-        path <- file_path_as_absolute(query[[i]])
-        .check_query_seq_lengths(fasta.seqlengths(path))
-        if (has_suffix(path, ".gz")) {
-	    was_gz[[i]] <- TRUE
-            destpath <- tempfile("igblastn_query_", fileext=".fasta")
-            gunzip(path, destname=destpath, overwrite=TRUE, remove=FALSE)
-            path <- destpath
-        }
-        paths[[i]] <- path
-    }
-    if (length(query) == 1L) {
-        ## 'paths' and 'was_gz' have length 1.
-        if (was_gz)
-            attr(paths, "safe_to_remove") <- TRUE
-        return(paths)
-    }
-    path <- tempfile("igblastn_query_", fileext=".fasta")
-    concatenate_files(paths, out=path)
-    if (any(was_gz))
-        unlink(paths[was_gz])
-    attr(path, "safe_to_remove") <- TRUE
-    path
-}
-
-### Returns **absolute** path to FASTA file containing all the query sequences.
-### See comment for .normalize_character_query() above for the meaning
-### of the 'safe_to_remove' attribute.
+### Returns **absolute** path to the **uncompressed** FASTA file containing
+### all the query sequences. See fasta_files_as_one_uncompressed_file() in
+### R/file-utils.R for the meaning of the 'safe_to_remove' attribute.
 .normarg_query <- function(query)
 {
     if (is.character(query))
-        return(.normalize_character_query(query))
+        return(fasta_files_as_one_uncompressed_file(query, "query"))
     if (is(query, "DNAStringSet")) {
         if (is.null(names(query)))
             stop(wmsg("DNAStringSet object 'query' must have names"))
-        .check_query_seq_lengths(setNames(width(query), names(query)))
+        check_seqlens(setNames(width(query), names(query)), "query")
         path <- tempfile("igblastn_query_", fileext=".fasta")
         writeXStringSet(query, path)
         attr(path, "safe_to_remove") <- TRUE

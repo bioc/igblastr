@@ -101,6 +101,11 @@ export(
     ## install_AIRR_germline_db.R:
     #install_AIRR_germline_db,
 
+    ## augment_germline_db.R:
+    augment_germline_db_V,
+    augment_germline_db_D,
+    augment_germline_db_J,
+
     ## outfmt7-utils.R:
     list_outfmt7_specifiers,
     parse_outfmt7,

@@ -126,14 +126,14 @@
 ###
 
 ### Remove the blastdb files produced by make_blastdbs().
-clean_blastdbs <- function(db_path)
+clean_blastdbs <- function(db_path, pattern="\\.fasta$")
 {
     if (!isSingleNonWhiteString(db_path))
         stop(wmsg("'db_path' must be a single (non-empty) string"))
     if (!dir.exists(db_path))
         stop(wmsg("directory ", db_path, " not found"))
 
-    fasta_files <- list.files(db_path, pattern="\\.fasta$")
+    fasta_files <- list.files(db_path, pattern=pattern)
     for (f in fasta_files)
         .clean_blastdb_files(db_path, f)
     remove_hidden_files(db_path)
@@ -147,9 +147,9 @@ clean_blastdbs <- function(db_path)
 ### Returns a named logical vector that indicates the status of all the FASTA
 ### files in the db. The vector has the file names on it. Status is TRUE if a
 ### file needs compilation and FALSE otherwise.
-.get_fasta_files_statuses <- function(db_path)
+.get_fasta_files_statuses <- function(db_path, pattern="\\.fasta$")
 {
-    fasta_files <- list.files(db_path, pattern="\\.fasta$")
+    fasta_files <- list.files(db_path, pattern=pattern)
     vapply(fasta_files,
         function(f) .fasta_file_needs_compilation(db_path, f),
         logical(1), USE.NAMES=TRUE)
@@ -159,7 +159,8 @@ clean_blastdbs <- function(db_path)
 ### very fast no-op if all the FASTA files in the db are already compiled.
 ### Returns the named logical vector obtained with .get_fasta_files_statuses()
 ### above.
-make_blastdbs <- function(db_path, force=FALSE, verbose=FALSE)
+make_blastdbs <- function(db_path, pattern="\\.fasta$",
+                          force=FALSE, verbose=FALSE)
 {
     if (!isSingleNonWhiteString(db_path))
         stop(wmsg("'db_path' must be a single (non-empty) string"))
@@ -170,12 +171,13 @@ make_blastdbs <- function(db_path, force=FALSE, verbose=FALSE)
     if (!isTRUEorFALSE(verbose))
         stop(wmsg("'verbose' must be TRUE or FALSE"))
 
-    statuses <- .get_fasta_files_statuses(db_path)
+    statuses <- .get_fasta_files_statuses(db_path, pattern=pattern)
     if (force || any(statuses)) {
         fasta_files <- names(statuses)
         if (!force)
             fasta_files <- fasta_files[statuses]
         makeblastdb_exe <- get_igblast_exe("makeblastdb", check=FALSE)
+        db_path <- file_path_as_absolute(db_path)
         oldwd <- getwd()
         setwd(db_path)
         on.exit(setwd(oldwd))

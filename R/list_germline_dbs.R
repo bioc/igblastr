@@ -53,9 +53,9 @@
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### get_germline_dbs_path()
-### get_germline_db_path()
 ###
 
+### Not exported!
 ### Returns path to GERMLINE_DBS cache compartment (see R/cache-utils.R for
 ### details about igblastr's cache organization).
 ### When 'init.path=TRUE':
@@ -71,14 +71,6 @@ get_germline_dbs_path <- function(init.path=FALSE)
     if (!dir.exists(germline_dbs_path) && init.path)
         .create_builtin_germline_dbs(germline_dbs_path)
     germline_dbs_path
-}
-
-### Note that the returned path is NOT guaranteed to exist.
-get_germline_db_path <- function(db_name)
-{
-    stopifnot(isSingleNonWhiteString(db_name), db_name != "USING")
-    germline_dbs_path <- get_germline_dbs_path(TRUE)  # guaranteed to exist
-    file.path(germline_dbs_path, db_name)             # NOT guaranteed to exist
 }
 
 
@@ -108,7 +100,7 @@ print.germline_dbs_df <- function(x, ...)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### use_germline_db()
+### check_germline_db_name()
 ###
 
 .stop_on_no_installed_germline_db_yet <- function()
@@ -118,6 +110,50 @@ print.germline_dbs_df <- function(x, ...)
              "install_IMGT_germline_db()) to install at least one.")
     stop(wmsg(msg))
 }
+
+.stop_on_invalid_germline_db_name <- function(db_name)
+{
+    msg1 <- c("\"", db_name, "\" is not the name of a cached germline db.")
+    msg2 <- c("Use list_germline_dbs() to list the germline dbs ",
+              "currently installed in the cache (see '?list_germline_dbs').")
+    msg3 <- c("Note that you can use any of the install_*_germline_db() ",
+              "function (e.g. install_IMGT_germline_db()) to install ",
+              "additional germline dbs in the cache.")
+    stop(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", wmsg(msg3))
+}
+
+### Not exported!
+check_germline_db_name <- function(db_name)
+{
+    if (!isSingleNonWhiteString(db_name))
+        stop(wmsg("'db_name' must be a single (non-empty) string"))
+    all_db_names <- list_germline_dbs(names.only=TRUE)
+    if (length(all_db_names) == 0L)
+        .stop_on_no_installed_germline_db_yet()
+    if (!(db_name %in% all_db_names))
+        .stop_on_invalid_germline_db_name(db_name)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### make_germline_db_path()
+###
+
+### Not exported!
+### Note that the returned path is NOT guaranteed to exist.
+make_germline_db_path <- function(db_name)
+{
+    if (!isSingleNonWhiteString(db_name))
+        stop(wmsg("'db_name' must be a single (non-empty) string"))
+    stopifnot(db_name != "USING")
+    germline_dbs_path <- get_germline_dbs_path(TRUE)  # guaranteed to exist
+    file.path(germline_dbs_path, db_name)             # NOT guaranteed to exist
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### use_germline_db()
+###
 
 .stop_on_no_selected_germline_db_yet <- function()
 {
@@ -141,17 +177,6 @@ print.germline_dbs_df <- function(x, ...)
     basename(db_path)
 }
 
-.stop_on_invalid_germline_db_name <- function(db_name)
-{
-    msg1 <- c("\"", db_name, "\" is not the name of a cached germline db.")
-    msg2 <- c("Use list_germline_dbs() to list the germline dbs ",
-              "currently installed in the cache (see '?list_germline_dbs').")
-    msg3 <- c("Note that you can use any of the install_*_germline_db() ",
-              "function (e.g. install_IMGT_germline_db()) to install ",
-              "additional germline dbs in the cache.")
-    stop(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", wmsg(msg3))
-}
-
 use_germline_db <- function(db_name=NULL, verbose=FALSE)
 {
     if (!isTRUEorFALSE(verbose))
@@ -159,17 +184,8 @@ use_germline_db <- function(db_name=NULL, verbose=FALSE)
     if (is.null(db_name))
         return(.get_germline_db_in_use(verbose=verbose))
 
-    ## Check 'db_name'.
-    if (!isSingleNonWhiteString(db_name))
-        stop(wmsg("'db_name' must be a single (non-empty) string"))
-
-    all_db_names <- list_germline_dbs(names.only=TRUE)
-    if (length(all_db_names) == 0L)
-        .stop_on_no_installed_germline_db_yet()
-    if (!(db_name %in% all_db_names))
-        .stop_on_invalid_germline_db_name(db_name)
-    germline_dbs_path <- get_germline_dbs_path()  # guaranteed to exist
-    db_path <- file.path(germline_dbs_path, db_name)
+    check_germline_db_name(db_name)
+    db_path <- make_germline_db_path(db_name)
     make_blastdbs(db_path, verbose=verbose)
 
     ## Returns 'db_name' invisibly.
@@ -202,9 +218,8 @@ use_germline_db <- function(db_name=NULL, verbose=FALSE)
 ### Returns the V, D, and/or J regions in a DNAStringSet object.
 load_germline_db <- function(db_name, region_types=NULL)
 {
-    db_path <- get_germline_db_path(db_name)
-    if (!dir.exists(db_path))
-        .stop_on_invalid_germline_db_name(db_name)
+    check_germline_db_name(db_name)
+    db_path <- make_germline_db_path(db_name)
     region_types <- .normarg_region_types(region_types)
     fasta_files <- vapply(region_types,
         function(region_type) get_db_fasta_file(db_path, region_type),
@@ -224,7 +239,7 @@ clean_germline_blastdbs <- function()
     if (dir.exists(germline_dbs_path)) {
         all_db_names <- list_germline_dbs(names.only=TRUE)
         for (db_name in all_db_names) {
-            db_path <- get_germline_db_path(db_name)
+            db_path <- make_germline_db_path(db_name)
             clean_blastdbs(db_path)
         }
     }
