@@ -17,7 +17,7 @@ set_igblast_root(version_or_path)
 
 \arguments{
   \item{version_or_path}{
-    A single string that contains either a version number (e.g.
+    A single string that is either a version number (e.g.
     \code{"1.22.0"}) or the path to an IgBLAST installation.
   }
 }

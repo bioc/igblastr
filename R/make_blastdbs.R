@@ -107,15 +107,18 @@
     if (verbose)
         message("Making ", region_type, " blast db in ", getwd(), "/ ... ",
                 appendLF=FALSE)
-    outfile <- .make_makeblastdb_output_filename(region_type)
     errfile <- .make_makeblastdb_errors_filename(region_type)
-    args <- c("-parse_seqids", "-dbtype nucl",
-              paste("-in", fasta_file), paste("-out", region_type))
-    system3(makeblastdb_exe, outfile, errfile, args=args)
 
     ## Record 'makeblastdb' version in local file.
     verfile <- .make_makeblastdb_version_filename(region_type)
     system3(makeblastdb_exe, verfile, errfile, args="-version")
+
+    ## Make the blast db.
+    outfile <- .make_makeblastdb_output_filename(region_type)
+    args <- c("-parse_seqids", "-dbtype nucl",
+              paste("-in", fasta_file), paste("-out", region_type))
+    system3(makeblastdb_exe, outfile, errfile, args=args)
+
     if (verbose)
         message("ok")
 }

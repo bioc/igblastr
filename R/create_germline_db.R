@@ -8,12 +8,13 @@
 
 ### A thin wrapper around create_region_db().
 .create_region_db2 <- function(fastadir, destdir, list_files_FUN,
-                               edit_fasta_script, region_type=VDJ_REGION_TYPES)
+                               edit_imgt_file_Perl_script,
+                               region_type=VDJ_REGION_TYPES)
 {
     region_type <- match.arg(region_type)
     fasta_files <- list_files_FUN(fastadir)
     create_region_db(fasta_files, destdir, region_type=region_type,
-                     edit_fasta_script=edit_fasta_script)
+                     edit_imgt_file_Perl_script=edit_imgt_file_Perl_script)
 }
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,7 +93,9 @@ create_germline_db <- function(fastadir, destdir, force=FALSE)
         stop(wmsg("'force' must be TRUE or FALSE"))
     if (dir.exists(destdir) && !force)
         .stop_on_existing_germline_db(destdir)
-    edit_fasta_script <- get_edit_imgt_file_Perl_script()
+    ## get_edit_imgt_file_Perl_script() also checks that Perl script
+    ## edit_imgt_file.pl is available and that Perl is functioning.
+    edit_imgt_file_Perl_script <- get_edit_imgt_file_Perl_script()
 
     ## We first create the db in a temporary folder, and, only if successful,
     ## replace 'destdir' with the temporary folder. Otherwise we destroy the
@@ -103,11 +106,11 @@ create_germline_db <- function(fastadir, destdir, force=FALSE)
     dir.create(tmp_destdir, recursive=TRUE)
     on.exit(nuke_file(tmp_destdir))
     .create_region_db2(fastadir, tmp_destdir, .list_V_fasta_files,
-                       edit_fasta_script, region_type="V")
+                       edit_imgt_file_Perl_script, region_type="V")
     .create_region_db2(fastadir, tmp_destdir, .list_D_fasta_files,
-                       edit_fasta_script, region_type="D")
+                       edit_imgt_file_Perl_script, region_type="D")
     .create_region_db2(fastadir, tmp_destdir, .list_J_fasta_files,
-                       edit_fasta_script, region_type="J")
+                       edit_imgt_file_Perl_script, region_type="J")
     rename_file(tmp_destdir, destdir, replace=TRUE)
 }
 

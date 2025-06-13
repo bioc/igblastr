@@ -5,19 +5,19 @@
 \alias{use_germline_db}
 \alias{load_germline_db}
 
-\title{List local germline dbs and select one to use with igblastn()}
+\title{List cached germline dbs and select one to use with igblastn()}
 
 \description{
-  Use \code{list_germline_dbs()} to list all the \emph{local germline dbs},
+  Use \code{list_germline_dbs()} to list all the \emph{cached germline dbs},
   that is, all the germline databases currently installed in \pkg{igblastr}'s
   persistent cache.
 
-  Use \code{use_germline_db()} to select the local germline db to use with
+  Use \code{use_germline_db()} to select the cached germline db to use with
   \code{\link{igblastn}()}. This choice will be remembered for the duration
   of the current R session but can be changed anytime.
 
   Use \code{load_germline_db()} to load the nucleotide sequences of the
-  gene regions stored in a local germline db.
+  gene regions stored in a cached germline db.
 }
 
 \usage{
@@ -30,13 +30,13 @@ load_germline_db(db_name, region_types=NULL)
 
 \arguments{
   \item{builtin.only}{
-    By default \code{list_germline_dbs()} returns the list of all local
+    By default \code{list_germline_dbs()} returns the list of all cached
     germline dbs, including built-in germline dbs. Set \code{builtin.only}
     to \code{TRUE} to return only the list of built-in germline dbs.
     Note that built-in dbs are prefixed with an underscore (\code{_}).
   }
   \item{names.only}{
-    By default \code{list_germline_dbs()} returns the list of local
+    By default \code{list_germline_dbs()} returns the list of cached
     germline dbs in a data.frame with one db per row. Set \code{names.only}
     to \code{TRUE} to return only the db names in a character vector.
   }
@@ -53,19 +53,19 @@ load_germline_db(db_name, region_types=NULL)
     For \code{use_germline_db()}:
 
     \code{NULL} or a single string specifying the name of the
-    local germline db to use. Use \code{list_germline_dbs()} to
-    list all the local germline dbs.
+    cached germline db to use. Use \code{list_germline_dbs()} to
+    list all the cached germline dbs.
 
     If set to \code{NULL} (the default), then
-    \code{use_germline_db()} returns the name of the local
+    \code{use_germline_db()} returns the name of the cached
     germline db that is currently in use, if any. Otherwise it
     raises an error.
 
     For \code{load_germline_db()}:
 
-    A single string specifying the name of the local germline db
+    A single string specifying the name of the cached germline db
     from which to load the V, D, and/or J regions. Use
-    \code{list_germline_dbs()} to list all the local germline dbs.
+    \code{list_germline_dbs()} to list all the cached germline dbs.
   }
   \item{verbose}{
     If set to \code{TRUE}, then \code{use_germline_db()} will display
@@ -82,27 +82,27 @@ load_germline_db(db_name, region_types=NULL)
 
 \details{
   The \pkg{igblastr} package provides a small set of utilities to
-  manage the local germline and C-region databases to use with
+  manage the cached germline and C-region databases to use with
   \code{\link{igblastn}()}.
 
   Terminology:
   \itemize{
-    \item A \emph{local germline db} contains the nucleotide sequences of
+    \item A \emph{cached germline db} contains the nucleotide sequences of
           the V, D, and J gene regions for a given organism.
-    \item A \emph{local C-region db} contains the nucleotide sequences of
+    \item A \emph{cached C-region db} contains the nucleotide sequences of
           the C regions (i.e. constant gene regions) for a given organism.
   }
 
-  This man page documents the basic utilities to operate on local
+  This man page documents the basic utilities to operate on cached
   germline dbs: \code{list_germline_dbs()}, \code{use_germline_db()},
   and \code{load_germline_db()}.
 
-  The basic utilities to operate on local C-region dbs are documented
+  The basic utilities to operate on cached C-region dbs are documented
   in the man page for \code{\link{list_c_region_dbs}}.
 }
 
 \value{
-  \code{list_germline_dbs()} returns the list of all local germline dbs
+  \code{list_germline_dbs()} returns the list of all cached germline dbs
   in a data.frame with one db per row (if \code{names.only} is \code{FALSE},
   which is the default), or in a character vector (if \code{names.only}
   is \code{TRUE}). Columns V, D, J in the data.frame indicate the number
@@ -116,7 +116,7 @@ load_germline_db(db_name, region_types=NULL)
   suffix of the db name.
 
   When called with no argument, \code{use_germline_db()} returns a single
-  string containing the name of the local germline db currently used by
+  string containing the name of the cached germline db currently used by
   \code{\link{igblastn}()} if any, or it raises an error if no germline db
   has been selected yet.
 
@@ -136,7 +136,7 @@ load_germline_db(db_name, region_types=NULL)
     \item \code{\link{install_IMGT_germline_db}} to install a germline db
           from IMGT.
 
-    \item \code{\link{use_c_region_db}} to select the local C-region db
+    \item \code{\link{use_c_region_db}} to select the cached C-region db
           to use with \code{igblastn()}.
 
     \item \link[Biostrings]{DNAStringSet} objects in the \pkg{Biostrings}

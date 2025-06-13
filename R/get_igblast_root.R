@@ -5,7 +5,7 @@
 ### Unless stated otherwise, nothing in this file is exported.
 
 
-.stop_on_invalid_igblast_root <- function(igblast_root, details)
+stop_on_invalid_igblast_root <- function(igblast_root, details)
 {
     msg <- c("Invalid IgBLAST installation at '", igblast_root, "'")
     obtained_via <- attr(igblast_root, "obtained_via")
@@ -33,12 +33,12 @@ get_igblast_root_subdir <- function(igblast_root, subdir)
     stopifnot(isSingleNonWhiteString(subdir))
     if (!dir.exists(igblast_root)) {
         details <- "Directory does not exist."
-        .stop_on_invalid_igblast_root(igblast_root, details)
+        stop_on_invalid_igblast_root(igblast_root, details)
     }
     path <- file.path(file_path_as_absolute(igblast_root), subdir)
     if (!dir.exists(path)) {
         details <- paste0("Directory has no '", subdir, "' subdirectory.")
-        .stop_on_invalid_igblast_root(igblast_root, details)
+        stop_on_invalid_igblast_root(igblast_root, details)
     }
     path
 }
@@ -64,11 +64,11 @@ get_igblast_exe <- function(cmdname=c("igblastn", "igblastp", "makeblastdb"),
     cmdpath <- file.path(bin_dir, filename)
     if (!file.exists(cmdpath) || dir.exists(cmdpath)) {
         details <- c("No '", filename, "' command in 'bin' subdirectory.")
-        .stop_on_invalid_igblast_root(igblast_root, details)
+        stop_on_invalid_igblast_root(igblast_root, details)
     }
     if (check && !system_command_works(cmdpath, "-version")) {
         details <- c("'", cmdpath, " -version' does not work.")
-        .stop_on_invalid_igblast_root(igblast_root, details)
+        stop_on_invalid_igblast_root(igblast_root, details)
     }
     cmdpath
 }
@@ -97,7 +97,7 @@ get_igblast_exe <- function(cmdname=c("igblastn", "igblastp", "makeblastdb"),
     for (file in required_bin_files) {
         if (!(file %in% bin_files)) {
             details <- c("No '", file, "' file in 'bin' subdirectory.")
-            .stop_on_invalid_igblast_root(igblast_root, details)
+            stop_on_invalid_igblast_root(igblast_root, details)
         }
     }
     ## We ignore the returned path. Only purpose is to check that the
@@ -320,26 +320,5 @@ set_igblast_root <- function(version_or_path)
     }
     stop(wmsg("'version_or_path' must be either a version number ",
               "(e.g. \"1.22.0\") or the path to an existing directory"))
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### get_edit_imgt_file_Perl_script()
-###
-
-get_edit_imgt_file_Perl_script <- function()
-{
-    igblast_root <- get_igblast_root()
-    bin_dir <- get_igblast_root_subdir(igblast_root, "bin")
-    script <- file.path(bin_dir, "edit_imgt_file.pl")
-    if (!file.exists(script)) {
-        details <- c("Perl script 'edit_imgt_file.pl' (needed ",
-                     "by install_IMGT_germline_db()) not found ",
-                     "in 'bin' subdirectory.")
-        .stop_on_invalid_igblast_root(igblast_root, details)
-    }
-    if (!has_perl())
-        stop(wmsg("Setup error: Perl not found."))
-    script
 }
 

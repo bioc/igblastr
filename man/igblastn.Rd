@@ -59,8 +59,8 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
 
     Note that, by default (i.e. when \code{germline_db_V} is omitted or set
     to \code{"auto"}), \code{igblastn()} uses the V-region db that belongs
-    to the local germline db currently selected.
-    See \code{?\link{use_germline_db}} for how to select the local
+    to the cached germline db currently selected.
+    See \code{?\link{use_germline_db}} for how to select the cached
     germline db to use with \code{igblastn()}.
   }
   \item{germline_db_D}{
@@ -89,17 +89,17 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
 
     Note that, by default (i.e. when \code{organism} is omitted or set
     to \code{"auto"}), \code{igblastn()} infers the organism from the
-    name of the local germline db currently selected.
-    See \code{?\link{use_germline_db}} for how to select the local
+    name of the cached germline db currently selected.
+    See \code{?\link{use_germline_db}} for how to select the cached
     germline db to use with \code{igblastn()}.
   }
   \item{c_region_db}{
     \code{"auto"} (the default), \code{NULL}, or the path to a C-region db.
 
     Note that, by default (i.e. when \code{c_region_db} is omitted or
-    set to \code{"auto"}), \code{igblastn()} uses the local C-region db
+    set to \code{"auto"}), \code{igblastn()} uses the cached C-region db
     currently selected.
-    See \code{?\link{use_c_region_db}} for how to select the local
+    See \code{?\link{use_c_region_db}} for how to select the cached
     C-region db to use with \code{igblastn()}.
   }
   \item{auxiliary_data}{
@@ -234,10 +234,10 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     \item \code{\link{install_IMGT_germline_db}} to install a germline db
           from IMGT.
 
-    \item \code{\link{use_germline_db}} to select the local germline db
+    \item \code{\link{use_germline_db}} to select the cached germline db
           to use with \code{igblastn()}.
 
-    \item \code{\link{use_c_region_db}} to select the local C-region db
+    \item \code{\link{use_c_region_db}} to select the cached C-region db
           to use with \code{igblastn()}.
 
     \item \code{\link{list_outfmt7_specifiers}} for how to customize

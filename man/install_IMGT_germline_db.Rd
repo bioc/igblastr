@@ -9,16 +9,10 @@
 
 \description{
   The \code{install_IMGT_germline_db()} function downloads IMGT/V-QUEST
-  germline sequences (FASTA files) from the IMGT website, and generates
-  a small local database with the sequences of the specified organism.
-  This local database can then be used later with \code{\link{igblastn}()}.
-
-  Note that \code{install_IMGT_germline_db()} generates the
-  local database by performing the instructions provided at
-  \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html}.
-  In particular, utility tool \emph{edit_imgt_file.pl} (Perl script
-  included in the IgBLAST installation) is invoked to process the
-  sequences. This means that Perl must be available on your machine.
+  germline sequences from the IMGT website for a given organism, and
+  store them in a local germline database. This local database gets
+  installed in \pkg{igblastr}'s persistent cache. It can then be used
+  later with \code{\link{igblastn}()}.
 }
 
 \usage{
@@ -62,8 +56,8 @@ IMGT_is_up()
 }
 
 \value{
-  \code{install_IMGT_germline_db()} returns the name to the local
-  germline db as an invisible string.
+  \code{install_IMGT_germline_db()} returns the name to the newly
+  installed germline db as an invisible string.
 
   \code{list_IMGT_releases()} returns the list of IMGT/V-QUEST releases
   in a character vector. The releases are sorted from newest to oldest
@@ -77,13 +71,22 @@ IMGT_is_up()
   or down.
 }
 
+\note{
+  Note that \code{install_IMGT_germline_db()} generates the
+  local database by performing the instructions provided at
+  \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html}.
+  In particular, utility tool \emph{edit_imgt_file.pl} (Perl script
+  included in the IgBLAST installation) is invoked to process the
+  sequences. This means that Perl must be available on your machine.
+}
+
 \seealso{
   \itemize{
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This
           is the main function in the \pkg{igblastr} package.
 
-    \item \code{\link{use_germline_db}} to select the local germline db
+    \item \code{\link{use_germline_db}} to select the cached germline db
           to use with \code{igblastn()}.
 
     \item The IMGT website: \url{https://www.imgt.org/}.
@@ -105,11 +108,11 @@ if (IMGT_is_up()) {
 
   list_IMGT_organisms("202506-1")
 
-  ## Download germline sequences from IMGT/V-QUEST 202506-1, and store
-  ## the IG sequences for Mouse in a local database:
+  ## Download Mouse germline sequences from IMGT/V-QUEST 202506-1, and
+  ## store them in a cached germline database:
   install_IMGT_germline_db("202506-1", organism="Mus musculus", force=TRUE)
 
-  ## List the local germline databases:
+  ## List the cached germline databases:
   list_germline_dbs()
 
   ## Tell igblastn() to use the newly installed germline db:

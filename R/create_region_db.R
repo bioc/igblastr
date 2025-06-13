@@ -59,7 +59,7 @@
 ### steps (1) and (2). Perl is required for step (2).
 ### Compilation (with makeblastdb) will happen at a latter time.
 .combine_and_edit_fasta_files <-
-    function(fasta_files, destdir, edit_fasta_script,
+    function(fasta_files, destdir, edit_imgt_file_Perl_script,
              region_type=c(VDJ_REGION_TYPES, "C"))
 {
     if (!is.character(fasta_files) || anyNA(fasta_files))
@@ -76,17 +76,10 @@
 
     ## (2a) Edit combined FASTA file with 'edit_imgt_file.pl'.
     final_fasta <- .get_final_fasta_path(destdir, region_type)
-    errfile <- file.path(destdir, paste0(region_type,
-                                         "_imgt_script_errors.txt"))
-
-    ## This does not work on Windows!
-    #system3(edit_fasta_script, final_fasta, errfile, args=combined_fasta)
-
-    ## Note that running the Perl script with 'script ...' runs on Linux
-    ## and Mac but not on Windows. So we run it with 'perl script ...'
-    ## instead. This seems to run everywhere.
-    system3("perl", final_fasta, errfile,
-            args=c(edit_fasta_script, combined_fasta))
+    errfile <- file.path(destdir,
+                         paste0(region_type, "_edit_imgt_file_errors.txt"))
+    edit_imgt_file(combined_fasta, final_fasta, errfile,
+                   Perl_script=edit_imgt_file_Perl_script)
     unlink(combined_fasta, force=TRUE)
 
     ## (2b) Mangle seq ids to make them unique if they're not.
@@ -115,7 +108,7 @@
 create_region_db <- function(fasta_files, destdir,
                              region_type=c(VDJ_REGION_TYPES, "C"),
                              overwrite=FALSE,
-                             edit_fasta_script=NULL)
+                             edit_imgt_file_Perl_script=NULL)
 {
     if (!is.character(fasta_files) || anyNA(fasta_files))
         stop(wmsg("'fasta_files' must be a character vector with no NAs"))
@@ -126,11 +119,15 @@ create_region_db <- function(fasta_files, destdir,
     region_type <- match.arg(region_type)
     if (!isTRUEorFALSE(overwrite))
         stop(wmsg("'overwrite' must be TRUE or FALSE"))
-    if (is.null(edit_fasta_script)) {
-        ## Check that Perl script edit_imgt_file.pl is available and
-        ## that Perl is functioning.
-        edit_fasta_script <- get_edit_imgt_file_Perl_script()
+    if (is.null(edit_imgt_file_Perl_script)) {
+        ## get_edit_imgt_file_Perl_script() also checks that Perl script
+        ## edit_imgt_file.pl is available and that Perl is functioning.
+        edit_imgt_file_Perl_script <- get_edit_imgt_file_Perl_script()
+    } else if (!isSingleNonWhiteString(edit_imgt_file_Perl_script)) {
+        stop(wmsg("'edit_imgt_file_Perl_script' must be NULL or ",
+                  "a single (non-empty) string"))
     }
+
     if (.region_db_already_exists(destdir, region_type)) {
         if (!overwrite)
             .stop_on_existing_region_db(destdir, region_type)
@@ -151,7 +148,7 @@ create_region_db <- function(fasta_files, destdir,
     ## Combine and edit the original fasta files.
     original_files <- list.files(original_fasta_dir, full.names=TRUE)
     .combine_and_edit_fasta_files(original_files, destdir,
-                                  edit_fasta_script,
+                                  edit_imgt_file_Perl_script,
                                   region_type=region_type)
 }
 

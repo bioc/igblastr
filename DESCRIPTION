@@ -39,6 +39,7 @@ Collate:
 	precompiled-igblast-utils.R
 	cache-utils.R
 	get_igblast_root.R
+	edit_imgt_file.R
 	igblast_info.R
 	auxiliary-data-utils.R
 	install_igblast.R

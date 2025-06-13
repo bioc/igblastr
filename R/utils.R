@@ -101,7 +101,10 @@ check_seqlens <- function(seqlens, varname)
     stopifnot(!is.null(seqids))
     empty_idx <- which(seqlens == 0L)
     if (length(empty_idx) != 0L) {
-        in1string <- paste(seqids[empty_idx], collapse=", ")
+        empty_seqids <- trimws2(seqids[empty_idx])
+        if (!all(nzchar(empty_seqids)))
+            stop(wmsg("some sequences in '", varname, "' are empty"))
+        in1string <- paste(empty_seqids, collapse=", ")
         stop(wmsg("the following sequences in '", varname, "' ",
                   "are empty (showing seq ids): ", in1string))
     }

@@ -46,7 +46,9 @@ create_c_region_db <- function(fastadir, destdir, force=FALSE)
         stop(wmsg("'force' must be TRUE or FALSE"))
     if (dir.exists(destdir) && !force)
         .stop_on_existing_c_region_db(destdir)
-    edit_fasta_script <- get_edit_imgt_file_Perl_script()
+    ## get_edit_imgt_file_Perl_script() also checks that Perl script
+    ## edit_imgt_file.pl is available and that Perl is functioning.
+    edit_imgt_file_Perl_script <- get_edit_imgt_file_Perl_script()
     fasta_files <- .list_C_fasta_files(fastadir)
     fasta_files <- file.path(fastadir, fasta_files)
 
@@ -59,7 +61,7 @@ create_c_region_db <- function(fastadir, destdir, force=FALSE)
     dir.create(tmp_destdir, recursive=TRUE)
     on.exit(nuke_file(tmp_destdir))
     create_region_db(fasta_files, tmp_destdir, region_type="C",
-                     edit_fasta_script=edit_fasta_script)
+                     edit_imgt_file_Perl_script=edit_imgt_file_Perl_script)
     rename_file(tmp_destdir, destdir, replace=TRUE)
 }
 

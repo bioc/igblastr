@@ -31,7 +31,7 @@ has_igblast()
 
 \arguments{
   \item{igblast_root}{
-    A single string that contains the path to an IgBLAST installation.
+    A single string that is the path to an IgBLAST installation.
     By default \code{igblast_root} is set to \code{get_igblast_root()},
     which is the path to the IgBLAST installation used by the \pkg{igblastr}
     package. See \code{?\link{get_igblast_root}} for more information.

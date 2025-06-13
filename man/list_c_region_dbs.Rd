@@ -5,19 +5,19 @@
 \alias{use_c_region_db}
 \alias{load_c_region_db}
 
-\title{List local C-region dbs and select one to use with igblastn()}
+\title{List cached C-region dbs and select one to use with igblastn()}
 
 \description{
-  Use \code{list_c_region_dbs()} to list all the \emph{local C-region dbs},
+  Use \code{list_c_region_dbs()} to list all the \emph{cached C-region dbs},
   that is, all the C-region databases currently installed in \pkg{igblastr}'s
   persistent cache.
 
-  Use \code{use_c_region_db()} to select the local C-region db to use with
+  Use \code{use_c_region_db()} to select the cached C-region db to use with
   \code{\link{igblastn}()}. This choice will be remembered for the duration
   of the current R session but can be changed anytime.
 
   Use \code{load_c_region_db()} to load the nucleotide sequences of the
-  gene regions stored in a local C-region db.
+  gene regions stored in a cached C-region db.
 }
 
 \usage{
@@ -30,13 +30,13 @@ load_c_region_db(db_name)
 
 \arguments{
   \item{builtin.only}{
-    By default \code{list_c_region_dbs()} returns the list of all local
+    By default \code{list_c_region_dbs()} returns the list of all cached
     C-region dbs, including built-in C-region dbs. Set \code{builtin.only}
     to \code{TRUE} to return only the list of built-in C-region dbs.
     Note that built-in dbs are prefixed with an underscore (\code{_}).
   }
   \item{names.only}{
-    By default \code{list_c_region_dbs()} returns the list of local
+    By default \code{list_c_region_dbs()} returns the list of cached
     C-region dbs in a data.frame with one db per row. Set \code{names.only}
     to \code{TRUE} to return only the db names in a character vector.
   }
@@ -52,11 +52,11 @@ load_c_region_db(db_name)
     For \code{use_c_region_db()}:
 
     \code{NULL} or a single string specifying the name of the
-    local C-region db to use. Use \code{list_c_region_dbs()} to
-    list all the local C-region dbs.
+    cached C-region db to use. Use \code{list_c_region_dbs()} to
+    list all the cached C-region dbs.
 
     If set to \code{NULL} (the default), then
-    \code{use_c_region_db()} returns the name of the local
+    \code{use_c_region_db()} returns the name of the cached
     C-region db that is currently in use, if any. Otherwise it
     returns the empty string (\code{""}).
 
@@ -65,9 +65,9 @@ load_c_region_db(db_name)
 
     For \code{load_c_region_db()}:
 
-    A single string specifying the name of the local C-region db
+    A single string specifying the name of the cached C-region db
     from which to load the gene regions. Use \code{list_c_region_dbs()}
-    to list all the local C-region dbs.
+    to list all the cached C-region dbs.
   }
   \item{verbose}{
     If set to \code{TRUE}, then \code{use_c_region_db()} will display
@@ -77,27 +77,27 @@ load_c_region_db(db_name)
 
 \details{
   The \pkg{igblastr} package provides a small set of utilities to
-  manage the local germline and C-region databases to use with
+  manage the cached germline and C-region databases to use with
   \code{\link{igblastn}()}.
 
   Terminology:
   \itemize{
-    \item A \emph{local germline db} contains the nucleotide sequences of
+    \item A \emph{cached germline db} contains the nucleotide sequences of
           the V, D, and J gene regions for a given organism.
-    \item A \emph{local C-region db} contains the nucleotide sequences of
+    \item A \emph{cached C-region db} contains the nucleotide sequences of
           the C regions (i.e. constant gene regions) for a given organism.
   }
 
-  This man page documents the basic utilities to operate on local
+  This man page documents the basic utilities to operate on cached
   C-region dbs: \code{list_c_region_dbs()}, \code{use_c_region_db()},
   and \code{load_c_region_db()}.
 
-  The basic utilities to operate on local germline dbs are documented
+  The basic utilities to operate on cached germline dbs are documented
   in the man page for \code{\link{list_germline_dbs}}.
 }
 
 \value{
-  \code{list_c_region_dbs()} returns the list of all local C-region dbs
+  \code{list_c_region_dbs()} returns the list of all cached C-region dbs
   in a data.frame with one db per row (if \code{names.only} is \code{FALSE},
   which is the default), or in a character vector (if \code{names.only}
   is \code{TRUE}). Column C in the data.frame indicates the number of
@@ -110,7 +110,7 @@ load_c_region_db(db_name)
   suffix of the db name.
 
   When called with no argument, \code{use_c_region_db()} returns a single
-  string containing the name of the local C-region db currently used by
+  string containing the name of the cached C-region db currently used by
   \code{\link{igblastn}()} if any, or the empty string (\code{""}) if
   \code{\link{igblastn}()} is not using any C-region db.
 
@@ -127,7 +127,7 @@ load_c_region_db(db_name)
           \emph{standalone executable} included in IgBLAST from R. This
           is the main function in the \pkg{igblastr} package.
 
-    \item \code{\link{use_germline_db}} to select the local germline db
+    \item \code{\link{use_germline_db}} to select the cached germline db
           to use with \code{igblastn()}.
 
     \item \link[Biostrings]{DNAStringSet} objects in the \pkg{Biostrings}

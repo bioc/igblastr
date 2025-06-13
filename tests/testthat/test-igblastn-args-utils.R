@@ -24,7 +24,7 @@ test_that("make_igblastn_command_line_args()", {
     expect_identical(names(cmd_args), CORE_ARGNAMES)
 
     ## For this test we're not specifying any of the 'germline_db_[VDJ]'
-    ## arguments so we need to select a local germline db. Once we do
+    ## arguments so we need to select a cached germline db. Once we do
     ## this, we don't need to specify 'organism' either.
     db_name <- "_AIRR.human.IGH+IGK+IGL.202501"
     use_germline_db(db_name)

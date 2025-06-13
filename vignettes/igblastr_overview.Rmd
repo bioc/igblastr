@@ -189,9 +189,9 @@ use_germline_db("IMGT-202506-1.Homo_sapiens.IGH+IGK+IGL")
 ```
 See `?use_germline_db` for more information.
 
-## Display the full list of local germline dbs
+## Display the full list of cached germline dbs
 
-To see the full list of local germline dbs:
+To see the full list of cached germline dbs:
 ```{r}
 list_germline_dbs()
 ```

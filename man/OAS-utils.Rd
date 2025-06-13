@@ -45,7 +45,7 @@ extract_sequences_from_paired_OAS_units(dir=".", pattern="\\\\.csv\\\\.gz$")
 
 \arguments{
   \item{file}{
-    A single string containing the path to an \emph{OAS unit file}.
+    A single string that is the path to an \emph{OAS unit file}.
   }
   \item{skip}{
     The number of lines of the data file to skip before beginning to read data.

@@ -316,7 +316,7 @@ make_igblastn_command_line_args <-
     stopifnot(isSingleNonWhiteString(query),
               isSingleNonWhiteString(outfmt))
 
-    ## It will only make sense to infer the organism from the local
+    ## It will only make sense to infer the organism from the cached
     ## germline db returned by use_germline_db() if the user didn't
     ## supply all the germline_db_X arguments, that is, if at least
     ## one of them is identical to "auto".
