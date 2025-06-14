@@ -23,9 +23,10 @@ augment_germline_db_J(db_name, novel_alleles, destdir=".", overwrite=FALSE)
     contains the set of gene alleles to augment.
     Use \code{\link{list_germline_dbs}()} to list the cached germline dbs.
 
-    Depending on the function used (i.e. \code{augment_germline_db_V()},
-    \code{augment_germline_db_D()}, or \code{augment_germline_db_J()}),
-    the set of alleles to augment is the alleles from the V, D, or J region.
+    The exact function used (i.e. \code{augment_germline_db_V()},
+    \code{augment_germline_db_D()}, or \code{augment_germline_db_J()})
+    determines the set of alleles to augment (i.e. alleles from the V, D,
+    or J region).
   }
   \item{novel_alleles}{
     A single string that is the path to a FASTA file (possibly gz-compressed)
@@ -66,6 +67,51 @@ augment_germline_db_J(db_name, novel_alleles, destdir=".", overwrite=FALSE)
 \examples{
 if (!has_igblast()) install_igblast()
 
+query <- system.file(package="igblastr", "extdata",
+                     "heavy_sequences.fasta")
+
+use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
+
+## ---------------------------------------------------------------------
+## Use "known" human germline db from AIRR
+## ---------------------------------------------------------------------
+
+use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
+
+AIRR_df <- igblastn(query)
+
+## ---------------------------------------------------------------------
+## Add novel V alleles
+## ---------------------------------------------------------------------
+
+## 'fake_human_V_alleles.fasta' contains made-up novel alleles:
+## - 2 novel alleles for gene IGHV1-8: IGHV1-8*fake1, IGHV1-8*fake2
+## - 1 novel allele for gene IGHV4-61: IGHV4-61*fake
+my_novel_V_alleles <- system.file(package="igblastr", "extdata",
+                                  "novel_germline_alleles",
+                                  "fake_human_V_alleles.fasta")
+destdir <- tempdir()
+augment_germline_db_V("_AIRR.human.IGH+IGK+IGL.202501",
+                      my_novel_V_alleles,
+                      destdir=destdir)
+
+AIRR_df2 <- igblastn(query, germline_db_V=destdir)
+
+## ---------------------------------------------------------------------
+## Compare 'AIRR_df' with 'AIRR_df2'
+## ---------------------------------------------------------------------
+
+## Index of rows where "v_call" has changed between 'AIRR_df'
+## and 'AIRR_df2':
+idx <- which(AIRR_df$v_call != AIRR_df2$v_call)
+idx  # 2 rows
+
+AIRR_df[idx, c("v_call", "v_cigar", "v_identity")]
+
+AIRR_df2[idx, c("v_call", "v_cigar", "v_identity")]
+
+## Besides these 2 rows, all the other rows are the same:
+stopifnot(all.equal(AIRR_df[-idx, ], AIRR_df2[-idx, ]))
 }
 
 \keyword{utilities}

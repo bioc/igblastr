@@ -10,7 +10,7 @@
 \description{
   The \code{install_IMGT_germline_db()} function downloads IMGT/V-QUEST
   germline sequences from the IMGT website for a given organism, and
-  store them in a local germline database. This local database gets
+  stores them in a local germline database. This local database gets
   installed in \pkg{igblastr}'s persistent cache. It can then be used
   later with \code{\link{igblastn}()}.
 }
@@ -72,9 +72,10 @@ IMGT_is_up()
 }
 
 \note{
-  Note that \code{install_IMGT_germline_db()} generates the
-  local database by performing the instructions provided at
+  \code{install_IMGT_germline_db()} generates the local
+  database by performing the instructions provided at
   \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html}.
+
   In particular, utility tool \emph{edit_imgt_file.pl} (Perl script
   included in the IgBLAST installation) is invoked to process the
   sequences. This means that Perl must be available on your machine.

@@ -243,16 +243,19 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     \item \code{\link{list_outfmt7_specifiers}} for how to customize
           output format 7.
 
-    \item \code{\link{list_igblast_organisms}()} to list the organisms
+    \item \code{\link{list_igblast_organisms}} to list the organisms
           supported by IgBLAST.
+
+    \item \code{\link{augment_germline_db}} to add novel gene alleles to
+          a germline db.
+
+    \item \link{igblastr_usage_report} to turn "Usage Reporting" on or off.
 
     \item \link[Biostrings]{DNAStringSet} objects implemented in the
           \pkg{Biostrings} package.
 
     \item \link[tibble]{tibble} objects implemented in the
           \pkg{tibble} package.
-
-    \item \link{igblastr_usage_report} to turn "Usage Reporting" on or off.
   }
 }
 

@@ -37,17 +37,23 @@ edit_imgt_file <- function(infasta, outfasta, errfile=NULL, Perl_script=NULL)
 {
     if (!isSingleNonWhiteString(infasta))
         stop(wmsg("'infasta' must be a single (non-empty) string"))
+    infasta <- path.expand(infasta)
     if (!isSingleNonWhiteString(outfasta))
         stop(wmsg("'outfasta' must be a single (non-empty) string"))
+    outfasta <- path.expand(outfasta)
     if (is.null(errfile)) {
         errfile <- tempfile("edit_imgt_file_errors", fileext=".txt")
         on.exit(unlink(errfile))
-    } else if (!isSingleNonWhiteString(errfile)) {
+    } else if (isSingleNonWhiteString(errfile)) {
+        errfile <- path.expand(errfile)
+    } else {
         stop(wmsg("'errfile' must be NULL or a single (non-empty) string"))
     }
     if (is.null(Perl_script)) {
         Perl_script <- get_edit_imgt_file_Perl_script()
-    } else if (!isSingleNonWhiteString(Perl_script)) {
+    } else if (isSingleNonWhiteString(Perl_script)) {
+        Perl_script <- path.expand(Perl_script)
+    } else {
         stop(wmsg("'Perl_script' must be NULL or a single (non-empty) string"))
     }
 

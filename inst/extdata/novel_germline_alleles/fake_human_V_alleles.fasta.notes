@@ -1,0 +1,56 @@
+Gene IGHV1-8
+============
+
+Known germline alleles:
+
+- 3 known alleles: IGHV1-8*01, IGHV1-8*02, IGHV1-8*03
+- Common length: 296 nucleotides
+- Nucleotide positions where differences are found: 93, 210
+
+    pos            30  93  210
+    ----------     --  --  ---
+    IGHV1-8*01      G   T    G
+    IGHV1-8*02      G   C    G
+    IGHV1-8*03      G   C    T
+
+Made-up germline alleles:
+
+- 2 made-up novel alleles: IGHV1-8*fake1, IGHV1-8*fake2
+- Common length: 296 nucleotides
+- They differ from alleles *01, *02, *03 at positions 30, 93 and/or 210:
+
+    pos            30  93  210
+    -------------  --  --  ---
+    IGHV1-8*fake1   A   C    G
+    IGHV1-8*fake2   A   T    G
+
+
+Gene IGHV4-61
+=============
+
+Known germline alleles:
+
+- 13 known alleles reported by IMGT and AIRR.
+
+- The 5 known alleles reported by AIRR are:
+    o IGHV4-61*01, IGHV4-61*02: 299 nucleotides
+    o IGHV4-61*10, IGHV4-61*11, IGHV4-61*i04: 298 nucleotides
+
+- Nucleotide positions where differences are found: 38, 45-46, 85, 127, 129,
+  154-155, 163-164, 213, 267, 270, 299
+
+  pos           38  45-46  85  127  129  154-155  163-164  213  267  270  299
+  ------------  --  -----  --  ---  ---  -------  -------  ---  ---  ---  ---
+  IGHV4-61*01    A     GG   G    C    A       TA       TA    A    T    G    A
+  IGHV4-61*02    A     AC   A    G    C       CG       AC    A    C    A    A
+  IGHV4-61*10    A     GG   G    G    C       TA       TA    A    T    G    -
+  IGHV4-61*11    A     AC   A    G    C       CG       AC    G    C    A    -
+  IGHV4-61*i04   G     GG   G    C    A       TA       TA    A    T    G    -
+
+Made-up germline allele:
+
+- 1 made-up novel allele: IGHV4-61*fake
+- Length: 302 nucleotides
+- Same as IGHV4-61*02 but with 3 nucleotides (CAT) inserted between
+  positions 11 and 12.
+
