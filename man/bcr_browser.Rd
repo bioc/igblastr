@@ -9,11 +9,13 @@
   returned by \code{\link{igblastn}()} in the browser.
   For each sequence, the V, D, and J segments are shown as well as
   the FWR1-4 and CDR1-3 regions.
+  Additionally, the C segments are shown if the C-region information
+  is available.
 }
 
 \usage{
 bcr_browser(AIRR_df, dna.coloring=TRUE,
-            Vcolor="#FFDDD2", Dcolor="#CFC", Jcolor="#CEF",
+            Vcolor="#FFDDD2", Dcolor="#CFC", Jcolor="#CEF", Ccolor="#EEC",
             FWRcolor="#C9D", CDRcolor="#EE4")
 }
 
@@ -30,9 +32,10 @@ bcr_browser(AIRR_df, dna.coloring=TRUE,
     Whether the nucleotides in the BCR sequences (\code{sequence} column
     in \code{AIRR_df}) should be colored or not.
   }
-  \item{Vcolor, Dcolor, Jcolor}{
-    The background colors of the V, D, and J segments of the BCR sequences
-    sequences.
+  \item{Vcolor, Dcolor, Jcolor, Ccolor}{
+    The background colors of the V, D, J, and C segments of the BCR
+    sequences. Note that the C segments are shown only if \code{AIRR_df}
+    contains C-region information.
   }
   \item{FWRcolor, CDRcolor}{
     The background colors of the Framework Regions (FWR1-4) and
@@ -65,9 +68,22 @@ if (!has_igblast()) install_igblast()
 query <- system.file(package="igblastr", "extdata",
                      "heavy_sequences.fasta")
 use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
-AIRR_df <- igblastn(query)
 
+## ---------------------------------------------------------------------
+## With C regions
+## ---------------------------------------------------------------------
+
+use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
+AIRR_df <- igblastn(query)
 bcr_browser(AIRR_df)
+
+## ---------------------------------------------------------------------
+## No C regions
+## ---------------------------------------------------------------------
+
+use_c_region_db("")
+AIRR_df2 <- igblastn(query)
+bcr_browser(AIRR_df2)
 }
 
 \keyword{utilities}

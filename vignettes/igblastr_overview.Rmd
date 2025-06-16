@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 15 May 2025"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 16 June 2025"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -283,7 +283,11 @@ By default, the result is a tibble in AIRR format:
 AIRR_df
 ```
 
-See `?igblastn` for more information.
+You can call `bcr_browser()` on `AIRR_df` to vizualize the annotated
+sequences in the browser. For each sequence, the V, D, J, and C segments
+will be shown as well as the FWR1-4 and CDR1-3 regions.
+
+See `?igblastn` and `?bcr_browser` for more information.
 
 
 # Downstream analysis examples
