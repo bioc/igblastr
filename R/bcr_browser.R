@@ -102,7 +102,7 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .make_VDJCblocks_line
+### .make_dna_line()
 ###
 
 ### Extract and check v_, d_, j_, c_ columns of interest.
@@ -164,74 +164,6 @@
     COI
 }
 
-.make_VDJCblocks_line <-
-    function(AIRR_df, Vcolor="#FFDDD2", Dcolor="#CFC", Jcolor="#CEF",
-                      Ccolor="#EEC")
-{
-    stopifnot(isSingleNonWhiteString(Vcolor),
-              isSingleNonWhiteString(Dcolor),
-              isSingleNonWhiteString(Jcolor))
-
-    COI <- .extract_vdjc_COI(AIRR_df)
-    has_no_D <- COI$has_no_D
-    has_no_C <- COI$has_no_C  # possibly NULL!
-
-    L_width  <- COI$v_sequence_start - 1L
-    v_width  <- COI$v_sequence_end - COI$v_sequence_start + 1L
-    vd_width <- COI$d_sequence_start - COI$v_sequence_end - 1L
-    d_width  <- COI$d_sequence_end - COI$d_sequence_start + 1L
-    dj_width <- COI$j_sequence_start - COI$d_sequence_end - 1L
-    j_width  <- COI$j_sequence_end - COI$j_sequence_start + 1L
-    R_width  <- nchar(COI$sequence) - COI$j_sequence_end
-    if (!is.null(has_no_C)) {
-        jc_width <- COI$c_sequence_start - COI$j_sequence_end - 1L
-        c_width  <- COI$c_sequence_end - COI$c_sequence_start + 1L
-        R_width[!has_no_C] <-
-            (nchar(COI$sequence) - COI$c_sequence_end)[!has_no_C]
-    }
-
-    mid_width1 <- vd_width + d_width + dj_width
-    mid_width2 <- COI$j_sequence_start - COI$v_sequence_end - 1L
-    mid_width <- ifelse(has_no_D, mid_width2, mid_width1)
-    seq_width2 <- L_width + v_width + mid_width + j_width + R_width
-    if (!is.null(has_no_C))
-        seq_width2[!has_no_C] <- (seq_width2 + jc_width + c_width)[!has_no_C]
-    stopifnot(identical(nchar(COI$sequence), seq_width2))
-
-    L_segment  <- strrep(" ", L_width)
-    v_segment  <- strrep(" ", v_width)
-    vd_segment <- strrep(" ", vd_width)
-    d_segment  <- strrep(" ", d_width)
-    dj_segment <- strrep(" ", dj_width)
-    j_segment  <- strrep(" ", j_width)
-    vd_segment[has_no_D] <- d_segment[has_no_D] <- dj_segment[has_no_D] <- ""
-    if (!is.null(has_no_C)) {
-        jc_segment <- strrep(" ", jc_width)
-        c_segment <- strrep(" ", c_width)
-        jc_segment[has_no_C] <- c_segment[has_no_C] <- ""
-    }
-
-    ## Set germline segment background color.
-    v_segment <- .set_background_color(v_segment, Vcolor)
-    d_segment <- .set_background_color(d_segment, Dcolor)
-    j_segment <- .set_background_color(j_segment, Jcolor)
-    if (!is.null(has_no_C))
-        c_segment <- .set_background_color(c_segment, Ccolor)
-
-    mid_segment1 <- paste0(vd_segment, d_segment, dj_segment)
-    mid_segment2 <- strrep(" ", mid_width2)
-    mid_segment <- ifelse(has_no_D, mid_segment2, mid_segment1)
-    ans <- paste0(L_segment, v_segment, mid_segment, j_segment)
-    if (!is.null(has_no_C))
-        ans <- paste0(ans, jc_segment, c_segment)
-    ans
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .make_dna_line()
-###
-
 .toupper_with_lower_prefix <- function(x, prefix_width)
 {
     stopifnot(is.character(x), is.integer(prefix_width),
@@ -244,11 +176,11 @@
     ans
 }
 
-.color_DNA_sequence <- function(dna)
+.color_DNA_sequence <- function(dna, nuc_colors)
 {
     stopifnot(isSingleString(dna))
     exploded_dna <- safeExplode(dna)
-    colors <- .NUCLEOTIDE_COLORS[toupper(exploded_dna)]
+    colors <- nuc_colors[toupper(exploded_dna)]
     span_tags <- sprintf("<span style=\"color: %s\">", colors)
     colored <- paste0(
         ifelse(is.na(colors), "", span_tags),
@@ -257,18 +189,19 @@
     paste0(colored, collapse="")
 }
 
-.color_DNA_sequences <- function(sequences)
+.color_DNA_sequences <- function(sequences, nuc_colors)
 {
-    stopifnot(is.character(sequences))
-    vapply(sequences, .color_DNA_sequence, character(1))
+    stopifnot(is.character(sequences),
+              is.character(nuc_colors),
+              identical(names(nuc_colors), c("A", "C", "G", "T")))
+    vapply(sequences, .color_DNA_sequence, character(1), nuc_colors=nuc_colors)
 }
 
-.make_dna_line <- function(AIRR_df, dna.coloring=TRUE,
+.make_dna_line <- function(AIRR_df, nuc_colors,
                            Vcolor="#FFDDD2", Dcolor="#CFC", Jcolor="#CEF",
                            Ccolor="#EEC")
 {
-    stopifnot(isTRUEorFALSE(dna.coloring),
-              isSingleNonWhiteString(Vcolor),
+    stopifnot(isSingleNonWhiteString(Vcolor),
               isSingleNonWhiteString(Dcolor),
               isSingleNonWhiteString(Jcolor))
 
@@ -327,18 +260,18 @@
         c_segment <- toupper(c_segment)
     }
 
-    if (dna.coloring) {
+    if (!is.null(nuc_colors)) {
         ## Color DNA letters.
-        L_segment  <- .color_DNA_sequences(L_segment)
-        v_segment  <- .color_DNA_sequences(v_segment)
-        vd_segment <- .color_DNA_sequences(vd_segment)
-        d_segment  <- .color_DNA_sequences(d_segment)
-        dj_segment <- .color_DNA_sequences(dj_segment)
-        j_segment  <- .color_DNA_sequences(j_segment)
-        R_segment  <- .color_DNA_sequences(R_segment)
+        L_segment  <- .color_DNA_sequences(L_segment, nuc_colors)
+        v_segment  <- .color_DNA_sequences(v_segment, nuc_colors)
+        vd_segment <- .color_DNA_sequences(vd_segment, nuc_colors)
+        d_segment  <- .color_DNA_sequences(d_segment, nuc_colors)
+        dj_segment <- .color_DNA_sequences(dj_segment, nuc_colors)
+        j_segment  <- .color_DNA_sequences(j_segment, nuc_colors)
+        R_segment  <- .color_DNA_sequences(R_segment, nuc_colors)
         if (!is.null(has_no_C)) {
-            jc_segment <- .color_DNA_sequences(jc_segment)
-            c_segment  <- .color_DNA_sequences(c_segment)
+            jc_segment <- .color_DNA_sequences(jc_segment, nuc_colors)
+            c_segment  <- .color_DNA_sequences(c_segment, nuc_colors)
         }
     }
 
@@ -532,7 +465,7 @@ bcr_browser <- function(AIRR_df,
                         FWRcolor="#C9D",
                         CDRcolor="#EE4")
 {
-    stopifnot(is.data.frame(AIRR_df))
+    stopifnot(is.data.frame(AIRR_df), isTRUEorFALSE(dna.coloring))
     sequence_id <- AIRR_df$sequence_id
     stopifnot(is.character(sequence_id))
 
@@ -540,15 +473,18 @@ bcr_browser <- function(AIRR_df,
                                               Dcolor=Dcolor,
                                               Jcolor=Jcolor,
                                               Ccolor=Ccolor)
-    VDJCblocks_line <- .make_VDJCblocks_line(AIRR_df, Vcolor=Vcolor,
-                                                      Dcolor=Dcolor,
-                                                      Jcolor=Jcolor,
-                                                      Ccolor=Ccolor)
-    dna_line <- .make_dna_line(AIRR_df, dna.coloring=dna.coloring,
-                                        Vcolor=Vcolor,
-                                        Dcolor=Dcolor,
-                                        Jcolor=Jcolor,
-                                        Ccolor=Ccolor)
+    nuc_colors <- setNames(rep.int("transparent", 4L), c("A", "C", "G", "T"))
+    dna_line1 <- .make_dna_line(AIRR_df, Vcolor=Vcolor,
+                                         Dcolor=Dcolor,
+                                         Jcolor=Jcolor,
+                                         Ccolor=Ccolor,
+                                         nuc_colors=nuc_colors)
+    nuc_colors <- if (dna.coloring) .NUCLEOTIDE_COLORS else NULL
+    dna_line2 <- .make_dna_line(AIRR_df, Vcolor=Vcolor,
+                                         Dcolor=Dcolor,
+                                         Jcolor=Jcolor,
+                                         Ccolor=Ccolor,
+                                         nuc_colors=nuc_colors)
     sequence_aa_line <- .make_sequence_aa_line(AIRR_df, Vcolor=Vcolor)
     FWR_CDR_line <- .make_FWR_CDR_line(AIRR_df, FWRcolor=FWRcolor,
                                                 CDRcolor=CDRcolor)
@@ -558,8 +494,8 @@ bcr_browser <- function(AIRR_df,
         "<tr>", td_tag, "\n",
         header_line, "\n",
         "<pre style=\"margin: 0px; margin-top: 12px; margin-bottom: 2px;\">",
-        VDJCblocks_line, "\n",
-        dna_line, "\n",
+        dna_line1, "\n",
+        dna_line2, "\n",
         sequence_aa_line, "\n",
         FWR_CDR_line,
         "</pre>\n</td></tr>\n")
