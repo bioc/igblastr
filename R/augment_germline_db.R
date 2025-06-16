@@ -17,11 +17,13 @@
         return(fasta_files_as_one_uncompressed_file(novel_alleles,
                                                     "novel_alleles"))
     if (is(novel_alleles, "DNAStringSet")) {
-        if (is.null(names(novel_alleles)))
-            stop(wmsg("DNAStringSet object 'novel_alleles' ",
-                      "must have names"))
-        seqlens <- setNames(width(novel_alleles), names(novel_alleles))
-        check_seqlens(seqlens, "query")
+        if (length(novel_alleles) != 0L) {
+            if (is.null(names(novel_alleles)))
+                stop(wmsg("DNAStringSet object 'novel_alleles' ",
+                          "must have names"))
+            seqlens <- setNames(width(novel_alleles), names(novel_alleles))
+            check_seqlens(seqlens, "query")
+        }
         path <- tempfile("novel_alleles_", fileext=".fasta")
         writeXStringSet(novel_alleles, path)
         attr(path, "safe_to_remove") <- TRUE

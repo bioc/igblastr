@@ -113,6 +113,9 @@ export(
     ## igblastn.R:
     igblastn, igblastn_help,
 
+    ## bcr_browser.R
+    bcr_browser,
+
     ## OAS-utils.R:
     read_OAS_csv_metadata,
     read_OAS_csv,

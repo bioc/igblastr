@@ -125,9 +125,10 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
               auxiliary data is used. In this case, \code{igblastn()} can
               emit a significant number of the following warning:
               \preformatted{    Warning: Auxilary data file could not be found}
-              and various columns of the returned AIRR-formatted tibble (e.g.
-              columns \code{vj_in_frame}, \code{productive}, \code{cdr3},
-              \code{fwr4}, and others) will be filled with \code{NA}s.
+              and various columns of the returned AIRR-formatted
+              \link[tibble]{tibble} (e.g. columns \code{vj_in_frame},
+              \code{productive}, \code{cdr3}, \code{fwr4}, and others)
+              will be filled with \code{NA}s.
       }
   }
   \item{...}{
@@ -239,6 +240,9 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
 
     \item \code{\link{use_c_region_db}} to select the cached C-region db
           to use with \code{igblastn()}.
+
+    \item \code{\link{bcr_browser}} to display the annotated sequences
+          returned by \code{igblastn()} in the browser.
 
     \item \code{\link{list_outfmt7_specifiers}} for how to customize
           output format 7.

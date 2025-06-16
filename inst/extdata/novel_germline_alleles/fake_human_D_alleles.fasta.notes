@@ -1,0 +1,40 @@
+Gene IGHD3-10
+=============
+
+Known germline alleles:
+
+- 3 known alleles:
+    IGHD3-10*01: 31 nucleotides
+    IGHD3-10*02: 30 nucleotides
+    IGHD3-10*03: 31 nucleotides
+
+- Alleles IGHD3-10*01 and IGHD3-10*03 differ at position 16:
+
+    pos            16
+    ----------     --
+    IGHD3-10*01     G
+    IGHD3-10*03     A
+
+- Allele IGHD3-10*03 is obtained by deleting 12th nucleotide (G) from
+  allele IGHD3-10*01.
+
+Made-up germline alleles:
+
+- 5 made-up novel alleles: IGHD3-10*fake[12345]
+- Common length: 31 nucleotides
+- They differ from allele *01 at positions 7, 12, 18 and/or 23:
+
+    pos               7  12  16  18  23
+    --------------   --  --  --  --  --
+    IGHD3-10*fake1    A   g   g   g   t
+    IGHD3-10*fake2    c   C   g   g   t
+    IGHD3-10*fake3    c   T   g   g   t
+    IGHD3-10*fake4    c   g   g   A   t
+    IGHD3-10*fake5    c   g   g   g   A
+
+  fake1: replace C with A at pos 7
+  fake2: replace G with C at pos 12
+  fake3: replace G with T at pos 12
+  fake4: replace G with A at pos 18
+  fake4: replace T with A at pos 23
+

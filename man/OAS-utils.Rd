@@ -64,7 +64,7 @@ extract_sequences_from_paired_OAS_units(dir=".", pattern="\\\\.csv\\\\.gz$")
     more information.
   }
   \item{df}{
-    The data.frame or tibble returned by \code{read_OAS_csv()}.
+    The data.frame or \link[tibble]{tibble} returned by \code{read_OAS_csv()}.
   }
   \item{add.prefix}{
     \code{TRUE} or \code{FALSE}. Should the names on the returned
@@ -76,12 +76,13 @@ extract_sequences_from_paired_OAS_units(dir=".", pattern="\\\\.csv\\\\.gz$")
     \link[Biostrings]{DNAStringSet} object with the sequence ids as
     names. The sequence ids are obtained from the \code{sequence_id_heavy}
     and \code{sequence_id_light} columns of the supplied data.frame or
-    tibble. By default, they are propagated as-is to the DNAStringSet
-    object, which makes it difficult to recognize which chain (heavy or
-    light) the antibody sequences are coming from. Setting \code{add.prefix}
-    to \code{TRUE} will add the \code{heavy_chain_} or \code{light_chain_}
-    prefix to the names on the DNAStringSet object, hence making it easy
-    to identify which chain a given antibody sequence is coming from.
+    \link[tibble]{tibble}. By default, they are propagated as-is to the
+    DNAStringSet object, which makes it difficult to recognize which chain
+    (heavy or light) the antibody sequences are coming from. Setting
+    \code{add.prefix} to \code{TRUE} will add the \code{heavy_chain_}
+    or \code{light_chain_} prefix to the names on the DNAStringSet object,
+    hence making it easy to identify which chain a given antibody sequence
+    is coming from.
   }
   \item{as.df}{
     \code{TRUE} or \code{FALSE}. By default, i.e. when \code{as.df}
