@@ -14,7 +14,7 @@
 }
 
 \usage{
-bcr_browser(AIRR_df, dna.coloring=TRUE,
+bcr_browser(AIRR_df, show.full.sequence=FALSE, dna.coloring=TRUE,
             Vcolor="#FFDDD2", Dcolor="#CFC", Jcolor="#CEF", Ccolor="#EEC",
             FWRcolor="#C9D", CDRcolor="#EE4")
 }
@@ -27,6 +27,10 @@ bcr_browser(AIRR_df, dna.coloring=TRUE,
     of rows is quite resource-intensive (it can even crash your browser!),
     so in this case we recommend subsetting the data.frame before passing
     it to \code{bcr_browser()} to keep the number of rows under 2000.
+  }
+  \item{show.full.sequence}{
+    By default, the part of the BCR sequences upstream of the V region
+    is not shown. Set \code{show.full.sequence} to \code{TRUE} to show it.
   }
   \item{dna.coloring}{
     Whether the nucleotides in the BCR sequences (\code{sequence} column
@@ -76,6 +80,10 @@ use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
 use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
 AIRR_df <- igblastn(query)
 bcr_browser(AIRR_df)
+
+## By default, the part of the sequences upstream of the V region is
+## not shown. Use 'show.full.sequence=TRUE' to show the full sequences:
+bcr_browser(AIRR_df, show.full.sequence=TRUE)
 
 ## ---------------------------------------------------------------------
 ## No C regions
