@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 16 June 2025"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 18 June 2025"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -367,6 +367,64 @@ AIRR_df |>
     theme_bw(base_size=14) +
     ggtitle("Logo plot of kappa chain CDR3 sequences that are 9 AA long")
 ```
+
+
+# Advanced usage
+
+
+## Passing additional arguments to igblastn()
+
+The `igblastn` _standalone executable_ in IgBLAST supports many command
+line arguments. You can quickly list them with `igblastn_help()` (or with
+`igblastn_help(TRUE)` to get an expanded list with more details --
+see `?igblastn_help`):
+```{r}
+igblastn_help()
+```
+
+All these command line arguments can be passed to the `igblastn()`
+function using the usual `argument_name=argument_value` syntax. For
+example, to set the number of threads to 8 (`-num_threads` command line
+argument), do `igblastn(query, num_threads=8)`.
+
+## Restrict the search to a subset of user-supplied gene alleles
+
+Some arguments of particular interest are the `germline_db_[VDJ]_seqidlist`
+arguments. They allow restricting the search of the germline database to
+a list of gene alleles supplied by the user. This list can be provided
+as a character vector of gene allele identifiers (e.g. `IGHV3-23*01`,
+`IGHV3-23*04`, etc..), or as the path to a file containing the identifiers
+(one identifier per line). For example:
+```{r, eval=FALSE}
+V_alleles <- c("IGHV3-23*01", "IGHV3-23*04")
+igblastn(query, germline_db_V_seqidlist=V_alleles)
+```
+
+If the gene alleles are stored in a file, say in
+`path/to/my_V_gene_alleles.txt`, then use:
+```{r, eval=FALSE}
+igblastn(query, germline_db_V_seqidlist=file("path/to/my_V_gene_alleles.txt"))
+```
+
+See `?igblastn` for more information.
+
+## Add novel gene alleles to the search
+
+The `r Biocpkg("igblastr")` package also provides facilities to add
+novel gene alleles to the search. This is done in two steps:
+
+1. Use one of the `augment_germline_db_[VDG]()` functions to create a new
+   augmented V, D, or J germline database.
+
+2. Tell `igblastn()` to use the augmented V, D, or J germline database
+   by pointing the `germline_db_V`, `germline_db_D`, or `germline_db_J`
+   argument to it.
+
+See `?augment_germline_db` for more information.
+
+Note that augmenting and restricting can be combined e.g. by pointing
+`germline_db_V` to an augmented V germline database _and_ by supplying
+the `germline_db_V_seqidlist` argument.
 
 
 # Future developments

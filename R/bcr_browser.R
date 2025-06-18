@@ -48,9 +48,10 @@
     paste0(seq_nb, "<i>sequence_id:</i>&nbsp;<b>", sequence_id, "</b>")
 }
 
-.HEADER_LINE2_PADDINGS <- c("padding: 2px",
-                            "padding-left: 8px",
-                            "padding-right: 8px")
+.HEADER_LINE2_SPAN_ATTRIBS <- c("padding: 2px",
+                                "padding-left: 8px",
+                                "padding-right: 8px",
+                                "border-radius: 8px")
 
 .make_VDJheadbox <- function(prefix, vdj_call, vdj_identity, bg_color)
 {
@@ -59,7 +60,8 @@
               is.numeric(vdj_identity),
               isSingleNonWhiteString(bg_color))
     vdj_identity <- format(vdj_identity, digits=4L)
-    attribs <- c(.HEADER_LINE2_PADDINGS, sprintf("background: %s", bg_color))
+    attribs <- c(.HEADER_LINE2_SPAN_ATTRIBS,
+                 sprintf("background: %s", bg_color))
     span_tag <- sprintf("<span %s>", .make_style_attrib(attribs))
     paste0(span_tag,
            "<i>", prefix, "_call:</i>&nbsp;<b>", vdj_call, "</b>",
@@ -88,19 +90,20 @@
               is.character(v_call), is.numeric(v_identity),
               is.vector(d_call), is.numeric(d_identity),
               is.character(j_call), is.numeric(j_identity))
-    attribs <- c(.HEADER_LINE2_PADDINGS, "background: #EEE")
+    attribs <- c(.HEADER_LINE2_SPAN_ATTRIBS, "background: #DDD")
     span_tag <- sprintf("<span %s>", .make_style_attrib(attribs))
     locus <- paste0(span_tag, "<i>locus:</i>&nbsp;",
                     "<b>", locus, "</b></span>")
     ans <- paste0(locus,
-                  .make_VDJheadbox("v", v_call, v_identity, Vcolor),
-                  .make_VDJheadbox("d", d_call, d_identity, Dcolor),
-                  .make_VDJheadbox("j", j_call, j_identity, Jcolor))
+                  "&nbsp;", .make_VDJheadbox("v", v_call, v_identity, Vcolor),
+                  "&nbsp;", .make_VDJheadbox("d", d_call, d_identity, Dcolor),
+                  "&nbsp;", .make_VDJheadbox("j", j_call, j_identity, Jcolor))
     if ("c_call" %in% colnames(AIRR_df)) {
         c_call <- AIRR_df$c_call
         c_identity <- AIRR_df$c_identity
         stopifnot(is.character(c_call), is.numeric(c_identity))
-        ans <- paste0(ans, .make_VDJheadbox("c", c_call, c_identity, Ccolor))
+        ans <- paste0(ans, "&nbsp;",
+                      .make_VDJheadbox("c", c_call, c_identity, Ccolor))
     }
     paste0("<p>", ans, "</p>")
 }

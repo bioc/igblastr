@@ -1,3 +1,6 @@
+- Add 'clonotype_out' arg to igblastn(). Add examples in man page and
+  vignette that use this functionality.
+
 - Add functionality to install/use the updated internal and/or auxiliary
   files that are sometimes made available at:
     https://ftp.ncbi.nih.gov/blast/executables/igblast/release/patch/

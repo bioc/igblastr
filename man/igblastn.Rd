@@ -72,14 +72,15 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
   \item{germline_db_V_seqidlist,
         germline_db_D_seqidlist,
         germline_db_J_seqidlist}{
-    Restrict search of germline database to list of sequence ids.
-    Each list of sequence ids can be specified either as a character vector
-    of ids or as the path to a file containing the sequence ids (one id per
-    line). In the latter case, a \code{file} object must be passed to the
-    \code{germline_db_V_seqidlist}, \code{germline_db_D_seqidlist}, or
-    \code{germline_db_J_seqidlist} argument. The \code{file} object will
-    typically be constructed with something like
-    \code{file("path/to/some/file")}.
+    Restrict search of germline database to list of gene alleles.
+    A list of gene alleles can be specified either as a character vector
+    of gene allele identifiers (e.g. \code{IGHV3-23*01}, \code{IGHV3-23*04},
+    etc...) or as the path to a file containing the identifiers (one
+    identifier per line). In the latter case, a \code{file} object must
+    be passed to the \code{germline_db_V_seqidlist},
+    \code{germline_db_D_seqidlist}, or \code{germline_db_J_seqidlist}
+    argument. The \code{file} object will typically be constructed with
+    something like \code{file("path/to/some/file")}.
   }
   \item{organism}{
     \code{"auto"} (the default), or the organism associated with the query
