@@ -9,6 +9,10 @@
 
 \description{
   Three functions to add novel V, D, or J gene alleles to a germline db.
+
+  Note that these functions can also be used to combine germline databases
+  from two different organisms. See "COMBINE GERMLINE DATABASES FROM TWO
+  ORGANISMS" in the Examples section below for how to do this.
 }
 
 \usage{
@@ -73,7 +77,7 @@ query <- system.file(package="igblastr", "extdata",
 use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
 
 ## ---------------------------------------------------------------------
-## Use "known" human germline db from AIRR
+## USE HUMAN GERMLINE DATABASE FROM AIRR
 ## ---------------------------------------------------------------------
 
 use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
@@ -81,24 +85,32 @@ use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
 AIRR_df <- igblastn(query)
 
 ## ---------------------------------------------------------------------
-## Add novel V alleles
+## ADD NOVEL V ALLELES
 ## ---------------------------------------------------------------------
 
-## 'fake_human_V_alleles.fasta' contains made-up novel alleles:
+## 'fake_human_V_alleles.fasta' contains made-up novel V alleles:
 ## - 2 novel alleles for gene IGHV1-8: IGHV1-8*fake1, IGHV1-8*fake2
 ## - 1 novel allele for gene IGHV4-61: IGHV4-61*fake
 my_novel_V_alleles <- system.file(package="igblastr", "extdata",
                                   "novel_germline_alleles",
                                   "fake_human_V_alleles.fasta")
-destdir <- tempdir()
+
+## Take a quick look at these novel V alleles:
+readDNAStringSet(my_novel_V_alleles)
+
+## Create a new V germline database that combines the V alleles
+## from _AIRR.human.IGH+IGK+IGL.202501 with our novel V alleles:
+myVdb_path <- file.path(tempdir(), "myVdb")
 augment_germline_db_V("_AIRR.human.IGH+IGK+IGL.202501",
                       my_novel_V_alleles,
-                      destdir=destdir)
+                      destdir=myVdb_path)
 
-AIRR_df2 <- igblastn(query, germline_db_V=destdir)
+## To use this new augmented V germline database with igblastn(),
+## supply its path via the 'germline_db_V' argument:
+AIRR_df2 <- igblastn(query, germline_db_V=myVdb_path)
 
 ## ---------------------------------------------------------------------
-## Compare 'AIRR_df' with 'AIRR_df2'
+## A QUICK COMPARISON BETWEEN 'AIRR_df' AND 'AIRR_df2'
 ## ---------------------------------------------------------------------
 
 ## Index of rows where "v_call" has changed between 'AIRR_df'
@@ -112,6 +124,78 @@ AIRR_df2[idx, c("v_call", "v_cigar", "v_identity")]
 
 ## Besides these 2 rows, all the other rows are the same:
 stopifnot(all.equal(AIRR_df[-idx, ], AIRR_df2[-idx, ]))
+
+## ---------------------------------------------------------------------
+## COMBINE GERMLINE DATABASES FROM TWO ORGANISMS
+## ---------------------------------------------------------------------
+
+## The augment_germline_db_[VDJ]() functions can be used to combine
+## germline databases from two different organisms. This can be useful
+## for example when working with BCR sequences from mice that have been
+## engineered to have both mouse and some human immunoglobulin genes.
+##
+## To create a hybrid human/mouse V germline database, we can either:
+##
+## (1) Add all (or a subset of) mouse V alleles to all human V alleles.
+##     This is done by extracting mouse V germline allele sequences from
+##     a cached germline database and using them to augment a cached
+##     germline database for human.
+##
+## (2) Add all (or a subset of) human V alleles to all mouse V alleles.
+##     This is done by extracting human V germline allele sequences from
+##     a cached germline database and using them to augment a cached
+##     germline database for mouse.
+##
+## Note that:
+## - We can choose to subset or not the V germline allele sequences
+##   extracted from one V germline database before adding them to the
+##   other V germline database.
+## - The two approaches above are equivalent if we don't subset, that
+##   is, if we combine **all** human V alleles with **all** mouse V
+##   alleles.
+## - However if our engineered mice only have a small known subset of
+##   human immunoglobulin genes (e.g. IGHV1-2), then we might want to
+##   create a hybrid human/mouse germline database that only adds the
+##   human alleles for genes IGHV1-2 to the mouse V alleles. In this
+##   case we need to use (2).
+
+## Let's do (2):
+
+db_name1 <- "_AIRR.mouse.PWD_PhJ.IGH+IGK+IGL.202501"
+db_name2 <- "_AIRR.human.IGH+IGK+IGL.202501"
+
+## Extract human V germline alleles:
+human_V_alleles <- load_germline_db(db_name2, "V")
+
+## Subset to keep only alleles for genes IGHV1-2:
+idx <- grep("^IGHV[12]", names(human_V_alleles))
+human_V12_alleles <- human_V_alleles[idx]
+
+## Create a new V germline database that combines the mouse V
+## alleles from 'db_name1' with the alleles in 'human_V12_alleles':
+engmouseVdb_path <- file.path(tempdir(), "engmouseVdb")
+augment_germline_db_V(db_name1, human_V12_alleles,
+                      destdir=engmouseVdb_path)
+
+## Then, assuming that 'query' contains BCR sequences from the
+## engineered mice:
+\dontrun{
+  use_germline_db(db_name1)
+  use_c_region_db("_IMGT.mouse.IGH.202412")
+  igblastn(query, germline_db_V=engmouseVdb_path, ...)
+}
+
+## Note that, by default, the mouse-only D and J databases that
+## we selected with 'use_germline_db(db_name1)' are being used.
+## If we also want to create hybrid D and J databases, we need
+## to repeat the above steps for each of them. Then we need to
+## specify the paths to the 3 hybrid databases when we call igblastn():
+\dontrun{
+  igblastn(query, germline_db_V=engmouseVdb_path,
+                  germline_db_D=engmouseDdb_path,
+                  germline_db_J=engmouseJdb_path,
+                  ...)
+}
 }
 
 \keyword{utilities}

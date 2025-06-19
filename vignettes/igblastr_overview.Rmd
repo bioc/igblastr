@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 18 June 2025"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 19 June 2025"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -405,6 +405,8 @@ If the gene alleles are stored in a file, say in
 ```{r, eval=FALSE}
 igblastn(query, germline_db_V_seqidlist=file("path/to/my_V_gene_alleles.txt"))
 ```
+Note that in this case, the path to the file containing the gene alleles
+identifiers must be wrapped in a call to `file()`.
 
 See `?igblastn` for more information.
 
@@ -420,11 +422,13 @@ novel gene alleles to the search. This is done in two steps:
    by pointing the `germline_db_V`, `germline_db_D`, or `germline_db_J`
    argument to it.
 
-See `?augment_germline_db` for more information.
+Note that this functionality can also be used to combine germline
+databases from two different organisms. See `?augment_germline_db` for
+more information and some examples.
 
-Note that augmenting and restricting can be combined e.g. by pointing
-`germline_db_V` to an augmented V germline database _and_ by supplying
-the `germline_db_V_seqidlist` argument.
+Finally note that augmenting and restricting can be combined e.g. by
+pointing `germline_db_V` to an augmented V germline database _and_ by
+supplying the `germline_db_V_seqidlist` argument.
 
 
 # Future developments
