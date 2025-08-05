@@ -331,12 +331,13 @@ igblastn_help <- function(long.help=FALSE, show.in.browser=FALSE)
     oldwd <- getwd()
     setwd(igblast_root)
     on.exit(setwd(oldwd))
-    outfile <- if (show.in.browser)
-               tempfile("igblastn_help_", fileext=".txt") else ""
+    outfile <- file.path(tempdir(), "igblastn_help.txt")
     status <- system2e(igblastn_exe, args=exe_args, stdout=outfile)
     if (status != 0)
         stop(wmsg("'igblastn' returned an error"))
     if (show.in.browser)
         display_local_file_in_browser(outfile)
+    else
+        writeLines(readLines(outfile))
 }
 

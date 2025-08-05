@@ -185,8 +185,8 @@ augment_germline_db_V(db_name1, human_V12_alleles,
   igblastn(query, germline_db_V=engmouseVdb_path, ...)
 }
 
-## Note that, by default, the mouse-only D and J databases that
-## we selected with 'use_germline_db(db_name1)' are being used.
+## Note that, by default, the mouse-only D and J databases that we
+## selected above with 'use_germline_db(db_name1)' are being used.
 ## If we also want to create hybrid D and J databases, we need
 ## to repeat the above steps for each of them. Then we need to
 ## specify the paths to the 3 hybrid databases when we call igblastn():

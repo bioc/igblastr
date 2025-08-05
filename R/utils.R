@@ -174,13 +174,15 @@ align_vectors_by_names <- function(vectors)
     df
 }
 
-### 'css' must be a single string specifying the CSS selector to the table
-### containing the index e.g. "body" or "body section".
+### 'css' must be a single string specifying the CSS selector to
+### the table containing the index e.g. "body" or "body section".
+### Additional curl configuration options can be passed thru the ellipsis
+### as **named** arguments. See ?httr::httr_options for all available options.
 ### Returns a data.frame with 3 columns: Name, Last modified, Size
-scrape_html_dir_index <- function(url, css="body", suffix=NULL)
+scrape_html_dir_index <- function(url, css="body", suffix=NULL, ...)
 {
     stopifnot(isSingleNonWhiteString(url), isSingleNonWhiteString(css))
-    html <- getUrlContent(url, type="text", encoding="UTF-8")
+    html <- getUrlContent(url, type="text", encoding="UTF-8", ...)
     xml <- read_html(html)
     all_ths <- html_text(html_elements(xml, paste0(css, " table tr th")))
     all_tds <- html_text(html_elements(xml, paste0(css, " table tr td")))
@@ -195,30 +197,46 @@ scrape_html_dir_index <- function(url, css="body", suffix=NULL)
 ### Miscellaneous stuff
 ###
 
-websiteIsUp <- function(url)
+### Additional curl configuration options can be passed thru the ellipsis
+### as **named** arguments e.g. websiteIsUp(url, connecttimeout=20).
+### See ?httr::httr_options for all available options.
+websiteIsUp <- function(url, ...)
 {
     if (!has_internet())
         stop("no internet")
-    response <- try(HEAD(url, user_agent("igblastr")), silent=TRUE)
+    config <- config(...)
+    response <- try(HEAD(url, config, user_agent("igblastr")), silent=TRUE)
     !inherits(response, "try-error")
 }
 
-urlExists <- function(url)
+### Additional curl configuration options can be passed thru the ellipsis
+### as **named** arguments e.g. urlExists(url, connecttimeout=20).
+### See ?httr::httr_options for all available options.
+urlExists <- function(url, ...)
 {
-    response <- try(HEAD(url, user_agent("igblastr")), silent=TRUE)
+    if (!has_internet())
+        stop("no internet")
+    config <- config(...)
+    response <- try(HEAD(url, config, user_agent("igblastr")), silent=TRUE)
     if (inherits(response, "try-error"))
-        stop(as.character(response), "  Please check your internet connection.")
+        stop(as.character(response))
     response$status_code != 404L
 }
 
-getUrlContent <- function(url, query=list(), type=NULL, encoding=NULL)
+### Additional curl configuration options can be passed thru the ellipsis
+### as **named** arguments. See ?httr::httr_options for all available options.
+getUrlContent <- function(url, query=list(), type=NULL, encoding=NULL, ...)
 {
     stopifnot(is.list(query))
     if (length(query) != 0L)
         stopifnot(!is.null(names(query)))
-    response <- try(GET(url, user_agent("igblastr"), query=query), silent=TRUE)
+    if (!has_internet())
+        stop("no internet")
+    config <- config(...)
+    response <- try(GET(url, config, user_agent("igblastr"), query=query),
+                    silent=TRUE)
     if (inherits(response, "try-error"))
-        stop(as.character(response), "  Please check your internet connection.")
+        stop(as.character(response))
     if (response$status_code == 404L)
         stop(wmsg("Not Found (HTTP 404): ", url))
     stop_for_status(response)
@@ -230,14 +248,14 @@ getUrlContent <- function(url, query=list(), type=NULL, encoding=NULL)
 ### TODO: Try to make the behavior atomic, under any circumstance.
 download_as_tempfile <- function(dir_url, filename, ...)
 {
+    if (!has_internet())
+        stop("no internet")
     url <- paste0(dir_url, filename)
     destfile <- tempfile()
     code <- try(suppressWarnings(download.file(url, destfile, ...)),
                 silent=TRUE)
     if (inherits(code, "try-error") || code != 0L)
-        stop(wmsg("Failed to download ", filename, " ",
-                  "from ", dir_url, ". ",
-                  "Are you connected to the internet?"))
+        stop(wmsg("failed to download ", filename, " from ", dir_url))
     destfile
 }
 

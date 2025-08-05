@@ -20,6 +20,8 @@ IMGT_URL <- "https://www.imgt.org"
 ### Do not remove the trailing slash.
 .VQUEST_ARCHIVES_URL <- paste0(.VQUEST_DOWNLOAD_ROOT_URL, "archives/")
 
+get_IMGT_connecttimeout <- function() getOption("IMGT_connecttimeout")
+
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### get_latest_IMGT_release()
@@ -30,7 +32,8 @@ IMGT_URL <- "https://www.imgt.org"
 
 .fetch_latest_IMGT_release <- function()
 {
-    content <- getUrlContent(.VQUEST_RELEASE_FILE_URL)
+    content <- getUrlContent(.VQUEST_RELEASE_FILE_URL,
+                             connecttimeout=get_IMGT_connecttimeout())
     sub("^([^ ]*)(.*)$", "\\1", content)
 }
 
@@ -51,7 +54,8 @@ get_latest_IMGT_release <- function(recache=FALSE)
 .fetch_list_of_archived_IMGT_zips <- function()
 {
     scrape_html_dir_index(.VQUEST_ARCHIVES_URL,
-                          css="body section", suffix=".zip")
+                          css="body section", suffix=".zip",
+                          connecttimeout=get_IMGT_connecttimeout())
 }
 
 ### If 'as.df' is TRUE then the listing is returned as a data.frame
@@ -79,12 +83,26 @@ list_archived_IMGT_zips <- function(as.df=FALSE, recache=FALSE)
 
 .download_and_unzip_latest_IMGT_zip <- function(exdir, ...)
 {
-    release <- get_latest_IMGT_release()
-    refdir_zip_filename <- paste0(.VQUEST_REFERENCE_DIRECTORY, ".zip")
-    refdir_zip <- download_as_tempfile(.VQUEST_DOWNLOAD_ROOT_URL,
-                                       refdir_zip_filename, ...)
+    zip_filename <- paste0(.VQUEST_REFERENCE_DIRECTORY, ".zip")
+
+    ## Sometimes, after a new release, the IMGT people forget to make
+    ## the zip file of the new release available. We're trying to detect
+    ## this and fail graciously when it's the case.
+    zip_url <- paste0(.VQUEST_DOWNLOAD_ROOT_URL, zip_filename)
+    zip_exists <- urlExists(zip_url, connecttimeout=get_IMGT_connecttimeout())
+    if (!zip_exists) {
+        release <- get_latest_IMGT_release()
+        stop(wmsg("It looks like the zip of the latest IMGT/V-QUEST ",
+                  "release (", release, ") is not available (yet?) at ",
+                  .VQUEST_DOWNLOAD_ROOT_URL),
+             "\n  ",
+             wmsg("Please install an older release in the meantime."))
+    }
+
+    local_zip <- download_as_tempfile(.VQUEST_DOWNLOAD_ROOT_URL, zip_filename,
+                                      ...)
     nuke_file(exdir)
-    unzip(refdir_zip, exdir=exdir)
+    unzip(local_zip, exdir=exdir)
 }
 
 .get_archived_IMGT_zip <- function(release)
@@ -105,10 +123,10 @@ list_archived_IMGT_zips <- function(as.df=FALSE, recache=FALSE)
 {
     nuke_file(exdir)
     unzip(zipfile, exdir=exdir, junkpaths=TRUE)
-    refdir_zip_filename <- paste0(.VQUEST_REFERENCE_DIRECTORY, ".zip")
-    refdir_zip <- file.path(exdir, refdir_zip_filename)
-    unzip(refdir_zip, exdir=exdir)
-    unlink(refdir_zip)
+    zip_filename <- paste0(.VQUEST_REFERENCE_DIRECTORY, ".zip")
+    local_zip <- file.path(exdir, zip_filename)
+    unzip(local_zip, exdir=exdir)
+    unlink(local_zip)
 }
 
 .download_and_unzip_archived_IMGT_zip <- function(release, exdir, ...)
@@ -234,7 +252,8 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
     stopifnot(isSingleNonWhiteString(version))
     query <- list(query=paste(version, group), species=species)
     html <- getUrlContent(.IMGT_C_REGIONS_URL, query=query,
-                          type="text", encoding="UTF-8")
+                          type="text", encoding="UTF-8",
+                          connecttimeout=get_IMGT_connecttimeout())
 
     ## HTML document 'html' is expected to contain 2 <pre></pre> sections:
     ## - The first one is a section that describes the 15 fields of the

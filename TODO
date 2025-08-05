@@ -17,6 +17,9 @@
   - Try to get an entry in the next R Journal advertizing igblastr.
   - Bioinformatics accepts short articles introducing new software.
 
+- Add Seqinfo to Imports (but wait until BioC 3.23 for that). Note
+  that we'll still need GenomeInfoDb just for list_ftp_dir().
+
 - Talk to Koshlan Mayer-Blackwell about using IgBLAST to analyze TCR
   sequences. Seems like none is using IgBLAST for that. Some people
   use mixeR.

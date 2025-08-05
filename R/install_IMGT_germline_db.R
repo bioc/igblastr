@@ -7,7 +7,8 @@
 ### IMGT_is_up()
 ###
 
-IMGT_is_up <- function() websiteIsUp(IMGT_URL)
+IMGT_is_up <- function()
+    websiteIsUp(IMGT_URL, connecttimeout=get_IMGT_connecttimeout())
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
