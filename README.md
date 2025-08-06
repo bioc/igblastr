@@ -19,11 +19,33 @@ provide feedback, request features, etc...
 
 #### Install igblastr
 
+First install and load **BiocManager**:
 ```r
 if (!require("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
 
+library(BiocManager)
+```
+
+Loading **BiocManager** should display a message that indicates the
+version of Bioconductor that you are using.
+
+If you are using Bioconductor >= 3.22, simply install **igblastr** with:
+```r
 BiocManager::install("igblastr")
+```
+This will install the version of **igblastr** that matches your version
+of Bioconductor.
+
+If you are using Bioconductor 3.21, then you need to install directly
+from GitHub (usually discouraged). That's because **igblastr** was only
+added to Bioconductor >= 3.22 so cannot be installed from the Bioconductor
+3.21 repositories:
+```r
+if (!require("remotes", quietly=TRUE))
+    BiocManager::install("remotes")
+
+BiocManager::install("HyrienLab/igblastr")
 ```
 
 #### Load igblastr
