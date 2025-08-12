@@ -1,49 +1,28 @@
-- Add 'clonotype_out' arg to igblastn(). Add examples in man page and
-  vignette that use this functionality.
+High-priority TODO list
+=======================
 
-- Add functionality to install/use the updated internal and/or auxiliary
-  files that are sometimes made available at:
-    https://ftp.ncbi.nih.gov/blast/executables/igblast/release/patch/
-  See https://ncbi.github.io/igblast/cook/How-to-set-up.html for the details.
+- bcr_browser() improvements:
+  - Should we rename the function to igbrowser()?
+  - Display pairwise alignment between BCR query sequence and germline
+    V/D/J/C sequences.
+  - Take a look at visualization tool from IMGT/V-QUEST for inspiration.
 
-- Add bibliography to vignette. See AuthoringRmdVignettes.Rmd vignette in
-  BiocStyle for how to do this.
+- Implement summarizeMismatches().
+  The function will take the AIRR data.frame returned by igblastn() as input
+  and, for each BCR query sequence, identify the positions of the mismatches,
+  insertions, and deletions in the pairwise alignment. Then it should count
+  how many of them fall in the following regions:
+    - V, D, J, C
+    - FWR1-4, CDR1-3
+  The counts should be returned in a matrix (or data.frame or tibble?)
+  with 1 row per query sequence and 11 columns (one per region).
+  summarizeMismatches() should also have an argument that lets the user
+  choose whether they want the matrix of counts added to the input AIRR
+  data.frame as additional columns or not. Should be FALSE by default.
+  E.g. 'bind.results=FALSE'.
 
-- Advertize igblastr once it's accepted:
-  - Announce on various bioc-community Slack channels.
-  - Announce on the FH-Data Slack (fhdata.slack.com) on channels
-    #r-user-comm and #general.
-  - Announce on LinkedIn.
-  - Try to get an entry in the next R Journal advertizing igblastr.
-  - Bioinformatics accepts short articles introducing new software.
-
-- Add Seqinfo to Imports (but wait until BioC 3.23 for that). Note
-  that we'll still need GenomeInfoDb just for list_ftp_dir().
-
-- Talk to Koshlan Mayer-Blackwell about using IgBLAST to analyze TCR
-  sequences. Seems like none is using IgBLAST for that. Some people
-  use mixeR.
-
-- Clarify provenance of 1279067_1_Paired_sequences.fasta.gz and its licence.
-  Give appropriate credit. See https://opig.stats.ox.ac.uk/webapps/oas/
-
-- More investigation to assess the consequences of using the static auxiliary
-  data included in IgBLAST.
-
-- Try online IgBLAST here https://www.ncbi.nlm.nih.gov/igblast/ and compare
-  results with igblastr.
-
-- Check support for Macaque.
-
-- Figure out a way to automatically stamp AIRR germline dbs with a
-  version number that allows to go back in time when needed.
-
-- One should be able to pass the name of a IMGT germline db to
-  install_IMGT_germline_db(), or a vector of names.
-
-- Improve outfmt7-utils.Rd man page (e.g. document customized format 7
-  and list_outfmt7_specifiers()) as well as associated unit tests (in
-  tests/testthat/test-outfmt7-utils.R).
+- Add igblastp(), a wrapper to the igblastp standalone executable included
+  in IgBLAST. Requested by Dr Iman Haddad in an email from Aug 12, 2025.
 
 - igblastn() only supports 'ig_seqtype="Ig"' (the default) at the moment.
   Do we also want to suport 'ig_seqtype="TCR"'? What would it take to properly
@@ -55,6 +34,60 @@
   i.e. bottom-right table):
     https://www.imgt.org/vquest/refseqh.html#constant-sets
   What else would it take to properly support 'ig_seqtype="TCR"'?
+  Note that someone mentioned that Koshlan Mayer-Blackwell at the Hutch was
+  maybe using IgBLAST to analyze TCR sequences. Someone else mentioned that
+  some people use mixeR for that.
+
+
+Things to do at BioC 3.22 release time
+======================================
+
+- Update README.md.
+
+- Advertize igblastr:
+  - Announce on various bioc-community Slack channels.
+  - Announce on the FH-Data Slack (fhdata.slack.com) on channels
+    #r-user-comm and #general.
+  - Announce on LinkedIn.
+  - Try to get an entry in the next R Journal advertizing igblastr.
+  - Bioinformatics accepts short articles introducing new software.
+
+
+Low-priority TODO list
+======================
+
+- Add 'clonotype_out' arg to igblastn(). Add examples in man page and
+  vignette that use this functionality.
+
+- Add functionality to install/use the updated internal and/or auxiliary
+  files that are sometimes made available at:
+    https://ftp.ncbi.nih.gov/blast/executables/igblast/release/patch/
+  See https://ncbi.github.io/igblast/cook/How-to-set-up.html for the details.
+
+- Add bibliography to vignette. See AuthoringRmdVignettes.Rmd vignette in
+  BiocStyle for how to do this.
+
+- Add Seqinfo to Imports (but wait until BioC 3.23 for that). Note
+  that we'll still need GenomeInfoDb just for list_ftp_dir().
+
+- Clarify provenance of 1279067_1_Paired_sequences.fasta.gz and its licence.
+  Give appropriate credit. See https://opig.stats.ox.ac.uk/webapps/oas/
+
+- More investigation to assess the consequences of using the static auxiliary
+  data included in IgBLAST.
+
+- Try online IgBLAST here https://www.ncbi.nlm.nih.gov/igblast/ and compare
+  results with igblastr.
+
+- Figure out a way to automatically stamp AIRR germline dbs with a
+  version number that allows to go back in time when needed.
+
+- One should be able to pass the name of an IMGT germline db to
+  install_IMGT_germline_db(), or a vector of names.
+
+- Improve outfmt7-utils.Rd man page (e.g. document customized format 7
+  and list_outfmt7_specifiers()) as well as associated unit tests (in
+  tests/testthat/test-outfmt7-utils.R).
 
 - Make 'num_threads' an explicit argument with default to 4. The doc should
   show how to specify a higher but still reasonable custom value based on
@@ -83,7 +116,7 @@
   which is poorly documented and is somewhat confusing (see below).
 
 - Investigate the following mysteries about the germline sets provided
-  by OGRDB:
+  by AIRR/OGRDB:
 
   1. The OGRDB API at https://ogrdb.airr-community.org/api/ allows downloading
      the germline sequences in 2 formats: ungapped or ungapped_ex.
@@ -104,6 +137,4 @@
 
 - Implement install_AIRR_germline_db(). Will download the germline sequences
   from https://ogrdb.airr-community.org/ (link provided by Kellie).
-
-- Update README.md.
 
