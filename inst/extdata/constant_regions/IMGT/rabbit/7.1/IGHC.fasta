@@ -1,0 +1,744 @@
+>X51647|IGHA1*01|Oryctolagus cuniculus|F|CH1|g,3..289|288 nt|1|+1|-1| | |288+87=375| | |
+............gatcccgcaaccacccccatcctcttcccgctgagcctcccctgtcct
+ctctct............ggacagcccgtggtcgtcggctgcctgatccagggcttcttc
+cccctg...ggccctctgaatgtgaagtggaccatcagcggg..................
+...gagaacgtgaccttccctcctgtccagttggacacctca...............ggc
+ctgtacaccacgagtagcctactgaacctgacagatgaagagtgt............cct
+acatgtgtggcctgccacgtggaacacaat............gaagtggacagatatctg
+atcctgccctgccca
+>X51647|IGHA1*01|Oryctolagus cuniculus|F|H-CH2|g,428..765|339 nt|1|+1|-1| | |339+69=408| | |
+gatacccacagctcctgcccccccacctcc..................tgcggggagccc
+agcctgtccctgcagcggccagacctcagagacctgctcctg......ggctcagacgcc
+agcctcacctgcaccctgagaggcctgaaggacccc...aaggatgccgtcttcacctgg
+gagcccacaaacgggaacgaa............ccggtccagcagagcccccagcgtgac
+ccctgcggc.....................tgctacagtgtgtccagtgtgctgcccggc
+tgtgcggagacctgg......actgcggggacagagttcacctgcacagtcacccaccct
+gag...atagagggcagctccctgacagccaccatcagaaaagacaca
+>X51647|IGHA1*01|Oryctolagus cuniculus|F|CH3-CHS|g,945..1336|393 nt|1|+1| | | |393+54=447| | |
+............ggcagcctcaccccgccccaggtccacctgctgccgccgccatcagaa
+gagctggccctc......aacgcgctggtgacgctgacctgcctggtgaggggcttcagc
+ccc......aaggacgtgctggtgtactggacaaacaaaggcgtggtggtcccaaaagac
+...agcttcctggtgtggaagcccctgccagagcccggccaggaa.........cccacc
+acctacgccgtcaccagcctgctgcgcgtgtcggccgaggactgg......aaccagggg
+gacagctactcctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgccaagcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaaggcgtgtgctac
+>AY386696|IGHA1*02|Oryctolagus cuniculus_Alicia|F|CH1|g,119223..119509|288 nt|1|+1|-1| | |288+87=375| | |
+............gatcccgcaaccacccccatcctcttcccgctgagcctcccctgtcct
+gtgtct............ggacagcccgtggtcgtcggctgcctgatccagggcttcttc
+cccctg...ggccctctgaatgtgaagtggaccatcagcggg..................
+...gagaacgtgaccttccctcctgtccagttggacacctca...............ggc
+ctgtacaccacgagtagcctactgaacctgacagatgaagagtgt............cct
+acatgtgtggcctgccacgtggaacacaat............gaagtggacagatatctg
+atcctgccctgccca
+>AY386696|IGHA1*02|Oryctolagus cuniculus_Alicia|F|H-CH2|g,119645..119982|339 nt|1|+1|-1| | |339+69=408| | |
+gatacccacagctcctgcccccccacctcc..................tgcggggagccc
+agcctgtccctgcagcggccagacctcagagacctgctcctg......ggctcagacgcc
+agcctcacctgcaccctgagaggcctgaaggacccc...aaggatgccgtcttcacctgg
+gagcccacaaacgggaacgaa............ccggtccagcagagcccccagcgtgac
+ccctgcggc.....................tgctacagtgtgtccagtgtgctgcccggc
+tgtgcggagccctgg......aatgcggggacagagttcacctgcacagtcacccaccct
+gag...atagagggcagctccctgacagccaccatcagcaaagacaca
+>AY386696|IGHA1*02|Oryctolagus cuniculus_Alicia|F|CH3-CHS|g,120162..120553|393 nt|1|+1| | | |393+54=447| | |
+............ggcagcctcaccccgccccaggtccacctgctgccgccgccatcagaa
+gagctggccctc......aacgcgctggtgacgctgacctgcctggtgaggggcttcagc
+ccc......aaggacgtgctggtgtactggacaaacaaaggcgtggtggtccccaaagac
+...agcttcctggtgtggaagcccctgccagagcccggccaggaa.........cccacc
+acctacgccgtcaccagcctgctgcgcgtgtcggccgaggactgg......aaccagggg
+gacagctactcctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgccaagcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaaggcgtgtgctac
+>AY386696|IGHA1*02|Oryctolagus cuniculus_Alicia|F|M|g,122841..123034|195 nt|1|+1| | | |195+0=195| | |
+ggttgtcaggagcccctgccctgtgtggtgctggatctgccacaggacagcctggaggag
+gaggcccctagcgacagcctgtggcccaccaccgtcaccctcctcactctcttcctgctg
+agcctgttctacagcacagctctgaccatgaccagcatccggggcccacctggcagcaaa
+gagggaccccagtac
+>X82116|IGHA10*01|Oryctolagus cuniculus|F|CH1|g,3..304|303 nt|1|+1|-1| | |303+75=378| | |
+............gaggctgcaaccaatctagaactcttcccgatgacctgccccagacct
+cgacct............gaacagaccgtggtcgtcggctgcctgatccggggcttccca
+ctg......gaccctctgagtgtgagctgggatgtcagtggggagaacgtg.........
+...agagtctataacttcccgcctgcccagtctggcacttca...............ggc
+ctgaacactgcatgcagcctgctgagcctaccatctgaccagtgt......cctgcagat
+gacaatgtgacctgccacgtggtgcacaac............aacgaaggccaggatctc
+cctgtgccctgccaccca
+>X82116|IGHA10*01|Oryctolagus cuniculus|F|H-CH2|g,450..796|348 nt|1|+1|-1| | |348+69=417| | |
+gagtgcagagaacccattatagatccaaccccctgccccaccacc...............
+...tgcggggagcccagcctgtccctgcagcggccagacatcggggacctgctcctg...
+...gaatcgaaggccagcctcacctgcaccctgagcggcctgaaggacccc...gagggc
+gccgtcttcacctgggagcccacaaacgggaacgaa............cccgtccagcag
+agcacccagagttacccgtgcggc.....................tgctacagtgtgtcc
+agcgtgctgcccggctgtgcggagccctgg......aacgcggggacagagttcacctgc
+acagtcacccaccctgag...atagagggcggctccctgacagccaccatcagcaga
+>X82116|IGHA10*01|Oryctolagus cuniculus|F|CH3-CHS|g,979..1370|393 nt|1|+1| | | |393+54=447| | |
+............ggcatcatcatcccacccctggtccacctgctgccgccgccatcagac
+gaactagccctg......aacgcgctggtgacgctgacctgcctggtgcggggcttcagc
+ccc......aaggatgtgctggtgtactggacgaacaaaggcgtgaatgtccctgaaaac
+...agcttcctgctgtggaagcccctgcctgagcccggccaggaa.........cccacc
+acctacgccatcaccagcctgctgcgcgtgccggccgaggactgg......aaccagaat
+gaaagctacacctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcaaccgggaggcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaaggcgtgtgctac
+>X82117|IGHA11*01|Oryctolagus cuniculus|F|CH1|g,3..316|315 nt|1|+1|-1| | |315+60=375| | |
+............gagcccgcgaccaccccaggcatctacccgctgagcctccccctacgt
+gtgtcagatgggaat...tcacagaccgtggtcgtcggctgcctgatccggggcttcttc
+cccctg...ggccctctgcgtgtgagctggaatgtcagcagggagaacgtg.........
+...agcatctataacttcccgcctgccccgactggcacttca...............ggc
+ccgtataccgcatgcagcgagctgatcctaccagacacgcagtgt......cttgaatat
+gacagtgcagcctgccacgtggagtacaac.........tcagtaataaacgagagtctg
+cccgtgcccttccca
+>X82117|IGHA11*01|Oryctolagus cuniculus|F|H-CH2|g,457..794|339 nt|1|+1|-1| | |339+69=408| | |
+gatccatgtgaacaatgccactgcccctcc..................tgcgaggagccc
+agcctgtccctgcagcgaccagacctcagagacctgctgctg......ggctcagacgcc
+agcctcacctgcaccctgagaggcctgaaggacccc...gagggagccgtcttcacctgg
+gagcccacaaacgggaacgaa............cccgtccagcagagcccccagcgtgac
+ccctgcggc.....................tgctacagtgtgtccagcgtgctgcccggc
+tgtgcggagccctgg......aacgcggggacagagttcacctgcacagtcacccaccct
+gag...atagagggcagctccctgacagccaccatcagcaaagacaca
+>X82117|IGHA11*01|Oryctolagus cuniculus|F|CH3-CHS|g,974..1365|393 nt|1|+1| | | |393+54=447| | |
+............ggcagcctcaccccacccctggtccacctgctgccgccgccgtcagaa
+gagttggccctc......aacgcgctggtgacgctgacctgcctggtgcggggcttcagc
+ccc......aaggacgtgctggtgtcctggacaaacaaaggcgtgaaggtccccgaaaac
+...agcttcctggtgtggaagcccctgcctgagcccggccaggac.........cccacc
+acctacgccgtcaccagcctgctgcgcgtgccggccgaggactgg......aaccagaat
+gaaagctactcctgcgtggtggcccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgcctggcg.........ggtaaacccacccatgtcaacgtgtctgtggtc
+gtggcagacgtagaagccgtgtgctac
+>X82118|IGHA12*01|Oryctolagus cuniculus|F|CH1|g,3..289|288 nt|1|+1|-1| | |288+87=375| | |
+............gcgtccgcaaccacccccagcctcttcccgctgatcctccctggacct
+gtgtcg............ggagagaccgtggtcgtcggctgcctgatccggggcttcttc
+cccctg...ggccctctgaatgtgagctggaacggcagcgag..................
+...ggggacgtgatcttccctcctgtcccgtctcccccctcg...............agc
+ctctacaccacgagcagcctgctgaacctgacaattgaagagtgt............cct
+aagtgtgtgatctgccacgtggagcacaat............gaagtgcacagagatctg
+atcctgccctgccca
+>X82118|IGHA12*01|Oryctolagus cuniculus|F|H-CH2|g,431..756|327 nt|1|+1|-1| | |327+69=396| | |
+gactgctccatcccccccattacc..................tgcggggagcccagcctg
+tccctgcagcggccagacatcggggacctgctcctg......gaatcgaaggccagcctc
+acctgcaccctgagcggcctaaaggacccc...gagggcgccgtcttcacctgggagccc
+acaaacgggaacgaa............cccgtccagcagagcgtccagagttacccctgc
+ggc.....................tgctacagtgtgtccagcgtgctgcccggctgtgcg
+gagccctgg......aatgcggggacagagttcacctgcacagtcacccaccctgag...
+atagagggcggctccctgacagccaaaatcagcaga
+>X82118|IGHA12*01|Oryctolagus cuniculus|F|CH3-CHS|g,937..1328|393 nt|1|+1| | | |393+54=447| | |
+............ggcagcctcacgccgccccaggtccacctgctgccgccgccatcggag
+gagctggccaac......aacgcgctggtgacgctgacctgcctggggcagggcttcagc
+ccc......aaggacgtgctggtgtactggacaaacaaaggcacggtagtcctcaaagaa
+...agctacctggtatggaagcccctgcctgagcccggccaggaa.........cccacc
+acctatgccgtcaccagcctgctgcgcgtgccggccgaggactgg......aaccagaat
+gaaagctacacctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcaaccgggaggcg.........ggtaaacccacccaagtcaacgtgtctgtggtc
+gtggcagatgtggaagccgtgtgctac
+>X82119|IGHA13*01|Oryctolagus cuniculus|F|CH1|1..256|256 nt|1| |-1| | |256+119=375|partial in 5'| |
+............................................................
+...........gaat...tcacagtatgtggtcgtcggctgcctgatccggggcttcttc
+cccccg...ggccctctgagtgtgagctggaccgtcaacggggagaatgtg.........
+...agcgcctataacttcccgcctgcccagtctggcacttca...............ggc
+ccgtacaccgcatgcagcgagctgatcctaccagttacgcagtgt......cttggccaa
+aaaagcgcagcctgccacgtggagtacaac.........tcagtaataaacgagagtctg
+cccgtgcccttccca
+>X82119|IGHA13*01|Oryctolagus cuniculus|F|H-CH2|g,396..760|366 nt|1|+1|-1| | |366+72=438| | |
+gactgctgcccagccaacagctgctgcacctgccccagctccagctctagaaacctcatc
+tcaggc.....................tgccagcccagcctgtccctgcagcggccagac
+ctcggggacctgctcctg......ggccgggacgccagcctcacctgcaccctgagcggc
+ctgaagaacccc...gaggatgccgtcttcacttgggagcccacaaacggcaacgaa...
+.........cccgtccagcagagagcccagcgtgacctcagtggc...............
+......tgctacagtgtgtccagtgtcctacccagcagtgcggagacctgg......aaa
+gcgaggacagagttcacctgcacagtcacccaccctgag...atagacagtggctcccta
+acagccaccatcagcaga
+>X82119|IGHA13*01|Oryctolagus cuniculus|F|CH3-CHS|g,940..1331|393 nt|1|+1| | | |393+54=447| | |
+............ggtgtcgtcaccccgccccaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aatgagcaggtgacgctgacctgcctggtgcggggcttcagc
+ccg......aaggatgtgctggtgtcctggaggcaccagggccaggaggtccctgaagac
+...agcttcctggtgtggaagtccatgcccgagtccagccaggac.........aaagcc
+acctacgccattaccagcctgctgcgcgtgccggccgaggactgg......aaccagggg
+gacacctattcctgcatggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgcctggcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtagaagccgtgtgctac
+>X00353|IGHA13*02|Oryctolagus cuniculus|F|CH1|1..138|138 nt|1| | | | |138+237=375|partial in 5'| |
+............................................................
+............................................................
+............................................................
+...........................cagtctggcacttca...............ggc
+ccgtacaccgcatgcagcgagctgatcctaccagttacgcagtgt......cttggccaa
+aaaagcgcagcctgccacgtggagtacaac.........tcagtaataaacgagagtctg
+cccgtgcccttccca
+>X00353|IGHA13*02|Oryctolagus cuniculus|F|H-CH2|139..504|366 nt|1| | | | |366+72=438| | |
+gactgctgcccagccaacagctgctgcacctgccccagctccagctctagaaacctcatc
+tcaggc.....................tgccagcccagcctgtccctgcagcggccagac
+ctcggggacctgctcctg......ggccgggacgccagcctcacctgcaccctgagcggc
+ctgaagaacccc...gaggatgccgtcttcacttgggagcccacaaacggcaacgaa...
+.........cccgtccagcagagagcccagcgtgacctcagtggc...............
+......tgctacagtgtgtccagtgtcctacccagcagtgcggagacctgg......aaa
+gcgaggacagagttcacctgcacagtcacccaccctgag...atagacagtggctcccta
+acagccaccatcagcaga
+>X00353|IGHA13*02|Oryctolagus cuniculus|F|CH3-CHS|g,505..897|393 nt|1|+1| | | |393+54=447| | |
+............ggtgtcgtcaccccgccccaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aatgagcaggtgacgctgacctgcctggtgcggggcttcagc
+ccc......aaggatgtgctggtgtcctggaggcaccagggccaggaggtccctgaagac
+...agcttcctggtgtggaagtccatgcccgagtccagccaggac.........aaagcc
+acctacgccattaccagcctgctgcgcgtgccggccgaggactgg......aaccagggg
+gacacctattcctgcatggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgccttgcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtagaagccgtgtgctac
+>AF314407|IGHA14*01|Oryctolagus cuniculus|F|CH1|1..101|101 nt|1| |-1| | |101+277=378|partial in 5'| |
+............................................................
+............................................................
+............................................................
+............................................................
+......................ggatcctcccacctgaagagtgt......cccgcagga
+aactgtgtggcctgccacgtggaacacaac.........gatgacgagggccaggacctc
+actgtgccctgcccccca
+>AF314407|IGHA14*01|Oryctolagus cuniculus|F|H-CH2|g,219..318|101 nt|1|+1| | | |101+21=122|partial in 3'| |
+gaggacccctgcaaaaactgccccaccatcagccgcagccgcttcaccgcccac......
+...............tgccagcccagcctgtccctgcagcggccagacctcggtgacctg
+tc
+>X82108|IGHA2*01|Oryctolagus cuniculus|F|CH1|g,3..301|300 nt|1|+1|-1| | |300+78=378| | |
+.........gatctcgagaacagcagtcctgacctcatcccgctaccctgccccatactt
+gaaccc............ggagagcccatggtcatcggctgcctgatccggggcttcttc
+ccccgg...ggccctctgactgtgacatggaacgtcagcggg..................
+...gagagcgtgatcttcccgcccgtcccgtctcccccctca...............agc
+ctctacaccacgtacagcctgctgaggctaccagctgagcagtgt......cctgaagaa
+aacagtgtggcctgccgcgtggagcacaac............aacaagggccaggatgtg
+accgtgcccagcccccca
+>X82108|IGHA2*01|Oryctolagus cuniculus|F|H-CH2|g,439..815|378 nt|1|+1|-1| | |378+69=447| | |
+gcttgcaatgagtccaccatagaaccaccaacgacacccacctgcccctgcccctgcccc
+tccccctcc..................tgtgggaagcccagcctgtccctgcagcggcca
+gacctcggggacctgctcctg......aactcgaacgccagcctcacctgcaccctgaga
+ggcctgttgaacccc...gagggcgccgtcttcacctgggagcccacatttgggaaggaa
+............cccgtccagcagagtccccagcttgaccactgtggc............
+.........tgctacagtgtgtccagtgtgctgcctggctgtgcagtgctctgg......
+aatgctgggacagagttcacctgcacagtcacccaccctgag...atagagggcgactcc
+ctaacaggaaccattagcaaagacaca
+>X82108|IGHA2*01|Oryctolagus cuniculus|F|CH3-CHS|g,996..1390|396 nt|1|+1| | | |396+51=447| | |
+............ggcagcctcatcccaccccaggtccacctgctgccgccgccatcagag
+gagctggccctc......aacgcgctggtgacactgacctgcctggtgaggggcttcagc
+ccc......aaggacgtgctggtgtcctggacacacaacggcaccccagtggtccccaaa
+gacagctacctggtgtggaagcccctccgtgagcccggccaggac.........cccaca
+acctacgccatcaccagcctgctgcgcgtgccggccgaggactgg......aaccagggg
+gacagctactcctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgcctggcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaaggcgtgtgctac
+>AY386696|IGHA2*02|Oryctolagus cuniculus_Alicia|F|CH1|g,135838..136136|300 nt|1|+1|-1| | |300+93=393| | |
+.........gatctcgagaacaccagtcctgacctcatcccgctaccctgccccatactt
+gaaccc............ggagagcccatggtcatcggctgcctgatccggggcttcttc
+ccccgg...ggccctctgagtgtgacatggaacgtcagcggg..................
+...gagagcgtgatcttcccgcccgtcccgtctcccccctca...............agc
+ctctacaccacgtacagcctgctgaggctaccagctgagcagtgt......cctgaagaa
+aacagtgtggcctgccgcgtggagcacaac............aacaagggccaggatgtg
+accgtgcccagcccccca...............
+>AY386696|IGHA2*02|Oryctolagus cuniculus_Alicia|F|H-CH2|g,136274..136650|378 nt|1|+1|-1| | |378+69=447| | |
+gcttgcaatgagtccaccatagaaccaccaacgacacccacctgcccctgcccctgcccc
+tccccctcc..................tgtgggaagcccagcctgtccctgcagcggcca
+gacctcggggacctgctcctg......aactcgaacgccagcctcacctgcaccctgaga
+ggcctgttgaacccc...gagggcgccgtcttcacctgggagcccacatttgggaaggaa
+............cccgtccagcagagtccccagcttgaccactgtggc............
+.........tgctacagtgtgtccagtgtgctgcctggctgtgcagtgctctgg......
+aatgctgggacagagttcacctgcacagtcacccaccctgag...atagagggcgactcc
+ctaacaggaaccattagcaaagacaca
+>AY386696|IGHA2*02|Oryctolagus cuniculus_Alicia|F|CH3-CHS|g,136831..137225|396 nt|1|+1| | | |396+51=447| | |
+............ggcagcctcatcccaccccaggtccacctgctgccgccgccatcagag
+gagctggccctc......aacgcgctggtgacactgacctgcctggtgaggggcttcagc
+ccc......aaggacgtgctggtgtcctggacacacaacggcaccccagtggtccccaaa
+gacagctacctggtgtggaagcccctgcctgagcccggccaggac.........cccaca
+acctacgccatcaccagcctgctgcgcgtgccggccgaggactgg......aaccagggg
+gacagctactcctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgcctggcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaaggcgtgtgctac
+>AY386696|IGHA2*02|Oryctolagus cuniculus_Alicia|F|M|g,139540..139733|195 nt|1|+1| | | |195+0=195| | |
+ggttgtcaggagcccctgccctgtgtggtgctggatctgccacaggacagcctggaggag
+gaggcccccggcgccaacctgtggcccaccaccgtcaccctcctcactctcttcctgctg
+agcctgttctacagcacagctctgaccatgacaaacatccggggcccagctgccagcaaa
+gagggaccccagtac
+>X82109|IGHA3*01|Oryctolagus cuniculus|F|CH1|g,3..307|306 nt|1|+1|-1| | |306+69=375| | |
+............gcgaccgcggcccctcccagcctcttcccgctgatccaccccagatgt
+gcattaaaagacact...ccagcgaccgtgatcgccggctgcctgatccggggcttcttc
+cccctg...ggccctctgagtgtgagctggaacgccagcggg..................
+...aagaacgtgaccttcccacccgtcccgtctggcacttca...............ggc
+ccgtacaccacgtgcagcctgctgagcctaacaccggagcagtgt......cctgaggat
+cacaatgtggtctgccacgtggagcacaac.........tatgacgagggccagaatctg
+actgtgctctaccca
+>X82109|IGHA3*01|Oryctolagus cuniculus|F|H-CH2|g,440..795|357 nt|1|+1|-1| | |357+69=426| | |
+gagtgcaaagatccaaattcagatccaaccccctgcccctgcccccccatcacc......
+............tgcggggagccaagcctgtccctgcagcggccagacatcggggacctg
+ctcctg......gaatcgaacgccagcctcacctgcaccctgagcggcctgaaggacccc
+...gagggtgccgtcttcacctggaatcccacaaatgggaacgaa............ccc
+gtgcagcagagcacccagagttacccgtgcggc.....................tgctac
+agtgtgtccagcgtgctgcccggctgtgcggagccctgg......aatgcggggacagag
+ttcacctgcacagtcacccaccctgag...atagagggcggctccctgacagccaccatc
+agcaga
+>X82109|IGHA3*01|Oryctolagus cuniculus|F|CH3-CHS|g,977..1371|396 nt|1|+1| | | |396+51=447| | |
+............ggcagcctcaccccgccccaggtccacctgctgccgccgccgactgag
+gaactggccctc......aacgcgctggtgacgctgacctgcctggtgaggggcttcagc
+ccc......aaggacgtgctggtgtcctggacacacaacggcaccctggtggtccccaaa
+gacagcttcctggtgtggaagcccctgcctgagcccggccaggaa.........cccacc
+acctacgctgtcaccagcctgctgcgcgtgccggccgaggactgg......aaccagggg
+gacagctactcctgcgtggtgggccatgagggc...ctggccgagcatttcacccagaag
+accatcgaccgcctggcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaagccgtgtgctac
+>X82110|IGHA4*01|Oryctolagus cuniculus|F|CH1|g,3..304|303 nt|1|+1|-1| | |303+72=375| | |
+............gtgcctgcaacccccccgatcatcttcccgctgacctgccccgggtgt
+gtactgaaagacact...tcagcgaccattgtcgcgggctgcctgatccggggcttcttc
+ccccgg...ggccctctaggtgtgacatggaacgacaacagg..................
+...gcaaacctgaccttcccacctgtccagtctgccacctcg...............agc
+ctgtacaccacgtgcagcgtgctgagcctgccagctgagcagtgt......cctgcagga
+aacagtgtggcctgccgcgtggagcacaac............aacaagcgccaggacctg
+actgtgccctgccta
+>X82110|IGHA4*01|Oryctolagus cuniculus|F|H-CH2|g,442..818|378 nt|1|+1|-1| | |378+69=447| | |
+gcttgcaataagcccaccatagaaccaccaacgaaacccacctgcccctgcccctgcccc
+tccccctcc..................tgtgggaagcccagcctgtccctgcagcggcca
+gacctcggggacctgctcctg......gactcgaacgccagcctcacctgcaccctgaga
+ggcctgctgaacccc...gagggcgccgtcttcacctggaatcccacaaatgggaaggaa
+............cccgtccagcagagcgcccagcgtgaccactgcggc............
+.........tgctacagtgtgtccagcgtgctgcctggctgtgcggagccctgg......
+aatgcagggacagtcttcacctgcactgtcacccaccctgag...atagacagcggctcc
+ctgacagccaccatcagcaaagacaca
+>X82110|IGHA4*01|Oryctolagus cuniculus|F|CH3-CHS|g,998..1389|393 nt|1|+1| | | |393+54=447| | |
+............ggcagcctcatcccaccccaggtccacctgctgccaccgccatcggag
+gagctggccctc......aatgcactggtgacactgacctgcctggtgcggggcttcagc
+ccc......aaggacgtgctggtgtactggacgaacaaaggcctgcaggtccccaaagac
+...agcttcctggtgtggaagcccctgcctgagccaggccaggaa.........cccacc
+acctacgccgtcaccagcctgctgcgcgtgccggccgaggactgg......aaccagaat
+gaaagctacacctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgcctggcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaaggcgtctgctac
+>AY386696|IGHA4*02|Oryctolagus cuniculus_Alicia|F|CH1|g,86059..86360|303 nt|1|+1|-1| | |303+72=375| | |
+............gtgcctgcaacccccccgatcatcttcccgctgacctgccccgggtgt
+gtactgaaagacact...tcagcgaccattgtcgccggctgcctgatccggggcttcttc
+ccccgg...ggccctctgagtgtgacatggaacgacaacagg..................
+...gcaaacctgaccttcccacctgtccagtctgccacctcg...............agc
+ctgtacaccacgtgcagcctgctgagcctgccagctgagcagtgt......cctgcagga
+aacagtgtggcctgccgcgtggagcacaac............aacaagcgccaggacctg
+actgtgccctgccta
+>AY386696|IGHA4*02|Oryctolagus cuniculus_Alicia|F|H-CH2|g,86498..86874|378 nt|1|+1|-1| | |378+69=447| | |
+gcttgcaataagcccaccatagaaccaccaacgaaacccacctgcccctgcccctgcccc
+tccccctcc..................tgtgggaagcccagcctgtccctgcagcggcca
+gacctcggggacctgctcctg......gactcgaacgccagcctcacctgcaccctgaga
+ggcctgctgaacccc...gagggcgccgtcttcacctggaatcccacaaatgggaaggaa
+............cccgtccagcagagcgcccagcgtgaccactgcggc............
+.........tgctacagtgtgtccagcgtgctgcctggctgtgcggagccctgg......
+aatgcagggacagtcttcacctgcactgtcacccaccctgag...atagacagcggctcc
+ctgacagccaccatcagcaaagacaca
+>AY386696|IGHA4*02|Oryctolagus cuniculus_Alicia|F|CH3-CHS|g,87055..87446|393 nt|1|+1| | | |393+54=447| | |
+............ggcagcctcatcccaccccaggtccacctgctgccaccgccatcggag
+gagctggccctc......aatgcactggtgacactgacctgcctggtgcggggcttcagc
+ccc......aaggacgtgctggtgtactggacgaacaaaggcgtgcaggtccccaaagac
+...agcttcctggtgtggaagcccctgcctgagcccggccaggaa.........cccacc
+acctacgccgtcaccagcctgctgcgcgtgccggccgaggactgg......aaccagaat
+gaaagctacacctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgcctggcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaaggcgtctgctac
+>AY386696|IGHA4*02|Oryctolagus cuniculus_Alicia|F|M|g,89577..89788|213 nt|1|+1| | | |213+0=213| | |
+ggccttctgtgtcttgcaggttgtcaggagcccctgccctgtgtggtgctggatctgcca
+caggacagcctggaggaggaggcccccggcgccaacctgtggcccaccaccgtcaccctc
+ctcactctcttcctgctgagcctgttctacagcacagctctgaccatgacaaacatccgg
+gacccacctggcagcaaagagggaccccagtac
+>X82111|IGHA5*01|Oryctolagus cuniculus|F|CH1|g,3..307|306 nt|1|+1|-1| | |306+69=375| | |
+............gcgactgcggcctctcccaggctcttcccactgatccaccctagatgt
+gcattaaaagacact...tcagcgaccgtgatcgccggctgcctgatccggggcttcttc
+cccctg...ggccctctgagtgtgagctggaacgccagcggg..................
+...aagaacgtgaccttcccacccgtcccgtctggcacttca...............ggc
+ccgtacaccacgtgcagcctgctgagcctaacaccggagcagtgt......cctgaggat
+gacaatgtggtctgccacgtggagcacaac.........tatgacaagggccagaatctg
+actgtgctctaccca
+>X82111|IGHA5*01|Oryctolagus cuniculus|F|H-CH2|g,439..815|378 nt|1|+1|-1| | |378+69=447| | |
+gaatgccaaccgccaactcctagtcctacaactccaaccacctgcccctgcccctgcccc
+ctcccctcc..................tgtggggagcccagcctgtccctgcagcggcca
+gacctcggggacctgctcctg......aactcgaacgccagcctcacctgcaccctgaga
+ggcctgttggacccc...gagggcgccgtcttcacctgggagcccacatttgggaaggaa
+............cccgtccagctgagtcccagacttgaccactgcggc............
+.........tgctacagtgtgtccagcgtgctgcccggctgtgcggcggcctgg......
+aatgcagggacaaagttcaactgcacagtcacccaccctgag...ataaagggcgtctcc
+ctaacagacataatcagcaaagacaca
+>X82111|IGHA5*01|Oryctolagus cuniculus|F|CH3-CHS|g,996..1387|393 nt|1|+1| | | |393+54=447| | |
+............ggtgtcgtcatcgcgccccaggtccacctgctgccaccgccgtcagac
+gaactagccctg......aacgcgctggtgacgctgacctgcctggtgcggggcttcagc
+ccc......aaggatgtgctggtgtactggacgaacaaaggcgtggaggtccccaaagac
+...agcttcctggtgtggaagcccctgcctgagcccggccaggaa.........cccaca
+acctacgctgtcaccagcctgctgcgcgtgccggccgaggactgg......aaccagaat
+gaaagctacacctgcgtggtaggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgcctggcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaaggcgtgtgctac
+>AF090367|IGHA5*02|Oryctolagus cuniculus|F|CH1|g,3..304|303 nt|1|+1|-1| | |303+69=372| | |
+............gtgcctgcaacccccccgatcatcttcccgctgacctgccccgggtgt
+gtactgaaagacact...tcagccaccgtgtccgccggctgcctgatccggggcttcttc
+ccccgg...ggccctctgagtgtgagctggaacgccagcggg..................
+...aagaacgtgactttcccgcccgtcccgtctggcacttca...............ggc
+ccgtacaccacgtgcagcctgctgagcctaacaccggagcagtgt......cctgaggat
+gacaatgtggtctgccacgtggagcactat.........gacgagggccaggatttgact
+gtgctctaccca
+>AF090367|IGHA5*02|Oryctolagus cuniculus|F|H-CH2|g,436..585|151 nt|1|+1| | | |151+24=175|partial in 3'| |
+gaatgccaaccgccaactcctagtcctacaactccaaccacagccaccacatccggcccc
+accccctcc..................tgcggggagcccagcctgtccctgcagcggcca
+gacctcggggacctgctgctg......aactcgaacgccagcctcacctgcaccc
+>AY386696|IGHA5*03|Oryctolagus cuniculus_Alicia|F|CH1|g,103798..104099|303 nt|1|+1|-1| | |303+72=375| | |
+............gtgcctgcaacccccccgatcatcttcccgctgacctgccccgggtgt
+gtactgaaagacact...tcagcgaccattgtcgccggctgcctgatccggggcttcttc
+ccccgg...ggccctctgagtgtgagctggaacgccagcggg..................
+...aagaacgtgactttcccgcccgtcccgtctggcacttca...............ggc
+ccgtacaccacgtgcagcctgctgagcctaacaccggagcagtgt......cctgaggat
+gacaatgtggtctgccacgtggagcac............tatgacgagggccaggatttg
+actgtgctctaccca
+>AY386696|IGHA5*03|Oryctolagus cuniculus_Alicia|F|H-CH2|g,104231..104607|378 nt|1|+1|-1| | |378+69=447| | |
+gaatgccaaccgccaactcctagtcctacaactccaaccacagccaccacatccggcccc
+accccctcc..................tgcggggagcccagcctgtccctgcagcggcca
+gacctcggggacctgctgctg......aactcgaacgccagcctcacctgcaccctgaga
+ggcctgttggacccc...gagggcgccgtcttcacctgggagcccacaaacgggaacgaa
+............cccgtccagctgagtcccaagcttgaccactgcggc............
+.........tgctacagtgtgtccagcgtgctgcccggctgtgcggcggcctgg......
+aatgcggggacaaagttcaactgcacagtcacccaccctgag...atagagggcggctcc
+ctaacagacataatcagcaaagacaca
+>AY386696|IGHA5*03|Oryctolagus cuniculus_Alicia|F|CH3-CHS|g,104787..105178|393 nt|1|+1| | | |393+54=447| | |
+............ggtgtcgtcatcgcgccccaggtccacctgctgccgccgccgtcagaa
+gagctggccctc......aacgcgctggtgacgctgacctgcctggtgcggggcttcagc
+ccc......aaggatgtgctggtttactggacgaacaaaggcgtggcggtccccaaagac
+...agatacctggtgtggaagcccctgcctgagcctggccaggac.........cccacc
+acctacgccgtcaccagcctgctgcgcgtgccggccgaggactgg......aaccagaat
+gaaagctacacctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgcctggcg.........ggtaaacccacccaagtcaacgtgtctgtggtc
+gtggcagacgtggaagccgtgtgctac
+>AY386696|IGHA5*03|Oryctolagus cuniculus_Alicia|F|M|g,107245..107438|195 nt|1|+1| | | |195+0=195| | |
+ggttgtcaggagcccctgccctgtgtggtgctggatctgccacaggacagcctggaggag
+gaggcccccggcgccaacctgtggcccaccaccgtcaccctcctcactctcttcctgctg
+agcctgttctacagcacagctctgaccatgacaaacattcggggtccacctggcagcaaa
+gagggaccccagtac
+>X82112|IGHA6*01|Oryctolagus cuniculus|F|CH1|g,3..304|303 nt|1|+1|-1| | |303+75=378| | |
+.........gatcccgtgaacactagacccatcctcatcccactacctagccccatactt
+ggcccc............ggagagcccgtggtcatcggctgcctgatccggggcttcttc
+cccctg...ggccctctgagtgtgacatggaacaccagcggg..................
+...gagaacctgaccttcccacctgtccagtctgccacctcg...............agc
+ctgtacaccacgtgcagcctgctgaggctactagctgagcagtgt......cctgaagaa
+aatagtgtggcctgccatgtggagcacaac.........tacgacaagggccagcatgtg
+accgtgcccagcccccca
+>X82112|IGHA6*01|Oryctolagus cuniculus|F|H-CH2|g,443..819|378 nt|1|+1|-1| | |378+69=447| | |
+gaatgccaaccgccaactccaggtccttcagatacaaccacctgcccctgtccctgccct
+tccccatcc..................tgtggggagcccagcctgtccctgcagcggcca
+ttcctcagggacctgctcctg......aactcgaacgccagcctcacctgcaccctgaga
+ggcctgaagaacccc...gagggcgccgtcttcacctgggagcccacaaacgggaacaaa
+............cccgtccagcagagcgtccagagttacccgtgcggc............
+.........tgctacagtgtgtccagcgtgctgcccggctgtgcggagccctgg......
+aatgcggggacagagttcacctgcacagtcacccaccctgag...atagagggcggcccc
+ctgacagccaaaatcagcaaagacaca
+>X82112|IGHA6*01|Oryctolagus cuniculus|F|CH3-CHS|g,997..1388|393 nt|1|+1| | | |393+54=447| | |
+............ggcgccatcataccacctcaggtccatctgctgccgccaccatcagag
+gagctggccctc......aacgagctggtgacactgacctgcctggtgcggggcttcagc
+ccc......aaggacgtgctggtgtactggacgaacaaaggcgtgaatgtccctgaaaac
+...agcttcctggtgtggaagcccctgcctgagcccggccaggaa.........cccaca
+acctacgccgtcaccagcctgctgcgcgtgccggccgaggactgg......aaccagaat
+gaaagctacacctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgcctgtcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaaggcgtgtgctac
+>X82113|IGHA7*01|Oryctolagus cuniculus|F|CH1|g,3..316|315 nt|1|+1|-1| | |315+60=375| | |
+............gagcccgcagccaccccagacatcttcccgctgaacctccccctacgt
+gtgtcagatgggaat...tcacagaccgtggtcgtcggctgcctgatccggggcttcttc
+cccccg...agccctctgcgtgtgagctggaacgtcagcagggagaacatg.........
+...agcgtctataacttcccacctgccccgactggcacttca...............ggc
+ccgtacaccgcatgcagcgagctgatcctaccagtcacgcagtgt......cttgaatat
+gacagtgcagcctgccacgtggagtacaac.........tcagtaataaacgagagtctg
+cccgtgcccttccca
+>X82113|IGHA7*01|Oryctolagus cuniculus|F|H-CH2|g,456..793|339 nt|1|+1|-1| | |339+69=408| | |
+gatccatgtgaacaatgccactgcccctcc..................tgcgaggagccc
+agcctgtccctgcagcggccagacctcagagacctgctcctg......ggctcagacgcc
+agcctcacctgcaccctgagaggcctcaagtacccc...gaggacgccgtcttcacctgg
+gagcccacaaacgggaacgaa............ccggtccagcagagcccccagcgtgac
+ccctgcggc.....................tgctacagtgtgtccagcgtgctgcccggc
+tgtgcggagccctgg......aatgcggggacagagttcacctgcacagtcacccaccct
+gag...atagagggcggctccctgacagccaccatcagcaaagacaca
+>X82113|IGHA7*01|Oryctolagus cuniculus|F|CH3-CHS|g,973..1364|393 nt|1|+1| | | |393+54=447| | |
+............gggagcctcactccaccccaggtccacctgctgccgccgccatcggag
+gagctggccctc......aacgcgctggtgacactgacctgcctggtgcggggcttcagc
+ccc......aaggacgtgctggtgtactggaggaagaaagacgtggaggtccccgaaaac
+...agcttcctggtgtggaagcccctgcctgagcccggccaggac.........cccacc
+acctacgccgtcaccagcctgctgcgcgtgtcggccgaggactgg......aaccagggg
+gacagttacacctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgggaggcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaagccgtgtgctac
+>X82114|IGHA8*01|Oryctolagus cuniculus|F|CH1|g,3..316|315 nt|1|+1|-1| | |315+60=375| | |
+............gcgtccgcaaccaccccaggcatctacccgctgagcctccccctacat
+gtgtcagatgggaat...tcacagcccgtggtcgtcggctgcctgatcgatggcttcttc
+cccccg...ggccctctgcgtgtgagctggaacgtcagcagggagaatataacc......
+...agcgtctataacttcccacctgccccgactggcacttca...............ggc
+ccgtacaccgcatgcagcgagctgatcctaccagacacgcagtgt......cttagacat
+caaagcgcagcctgccacgtggaatacaac............tcagtaaaccagagtctg
+cttgtgccctaccca
+>X82114|IGHA8*01|Oryctolagus cuniculus|F|H-CH2|g,456..826|372 nt|1|+1|-1| | |372+72=444| | |
+gactgctgcccagccaacagctgctgcacctgccccagctccagctctagaaacctcatc
+tcaggc.....................tgccagcccagcctgtccctgcagcggccagac
+atcggggacctgctcctg......ggccgggacgccagcctcacctgcaccctgagcggc
+ctgaaggacccc...gagggtgccgtcttcacctgggagcccacaaacgggaacgaa...
+.........cccgtccagcagagagcccagcgtgacctcagtggc...............
+......tgctacagtgtgtccagtgtcctacccagcagtgcggagacctgg......aaa
+gtgaggacagagttcacctgcacagtcacccaccctgag...atagagggcggctccctg
+acagccaccatcagcaaagacaca
+>X82114|IGHA8*01|Oryctolagus cuniculus|F|CH3-CHS|g,1006..1400|396 nt|1|+1| | | |396+51=447| | |
+............ggcagcctcaccccacccctggtccacctgctgccgccgccgtcagaa
+gagttggccctc......aacgcgctggtgacgctgacctgcctggtgaggggcttcagc
+ccc......aaggacgtgctggtgtcctggacacacaacggcaccccagtggtccccaaa
+gacagcttcctggtgtggaagcccctgcccgagccgggccaggac.........cccacc
+acctacgccgccaccagcctgctgcgcatgtcggccgaggactgg......aaccagggg
+gacagctacaactgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgcctggcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaaggcgtgtgctac
+>X82115|IGHA9*01|Oryctolagus cuniculus|F|CH1|g,3..298|297 nt|1|+1|-1| | |297+78=375| | |
+............gatcccgcgaccacccccagcctcttcccgctgagcctgccctgtcct
+gagtgt............gcacatcctgtggtcgtcggctgcctgatccggggcttcttc
+cccctg...ggccctctgaatgtgagctggaacggcagcgag..................
+...gggggcgtgatcttccctcctgtcccgtctccctcctca...............agc
+ctctacaccacaagcagcctgctgagcctgacagatgaccagtgt......cctagagat
+ggaaatgtgacctgccatgtggagcacaac.........tatgatgagggccaggatctg
+actgtgccctgccaa
+>X82115|IGHA9*01|Oryctolagus cuniculus|F|H-CH2|g,437..774|339 nt|1|+1|-1| | |339+69=408| | |
+gactgccactgctactgcccccccacctcc..................tgcggggagccc
+agcctgtccctgcagcggccagacatcggggacctgctcctg......gaatcgaaggcc
+agcctcacctgcaccctgagcggcctgaaggacccc...gagggcgccgtcttcacctgg
+gagcccacaaacgggaacgaa............cccgtccagcagagcgtccagagttac
+ccgtgcggc.....................tgctacagtgtgtccagcgtgctgcccggc
+tgtgcggagccctgg......aatgcggggacagagttcacctgcacagtcacccaccct
+gag...atagagggcggctccctgacagccaccatcagcatcagcaga
+>X82115|IGHA9*01|Oryctolagus cuniculus|F|CH3-CHS|g,957..1351|396 nt|1|+1| | | |396+51=447| | |
+............ggcagcctcaccccaccccaggtccacctgctgccaccgccgactgag
+gagctcgccctg......aatgagcaggtgacgctcacctgcctggtgcagggcttcagc
+ccc......aaggacgtgctggtgtcctggacacacaacggcaccctggtggtccccaaa
+gacagctacctggtgtggaagcccctgcctgagcccggccaggac.........cccacc
+acctacgctgtcaccagcctgctgcgcgtgtcggccgaggactgg......aaccagggg
+gacagctactcctgcgtggtgggccatgagggc...ctggccgagcacttcacccagaag
+accatcgaccgccaagcg.........ggtaaacccacccacgtcaacgtgtctgtggtc
+gtggcagacgtggaagccgtgtgctac
+>AY386696|IGHE*01|Oryctolagus cuniculus_Alicia|F|CH1|g,69246..69544|300 nt|1|+1|-1| | |300+63=363| | |
+............gtctctatccaggccccctccgtcttccccttggcctcctgctgcaga
+ggggcgactgccagg...gcagcctccgtgacgctgggctgcctggtgaagggctacttc
+ccg......gagccggtgagcgtgacctgggatgccggcaccctgaacagc.........
+...agcaccgtgaccttgcctgccgtcaccctcgacacg..................ggg
+ctgtccaccaccgtcagccaggtgaccatttcgggcgcatgggct............aag
+cagcggttcacctgcagtgtggcacacactccgtctgcaacccacaccaacaagaccttc
+caa
+>AY386696|IGHE*01|Oryctolagus cuniculus_Alicia|F|CH2|g,69716..70038|324 nt|1|+1|-1| | |324+54=378| | |
+...gcgtgctctgtgagcttcaccccgccggccgtgaggctcttccactcctcctgtgac
+cccagagagaac......gacacctacaccgtccagcttctgtgcctcatctccggctac
+acc...ccgggggacatcgaggtcacctggctggtggacgggcagaaggacccc......
+aacatgttctcgatcacggcgcagcccaggcaggagggc..................aag
+ctggcgtccacccacagtgaactcaacatcacccagggcgagtgg......gcgtccaag
+cgcacctacacctgcagggtcgcctaccaa............ggcgagctctttgaggcc
+cacgcccgggagtgcaca
+>AY386696|IGHE*01|Oryctolagus cuniculus_Alicia|F|CH3|g,70132..70451|321 nt|1|+1|-1| | |321+57=378| | |
+.........gattacgaaccgcgaggcgtgagcacctacctgagctcccccagccccctc
+gacctatacgtc......cacaagtcgcccaagctcacctgcctggtggtggacctggcc
+agtgaa...gagggcgtgagcctggtctggtcccgggacagcgggaagcctgtc......
+...gaccctgacccctggaagtctgataagcagttcaat..................gcc
+acggtcatcatcaggtccaccctgccagtggacgcccaggactgg......attgatggc
+gagatcttcaagtgcaccgtgacccaccctgac......ctgcccacagccatcgtgcgc
+tccatctccaaggcccag
+>AY386696|IGHE*01|Oryctolagus cuniculus_Alicia|F|CH4-CHS|g,70532..70869|339 nt|1|+1| | | |339+54=393| | |
+............ggcaagcgtgccacccctgaggtccacctgttcacaccgcctgaggag
+gatcaggggagc......agggaccagctcaccctcacctgcctggtccagaacttcttc
+cca......gcggacatcttcgtggactggctgcgcaatggccagcacatgcccagt...
+ggccagcaaagcaccaccgagcctcgcctggctggcggctcc............aaccaa
+acctactttgtcttcagccgcctggaggtcagccgggctgactgg......gagcagaac
+atcccattcacctgccgcgtggtccacgaggcggtgaccgacaccaggaccctgctgaaa
+accgtgtccaagaggccc.........ggtaaa
+>AY386696|IGHE*01|Oryctolagus cuniculus_Alicia|F|M1|g,73064..73197|135 nt|1|+1| | | |135+0=135| | |
+gagctggacgtccaggacctgtgcacagagggggctgagcacgaggagctagacggactg
+tggaccagcacctgcatcttcgccggcctcttcctgctcagtacgagctgcagcgccacc
+gtcctgctcctcaag
+>AY386696|IGHE*01|Oryctolagus cuniculus_Alicia|F|M2|73292..73372|81 nt|1| | | | |81+0=81| | |
+gtgaagtgggtcttcacagcggtgctgcgggagtcgccccaagcctcccacgactacacc
+aacgtcctccagctgcgggcc
+>L29172|IGHG*01|Oryctolagus cuniculus_39-la|F|CH1|g,182..465|285 nt|1|+1|-1| | |285+81=366| | |
+............gggcaacctaaggctccgtcagtcttcccactggccccctgctgcggg
+gacacaccc.........agctccacggtgaccttgggctgcttggtcaaaggctacctc
+ccc......gagccagtgaccgtgacttggaactcgggcaccctcaccaat.........
+...ggggtacgcaccttcccgtccgtccggcagtcctca..................ggc
+ctctactcgctgagcagcgtggtgagcgtgacctcaagc..................agc
+cagcccgtcacctgcaacgtggcccacccagcc......accaacaccaaagtggacaag
+accgtt
+>L29172|IGHG*01|Oryctolagus cuniculus_39-la|F|H|g,672..703|33 nt|1|+1|-1| | |33+0=33| | |
+gcgccctcgacatgcagcaagcccacgtgccca
+>L29172|IGHG*01|Oryctolagus cuniculus_39-la|F|CH2|c,798..1126|330 nt|1|+1|-1| | |330+48=378| | |
+......ccccctgaactcttggggggaccgtctgttttcatctttcccccaaaacccaag
+gacaccctcatgatc...tcacgcacccccgaggtcacatgcgtggtggtggacgtgagc
+gaggatgaccccgaggtgcagttcacatggtacataaacaacgagcaggtgcgc......
+...accgcccggccgccgctacgggagcagcagttcaac..................agc
+acgatccgtgtggtcagcaccctccccatcgcgcacgaggactgg......ctgaggggc
+aaggagttcaagtgcaaagtccacaacaaggca......ctcccggcccccatcgagaaa
+accatctccaaagccaga
+>L29172|IGHG*01|Oryctolagus cuniculus_39-la|F|CH3-CHS|g,1220..1539|321 nt|1|+1| | | |321+72=393| | |
+............gggcagcccctggagccgaaggtctacaccatgggccctccccgggag
+gagctgagc.........agcaggtcggtcagcctgacctgcatgatcaacggcttctac
+cct......tccgacatctcggtggagtgggagaagaacgggaaggcagaggac......
+...aactacaagaccacgccggccgtgctggacagcgac..................ggc
+tcctacttcctctacagcaagctctcagtgcccacgagtgaatgg......caacggggc
+gacgtcttcacctgctccgtgatgcacgaggcc...ttgcacaaccactacacgcagaag
+tccatctcccgctctccg.........ggtaaa
+>K00752|IGHG*02|Oryctolagus cuniculus|F|CH1|238..522|285 nt|1| | | | |285+81=366| | |
+............gggcaacctaaggctccatcagtcttcccactggccccctgctgcggg
+gacacaccc.........agctccacggtgaccctgggctgcctggtcaaaggctacctc
+ccg......gagccagtgaccgtgacctggaactcgggcaccctcaccaat.........
+...ggggtacgcaccttcccgtccgtccggcagtcctca..................ggc
+ctctactcgctgagcagcgtggtgagcgtgacctcaagc..................agc
+cagcccgtcacctgcaacgtggcccacccagcc......accaacaccaaagtggacaag
+accgtt
+>K00752|IGHG*02|Oryctolagus cuniculus|F|H|523..555|33 nt|1| | | | |33+0=33| | |
+gcaccctcgacatgcagcaagcccacgtgccca
+>K00752|IGHG*02|Oryctolagus cuniculus|F|CH2|556..885|330 nt|1| | | | |330+48=378| | |
+......ccccctgaactcctggggggaccgtctgtcttcatcttccccccaaaacccaag
+gacaccctcatgatc...tcacgcacccccgaggtcacatgcgtggtggtggacgtgagc
+caggatgaccccgaggtgcagttcacatggtacataaacaacgagcaggtgcgc......
+...accgcccggccgccgctacgggagcagcagttcaac..................agc
+acgatccgcgtggtcagcaccctccccatcacgcaccaggactgg......ctgaggggc
+aaggagttcaagtgcaaagtccacaacaaggca......ctcccggcccccatcgagaaa
+accatctccaaagccaga
+>K00752|IGHG*02|Oryctolagus cuniculus|F|CH3-CHS|886..1206|321 nt|1| | | | |321+72=393| | |
+............gggcagcccctggagccgaaggtctacaccatgggccctccccgggag
+gagctgagc.........agcaggtcggtcagcctgacctgcatgatcaacggcttctac
+cct......tccgacatctcggtggagtgggagaagaacgggaaggcagaggac......
+...aactacaagaccacgccggccgtgctggacagcgac..................ggc
+tcctacttcctctacaacaagctctcagtgcccacgagtgagtgg......cagcggggc
+gacgtcttcacctgctccgtgatgcacgaggcc...ttgcacaaccactacacgcagaag
+tccatctcccgctctccg.........ggtaaa
+>J00665|IGHG*03|Oryctolagus cuniculus|F|CH2|1..219|219 nt|1| | | | |219+159=378|partial in 5'| |
+............................................................
+............................................................
+gaggatgaccccgaggtgcagttcacatggtacataaacaacgagcaggtgcgc......
+...accgcccggccgccgctacgggagcagcagttcaac..................agc
+acgatccgcgtggtcagcaccctccccatcgcgcaccaggactgg......ctgaggggc
+aaggagttcaagtgcaaagtccacaacaaggca......ctcccggcccccatcgagaaa
+accatctccaaagccaga
+>J00665|IGHG*03|Oryctolagus cuniculus|F|CH3-CHS|220..540|321 nt|1| | | | |321+72=393| | |
+............gggcagcccctggagccgaaggtctacaccatgggccctccccgggag
+gagctgagc.........agcaggtcggtcagcctgacctgcatgatcaacggcttctac
+cct......tccgacatctcggtggagtgggagaagaacgggaaggcagaggac......
+...aactacaagaccacgccggccgtgctggacagcgac..................ggc
+tcctacttcctctacagcaagctctcagtgcccacgagtgagtgg......cagcggggc
+gacgtcttcacctgctccgtgatgcacgaggcc...ttgcacaaccactacacgcagaag
+tccatctcccgctctccg.........ggtaaa
+>M16426|IGHG*04|Oryctolagus cuniculus|F|CH1|1..24|24 nt|1| | | | |24+342=366|partial in 5'| |
+............................................................
+............................................................
+............................................................
+............................................................
+............................................................
+..........................................aacaccaaagtggacaag
+accgtt
+>M16426|IGHG*04|Oryctolagus cuniculus|F|H|25..57|33 nt|1| | | | |33+0=33| | |
+gcgccctcgacgtgcagcaagcccatgtgccca
+>M16426|IGHG*04|Oryctolagus cuniculus|F|CH2|58..387|330 nt|1| | | | |330+48=378| | |
+......ccccccgaactcctaggggggccgtctgtttttatctttcctccaaaacccaag
+gacaccctcatgatc...tcacgcacccccgaggtcacatgcgtggtggtggacgtgagc
+gaggatgaccccgaggtgcagttcacatggtacataaacaacgagcaggtgcgc......
+...accgcccggccgccgctacgggagcagcagttcaac..................agc
+acgatccgtgtggtcagcaccctccccatcgcgcacgaggactgg......ctgaggggc
+aaggagttcaagtgcaaagttcacaataaggca......ctcccggcccccatcgagaaa
+accatctccaaagccagg
+>M16426|IGHG*04|Oryctolagus cuniculus|F|CH3-CHS|388..537|150 nt|1| | | | |150+36=186| | |
+............gggcagcccctggagccgaaggtctacaccatgggccctccccgggag
+gagctgagc.........agcaggtcggtcagcctgacctgcatgatcaacggcttctac
+cct......tccgacatctcggtggagtgggagaagaacgggaaggcagaggac......
+...aac
+>AY386696|IGHG*05|Oryctolagus cuniculus_Alicia|F|CH1|g,55582..55865|285 nt|1|+1|-1| | |285+81=366| | |
+............gggcaacctaaggctccatcagtcttcccactggccccctgctgcggg
+gacacaccc.........agctccacggtgaccctgggctgcctggtcaaaggctacctc
+ccg......gagccagtgaccgtgacctggaactcgggcaccctcaccaat.........
+...ggggtacgcaccttcccgtccgtccggcagtcctca..................ggc
+ctctactcgctgagcagcgtggtgagcgtgacctcaagc..................agc
+cagcccgtcacctgcaacgtggcccacccagcc......accaacaccaaagtggacaag
+accgtt
+>AY386696|IGHG*05|Oryctolagus cuniculus_Alicia|F|H|g,56071..56102|33 nt|1|+1|-1| | |33+0=33| | |
+gcaccctcgacatgcagcaagcccacgtgccca
+>AY386696|IGHG*05|Oryctolagus cuniculus_Alicia|F|CH2|c,56201..56529|330 nt|1|+1|-1| | |330+48=378| | |
+......ccccctgaactcctggggggaccgtctgtcttcatcttccccccaaaacccaag
+gacaccctcatgatc...tcacgcacccccgaggtcacatgcgtggtggtggacgtgagc
+caggatgaccccgaggtgcagttcacatggtacataaacaacgagcaggtgcgc......
+...accgcccggccgccgctacgggagcagcagttcaac..................agc
+acgatccgcgtggtcagcaccctccccatcacgcaccaggactgg......ctgaggggc
+aaggagttcaagtgcaaagtccacaacaaggca......ctcccggcccccatcgagaaa
+accatctccaaagccaga
+>AY386696|IGHG*05|Oryctolagus cuniculus_Alicia|F|CH3-CHS|g,56623..56942|321 nt|1|+1| | | |321+72=393| | |
+............gggcagcccctggagccgaaggtctacaccatgggccctccccgggag
+gagctgagc.........agcaggtcggtcagcctgacctgcatgatcaacggcttctac
+cct......tccgacatctcggtggagtgggagaagaacgggaaggcagaggac......
+...aactacaagaccacgccggccgtgctggacagcgac..................ggc
+tcctacttcctctacagcaagctctcagtgcccacgagtgagtgg......cagcggggc
+gacgtcttcacctgctccgtgatgcacgaggcc...ttgcacaaccactacacgcagaag
+tccatctcccgctctccg.........ggtaaa
+>AY386696|IGHG*05|Oryctolagus cuniculus_Alicia|F|M1|g,58984..59114|132 nt|1|+1| | | |132+0=132| | |
+gagctgcagctggacgagagctgtgccgaggcccaggacggggagctggacgggctgtgg
+accaccatcaccatcttcatctccctcttcctgctcagcgtgtgctacagcgccacagtc
+accctcttcaag
+>AY386696|IGHG*05|Oryctolagus cuniculus_Alicia|F|M2|59205..59285|81 nt|1| | | | |81+0=81| | |
+gtgaagtggatcttctcgtccgtggtggagctgaaacacaccatcgctcccgactacagg
+aacatgatcgggcagggggcc
+>J00666|IGHM*01|Oryctolagus cuniculus|F|CH1|473..790|318 nt|1| | | | |318+57=375| | |
+............gtgagcctgtcatctccaactctgtacccgctcgtctcctgcgagggt
+gccctgaccgat......gggaacctggtggccatgggctgcctggcgcgggactttctg
+ccc......agctccgtcaccttctcctggagcttcaagaacaactctgagatcagcagc
+cggaccgtcaggaccttcccggtggtgaagagaggggac.....................
+aagtatatggccacctcgcaggtgctggtgccctccaaggatgtcctccagggcacagag
+gagtacctggtgtgcaaagtccagcacagc............aacagcaacagagacctg
+cgagtgtcctttccc
+>J00666|IGHM*01|Oryctolagus cuniculus|F|CH2|791..1135|345 nt|1| | | | |345+45=390| | |
+.........gtggactcagagctgccccccaacgtgagcgtgttcatcccacctcgagac
+tccttcagcggctctggcacacgcaagtccaggctcatctgccaggccacaggtttcagc
+ccc......aaacagatcagcgtgtcctggctgcgcgatgggcagaaggtggagtct...
+...ggcgtcctcaccaagccggtggaggctgaaaccaaaggggct......gggcctgcg
+acctttagcatcagcagcatgctgaccatcaccgagagcgactgg......ctgagccag
+agcctgtacacctgccgcgtggaccacagg............ggcatcttcttcgataag
+aacgtgtccatgtcctccgagtgcagcacg
+>J00666|IGHM*01|Oryctolagus cuniculus|F|CH3|1136..1453|318 nt|1| | | | |318+60=378| | |
+............accccatccccaggcatccaggtcttccccatcgccccttcgttcgcc
+gacaccttcctc......agcaagtcagccaggctgatctgcctggtcacagacctgacc
+acctat...ggcagcctcaacatctcctgggcaagccataacggcaaagccctg......
+...gacacccacatgaacatcaccgagagccaccccaac..................gcc
+accttcagcgccatgggcgaggccagcgtgtgcgcggaggattgg......gagtctggg
+gagcagttcacgtgcaccgtgacccacgccgac......ctgcccttcccgctgaagcac
+accatctccaagtccagg
+>J00666|IGHM*01|Oryctolagus cuniculus|F|CH4-CHS|1454..1846|393 nt|1| | | | |393+54=447| | |
+.........gaggtggccaagcaccccccggcggtgtacgtgctgccgccagcccgggag
+cagctggtcctg......cgagagtcggccaccgtgacctgcctggtcaagggcttctcg
+ccg......gcagatgtgttcgtgcagtggcagcagagggggcagcccttgtcctcagac
+...aagtacgtgaccagcgccccagcgcccgagccccaggcc............ccaggc
+ctgtacttcacccacagcaccctgaccgtgaccgaggaggactgg......aactccggg
+gagacgttcacctgcgtcgtgggccacgaggcc...ctgccgcacatggtgaccgagagg
+accgtggacaagtccact.........ggtaaacccaccttgtacaatgtgtccctgatc
+atgtctgacacggccagcacctgctac
+>K01357|IGHM*01|Oryctolagus cuniculus|F|M1|283..399|117 nt|1| | | | |117+0=117| | |
+gaaggggaggtaggcgccgaggaggagggctttgagaacctgtggaccaccgcctccacc
+ttcatcgtcctgttcctgctgagcctcttctacagcaccacggtcactctgttcaag
+>K01357|IGHM*01|Oryctolagus cuniculus|F|M2|400..405|6 nt|1| | | | |6+0=6| | |
+gtgaag
+>AY386695|IGHM*02|Oryctolagus cuniculus_Alicia|F|CH1|g,106867..107183|318 nt|1|+1|-1| | |318+57=375| | |
+............gtgagcctgtcatctccaactctgtacccgctcgtctcctgcgagggt
+gccctgaccgat......gggaacctggtggccatgggctgcctggcgcgggactttctg
+ccc......agctccgtcaccttctcctggagcttcaagaacaactctgagatcagcagc
+cggaccgtcaggaccttcccggtggtgaagagaggggac.....................
+aagtatatggccacctcgcaggtgctggtgccctccaaggatgtcctccagggcacagag
+gagtacctggtgtgcaaagtccagcacagc............aacagcaacagagacctg
+cgagtgtcctttccc
+>AY386695|IGHM*02|Oryctolagus cuniculus_Alicia|F|CH2|g,107290..107633|345 nt|1|+1|-1| | |345+45=390| | |
+.........gtggactcagagctgccccccaacgtgagcgtgttcatcccacctcgagac
+tccttcagcggctctggcacacgcaagtccaggctcatctgccaggccacaggtttcagc
+ccc......aaacagatcagcgtgtcctggctgcgcgatgggcagaaggtggagtct...
+...ggcgtcctcaccaagccggtggaggctgaaaccaaaggggct......gggcctgcg
+acctttagcatcagcagcatgctgaccatcaccgagagcgactgg......ctgagccag
+agcctgtacacctgccgcgtggaccacagg............ggcatcttcttcgataag
+aacgtgtccatgtcctccgagtgcagcacg
+>AY386695|IGHM*02|Oryctolagus cuniculus_Alicia|F|CH3|a,107863..108179|318 nt|1|+1|-1| | |318+60=378| | |
+............accccatccccaggcatccaggtcttccccatcgccccttcgttcgcc
+gacaccttcctc......agcaagtcagccaggctgatctgcctggtcacagacctgacc
+acctat...ggcagcctcaacatctcctgggcaagccataacggcaaagccctg......
+...gacacccacatgaacatcaccgagagccaccccaac..................gcc
+accttcagcgccatgggcgaggccagcgtgtgcgcggaggattgg......gagtctggg
+gagcagttcacgtgcaccgtgacccacgccgac......ctgcccttcccgctgaagcac
+accatctccaagtccagg
+>AY386695|IGHM*02|Oryctolagus cuniculus_Alicia|F|CH4-CHS|g,108269..108660|393 nt|1|+1| | | |393+54=447| | |
+.........gaggtggccaagcaccccccggcggtgtacgtgctgccgccagcccgggag
+cagctggtcctg......cgagagtcggccaccgtgacctgcctggtcaagggcttctcg
+ccg......gcagatgtgttcgtgcagtggcagcagagggggcagcccttgtcctcagac
+...aagtacgtgaccagcgccccagcgcccgagccccaggcc............ccaggc
+ctgtacttcacccacagcaccctgaccgtgaccgaggaggactgg......aactccggg
+gagacgttcacctgcgtcgtgggccacgaggcc...ctgccgcacatggtgaccgagagg
+accgtggacaagtccact.........ggtaaacccaccttgtacaatgtgtccctgatc
+atgtctgacacggccagcacctgctac
+>AY386695|IGHM*02|Oryctolagus cuniculus_Alicia|F|M1|g,110499..110614|117 nt|1|+1| | | |117+0=117| | |
+gaaggggaggtaggcgccgaggaggagggctttgagaacctgtggaccaccgcctccacc
+ttcatcgtcctgttcctgctgagcctcttctacagcaccacggtcactctgttcaag
+>AY386695|IGHM*02|Oryctolagus cuniculus_Alicia|F|M2|110741..110746|6 nt|1| | | | |6+0=6| | |
+gtgaag

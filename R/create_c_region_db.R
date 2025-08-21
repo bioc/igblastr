@@ -67,15 +67,16 @@ create_c_region_db <- function(fastadir, destdir, force=FALSE)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### form_IMGT_c_region_db_name()
+### form_builtin_IMGT_c_region_db_name()
 ###
 
-form_IMGT_c_region_db_name <- function(organism_path)
+form_builtin_IMGT_c_region_db_name <- function(fastadir)
 {
-    fasta_files <- .list_C_fasta_files(organism_path)
+    stopifnot(isSingleNonWhiteString(fastadir), has_suffix(fastadir, "/14.1"))
+    fasta_files <- .list_C_fasta_files(fastadir)
     loci <- paste(sort(substr(fasta_files, 1L, 3L)), collapse="+")
-    version <- read_version_file(organism_path)
-    organism <- basename(organism_path)
+    version <- read_version_file(fastadir)
+    organism <- basename(sub("/14\\.1$", "", fastadir))
     ## Prefix name with underscore because it's a built-in db.
     paste("_IMGT", organism, loci, version, sep=".")
 }

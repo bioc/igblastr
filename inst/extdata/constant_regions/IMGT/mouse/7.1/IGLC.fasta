@@ -1,0 +1,56 @@
+>J00587|IGLC1*01|Mus musculus_BALB/c|F|C-REGION|g,30..346|318 nt|1|+1| | | |318+66=384| | |
+.........ggccagcccaagtcttcgccatcagtcaccctgtttccaccttcctctgaa
+gagctcgag.........actaacaaggccacactggtgtgtacgatcactgatttctac
+cca......ggtgtggtgacagtggactggaaggtagatggtacccctgtcactcag...
+...ggtatggagacaacccagccttccaaacagagcaac..................aac
+aagtacatggctagcagctacctgaccctgacagcaagagcatgg......gaaaggcat
+agcagttacagctgccaggtcactcatgaa............ggtcacactgtggagaag
+agtttgtcccgtgctgactgttcc
+>J00595|IGLC2*01|Mus musculus_BALB/c|F|C-REGION|g,27..340|315 nt|1|+1| | | |315+69=384| | |
+.........ggtcagcccaagtccactcccactctcaccgtgtttccaccttcctctgag
+gagctcaag.........gaaaacaaagccacactggtgtgtctgatttccaacttttcc
+ccg......agtggtgtgacagtggcctggaaggcaaatggtacacctatcacccag...
+...ggtgtggacacttcaaatcccaccaaagagggcaac.....................
+aagttcatggccagcagcttcctacatttgacatcggaccagtgg......agatctcac
+aacagttttacctgtcaagttacacatgaa............ggggacactgtggagaag
+agtctgtctcctgcagaatgtctc
+>J00585|IGLC3*01|Mus musculus_BALB/c|F|C-REGION|g,27..340|315 nt|1|+1| | | |315+69=384| | |
+.........ggtcagcccaagtccactcccacactcaccatgtttccaccttcccctgag
+gagctccag.........gaaaacaaagccacactcgtgtgtctgatttccaatttttcc
+cca......agtggtgtgacagtggcctggaaggcaaatggtacacctatcacccag...
+...ggtgtggacacttcaaatcccaccaaagaggacaac.....................
+aagtacatggccagcagcttcttacatttgacatcggaccagtgg......agatctcac
+aacagttttacctgccaagttacacatgaa............ggggacactgtggagaag
+agtctgtctcctgcagaatgtctc
+>IMGT000117|IGLC4*02|Mus musculus_C57BL/6J|F|C-REGION|g,75383..75693|312 nt|1|+1| | | |312+72=384| | |
+.........ggccaacccaaggctacaccctcagttaatctgttcccaccttcctctgaa
+gagctcaag.........actaaaaaggccacactggtgtgtatgatcactgagttctac
+gca......gctgctgtgagagtggcctggaaggcagatggtacccctttcactcag...
+...ggtgtagagactacccagcctcccaaacagagg........................
+gacaacatggctagcagttacctgctcttcacagcagaagcgtgggaatct......cat
+agcagttacagctgccatgtcactcatgaagggaac............actgtggagaag
+agtttgtcccgtgctgagtgttcc
+>M16554|IGLC2*01|Mus spretus_SPE|F|C-REGION|g,593..906|315 nt|1|+1| | | |315+69=384| | |
+.........ggtcagcccaagtccactcccactctcacagtgtttccaccttcctctgag
+gagctcaag.........gaaaacaaagccacactggtgtgtctgatttccaacttttcc
+ccg......agtggtgtgacagtggcctggaaggcaaatggtacacctatcacccag...
+...ggtgtggacacttcaaatcccaccaaagagggcaac.....................
+aagttcatggccagcagcttcctacatttgacatcggaccagtgg......agatctcac
+aacagttttacctgtcaagttacacatgaa............ggggacactgtggagaag
+agtctgtctcctgcagaatgtctc
+>AF357973|IGLC2*02|Mus spretus_B6.lambdaSEG|F|C-REGION|g,6..319|315 nt|1|+1| | | |315+69=384| | |
+.........ggtcagcccaagtccactcccactctcaccgtgtttccaccttcctctgag
+gagctcaag.........gaaaacaaagccacactggtgtgtctgatttccaacttttcc
+ccg......agtggtgtgacagtggcctggaaggcaaatggtacacctatcacccag...
+...ggtgtggacacttcaaatcccaccaaagagggcaac.....................
+aagttcatggccagcagcttcctacatttgacatcggaccagtgg......agatctcac
+aacagttttacctgtcaagttacacatgaa............ggggacactgtggagaag
+agtctgtctcctgcagaatgtctc
+>AF357974|IGLC5*01|Mus spretus_B6.lambdaSEG|F|C-REGION|1294..1604|311 nt|1| | | | |311+73=384| | |
+..........gccaacccaaggctacaccctcagttaatctgttcccaccttcctctgaa
+gagctcaag.........actaaaaaggccacactggtgtgtatgatcactgagttctac
+gca......actgctgtgagaatggcctggaaggcagacggtacccctatcactcag...
+...gatgtagagactacccagcctcccaaacagagt........................
+gacaacatggctagcagttacctgctcttcacagcagaagcgtgg......gaatctcat
+agcagttacagctgccatgtcactcatgaa............gggaacactgtggagaag
+aatttgtcccgtgctgagtgttcc

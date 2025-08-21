@@ -196,8 +196,8 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
 .IMGT_GENE_DB_URL <- "https://www.imgt.org/genedb/"
 
 ### IMPORTANT NOTE: Used to map 'seqset_nb' to 'seqset_internal_nb' so
-### order is important! See .fetch_C_sequence_set_from_IMGT() below for
-### more information about these "sequence set internal numbers".
+### order is important! See download_C_sequence_set_from_IMGT() below
+### for more information about these "sequence set internal numbers".
 .SEQSET_SET_INTERNAL_NUMBERS <- c("7.2", "7.5", "7.1", "14.1")
 
 ### According to our findings, IMGT/GENE-DB can be queried using an URL
@@ -211,17 +211,17 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
 ###
 ### The number at the beginning of the query (e.g. 7.2) is an internal
 ### number used by IMGT to refer to a particular set of sequences.
-### See .fetch_C_sequence_set_from_IMGT() below for more information
+### See download_C_sequence_set_from_IMGT() below for more information
 ### about this.
 ### Returns an ugly HTML page in a character vector and a nucleotide sequence
 ### embedded in it. Use .scrape_IMGT_GENE_DB_result() below to extract that
 ### sequence.
-.query_IMGT_GENE_DB <- function(species, group, seqset_internal_nb)
+.query_IMGT_GENE_DB <- function(species, seqset_internal_nb, group)
 {
     stopifnot(isSingleNonWhiteString(species),
-              isSingleNonWhiteString(group),
               isSingleNonWhiteString(seqset_internal_nb),
-              seqset_internal_nb %in% .SEQSET_SET_INTERNAL_NUMBERS)
+              seqset_internal_nb %in% .SEQSET_SET_INTERNAL_NUMBERS,
+              isSingleNonWhiteString(group))
     query <- list(query=paste(seqset_internal_nb, group), species=species)
     ## Querying IMGT/GENE-DB can be very slow so we increase the allowed
     ## time by 50%.
@@ -239,10 +239,10 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
     if (length(header_idx) == 0L)
         return(FALSE)  # no FASTA records
     dna_lines <- fasta_lines[-header_idx]
-    dna <- paste(tolower(dna_lines), collapse="")
+    dna <- paste(toupper(dna_lines), collapse="")
     if (!nzchar(dna))
         return(FALSE)  # all records are empty
-    all(safeExplode(dna) %in% c("a", "c", "g", "t", "n", "."))
+    all(safeExplode(dna) %in% DNA_ALPHABET)
 }
 
 ### 'html' is expected to be a character vector containing the HTML document
@@ -252,10 +252,10 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
 ###      FASTA headers.
 ###   2. The second one contains our nucleotide sequences in FASTA format.
 ### Instead of assuming that our nucleotide sequences are in the 2nd
-### <pre></pre> section, .scrape_IMGT_GENE_DB_result() returns the content
-### of the first <pre></pre> section that contains valid FASTA. This should
-### be the content of the 2nd <pre></pre> section but the hope is that this
-### approach is a little bit more robust.
+### <pre></pre> section, the .scrape_IMGT_GENE_DB_result() function returns
+### the content of the first <pre></pre> section that contains valid FASTA.
+### This should be the content of the 2nd <pre></pre> section but the hope
+### is that this approach is a little bit more robust.
 .scrape_IMGT_GENE_DB_result <- function(html)
 {
     stopifnot(is.character(html))
@@ -264,10 +264,20 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
     for (pre_elt in all_pre_elts) {
         fasta_lines <- strsplit(pre_elt, split="\n", fixed=TRUE)[[1L]]
         fasta_lines <- fasta_lines[nzchar(fasta_lines)]
+        if (length(fasta_lines) == 0L)
+            stop(wmsg("IMGT/GENE-DB returned 0 sequences"))
         if (.is_dna_fasta(fasta_lines))
             return(fasta_lines)
     }
     stop(wmsg("failed to scrape the results returned by IMGT/GENE-DB"))
+}
+
+.fetch_C_sequence_set_from_IMGT <-
+    function(species, seqset_internal_nb, group=c("IGHC", "IGKC", "IGLC"))
+{
+    group <- match.arg(group)
+    html <- .query_IMGT_GENE_DB(species, seqset_internal_nb, group)
+    .scrape_IMGT_GENE_DB_result(html)
 }
 
 
@@ -276,27 +286,38 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
 ###
 
 ### All kinds of conventions are used across the IMGT website to name
-### organisms. Picking one and sticking to it would boring I guess...
+### organisms. I guess picking one and sticking to it would be kind of
+### boring...
 .map_organism_to_IMGT_species <- function(organism)
 {
     stopifnot(isSingleNonWhiteString(organism))
-    organism <- chartr("_", " ", organism)
-    IMGT_species <- c("Homo sapiens", "Mus", "Rat",
-                      "Vicugna pacos", "Oryctolagus cuniculus")
-    m <- match(tolower(organism), tolower(IMGT_species))
-    if (is.na(m)) {
-        errmsg <- c("to the best of our knowledge, IMGT does not ",
-                    "provide C regions for organism ", organism)
-        m <- switch(tolower(organism),
-                    "human"=1L,
-                    "mouse"=, "mus musculus"= 2L,
-                    "rattus norvegicus"=3L,
-                    "alpaca"=4L,
-                    "rabbit"=5L,
-                    stop(wmsg(errmsg))
-        )
-    }
-    IMGT_species[m]
+    org <- tolower(organism)
+    IMGT_species <- c(human="Homo sapiens",
+                      mouse="Mus",
+                      rat="Rattus norvegicus",
+                      alpaca="Vicugna pacos",
+                      rabbit="Oryctolagus cuniculus",
+                      rhesus_monkey="Macaca mulatta")
+    m <- match(chartr("_", " ", org), tolower(IMGT_species))
+    if (!is.na(m))
+        return(IMGT_species[[m]])
+    m <- match(chartr(" ", "_", org), names(IMGT_species))
+    if (!is.na(m))
+        return(IMGT_species[[m]])
+
+    shortname <- find_organism_shortname(org)
+    ## find_organism_shortname() is guaranteed to return one of
+    ## 'names(LATIN_NAMES)', and 'names(LATIN_NAMES)' is currently
+    ## a subset of 'names(IMGT_species)' (see file LATIN_NAMES.R).
+    ## So 'shortname' is guaranteed to be in 'names(IMGT_species)'.
+    ## This means that 'IMGT_species[[shortname]]' should never fail.
+    ## So why don't we just return that? Because this could change in
+    ## the future e.g. if new entries get added to 'LATIN_NAMES'.
+    ## Hence the extra work below.
+    m <- match(shortname, names(IMGT_species))
+    if (is.na(m))
+        stop(wmsg("unrecognized organism: ", organism))
+    IMGT_species[[m]]
 }
 
 ### Fetch the C-region sequences from the links provided in the tables
@@ -316,8 +337,10 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
 ###    #4 | C-GENE artificially spliced exons: F+ORF+in-frame P | (d)
 ###
 ###   (a) The exon sequences in set #1 can contain N's.
-###   (b) Set #2 is a subset of set #1. Sequences in this set do NOT
-###       contain N's.
+###   (b) Set #2 is a subset of set #1. TO BE CONFIRMED: Sequences in this
+###       set tend to be "cleaner" i.e. they have no N's (confirmed for Human,
+###       still to be confirmed for other organisms). Note that, for Rhesus
+###       monkey, one IGHC sequence in set #2 has a Y.
 ###   (c) Same exon sequences as in set #2 but with IMGT gaps. Note that
 ###       removing the gaps produces exactly the same sequences as in set #2.
 ###   (d) Set #4 is only available for a very limited number of organisms:
@@ -348,55 +371,116 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
 ###             3 |              "7.1"
 ###             4 |             "14.1"
 ###
-.fetch_C_sequence_set_from_IMGT <-
-    function(species, group=c("IGHC", "IGKC", "IGLC"), seqset_nb=1L)
-{
-    group <- match.arg(group)
-    stopifnot(isSingleInteger(seqset_nb), seqset_nb %in% 1:4)
-    seqset_internal_nb <- .SEQSET_SET_INTERNAL_NUMBERS[[seqset_nb]]
-    html <- .query_IMGT_GENE_DB(species, group, seqset_internal_nb)
-    .scrape_IMGT_GENE_DB_result(html)
-}
-
+### 'seqset_nb' can also be a "sequence set internal number".
 download_C_sequence_set_from_IMGT <-
     function(organism, destfile, group=c("IGHC", "IGKC", "IGLC"),
              seqset_nb=1L)
 {
     species <- .map_organism_to_IMGT_species(organism)
-    sequences <- .fetch_C_sequence_set_from_IMGT(species, group, seqset_nb)
+    group <- match.arg(group)
+    if (isSingleNonWhiteString(seqset_nb)) {
+        seqset_internal_nb <- seqset_nb
+    } else {
+        stopifnot(isSingleInteger(seqset_nb), seqset_nb %in% 1:4)
+        seqset_internal_nb <- .SEQSET_SET_INTERNAL_NUMBERS[[seqset_nb]]
+    }
+    sequences <- .fetch_C_sequence_set_from_IMGT(species, seqset_internal_nb,
+                                                 group=group)
     writeLines(sequences, destfile)
 }
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### download_all_C_regions_from_IMGT()
+### download_C_sequence_sets_from_IMGT()
 ###
 
-### Use this to populate igblastr/inst/extdata/constant_regions/IMGT/
-### See the table at https://www.imgt.org/vquest/refseqh.html#constant-sets
-### for what we download.
-### Note that IMGT does not provide IGHC regions for Rat at the moment (as
-### of Dec 2024) despite the link displayed in the Nucleotides column of
-### the left table.
-download_all_C_regions_from_IMGT <- function(destdir=".")
+### Reflects the C-region sequence sets available in IMGT/GENE-DB for
+### the 5 official IgBLAST organisms as of Aug 21, 2025.
+### See file LATIN_NAMES.R for more information.
+.IMGT_ORGANISM_TO_C_SEQUENCE_SETS <- list(
+    human=list(
+        `7.2`=c("IGHC", "IGKC", "IGLC"),
+        `7.5`=c("IGHC", "IGKC", "IGLC"),
+        `7.1`=c("IGHC", "IGKC", "IGLC"),
+       `14.1`=c("IGHC", "IGKC", "IGLC")
+    ),
+    mouse=list(
+        `7.2`=c("IGHC", "IGKC", "IGLC"),
+        `7.5`=c("IGHC", "IGKC", "IGLC"),
+        `7.1`=c("IGHC", "IGKC", "IGLC"),
+       `14.1`=c("IGHC")
+    ),
+    rabbit=list(
+        `7.2`=c("IGHC", "IGKC", "IGLC"),
+        `7.5`=c("IGHC", "IGKC", "IGLC"),
+        `7.1`=c("IGHC", "IGKC", "IGLC"),
+       `14.1`=c("IGHC")
+    ),
+    rat=list(
+        `7.2`=c("IGHC", "IGKC", "IGLC"),
+        `7.5`=c("IGHC", "IGKC", "IGLC"),
+        `7.1`=c("IGHC", "IGKC", "IGLC"),
+       `14.1`=c("IGHC")
+    ),
+    rhesus_monkey=list(
+        `7.2`=c("IGHC", "IGKC", "IGLC"),
+        `7.5`=c("IGHC", "IGKC", "IGLC"),
+        `7.1`=c("IGHC", "IGKC", "IGLC")
+    )
+)
+
+.normarg_IMGT_organisms <- function(organisms)
 {
-    stopifnot(isSingleNonWhiteString(destdir))
-    organism2groups <- list(human  = c("IGHC", "IGKC", "IGLC"),
-                            mouse  = "IGHC",
-                            #rat    = "IGHC",
-                            rabbit = "IGHC")
-    for (organism in names(organism2groups)) {
-        groups <- organism2groups[[organism]]
-        for (group in groups) {
-            filename <- paste0(group, ".fasta")
-            destfile <- file.path(destdir, organism, filename)
-            message("Download ", group, " regions for ", organism, " ",
-                    "to ", destfile, " ... ", appendLF=FALSE)
-            download_C_sequence_set_from_IMGT(organism, destfile, group,
-                                              seqset_nb=4L)
-            message("ok")
-            nregion <- length(readDNAStringSet(destfile))
-            message("  (", nregion, " region(s) downloaded)")
+    supported_organisms <- names(.IMGT_ORGANISM_TO_C_SEQUENCE_SETS)
+    if (is.null(organisms))
+        return(supported_organisms)
+    if (!is.character(organisms))
+        stop(wmsg("'organisms' must be NULL or a character vector"))
+    if (!all(organisms %in% supported_organisms)) {
+        in1string <- paste(supported_organisms, collapse=", ")
+        stop(wmsg("'organisms' must be a subset of: ", in1string))
+    }
+    if (anyDuplicated(organisms))
+        stop(wmsg("'organisms' cannot contain duplicates"))
+    organisms
+}
+
+### Use this to (re-)populate the igblastr/inst/extdata/constant_regions/IMGT/
+### folder. The function must be called from within the folder.
+### To fully (re-)populate it:
+###
+###     igblastr:::download_C_sequence_sets_from_IMGT()
+###
+### To (re-)populate only for a given organism:
+###
+###     igblastr:::download_C_sequence_sets_from_IMGT("rhesus_monkey")
+###
+### 'organisms' should be NULL or a character vector of organism names for
+### which to download the sequence sets. If set to NULL, then the sequence
+### sets for all the organisms listed in .IMGT_ORGANISM_TO_C_SEQUENCE_SETS
+### get downloaded.
+download_C_sequence_sets_from_IMGT <- function(organisms=NULL)
+{
+    organisms <- .normarg_IMGT_organisms(organisms)
+    for (organism in organisms) {
+        sequence_sets <- .IMGT_ORGANISM_TO_C_SEQUENCE_SETS[[organism]]
+        for (seqset_internal_nb in names(sequence_sets)) {
+            destdir <- file.path(organism, seqset_internal_nb)
+            groups <- sequence_sets[[seqset_internal_nb]]
+            for (group in groups) {
+                filename <- paste0(group, ".fasta")
+                destfile <- file.path(destdir, filename)
+                seqset_label <- paste0(seqset_internal_nb, "/", group)
+                message("Download sequence set ", seqset_label, " ",
+                        "for ", organism, " ",
+                        "to ", destfile, " ... ", appendLF=FALSE)
+                download_C_sequence_set_from_IMGT(organism, destfile,
+                                                  group=group,
+                                                  seqset_nb=seqset_internal_nb)
+                message("ok")
+                nregion <- length(readDNAStringSet(destfile))
+                message("  (", nregion, " region(s) downloaded)")
+            }
         }
     }
 }

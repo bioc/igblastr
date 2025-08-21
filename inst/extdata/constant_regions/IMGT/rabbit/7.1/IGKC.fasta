@@ -1,0 +1,104 @@
+>K01360|IGKC1*01|Oryctolagus cuniculus|F|C-REGION|n,4714..5024|312 nt|1|+1| | | |312+69=381| | |
+............ngtgatccagttgcacctactgtcctcatcttcccaccagctgctgat
+caggtggca.........actggaacagtcaccatcgtgtgtgtggcgaataaatacttt
+ccc.........gatgtcaccgtcacctgggaggtggatggcaccacccaaacaact...
+...ggcatcgagaacagtaaaacaccgcagaattctgcagat...............tgt
+acctacaacctcagcagcactctgacactgaccagcacacagtac......aacagccac
+aaagagtacacctgcaaggtgacccagggc............acgacctcagtcgtccag
+agcttcaataggggtgactgt
+>K01362|IGKC1*02|Oryctolagus cuniculus|F|C-REGION|n,41..351|312 nt|1|+1| | | |312+69=381| | |
+............ngtgatccagttgcacctactgtcctcatcttcccaccatctgctgat
+cttgtggca.........actggaacagtcaccatcgtgtgtgtggcgaataaatacttt
+ccc.........gatgtcaccgtcacctgggaggtggatggcaccacccaaacaact...
+...ggcatcgagaacagtaaaacaccgcagaattctgcagat...............tgt
+acctacaacctcagcagcactctgacactgaccagcacacagtac......aacagccac
+aaagagtacacctgcaaggtgacccagggc............acgacctcagtcgtccag
+agcttcaataggggtgactgt
+>K01363|IGKC1*03|Oryctolagus cuniculus|F|C-REGION|n,4375..4688|315 nt|1|+1| | | |315+66=381| | |
+............nttgctacattggcacctactgtcctcatcttcccaccatctcctgct
+gagctggca.........actggaacagccaccatcgtgtgcgtggcaaacaaatacttt
+ccc.........gatggcaccgtcacctggcaggtggatggcaagcccctaacaact...
+...ggcatcgagaccagtaaaacaccgcagaattctgatgat...............tgt
+acctacaacctcagcagtactctgacactgaaaagcgacgagtac......aacagccac
+gacgagtacacctgccaggtggcccagggc.........tcaggctcaccggtcgtccag
+agcttcagtaggaagaactgt
+>X00674|IGKC1*04|Oryctolagus cuniculus|F|C-REGION|n,264..583|321 nt|1|+1| | | |321+60=381| | |
+.........ngtgatcctccaattgcgcctactgtcctcctcttcccaccatctgctgat
+cagctgaca.........actgaaacagtcaccatcgtgtgcgtggcaaataaattccgt
+ccc......aatgacatcaccgtcacctggaaggtggatgtcgaaatccaacagagc...
+...ggcatcgagaacagtacaacaccgcagagccccgaagac...............tgt
+acctacaacctcagcagcactctgtcactgaccaaagcacagtac......aacagccac
+agcgtgtacacctgcgaggtggtccacaac.........tcgggctcagcgatcgtccag
+agcttcaataggggtgactgt
+>X03050|IGKC1*05|Oryctolagus cuniculus_Basilea|ORF|C-REGION|n,296..615|321 nt|1|+1| | | |321+60=381| | |
+.........ngtgatcctccaattgcgcctactgtcctcctcttcccaccatctgctgat
+cagctgaca.........actgaaacagtcaccatcgtgtgcgtggcaaataaattccgt
+ccc......aatgacatcaccgtcacctggaaggtggatgacgaaatccaacagagc...
+...ggcatcgagaacagtacaacaccgcagagccccgaagac...............tgt
+acctacaacctcagcagcactctgtcactgaccaaagcacagtac......aacagccac
+agcgtgtacacctgcgaggtggtccacaac.........tcgggctcagcgatcgtccag
+agcttcaataggggtgactgt
+>M37809|IGKC1*06|Oryctolagus cuniculus|F|C-REGION|n,3700..4013|315 nt|1|+1| | | |315+66=381| | |
+............nttgctacgttggcacctactgtcctcatcttcccaccatctcctgct
+gagctggca.........actggaacagccaccatcgtgtgcgtggcgaataaatacttt
+ccc.........gatggcaccgtcacctggaaggtggatggcatcacccaaagcagc...
+...ggcatcaataacagtagaacaccgcagaattctgcagat...............tgt
+acctacaacctcagcagtactctgacactgagcagcgacgagtac......aacagccac
+gacgagtacacctgccaggtggcccaggac.........tcaggctcaccggtcgtccag
+agcttcagtaggaagagctgt
+>M22542|IGKC1*07|Oryctolagus cuniculus|F|C-REGION|n,993..1306|315 nt|1|+1| | | |315+66=381| | |
+............nttgatccagttgcacctactgtcctcatcttcccaccatctcctgct
+gagctggca.........actggaacagccaccatcgtgtgcgtggcgaataaatacttt
+ccc.........gatgtcaccgtcacctggaaggtggatggcaccacccaaacaact...
+...ggcatcgagaacagtagaacaccacagaattctgatgat...............tgt
+acctacaacctcagcagtactctgacactgaaaagcgacgagtac......aacagccac
+gacgagtacatctgccaggtggcccagggc.........tcaggctcaccggtcgtccag
+agcttcagtaggaagaactgt
+>Z48308|IGKC1*08|Oryctolagus cuniculus|F|C-REGION|n,194..507|315 nt|1|+1| | | |315+66=381| | |
+............nttgatccagttgcacctactgtcctcatcttcccaccatctcctgct
+gagctggca.........actggaacagccaccatcgtgtgcgtggcgaataaatacttt
+ccc.........gatggcaccgtcacctggaaggtggatggcatcacccaaagcagc...
+...ggcatcaataacagtagaacaccgcaggatcctacatat...............tgt
+acctacaacctcagcagtactctgacactgagcagcgacgagtac......aacagccac
+aacgagtacacctgccaggtggcccaggac.........tcaggctcaccggtcgtccag
+agcttcaataggaagagctgt
+>K01359|IGKC1*09|Oryctolagus cuniculus|(F)|C-REGION|367..687|321 nt|1| | | | |321+60=381| | |
+.........tgtgatcctccaattgcgcctactgtcctcctcttcccaccatctgctgat
+cagctgaca.........actgaaacagtcaccatcgtgtgcgtggcaaataaattccgt
+ccc......aatgacatcaccgtcacctggaaggtggatgacgaaatccaacagagc...
+...ggcatcgagaacagtacaacaccgcagagccccgaagac...............tgt
+acctacaacctcagcagcactctgtcactgaccaaagcacagtac......aacagccac
+agcgtgtacacctgcgaggtggtccacaac.........tcgggctcagcgatcgtccag
+agcttcaataggggtgactgt
+>X00232|IGKC2*01|Oryctolagus cuniculus|F|C-REGION|c,2276..2592|318 nt|1|+1| | | |318+63=381| | |
+............cgtgatccagttgcgccttctgtcctcctcttcccaccatctaaggag
+gagctgaca.........actggaacagccaccatcgtgtgcgtggcgaataaattctat
+ccc......agtgacatcaccgtcacctggaaggtggatggcaccacccaacagagc...
+...ggcatcgagaacagtaaaacaccgcagagccccgaagac...............aat
+acctacagcctgagcagcactctgtcactgaccagcgcacagtac......aacagccac
+agcgtgtacacctgcgaggtggtccaaggctca.........gcctcaccgatcgtccag
+agcttcaacaggggtgactgc
+>X05800|IGKC2*02|Oryctolagus cuniculus|F|C-REGION|c,295..611|318 nt|1|+1| | | |318+63=381| | |
+............cgtgatccagttgcgccttctgtcctcctcttcccaccatctaaggag
+gagctgaca.........actggaacagccaccatcgtgtgcgtggcgaataaattctat
+ccc......agtgacatcaccgtcacctggaaggtggatggcaccacccaacagagc...
+...ggcatcgagaacagtaaaacaccgcagagccctgaagac...............aat
+acctacagcctgagcagcactctgtcactgaccagcgcacagtac......aacagccac
+agcgtgtacacctgcgaggtggtccaaggctca.........gcctcaccgatcgtccag
+agcttcaacaggggtgactgc
+>X56061|IGKC2*03|Oryctolagus cuniculus|F|C-REGION|c,504..820|318 nt|1|+1| | | |318+63=381| | |
+............cgtgatccagttgcaccttctgtcctcctcttcccaccatctaaggag
+gagctgaca.........actggaacagccaccatcgtgtgcgtggcgaataaattctat
+ccc......agtgacatcaccgtcacctggaaggtggatggcaccacccaacagagc...
+...ggcatcgagaacagtaaaacaccgcagagccccgaagac...............aat
+acctacagcctgagcagcactctgtcactgaccagcgcacagtac......aacagccac
+agcgtgtacacctgcgaggtggtccaaggctca.........gcctcaccgatcgtccag
+agcttcaacaggggtgactgc
+>K01280|IGKC2*04|Oryctolagus cuniculus_Basilea|(F)|C-REGION|370..687|318 nt|1| | | | |318+63=381| | |
+............cgtgatccagttgcgccttctgtcctcctcttcccaccatctaaggag
+gagctgaca.........actggaacagccaccatcgtgtgcgtggcgaataaattctat
+ccc......agtgacatcaccgtcacctggaaggtggatggcaccacccaacagagc...
+...ggcatcgagaacagtaaaacaccgcagagccccgaagac...............aat
+acctacagcctgagcagcactctgtcactgaccagcgcacagtac......aacagccac
+agcgtgtacacctgcgaggtggtccaaggctca.........gcctcactgatcgtccag
+agcttcaacaggggtgactgc

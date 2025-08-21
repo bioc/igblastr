@@ -1,6 +1,16 @@
 High-priority TODO list
 =======================
 
+- Work on the built-in IMGT C-region db for rhesus_monkey:
+  - Verify that the C-region sequences in the 14.1 set (C-GENE artificially
+    spliced exons) can be constructed from the C-region sequences in the
+    7.5 set (these are exon sequences). Verify this for human, mouse, rabbit,
+    and rat.
+  - If that turns out to be the case, then use this to construct the
+    rhesus_monkey/14.1 set from the rhesus_monkey/7.5 set, and add it to
+    igblastr/inst/extdata/constant_regions/IMGT/
+  - Finally add the built-in IMGT C-region db for rhesus_monkey to the package.
+
 - bcr_browser() improvements:
   - Should we rename the function to igbrowser()?
   - Display pairwise alignment between BCR query sequence and germline

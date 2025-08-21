@@ -141,7 +141,7 @@ load_c_region_db(db_name)
 \examples{
 if (!has_igblast()) install_igblast()
 
-## 3 built-in C-region dbs prefixed with an underscore:
+## 4 built-in C-region dbs prefixed with an underscore:
 list_c_region_dbs()
 
 list_c_region_dbs(names.only=TRUE)  # db names only

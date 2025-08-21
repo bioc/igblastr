@@ -15,7 +15,7 @@
 ### machine (e.g. right after installing the package from source).
 .create_builtin_c_region_dbs <- function(destdir)
 {
-    stopifnot(isSingleNonWhiteString(destdir), !dir.exists(destdir))
+    stopifnot(isSingleNonWhiteString(destdir))
 
     ## We first create the dbs in a temporary folder, and, only if successful,
     ## rename the temporary folder to 'destdir'. Otherwise we destroy the
@@ -28,23 +28,59 @@
     IMGT_c_region_dir <- system.file(package="igblastr",
                                      "extdata", "constant_regions", "IMGT",
                                      mustWork=TRUE)
-    organism_paths <- list.dirs(IMGT_c_region_dir, recursive=FALSE)
-    for (organism_path in organism_paths) {
-        db_name <- form_IMGT_c_region_db_name(organism_path)
+    organisms <- c("human", "mouse", "rabbit", "rat")
+    for (organism in organisms) {
+        fastadir <- file.path(IMGT_c_region_dir, organism, "14.1")
+        db_name <- form_builtin_IMGT_c_region_db_name(fastadir)
         db_path <- file.path(tmp_destdir, db_name)
-        create_c_region_db(organism_path, db_path)
+        create_c_region_db(fastadir, db_path)
     }
 
     ## Any other built-in C-region dbs to create?
 
     ## Everyting went fine so we can rename 'tmp_destdir' to 'destdir'.
-    rename_file(tmp_destdir, destdir)
+    rename_file(tmp_destdir, destdir, replace=TRUE)
 }
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .get_c_region_dbs_path()
 ###
+
+### The built-in IMGT C-region db for rat was added in igblastr 0.99.13
+### (Aug 2025).
+.has_builtin_IMGT_c_region_db_for_rat <- function(c_region_dbs_path)
+{
+    stopifnot(isSingleNonWhiteString(c_region_dbs_path),
+              dir.exists(c_region_dbs_path))
+    db_path <- list.files(c_region_dbs_path, pattern="_IMGT\\.rat\\.",
+                          full.names=TRUE)
+    length(db_path) == 1L && dir.exists(db_path)
+}
+
+### Returns whether the built-in C-region dbs need to be (re)created.
+### Creating them is needed if folder 'c_region_dbs_path' does not exist.
+### Recreating them is needed if folder 'c_region_dbs_path' exists but is
+### out-of-sync with the content of igblastr/inst/extdata/constant_regions/.
+.need_to_create_builtin_c_region_dbs <- function(c_region_dbs_path)
+{
+    stopifnot(isSingleNonWhiteString(c_region_dbs_path))
+    if (!dir.exists(c_region_dbs_path))
+        return(TRUE)
+    ## In igblastr 0.99.12, the list of built-in C-region dbs is expected
+    ## to be:
+    ##     _IMGT.human.IGH+IGK+IGL.202412
+    ##     _IMGT.mouse.IGH.202412
+    ##     _IMGT.rabbit.IGH.202412
+    ## These have not changed since their introduction to igblastr back in
+    ## December 2024. In igblastr 0.99.13 (Aug 2025), we added:
+    ##     _IMGT.rat.IGH.202508
+    ## So we only check for the presence of the built-in IMGT C-region db
+    ## for rat to decide whether the built-in C-region dbs need to be
+    ## recreated or not. Recreating them should only add _IMGT.rat.IGH.202508
+    ## to the output of list_c_region_dbs() for users who don't have it yet.
+    !.has_builtin_IMGT_c_region_db_for_rat(c_region_dbs_path)
+}
 
 ### Returns path to C_REGION_DBS cache compartment (see R/cache-utils.R for
 ### details about igblastr's cache organization).
@@ -58,7 +94,7 @@
 {
     stopifnot(isTRUEorFALSE(init.path))
     c_region_dbs_path <- igblastr_cache(C_REGION_DBS)
-    if (!dir.exists(c_region_dbs_path) && init.path)
+    if (.need_to_create_builtin_c_region_dbs(c_region_dbs_path) && init.path)
         .create_builtin_c_region_dbs(c_region_dbs_path)
     c_region_dbs_path
 }

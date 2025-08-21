@@ -1,0 +1,56 @@
+>M12388|IGLC1*01|Oryctolagus cuniculus|F|C-REGION|g,2..318|318 nt|1|+1| | | |318+66=384| | |
+.........ggtcagcctgtggtcgcccccttggtcactctgtttccaccctcctcagag
+gagctcaag.........gccaacaaggccaccctggtgtgtctgatcagtgacttctac
+cca......ggcacactgacagtggcctggaaggcagatggagtcaccatcacccag...
+...ggtgtggacaccacccagccctctaaacagagcaac..................aac
+aagtacatggccagcagcttcctcagcctttcacgtggacagtgg......acatcgcat
+agccgcttcacttgccaggtcacccatgag............gggaaaaccacggagaag
+agcgtggcccctgcacgctgtcct
+>M12761|IGLC2*01|Oryctolagus cuniculus|F|C-REGION|g,2..318|318 nt|1|+1| | | |318+66=384| | |
+.........ggtcagcctgtggtcgcccccttggtcatcctgtttccgccctcctcagag
+gagctcaag.........gccaacaaggccaccctggtgtgtctgatcagtgacttctac
+cca......ggcacactgacagtggcctggaaggcagatggagccaccatcacccaa...
+...ggcatggatttcacccagccctccaaacagagcaac..................aac
+aagtacatggccagcagcttcctcagcctctcacgtggacaatgg......acatcgcat
+agccgcttcatttgccaggtcacccatgag............gggaaaaccatggagaag
+agtgtggcccctgcacactgtcct
+>M12762|IGLC3*01|Oryctolagus cuniculus|F|C-REGION|g,2..306|306 nt|1|+1| | | |306+78=384| | |
+.........ggtcagcctgtggtcgcccccttggtcattctgtttccgccctcctcagag
+gagctc..................aaggccaccctggtgtgtctgatcagtgacttctac
+cca......ggcacactgacggtggcctggaaggcagatggagtcaccatcacccag...
+...ggtgtggacaccacccagccctccaaacagagcaac.....................
+aagtacatggccagaaccttcctcagcctgtcacatggacagtgg......acatcgcat
+agccgcttcacttgccaggtcacccatgag............gggaaaaccacggagaag
+agcgtggcccctgcacactgtcct
+>M12763|IGLC4*01|Oryctolagus cuniculus|F|C-REGION|g,2..318|318 nt|1|+1| | | |318+66=384| | |
+.........ggtcaacccgtagtcactccttcactcactctgttcccgccctcctctgag
+gaactcaag.........gacaacaaggccacactagtgtgtctgatcaatgacttctac
+ccg......ggcaccctgacggtgaactggaaggcagatggcacctccatcacccag...
+...ggcatggacaccacccagccctccaaacagagcaac..................aac
+aagtacgcggccagcagcttcctcagcctgtcagccaatcagtgg......aaatcctac
+cagagagccacctgccaggtcacacacgag............ggccaagccatggagagg
+agcctggtccctgcagaatgctcc
+>NW_003159316|IGLC4*02|Oryctolagus cuniculus_Thorbecke inbred|F|C-REGION|g,1880210..1880526|318 nt|1|+1| | | |318+66=384| | |
+.........ggtcaacccgtagtcactccttcactcactctgttcccgccctcctctgag
+gaactcaag.........gacaacaaggccacactagtgtgtctgatcaatgacttctac
+ccg......ggcaccgtgacggtgaactggaaggcagatggcacctccatcacccag...
+...ggcatggacaccacccagccctccaaagagagcaac..................aac
+aagtacgcggccagcagcttcctcagcctgtcagccaatcagtgg......aaatcctac
+cagagagccacctgccaggtcacacacgag............ggccaagccatggagagg
+agcctggtccctgcagaatgctcc
+>M23227|IGLC5*01|Oryctolagus cuniculus|F|C-REGION|g,7..323|318 nt|1|+1| | | |318+66=384| | |
+.........ggtcagcccgcggtgaccccctcggtcattctgttcccgccctcctctgag
+gaactcaag.........gacaacaaggctaccctggtgtgtctgatcaatgacttctac
+ccc......agaaccgtgaaggtaaactggaaggcagatggcaactctgtcacccag...
+...ggcgtggacaccacccagccctccaaacagagcaac..................aac
+aagtacgcggccagcagcttcctcagcctgtcagccaatcaatgg......aaatcctac
+cagagtgtcacctgccaggtcacgcacgag............ggccacactgtggagaag
+agcctggcccctgcagaatgctcc
+>M23229|IGLC6*01|Oryctolagus cuniculus|F|C-REGION|g,7..323|318 nt|1|+1| | | |318+66=384| | |
+.........ggtcagcccgcggtgaccccctcggtcattttgttcccgccctcctctgag
+gaactcaag.........gacaacaaggccaccttggtgtgtctgatcaatgacttctac
+ccg......ggcaccgtgaaggtgaactggaaggccgatggtactcccgtcacccag...
+...ggcgtggacaccacccagccctccaaacagagcaac..................agc
+aagtatgcggccagcagcttcctcagcctgtcagccaatcaatgg......aaatcctac
+cagagtgtcacctgccaggtcacgcatgag............ggccacacggtggagaag
+agcctggcccctgcagaatgctcc

@@ -1,0 +1,1463 @@
+>AY039245|IGHA*01|Macaca mulatta|F|CH1|23..319|297 nt|1| |-1| | |297+78=375|partial in 5'| |
+..................ccgaccaaacccaaggtcttcccgctgagcctcgagggcacc
+cag...............tcagataacgtggtcgtcgcctgcctggtccagggcttcttc
+ccccag...aagccactcaacgtgacctggagcaaaagcggagcgggcgtg.........
+...accgtcataaacttcccgcccaggcaggacgcctccggg...............ggc
+ctgtacaccacaagcagccagctgaccctgccagctgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagacaggatgtg
+gctgtgccctgcaga
+>AY039245|IGHA*01|Macaca mulatta|F|H-CH2|g,535..866|333 nt|1|+1|-1| | |333+72=405| | |
+gttcccccacccaaatgtccctcactcaaa..................tgtgacaaaccc
+cgactgtcgctgcgccggccggccctcgaggacctgctccta......ggttccgaggca
+aacctcacgtgcacactgaccggcctgagagatccc...tcgggtgccaccttcacctgg
+acgccctcaagtgggaagaac............gctgtccaacagtcacctgagcatgac
+ccctgtggc.....................tgctacagtgtgtccagtgtcctgcccggc
+tgtgccgagccatgg......aacaatagggtgaccttcacctgcactgctgagcaccct
+gag......ttggagacccaactaactgccaccatctcaaaatcc
+>AY039245|IGHA*01|Macaca mulatta|F|CH3-CHS|g,1078..1417|341 nt|1|+1| | | |341+111=452|partial in 3'| |
+............ggaaacacgttccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacgctgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctggttcgctggctgaagggaacagagcagctgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatactgcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacc.........................
+................................
+>AY039246|IGHA*02|Macaca mulatta|F|CH1|23..319|297 nt|1| |-1| | |297+78=375|partial in 5'| |
+..................ccgaccagacccaaggtcttcccgctgagcctcgagggcacc
+cag...............tcagataacgtggtcgtcgcctgcctggtccagggcttcttc
+ccccag...gagccactcaacgtgacctggagcaaaagcggagcgggcgtg.........
+...accgtcataaacttcccgcccaggcaggacgcctccggg...............ggc
+ctgtacaccacaagcagccagctgaccctgccagctgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactat.........acaaatcccagacaggatgtg
+ggtgtgccctgcaga
+>AY039246|IGHA*02|Macaca mulatta|F|H-CH2|g,535..860|327 nt|1|+1|-1| | |327+72=399| | |
+gttcccccacccaactgtcgctta..................tgtgacaaaccccgactg
+tcgctgcgccggccggccctcgaggacctgctctta......ggttcagaggcgaacctc
+acgtgcacactgaccggcctgagagatccc...tcgggtgccaccttcgcctggacgccc
+tcaagtgggaagaac............gctgtccaacagtcacctgagcatgacccctgt
+ggc.....................tgctacagtgtgtccagtgtcctgcccggctgtgcc
+gagccatgg......aacaatagggtgaccttcaactgcactgctaatcaccctgag...
+...ttgaagaccccactaactgccaccatctcaaaatcc
+>AY039246|IGHA*02|Macaca mulatta|F|CH3-CHS|g,1071..1410|341 nt|1|+1| | | |341+54=395|partial in 3'| |
+............ggaaacacgttccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacgctgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctggttcgctggctgaagggaacagagcaggtgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatactgcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggcattcacacagaag
+accatcgaccgcctggcg.........ggtaaacc
+>AY039247|IGHA*03|Macaca mulatta|F|CH1|23..316|294 nt|1| |-1| | |294+78=372|partial in 5'| |
+..................ccgaccagacccaaggtcttcccgctgagcctctgcagcacc
+cag...............tcagataatgtggtcatcgcctgcctggtccagggcttcttc
+ccccag...gagccactcaacgtgacctggagcaaaagcggagcgggcgtg.........
+...accgtcataaacttcccgcccaggcaggacgcctccggg...............ggc
+ctgtacaccacgagcagccagctgaccctgccagctgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagccaggatgtg
+gctgtgccctgc
+>AY039247|IGHA*03|Macaca mulatta|F|H-CH2|g,532..857|327 nt|1|+1|-1| | |327+72=399| | |
+gttccccaacccaagccttgctta..................tgtgacaaaccccgactg
+tcactgcgccggccagccctcgaggacctgctctta......ggttcagaagcgaacctc
+acgtgcacactgaccggcctgagagatccc...tcgggtgccaccttcacctggacgccc
+tcaagtgggaagaac............gctgtccaacagtcacctgagcatgacccctgt
+ggc.....................tgctacagtgtgtccagtgtcctgcccggctgtgct
+gagccatgg......aacaatagggtgaccttcacctgcactgctgagcaccctcag...
+...ttgaagaccccactaactgccaccatctcaaaatcc
+>AY039247|IGHA*03|Macaca mulatta|F|CH3-CHS|g,1071..1410|341 nt|1|+1| | | |341+54=395|partial in 3'| |
+............ggaaacacgttccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacactgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctggttcgctggctgaagggaacagagcagctgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatactgcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacc
+>AY039248|IGHA*04|Macaca mulatta|F|CH1|23..316|294 nt|1| |-1| | |294+78=372|partial in 5'| |
+..................ccgaccagacccaaggtcttcccgctgaacctctgcagcacc
+cag...............tcagataacgtggtcgtcgcctgcctggtccagggcttcttc
+ccccag...gagccactcaacgtgacctggagcaaaagtggagcgggcgtg.........
+...accgtcataaacttcccgcccagccaggacgcctctggc...............ggc
+ctgtacaccacgagcagccagctgaccctgccggccgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagccaggatgtg
+gctgtgccctgc
+>AY039248|IGHA*04|Macaca mulatta|F|H-CH2|g,532..863|333 nt|1|+1|-1| | |333+72=405| | |
+gttcccccaatcacacccccatgtccctca..................tgctgcgagccc
+cgactgtcgctgcgccggccggccctcgaggacctgctctta......ggttcagaagcg
+aacctcacgtgcacactgacaggcctgaaagatccc...tcgggtgccaccttcacctgg
+acgccctcaagtgggaagaac............gctgtccaacagtcacctaagcgtgac
+ccctgtggc.....................tgctacagtgtgtccagtgtcctgcccggc
+tgtgccgagccatgg......aacaatagggagaccttcacctgcactgctaatcaccct
+gag......ttggagaccccgctaaccgccaccatctcaaaatcc
+>AY039248|IGHA*04|Macaca mulatta|F|CH3-CHS|g,1077..1416|341 nt|1|+1| | | |341+54=395|partial in 3'| |
+............ggaaacacgttccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacactgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctggttcgctggctgaagggaacagagcagctgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatactgcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacc
+>AY039249|IGHA*05|Macaca mulatta|F|CH1|23..316|294 nt|1| |-1| | |294+78=372|partial in 5'| |
+..................ccgaccagacccaaggtcttcccgctgaacctctgcagcacc
+cag...............tcagataacgtggtcgtcgcctgcctggtccagggcttcttc
+ccccag...gagccactcaacgtgacctggagcaaaagtggagcggacgtg.........
+...actgtcataaacttcccgcccagccaggacgcctctggc...............ggc
+ctgtacaccacgagcagccagctgaccctgccggccgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagccaggatgtg
+gctgtgccctgc
+>AY039249|IGHA*05|Macaca mulatta|F|H-CH2|g,532..863|333 nt|1|+1|-1| | |333+72=405| | |
+gttcccccaatcacacccccatgtccctca..................tgctgcgagccc
+cgactgtcgctgcgccggccggccctcgaggacctgctctta......ggttcagaagcg
+aacctcacgtgcacactgacaggcctgagagatccc...tcgggtgccaccttcacctgg
+acgccctcaagtgggaagaac............gctgtccaacagtcacctaagcgtgac
+ccctgtggc.....................tgctacagtgtgtccagtgtcttgcccggc
+tgtgccgagccatgg......aacaatagggagaccttcacctgcactgctaatcaccct
+gag......ttggagaccccgctaaccgccaccatctcaaaatcc
+>AY039249|IGHA*05|Macaca mulatta|F|CH3-CHS|g,1076..1415|341 nt|1|+1| | | |341+54=395|partial in 3'| |
+............ggaaacacattccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacgctgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctggttcgctggctgaagggaacagaacagctgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatacttcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacc
+>AY039250|IGHA*06|Macaca mulatta|F|CH1|23..319|297 nt|1| |-1| | |297+78=375|partial in 5'| |
+..................ccgaccagacccaaggtcttcccgctgagcctcgagggcacc
+cag...............tcagataacgtggtcgtcgcctgcctggtccagggcttcttc
+ccccag...gagccactcaacgtgacctggagcaaaagcggagcgggcgtg.........
+...accgtcataaacttcccgcccaggcaggacgcctccggg...............ggc
+ctgtacaccacgagcagccagctgaccctgccagctgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactat.........acaaatcccagacaggatgtg
+ggtgtgccctgcaga
+>AY039250|IGHA*06|Macaca mulatta|F|H-CH2|g,535..860|327 nt|1|+1|-1| | |327+72=399| | |
+gttcccccacccaactgtcgctta..................tgtgacaaaccccgactg
+tcgctgcgccggccggccctcgaggacctgctccta......ggttccgaggcgaacctc
+acgtgcacactgaccggcctgagagatccc...tcgggtgccaccttcgcctggacgccc
+tcaagtgggaagaac............gctgtccaacagtcacctgagcatgacccctgt
+ggc.....................tgctacagtgtgtccagtgtcctgcccggctgtgcc
+gagccatgg......aacaatagggtgaccttcaactgcactgctaatcaccctgag...
+...ttgaagaccccactaactgccaccatctcaaaatcc
+>AY039250|IGHA*06|Macaca mulatta|F|CH3-CHS|g,1072..1411|341 nt|1|+1| | | |341+54=395|partial in 3'| |
+............ggaaacacgttccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacgctgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctggttcgctggctgaagggaacagagcaggtgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatactgcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacc
+>AY039251|IGHA*07|Macaca mulatta|F|CH1|23..316|294 nt|1| |-1| | |294+78=372|partial in 5'| |
+..................ccgaccagacccaaggtcttcccgctgagcctcgagggcacc
+cag...............tcagataacgtggtcgtcgcctgcctggtccagggcttcttc
+ccccag...gagccactcaacgtgacctggagcaaaagcggagcgggcgtg.........
+...accgtcataaacttcccgcccagccaggacgcctccggg...............ggc
+ctgtacaccacgagcagccagctgaccctgccagctgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatgccagacaggatgtg
+gctgtgccctgc
+>AY039251|IGHA*07|Macaca mulatta|F|H-CH2|g,532..857|327 nt|1|+1|-1| | |327+72=399| | |
+gtttcccaaaccaagccttgctta..................tgtgatgaaccccgactg
+tcgctgcgccgaccagccctcgaggacctgctccta......ggttccgaggcgaacctc
+acgtgcacactgaccggcctgagagatccc...tcgggtgccaccttcacctggacgccc
+tcaagtgggaagaac............gctgtccaacagtcacctaagcgtgacccctgt
+ggc.....................tgctacagtgtgtccagtgtcctgcccggctgtgcc
+gagccatgg......aacaatagggtgaccttcacctgcaaagctgagcaccctgag...
+...ttggagaccccactaactgccaccatctcaaaatcc
+>AY039251|IGHA*07|Macaca mulatta|F|CH3-CHS|g,1069..1408|341 nt|1|+1| | | |341+54=395|partial in 3'| |
+............ggaaacacattccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacgctgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctggttcgctggctgaagggaacagagcagctgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatactgcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacc
+>AY039252|IGHA*08|Macaca mulatta|F|CH1|23..316|294 nt|1| |-1| | |294+78=372|partial in 5'| |
+..................ccgaccagacccaaggtcttcccgctgagcctcgagggcacc
+cag...............tcagataacgtggtcgtcgcctgcctggtccagggcttcttc
+ccccag...gagccactcaacgtgacctggagcaaaagcggagcgggcgtg.........
+...accgtcataaacttcccgcccagccaggacgcctccggg...............ggc
+ctgtacaccacgagcagccagctgaccctgccagctgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatgccagacaggatgtg
+gctgtgccctgc
+>AY039252|IGHA*08|Macaca mulatta|F|H-CH2|g,532..857|327 nt|1|+1|-1| | |327+72=399| | |
+gtttcccaaaccaagccttgctta..................tgtgatgaaccccgactg
+tcgctgcgccgaccagccctcgaggacctgctccta......ggttccgaggcgaaccta
+acgtgcacactgaccggcctgagagatccc...tcgggtgccaccttcacctggacgccc
+tcaagtgggaagaac............gctgtccaacagtcacctaagcgtgacccctgt
+ggc.....................tgctacagtgtgtccagtgtcctgcccggctgtgcc
+gagccatgg......aacaatagggtgaccttcacctgcaaagctgagcaccctgag...
+...ttggagaccccactaactgccaccatctcaaaatcc
+>AY039252|IGHA*08|Macaca mulatta|F|CH3-CHS|g,1069..1408|341 nt|1|+1| | | |341+54=395|partial in 3'| |
+............ggaaacacattccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacgctgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctggttcgctggctgaagggaacagagcagctgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatactgcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacc
+>AB013768|IGHA*09|Macaca mulatta_UTS378|F|CH1|1..12|12 nt|1| |-1| | |12+360=372|partial in 5'| |
+............................................................
+............................................................
+............................................................
+............................................................
+............................................................
+............................................................
+gctgtgccctgc
+>AB013768|IGHA*09|Macaca mulatta_UTS378|F|H-CH2|g,228..364|138 nt|1|+1| | | |138+27=165|partial in 3'| |
+gttcccccacccaactcttgctta..................tgtgatgaaccccgactg
+tcgctgcgccgaccagccctcgaggacctgctccta......ggttccgaggcgaacctc
+acgtgcacactgaccggcctgagagatccc...tcgggtgccacc
+>AB013769|IGHA*10|Macaca mulatta_UTS520|F|CH1|1..12|12 nt|1| |-1| | |12+360=372|partial in 5'| |
+............................................................
+............................................................
+............................................................
+............................................................
+............................................................
+............................................................
+gccgtgccctgc
+>AB013769|IGHA*10|Macaca mulatta_UTS520|F|H-CH2|g,227..363|138 nt|1|+1| | | |138+27=165|partial in 3'| |
+gtttccgaaaccaagccttgctta..................tgtgacaaaccccgactg
+tcactgcgccggccggccctcgaggacctgctccta......ggttcagaagcgaacctc
+acgtgcacactgaccggcctgagaaatccc...tcgggtgccacc
+>AB013767|IGHA*11|Macaca mulatta_UTS493|F|CH1|1..12|12 nt|1| |-1| | |12+360=372|partial in 5'| |
+............................................................
+............................................................
+............................................................
+............................................................
+............................................................
+............................................................
+gctgtgccctgc
+>AB013767|IGHA*11|Macaca mulatta_UTS493|F|H-CH2|g,228..370|144 nt|1|+1| | | |144+27=171|partial in 3'| |
+gttcccccaatcacacccccatgtccctca..................tgctgcgagccc
+cgactgtcgctgcgccggccggccctcgaggacctgctccta......ggttcagaagcg
+aacctcacgtgcacattgacaggcctgaaagatccc...tcgggtgccacc
+>AB013757|IGHA*12|Macaca mulatta_UTS380|F|H-CH2|g,9..45|38 nt|1|+1| | | |38+18=56|partial in 3'| |
+gatccccaacccaagccttgctta..................tgtgacaaacccca
+>AB013761|IGHA*13|Macaca mulatta_UTS382|F|H-CH2|g,9..60|53 nt|1|+1| | | |53+18=71|partial in 3'| |
+ggtatcccacctaccccaatcccactcccatgtccctca..................tgc
+tgcgagccccg
+>AY294614|IGHA*14|Macaca mulatta|(F)|CH1|g,1..299|300 nt|1|+1| | | |300+72=372| | |
+............gcatccccgaccagccccaaggtcttcccgctgaacctctgcagcacc
+cag...............tcagataacgtggtcgtcgcctgcctggtccagggcttcttc
+ccccag...gagccactcaacgtgacctggagcaaaagtggagcggacgtg.........
+...actgtcataaacttcccgcccagccaggacgcctctggc...............ggc
+ctgtacaccacgagcagccagctgaccctgccggccgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagccaggatgtg
+gctgtgccctgc
+>AY294614|IGHA*14|Macaca mulatta|(F)|H-CH2|300..632|333 nt|1| | | | |333+72=405| | |
+gttcccccaatcacacccccatgtccctca..................tgctgcgagccc
+cgactgtcgctgcgccggccggccctcgaggacctgctccta......ggttcagaagcg
+aacctcacgtgcacactgacaggcctgaaagatccc...tcgggtgccaccttcacctgg
+acgccctcaagtgggaagaac............gctgtccaacagtcacctaagcgtgac
+ccctgtggc.....................tgctacagtgtgtccagtgtcctgcccggc
+tgtgccgagccatgg......aacaatagggagaccttcacctgcactgctaatcaccct
+gag......ttggagaccccgctaaccgccaccatctcaaaatcc
+>AY294614|IGHA*14|Macaca mulatta|(F)|CH3-CHS|633..996|364 nt|1| | | | |364+54=418| | |
+............ggaaacacattccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacgctgacgtgcctggcacgcggcttcagc
+ccc......gaggatgtgctggttcgctggctgaagggaacagaacagctgccccgtgac
+...aagtacctgacttgggaatcccggcaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatactgcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacccacccatgtcaatgtgtctgttg
+>AY294616|IGHA*15|Macaca mulatta|(F)|CH1|1..161|161 nt|1| | | | |161+211=372|partial in 5'| |
+............................................................
+............................................................
+.................................................tg.........
+...accgtcataaacttcccgcccagccaggacgcctccggg...............ggc
+ctgtacaccacgagcagccagctgaccctgccagctgcacagtgc......ccagccaca
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagccaggatgtg
+gctgtgccctgc
+>AY294616|IGHA*15|Macaca mulatta|(F)|H-CH2|162..249|88 nt|1| | | | |88+24=112|partial in 3'| |
+gtttcccaaaccaagccttgctta..................tgtgatgaaccccgactg
+tcgctgcgccgaccagccctcgaggacctgctctta......ggttcagaag
+>AY294617|IGHA*16|Macaca mulatta|(F)|CH1|1..161|161 nt|1| | | | |161+211=372|partial in 5'| |
+............................................................
+............................................................
+.................................................tg.........
+...accgtcataaacttcccgcccagccaggacgcctccggg...............ggc
+ctgtacaccacgagcagccagctgaccctgccggccacacagtgc......ccagccaca
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagccaggatgtg
+gctgtgccctgc
+>AY294617|IGHA*16|Macaca mulatta|(F)|H-CH2|162..204|43 nt|1| | | | |43+18=61|partial in 3'| |
+gttcccccacccaactcttgctta..................tgtgataagccccgactg
+t
+>AY294618|IGHA*17|Macaca mulatta|(F)|CH1|1..164|164 nt|1| | | | |164+211=375|partial in 5'| |
+............................................................
+............................................................
+.................................................tg.........
+...accgtcataaacttcccgcccaggcaggacgcctccggg...............ggc
+ctgtacaccacgagcagccagctgaccctgccagctgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactat.........acaaatcccagacaggatgtg
+gctgtgccctgcaga
+>AY294618|IGHA*17|Macaca mulatta|(F)|H-CH2|165..204|40 nt|1| | | | |40+18=58|partial in 3'| |
+gttcccccacccaactgtcgctta..................tgtgacaagccccgac
+>AY294620|IGHA*18|Macaca mulatta|(F)|CH1|1..161|161 nt|1| | | | |161+211=372|partial in 5'| |
+............................................................
+............................................................
+.................................................tg.........
+...accgtcataaacttcccgcccagccaggacgcctctggc...............ggc
+ctgtacaccacgagcagccagctgaccctgccggccgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagccaggatgtg
+gctgtgccctgn
+>AY294620|IGHA*18|Macaca mulatta|(F)|H-CH2|162..255|94 nt|1| | | | |94+24=118|partial in 3'| |
+gttcccccaatcacacccccatgtccctca..................tgctgcgagccc
+cgactgtcgctgcgccggccggccctcgaggacctgctctta......ggttcagaag
+>AY294621|IGHA*19|Macaca mulatta|(F)|CH1|1..161|161 nt|1| | | | |161+211=372|partial in 5'| |
+............................................................
+............................................................
+.................................................tg.........
+...accgtcataaacttcccgcccagccaggacgcctccggg...............ggc
+ctgtacaccacgagcagccagctgaccctgccggccgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagccaggatgtg
+gctgtgccctgc
+>AY294621|IGHA*19|Macaca mulatta|(F)|H-CH2|162..248|87 nt|1| | | | |87+24=111|partial in 3'| |
+gttcccccacccaactcttgctta..................tgtgatgaaccccgactg
+tcgctgcgccgaccagccctcgaggacctgctctta......ggttcagaa
+>AY294623|IGHA*20|Macaca mulatta|(F)|CH1|1..164|164 nt|1| | | | |164+211=375|partial in 5'| |
+............................................................
+............................................................
+.................................................tg.........
+...accgtcataaacttcccgcccagccaggacgcctctggc...............ggc
+ctgtacaccacgagcagccagctgaccctgccagctgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagacaggatgtg
+gctgtgccctgcaga
+>AY294623|IGHA*20|Macaca mulatta|(F)|H-CH2|165..258|94 nt|1| | | | |94+24=118|partial in 3'| |
+gttcccccacccaaatgtccctcactcaaa..................tgtgacaaaccc
+cgactgtcgctgcgccggccggccctcgaggacctgctctta......ggttcagaag
+>AY294615|IGHA*21|Macaca mulatta|(F)|CH1|g,1..305|306 nt|1|+1| | | |306+69=375| | |
+............gcatccccgaccagccccaaggtcttcccgctgagcctcaagggcacc
+cag............tcagatgggaatgtggtcgtcgcctgcctggtccagggcttcttc
+ccccaa...gagccactcaacgtgacctggaacaaaagcggagcgggcgtg.........
+...accgtcataaacttcccgcccagccaggacgcctccggg...............ggc
+ctgtacaccacaagcagccagctgaccctgccggccacgcagtgc......ccagccaca
+gagtccgtgacatgccacgtggagcactac.........acgaatcccagccaggatgtg
+gctgtgcgctgcaga
+>AY294615|IGHA*21|Macaca mulatta|(F)|H-CH2|306..632|327 nt|1| | | | |327+72=399| | |
+gatccccaacccaagccttgctta..................tgtgacaaaccccaactg
+tcgctgcgccggccggccctcgaggacctgctccta......ggttcagaagcgaacctc
+acgtgcacactgaccggcctgagagatccc...tcgggtgccaccttcgcctggacgccc
+tcaagtgggaagaat............gctgtccaacagtcacctgagcatgacccctgt
+ggc.....................tgctacagtgtgtccagtgtcctgcctggctgtgcc
+gagccatgg......aacaatagggagaccttcacctgcactgctaatcaccctgag...
+...ttgaagaccccactaaccgccaccatctcaaaatct
+>AY294615|IGHA*21|Macaca mulatta|(F)|CH3-CHS|633..996|364 nt|1| | | | |364+54=418| | |
+............ggaaacacgttccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aatgagctggtgacactgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctggttcgctggctgaagggaacagaacagctgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatactgcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacccacccatgtcaatgtgtctgttg
+>BK063715|IGHA*22|Macaca mulatta_AG07107|F|CH1|g,1956843..1957141|300 nt|1|+1|-1| | |300+72=372| | |
+............gcatccccgaccagacccaaggtcttcccgctgaacctctgcagcacc
+cag...............tcagataacgtggtcgtcgcctgcctggtccagggcttcttc
+ccccag...gagccactcaacgtgacctggagcaaaagtggagcggacgtg.........
+...actgtcataaacttcccgcccagccaggacgcctctggc...............ggc
+ctgtacaccacgagcagccagctgaccctgccggccgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagccaggatgtg
+gctgtgccctgc
+>BK063715|IGHA*22|Macaca mulatta_AG07107|F|H-CH2|g,1957357..1957688|333 nt|1|+1|-1| | |333+72=405| | |
+gttcccccaatcacacccccatgtccctca..................tgctgcgagccc
+cgactgtcgctgcgccggccggccctcgaggacctgctccta......ggttcagaagcg
+aacctcacgtgcacactgacaggcctgaaagatccc...tcgggtgccaccttcacctgg
+acgccctcaagtgggaagaac............gctgtccaacagtcacctaagcgtgac
+ccctgtggc.....................tgctacagtgtgtccagtgtcctgcccggc
+tgtgccgagccatgg......aacaatagggagaccttcacctgcactgctgatcaccct
+gag......ttggagaccccgctaaccgccaccatctcaaaatcc
+>BK063715|IGHA*22|Macaca mulatta_AG07107|F|CH3-CHS|g,1957901..1958292|393 nt|1|+1| | | |393+54=447| | |
+............ggaaacacattccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacgctgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctgattcgctggctgaagggaacagaacagctgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatacttcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacccacccacgtcaatgtgtctgtggtc
+atggcggaagtggacggcacctgctac
+>BK063715|IGHA*22|Macaca mulatta_AG07107|F|M|g,1960848..1961059|213 nt|1|+1| | | |213+0=213| | |
+ggctcttgctgtgttacagattggcagatgctgcctccctatgtggtgctggacttgccg
+caggagaccctggaggaggagacccctggtgccaacctgtggcccaccaccatcaccttc
+ctcaccctcttcctgctgagcctgttctatagcacagcactgaccgtgaccagcgtccgg
+ggtccatctggcaacagggagggcccccagtac
+>IMGT000099|IGHA*23|Macaca mulatta_rheMacS_CGG.01|F|CH1|g,2477366..2477667|303 nt|1|+1|-1| | |303+69=372| | |
+............gcatccccgaccagacccaaggtcttcccgctgaacctctgcagcccc
+cag............tcagatgggaatgtggtcgtcgcctgcctggtccagggcttcttc
+ccccag...gagccactcaacgtgacctggagcaaaagcggagagggcgtg.........
+...actgtcataaacttcccgcccagcccggacgcctccggg...............ggc
+ctgtacaccacaagcagccagctgaccctgccggccacacagtgc......ccagccaca
+gagtccgtgacatgccacgtggagcactac.........acgaatcccagccaggatgtg
+gccgtgcgctgc
+>IMGT000099|IGHA*23|Macaca mulatta_rheMacS_CGG.01|F|H-CH2|g,2477883..2478223|342 nt|1|+1|-1| | |342+72=414| | |
+ggtatcccacctaccccaaccccactcccatgtccctca..................tgc
+tgcgagccccgactgtcgctgcgccggccagccctcgaggacctgctccta......ggt
+tcagaagcgaacctcacgtgcacactgaccggcctgagagatccc...tcgggtgccacc
+ttcacctggacgccctcaagtgagaagaac............gctgtccaacagtcacct
+aagcgtgacccctgtggc.....................tgctacagtgtgtccagtgtc
+ctgcccggctgtgccgagccatgg......aacaacaggaagaccttcacctgcactgct
+aatcaccctgag......ttggagaccccactaactgccaccatctcaaaatcc
+>IMGT000099|IGHA*23|Macaca mulatta_rheMacS_CGG.01|F|CH3-CHS|g,2478435..2478826|393 nt|1|+1| | | |393+54=447| | |
+............ggaaacacgttccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacgctgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctggttcgctggctgaagggaacagagcagctgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatactacgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacccacccacgtcaatgtgtctgtggtc
+atggcggaagtggacggcacctgctac
+>IMGT000099|IGHA*23|Macaca mulatta_rheMacS_CGG.01|F|M|g,2481392..2481603|213 nt|1|+1| | | |213+0=213| | |
+ggctcttgctgtgttacagattggcagatgctgcctccctatgtggtgctggacttgccg
+caggagaccctggaggaggagacccctggtgccaacctgtggcccaccaccatcaccttc
+ctcaccctcttcctgctgagcctgttctatagcacagcactgaccgtgaccagcgtccgg
+ggtccatctggcaacagggagggcccccagtac
+>SBKD01000511|IGHA*24|Macaca mulatta_RUp15|F|CH1|g,403542..403840|300 nt|1|+1|-1| | |300+72=372| | |
+............gcatccccgaccagacccaaggtcttcccgctgaacctctgcagcacc
+cag...............tcagataacgtggtcgtcgcctgcctggtccagggcttcttc
+ccccag...gagccactcaacgtgacctggagcaaaagtggagcggacgtg.........
+...actgtcataaacttcccgcccagccaggacgcctctggc...............ggc
+ctgtacaccacgagcagccagctgaccctgccggccgcacagtgc......ccagccagc
+gagtccgtgacatgccacgtggagcactac.........acaaatcccagccaggatgtg
+gctgtgccctgc
+>SBKD01000511|IGHA*24|Macaca mulatta_RUp15|F|H-CH2|g,404056..404387|333 nt|1|+1|-1| | |333+72=405| | |
+gttcccccaatcacacccccatgtccctca..................tgctgcgagccc
+cgactgtcgctgcgccggccggccctcgaggacctgctccta......ggttcagaagcg
+aacctcacgtgcacactgacaggcctgaaagatccc...tcgggtgccaccttcacctgg
+acgccctcaagtgggaagaac............gctgtccaacagtcacctaagcgtgac
+ccctgtggc.....................tgctacagtgtgtccagtgtcctgcccggc
+tgtgccgagccatgg......aacaatagggagaccttcacctgcactgctaatcaccct
+gag......ttggagaccccgctaaccgccaccatctcaaaatcc
+>SBKD01000511|IGHA*24|Macaca mulatta_RUp15|F|CH3-CHS|g,404599..404990|393 nt|1|+1| | | |393+54=447| | |
+............ggaaacacattccggcccgaggtccacctgctgccgccgccgtcggag
+gagctggccctg......aacgagctggtgacgctgacgtgcctggcacgcggcttcagc
+ccc......gaggacgtgctgattcgctggctgaagggaacagaacagctgccccgtgac
+...aagtacctgacttgggaatcccggaaggagcccagccagggc.........accacc
+accttcgccgtgaccagcatacttcgcgtggcagccgaggactgg......aagaagggg
+gacaccttctcctgcatggtgggccacgaggcc...ctgccgctggccttcacacagaag
+accatcgaccgcctggcg.........ggtaaacccacccacgtcaatgtgtctgtggtc
+atggcggaagtggacggcacctgctac
+>SBKD01000511|IGHA*24|Macaca mulatta_RUp15|F|M|g,407548..407759|213 nt|1|+1| | | |213+0=213| | |
+ggctcttgctgtgttacagattggcagatgctgcctccctatgtggtgctggacttgccg
+caggagaccctggaggaggagacccctggtgccaacctgtggcccaccaccatcaccttc
+ctcaccctcttcctgctgagcctgttctatagcacagcactgaccgtgaccagcgtccgg
+ggtccatctggcaacagggagggcccccagtac
+>DQ297181|IGHD*01|Macaca mulatta|(F)|CH1|1..293|293 nt|1| | | | |293+82=375|partial in 5'| |
+............................cggatgtgttccccatcatatcagcgtgccaa
+ctcccaaaggat......aacagccctgtggtcctggcatgcttgataactgggtacaac
+cca......aagtccgtgactgtcacctggcacctggggacacagatccag.........
+...aaccagattatgttccctgagacagagagagagggc.....................
+agctacacgacaagcagccagctcgcccccaccccacccctctcccaa...cagcaccaa
+ggcgagtacaaatgcaccgtcaagcacaccccc......agcgatacaagcaaggagaag
+accttccgctggcca
+>DQ297181|IGHD*01|Macaca mulatta|(F)|H1|294..395|102 nt|1| | | | |102+0=102| | |
+gagtctccaaaggcacagtacccctcagtgcccactgtacagccccaagcagagggcggc
+ctctccaaagcaaccagacccccggccaccaacaggaacaca
+>DQ297181|IGHD*01|Macaca mulatta|(F)|H2|396..458|63 nt|1| | | | |63+0=63| | |
+ggaagaagagaaaaggaggacgaggaggagaaagaacaacaagagggagagacaaagacc
+cca
+>DQ297181|IGHD*01|Macaca mulatta|(F)|CH2|459..782|324 nt|1| | | | |324+51=375| | |
+...gagtgtccaagccacacccagcctctcggcgtctacctgctgcccccggccctgcag
+gacctgtggttc......caagacaaagtcaccttcacctgcttcgtggtgggcagtgac
+ctg......caggatgcccacctgtcctgggaggtggccgggaaggtccccaaaggg...
+...ggcatggaggaggggccgctggagcagcacagcaac..................ggc
+tcccagagccagcacagccgcctggccctacccaggtccttgtgg......aatgcgggg
+acctccgtcacctgcacactgaaccatcccagc......ctcccatcccagaagctgatg
+gcgctgagagaaccc
+>DQ297181|IGHD*01|Macaca mulatta|(F)|CH3|783..1106|324 nt|1| |-1| | |324+51=375|partial in 3'| |
+...............gctgcccaggcacccgtcaggctttccctgaacctgttggcctcg
+tctgaccctccg......gaagcagcctcatggctcctgtgtgaggtgtctgacttctcg
+ccc......cccaacatcctcctgatgtggctggagaaccagcgcgaggtgaacacttct
+...tggtttgccaccacgcaccccactccacagcctgggagc...............acc
+atgttctgggcctggagtgtgctgcgtgtcccaggcccgaccagc......cctcagcca
+gccacctacacgtgtgtggtcagccacgaggactccaggactctgctcaacgccagccgg
+agcctagaagtcagc
+>DQ297180|IGHD*02|Macaca mulatta|(F)|CH1|1..293|293 nt|1| | | | |293+82=375|partial in 5'| |
+............................cggatgtgttccccatcatatcagcgtgccaa
+ctcccaaaggat......aacagccctgtggtcctggcatgcttgataactgggtacaac
+cca......aagtccgtgactgtcacctggcacctggggacacagatccag.........
+...aaccagattatgttccctgagacagagagagagggc.....................
+agctacacgacaagcagccagctcgcccccaccccacccctctcccaa...cagcaccaa
+ggcgagtacaaatgcaccgtcaagcacaccccc......agcgatacaagcaaggagaag
+accttccgctggcca
+>DQ297180|IGHD*02|Macaca mulatta|(F)|H1|294..395|102 nt|1| | | | |102+0=102| | |
+gagtctccaaaggcacagtacccctcagtgcccactgtacagccccaagcagagggcggc
+ctctccaaagcaaccagacccccggccaccaacaggaacaca
+>DQ297180|IGHD*02|Macaca mulatta|(F)|H2|396..458|63 nt|1| | | | |63+0=63| | |
+ggaagaagagaaaaggaggacgaggaggagaaagaacaacaagagggagagacaaagacc
+cca
+>DQ297180|IGHD*02|Macaca mulatta|(F)|CH2|459..782|324 nt|1| | | | |324+51=375| | |
+...gagtgtccaagccacacccagcctctcggcgtctacctgctgcccccggccctgcag
+gacctgtggttc......caagacaaagtcaccttcacctgcttcgtggtgggcagtgac
+ctg......caggatgcccacctgtcctgggaggtggccgggaaggtccccaaaggg...
+...ggcatggaggaggggccgctggagcagcacagcaac..................ggc
+tcccagagccagcacagccgcctggccctacccaggtccttgtgg......aatgcgggg
+acctccgtcacctgcacactgaaccatcccagc......ctcccatcccagaagctgatg
+gcgctgagagaaccc
+>DQ297180|IGHD*02|Macaca mulatta|(F)|CH3|783..1106|324 nt|1| |-1| | |324+51=375| | |
+...............gctgcccaggcacccgtcaggctttccctgaacctgttggcctcg
+tctgaccctccg......gaagcagcctcatggctcctgtgtgaggtgtctgacttctcg
+ccc......cccaacatcctcctgatgtggctggagaaccagcgcgaggtgaacacttct
+...tggtttgccaccacgcaccccactccacagcccgggagc...............acc
+atgttctgggcctggagtgtgctgcgtgtcccaggcccgaccagc......cctcagcca
+gccacctacacgtgtgtggtcagccacgaggactccaggactctgctcaacgccagccgg
+agcctagaagtcagc
+>BK063715|IGHD*03|Macaca mulatta_AG07107|F|CH1|g,1722155..1722462|309 nt|1|+1|-1| | |309+66=375| | |
+............gcatccaccaaggctccggatgtgttccccatcacgtcagcgtgccaa
+ctcccaaaggat......aacagccctgtggtcctggcatgcttgataactgggtacaac
+cca......aagtccgtgactgtcacctggcacctggggacacagatccag.........
+...aaccagattatgttccctgagacagagagagagggc.....................
+agctacacgacaagcagccagctcgcccccaccccacccctctcccaa...cagcaccaa
+ggcgagtacaaatgcaccgtcaagcacaccccc......agcgatacaagcaaggagaag
+accttccgctggcca
+>BK063715|IGHD*03|Macaca mulatta_AG07107|F|CH2|g,1727290..1727612|324 nt|1|+1|-1| | |324+51=375| | |
+...gagtgtccaagccacacccagcctctcggcgtctacctgctgcccccggccctgcag
+gacctgtggttc......caagacaaagtcaccttcacctgcttcgtggtgggcagtgac
+ctg......caggatgcccacctgtcctgggaggtggccgggaaggtccccaaaggg...
+...ggcatggaggaggggccgctggagcagcacagcaac..................ggc
+tcccagagccagcacagccgcctggccctacccaggtccttgtgg......aatgcgggg
+acctccgtcacctgcacactgaaccatcccagc......ctcccatcccagaagctgatg
+gcgctgagagaaccc
+>BK063715|IGHD*03|Macaca mulatta_AG07107|F|CH3|g,1727917..1728239|324 nt|1|+1|-1| | |324+51=375| | |
+...............gctgcccaggcacccgtcaggctttccctgaacctgttggcctcg
+tctgaccctcca......gaagcagcctcatggctcctgtgtgaggtgtctgacttctcg
+ccc......cccaacatcctcctgatgtggctggagaaccagcgcgaggtgaacacttct
+...tggtttgccaccacgcaccccactccacagcctgggagc...............acc
+atgttctgggcctggagtgtgctgcgtgtcccaggcccgaccagc......cctcagcca
+gccacctacacgtgtgtggtcagccacgaggactccaggactctgctcaacgccagccgg
+agcctggatgtcagc
+>BK063715|IGHD*03|Macaca mulatta_AG07107|F|CHS|t,1730163..1730188|27 nt|1|+1| | | |27+0=27| | |
+tatttaacagaccgtggccccgtgaaa
+>BK063715|IGHD*03|Macaca mulatta_AG07107|F|M1|g,1730991..1731148|159 nt|1|+1| | | |159+0=159| | |
+gacctggccacaacccccccgatccctcagagcaaggatgagaacagcgatgactacacg
+accttggatgacatgggcagcctgtggaccaccctgtccacgttcgtggccctcttcgtc
+ctcaccctcctctatagcggcattgtcactttcatcaag
+>BK063715|IGHD*03|Macaca mulatta_AG07107|F|M2|1731432..1731437|6 nt|1| | | | |6+0=6| | |
+gtgaag
+>IMGT000099|IGHD*04|Macaca mulatta_rheMacS_CGG.01|F|CH1|g,2240002..2240309|309 nt|1|+1|-1| | |309+66=375| | |
+............gcatccaccaaggctccggatgtgttccccatcacgtcagcgtgccaa
+ctcccaaaggat......aacagccctgtggtcctggcatgcttgataactgggtacaac
+cca......aagtccgtgactgtcacctggcacctggggacacagatccag.........
+...aaccagattatgttccctgagacagagagagagggc.....................
+agctacacgacaagcagccagctcgcccccaccccacccctctcccaa...cagcaccaa
+ggcgagtacaaatgcaccgtcaagcacaccccc......agcgatacaagcaaggagaag
+accttccgctggcca
+>IMGT000099|IGHD*04|Macaca mulatta_rheMacS_CGG.01|F|H1|g,2240794..2240894|102 nt|1|+1|-1| | |102+0=102| | |
+gagtctccaaaggcacagtacccctcagtgcccactgtacagccccaagcagagggcggc
+ctctccaaagcaaccagacccccggccaccaacaggaacaca
+>IMGT000099|IGHD*04|Macaca mulatta_rheMacS_CGG.01|F|H2|g,2244342..2244403|63 nt|1|+1|-1| | |63+0=63| | |
+ggaagaagagaaaaggaggacgaggaggagaaagaacaacaagagggagagacaaagacc
+cca
+>IMGT000099|IGHD*04|Macaca mulatta_rheMacS_CGG.01|F|CH2|g,2245136..2245458|324 nt|1|+1|-1| | |324+51=375| | |
+...gagtgtccaagccacacccagcctctcggcgtctacctgctgcccccggccctgcag
+gacctgtggttc......caagacaaagtcaccttcacctgcttcgtggtgggcagtgac
+ctg......caggatgcccacctgtcctgggaggtggccgggaaggtccccaaaggg...
+...ggcatggaggaggggccgctggagcagcacagcaac..................ggc
+tcccagagccagcacagccgcctggccctacccaggtccttgtgg......aatgcgggg
+acctccgtcacctgcacactgaaccatcccagc......ctcccatcccagaagctgatg
+gcgctgagagaaccc
+>IMGT000099|IGHD*04|Macaca mulatta_rheMacS_CGG.01|F|CH3|g,2245763..2246085|324 nt|1|+1|-1| | |324+51=375| | |
+...............gctgcccaggcacccgtcaggctttccctgaacctgttggcctcg
+tctgaccctccg......gaagcagcctcatggctcctgtgtgaggtgtctgacttctcg
+ccc......cccaacatcctcctgatgtggctggagaaccagcgcgaggtgaacacttct
+...tggtttgccaccacgcaccccactccacagcccgggagc...............acc
+atgttctgggcctggagtgtgctgcgtgtcccaggcccgaccagc......cctcagcca
+gccacctacacgtgtgtggtcagccacgaggactccaggactctgctcaacgccagccgg
+agcctggatgtcagc
+>IMGT000099|IGHD*04|Macaca mulatta_rheMacS_CGG.01|F|CHS|t,2248013..2248038|27 nt|1|+1| | | |27+0=27| | |
+tatttaacagaccgtggccccgtgaaa
+>IMGT000099|IGHD*04|Macaca mulatta_rheMacS_CGG.01|F|M1|t,2248840..2248997|159 nt|1|+1| | | |159+0=159| | |
+tacctggccacaacccccccgatccctcagagcaaggatgagaacagcgatgactacacg
+accttggatgacatgggcagcctgtggaccaccctgtccacgttcgtggccctcttcgtc
+ctcaccctcctctatagcggcattgtcactttcatcaag
+>IMGT000099|IGHD*04|Macaca mulatta_rheMacS_CGG.01|F|M2|2249281..2249286|6 nt|1| | | | |6+0=6| | |
+gtgaag
+>BK063715|IGHE*01|Macaca mulatta_AG07107|F|CH1|g,1943782..1944089|309 nt|1|+1|-1| | |309+66=375| | |
+............gcctccatacagagccccttcgtcttccccttgatcccctgctgcaaa
+cacattgcctccaat...gccacctccgtgaccctgggctgcctggccacgggctacttc
+ccg......gagccggtgatggtgacctgggacgcaggctccctcaacaga.........
+...agcactatgaccttaccagccaccaccttcacgccctcc...............ggt
+cactatgccaccatcagcttgctgaccgtctcgggtgcgtgg............gccaag
+gagacgttcacctgccatgtggtgcacactcca......tcgtccgcagacaaagaggtc
+aacaaaacctttggc
+>BK063715|IGHE*01|Macaca mulatta_AG07107|F|CH2|g,1944288..1944607|321 nt|1|+1|-1| | |321+57=378| | |
+...gtctgctccaggaacttcaccccacctaccgtgaagatcttacagtcatcctgcgat
+gacgacgggcacttt...cccccgaccatccagctcctgtgcctcatctccgggtacacc
+cca......ggggccatcaatgtcacctggctggagaacgggcaggtcatgaaa......
+...gtgaactcgcccacccctcctgccacgcaggagggt..................gag
+ctggcctccacacaaagtgagttcaccctcgcccagaagcactgg......ctgtcggac
+cgcacttacacctgccaggtcacctatcaa............ggtaccacctataacgac
+agcaccaagaagtgtgca
+>BK063715|IGHE*01|Macaca mulatta_AG07107|F|CH3|g,1944694..1945019|327 nt|1|+1|-1| | |327+51=378| | |
+.........gattccaacccgagaggggtgagtgcctacctaagccggcccagcccgttt
+gacctgttcatc......agcaagtcgcccacgatcacctgtctggtggtggacctggca
+cccagcaaggagaccgtgaacctgacctggtcccgggccagtgggaagcctgtg......
+...ccccacatccccgcaacggagaagaagcagcagcgcaat...............ggc
+accttaaccgttacgtccatcctgccggtggtcacccaagactgg......atcgagggg
+gagacctaccagtgcagggtgacccacccccac......ctccccagggccctcgtgcgg
+tccatgaccaagaccagc
+>BK063715|IGHE*01|Macaca mulatta_AG07107|F|CH4-CHS|g,1945107..1945435|330 nt|1|+1| | | |330+54=384| | |
+............ggcccgcgtgctgccccggaagtctatgtgtttgcaacgccagagaag
+ctagagagc.........cgggacaagcgcaccctcgcctgcctgatccagaacttcatg
+cct......gaggacatatcggtgcagtggctgcacagcgacgtgcagctcccggacgcc
+...cggcacagtgtgacgcagccccgcaagaccaagggc..................tcc
+ggcttcttcgtcttcagccgcctggaggtgaccaaggccgaatgg......gagcagaaa
+gacgagttcatctgccgtgcagtccatgaggcagcgagcccctcatggatcgtccagcaa
+gcggtgtctgtaaatcccggtaaa
+>BK063715|IGHE*01|Macaca mulatta_AG07107|F|M1|g,1947523..1947644|123 nt|1|+1| | | |123+0=123| | |
+gagctggacctgtgcgtggaggaggccgagagtgaggtgctgtggacgtggactggcctc
+tgcatcttcgccacactcttcctgctcagtgtgagctacagcgctgccatcacactcctc
+atg
+>BK063715|IGHE*01|Macaca mulatta_AG07107|F|M2|1947729..1947809|81 nt|1| | | | |81+0=81| | |
+gtgcagcggttcctctcagccacgcggcaggggaggccccagacctccctcgactacacc
+aacatcctccagccccacgcc
+>IMGT000099|IGHE*02|Macaca mulatta_rheMacS_CGG.01|F|CH1|g,2463950..2464257|309 nt|1|+1|-1| | |309+66=375| | |
+............gcctccatacagagccccttcgtcttccccttgatcccctgctgcaaa
+cacattgcctccaat...gccacctccgtgaccctgggctgcctggccacgggctacttc
+ccg......gagccggtgatggtgacctgggacgcaggctccctcaacaga.........
+...agcactatgaccttaccagccaccaccttcacgccctcc...............ggt
+cactatgccaccatcagcttgctgaccgtctcgggtgcgtgg............gccaag
+gagacgttcacctgccatgtggtgcacactcca......tcgtccgcagacaaagaggtc
+aacaaaacctttggc
+>IMGT000099|IGHE*02|Macaca mulatta_rheMacS_CGG.01|F|CH2|g,2464456..2464775|321 nt|1|+1|-1| | |321+57=378| | |
+...gtctgctccaggaacttcaccccacctaccgtgaagatcttacagtcatcctgcgat
+gacgacgggcacttt...cccccgaccatccagctcctgtgcctcatctccgggtacacc
+cca......ggggccatcaatgtcacctggctggagaacgggcaggtcatgaaa......
+...gtgaactcgcccacccctcctgccacgcaggagggt..................gag
+ctggcctccacacaaagtgagttcaccctcgcccagaagcactgg......ctgtcggac
+cgcacttacacctgccaggtcacctatcaa............ggtaccacctataacgac
+agcaccaagaagtgtgca
+>IMGT000099|IGHE*02|Macaca mulatta_rheMacS_CGG.01|F|CH3|g,2464862..2465184|324 nt|1|+1|-1| | |324+54=378| | |
+.........gattccaacccgagaggggtgagtgcctacctaagccggcccagcccgttt
+gacctgttcatc......agcaagtcgcccacgatcacctgtctggtggtggacctggca
+cccagcaaggagaccgtgaacctgacctggtcccgggccagtgggaagcctgtg......
+...ccccacatccccacaacggagaagaag...cagcgcaat...............ggc
+acgttaaccgttacgtccatcctgccggtggtcacccaagactgg......atcgagggg
+gagacctaccagtgcagggtgacccacccccac......ctccccagggccctcgtgcgg
+tccatgaccaagaccagc
+>IMGT000099|IGHE*02|Macaca mulatta_rheMacS_CGG.01|F|CH4-CHS|g,2465272..2465600|330 nt|1|+1| | | |330+54=384| | |
+............ggcccacgtgctgccccggaagtctatgtgtttgcaacgccagagaag
+ctagagagc.........cgggacaagcgcaccctcgcctgcctgatccagaacttcatg
+cct......gaggacatatcggtgcagtggctgcacagcgacgtgcagctcccggacgcc
+...cggcacagcgtgacgcagccccgcaagaccaagggc..................tcc
+ggcttcttcgtcttcagccgcctggaggtgaccaaggccgaatgg......gagcagaaa
+gacgagttcatctgccgtgcagtccatgaggcagcgagcccctcatggatcgtccagcaa
+gcggtgtctgtaaatcccggtaaa
+>IMGT000099|IGHE*02|Macaca mulatta_rheMacS_CGG.01|F|M1|g,2467675..2467796|123 nt|1|+1| | | |123+0=123| | |
+gagctggacgtgtgcgtggaggaggccgagagtgaggtgctgtggacgtggactggcctc
+tgcatcttcgccacactcttcctgctcagtgtgagctacagcgctgccatcacactcctc
+atg
+>IMGT000099|IGHE*02|Macaca mulatta_rheMacS_CGG.01|F|M2|2467881..2467961|81 nt|1| | | | |81+0=81| | |
+gtgcagcggttcctctcagccacgcggcaggggaggccccagacctccctcgactacacc
+aacatcctccagccccacgcc
+>NW_001121238|IGHG1*01|Macaca mulatta_17573|F|CH1|g,117212..117504|294 nt|1|+1|-1| | |294+72=366| |rev-compl|
+............gcctccaccaagggcccatcggtcttccccctggcgccctcctccagg
+agcacctcc.........gagagcacagcggccctgggctgcctggtcaaggactacttc
+cct......gaacccgtgaccgtgtcgtggaactcaggctccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtaaaccacaagccc......agcaacaccaaggtggacaag
+agagtt
+>NW_001121238|IGHG1*01|Macaca mulatta_17573|F|H|g,116767..116819|54 nt|1|+1|-1| | |54+0=54| |rev-compl|
+gagataaaaacatgtggtggtggcagcaaacctcccacgtgcccaccgtgccca
+>NW_001121238|IGHG1*01|Macaca mulatta_17573|F|CH2|g,116319..116647|330 nt|1|+1|-1| | |330+48=378| |rev-compl|
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacatgcgtggtggtagacgtgagc
+caggaagaccccgatgtcaagttcaactggtacgtaaatggcgcggaggtgcat......
+...catgcccagacgaagccacgggagacgcagtacaac..................agc
+acatatcgtgtggtcagcgtcctcaccgtcacgcaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaagcc......ctcccggcccccatccagaaa
+accatctccaaagacaaa
+>NW_001121238|IGHG1*01|Macaca mulatta_17573|F|CH3-CHS|g,115902..116221|321 nt|1|+1| | | |321+72=393| |rev-compl|
+............gggcagccccgagagcctcaggtgtacaccctgcccccgtcccgggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
+ccc......agtgacatcgtcgtggagtgggagagcagcgggcagccggagaac......
+...acctacaagaccaccccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacgtcttctcatgctccgtgatgcatgaggct...ctgcacaaccactacacccagaag
+agcctctccgtgtctccg.........ggtaaa
+>NW_001121238|IGHG1*01|Macaca mulatta_17573|F|M1|g,114454..114584|132 nt|1|+1| | | |132+0=132| |rev-compl|
+gagctgcaactggaggagagctgtgtggaggcacaggacggggagctggacgggctgtgg
+acgaccatcaccatcttcatcacactcttcctgctaagcgtgtgctacagtgccaccgtc
+accttcttcaag
+>NW_001121238|IGHG1*01|Macaca mulatta_17573|F|M2|112176..112256|81 nt|1| | | | |81+0=81| |rev-compl|
+gtgaagtggatcttctcctcggtggtggacctgaaacagaccatcatccccgactacagg
+aacatgatcgggcagggggcc
+>AY292507|IGHG1*02|Macaca mulatta_Indian RWy2|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgccctcctccagg
+agcacctcc.........gagagcacagcggccctgggctgcctggtcaaggactacttc
+cct......gaacccgtgaccgtgtcgtggaactcaggctccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtaaaccacaagccc......agcaacaccaaggtggacaag
+agagtt
+>AY292507|IGHG1*02|Macaca mulatta_Indian RWy2|F|H|g,693..745|54 nt|1|+1|-1| | |54+0=54| | |
+gagataaaaacatgtggtggtggcagcaaacctcccacgtgcccaccgtgccca
+>AY292507|IGHG1*02|Macaca mulatta_Indian RWy2|F|CH2|g,865..1193|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacatgcgtggtggtagacgtgagc
+caggaagaccccgatgtcaagttcaactggtacgtaaacggcgcggaggtgcat......
+...catgcccagacgaagccacgggagacgcagtacaac..................agc
+acatatcgtgtggtcagcgtcctcaccgtcacgcaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaagcc......ctcccggcccccatccagaaa
+accatctccaaagacaaa
+>AY292507|IGHG1*02|Macaca mulatta_Indian RWy2|F|CH3-CHS|g,1292..1563|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagcctcaggtgtacaccctgcccccgtcccgggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
+ccc......agcgacatcgtcgtggagtgggagagcagcgggcagccggagaac......
+...acctacaagaccaccccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacgtcttctcatgctccgtgatgcatgaggct
+>BK063715|IGHG1*03|Macaca mulatta_AG07107|F|CH1|g,1796884..1797176|294 nt|1|+1|-1| | |294+72=366| | |
+............gcctccaccaagggcccatcggtcttccccctggcgccctcctccagg
+agcacctcc.........gagagcacagcggccctgggctgcctggtcaaggactacttc
+cct......gaacccgtgaccgtgtcgtggaactcaggctccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtaaaccacaagccc......agcaacaccaaggtggacaag
+agagtt
+>BK063715|IGHG1*03|Macaca mulatta_AG07107|F|H|g,1797569..1797621|54 nt|1|+1|-1| | |54+0=54| | |
+gagataaaaacatgtggtggtggcagcaaacctcccacgtgcccaccgtgccca
+>BK063715|IGHG1*03|Macaca mulatta_AG07107|F|CH2|g,1797741..1798069|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacatgcgtggtggtagacgtgagc
+caggaagaccccgatgtcaagttcaactggtacgtaaacggcgcggaggtgcat......
+...catgcccagacgaagccacgggagacgcagtacaac..................agc
+acatatcgtgtggtcagcgtcctcaccgtcacgcaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaagcc......ctcccggcccccatccagaaa
+accatctccaaagacaaa
+>BK063715|IGHG1*03|Macaca mulatta_AG07107|F|CH3-CHS|g,1798168..1798487|321 nt|1|+1| | | |321+72=393| | |
+............gggcagccccgagagcctcaggtgtacaccctgcccccgtcccgggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
+ccc......agcgacatcgtcgtggagtgggagagcagcgggcagccggagaac......
+...acctacaagaccaccccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacgtcttctcatgctccgtgatgcatgaggct...ctgcacaaccactacacccagaag
+agcctctccgtgtctccg.........ggtaaa
+>BK063715|IGHG1*03|Macaca mulatta_AG07107|F|M1|g,1799786..1799916|132 nt|1|+1| | | |132+0=132| | |
+gagctgcaactggaggagagctgtgtggaggcgcaggacggggagctggacgggctgtgg
+acgaccatcaccatcttcatcacactcttcctgctaagcgtgtgctacagtgccaccgtc
+accttcttcaag
+>BK063715|IGHG1*03|Macaca mulatta_AG07107|F|M2|1802382..1802462|81 nt|1| | | | |81+0=81| | |
+gtgaagtggatcttctcctcggtggtggacctgaaacagaccatcatccccgactacagg
+aacatgatcgggcagggggcc
+>AY292519|IGHG2*01|Macaca mulatta_Indian RWy2|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttccaggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+acagtt
+>AY292519|IGHG2*01|Macaca mulatta_Indian RWy2|F|H|g,690..724|36 nt|1|+1|-1| | |36+0=36| | |
+gggctcccatgtcgttccacgtgcccaccgtgccca
+>AY292519|IGHG2*01|Macaca mulatta_Indian RWy2|F|CH2|g,844..1169|327 nt|1|+1|-1| | |327+51=378| | |
+......gct...gaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatt...tcccggacccctgaggtcacatgcgtggtggtagacgtgagc
+caggaagaacccgatgtcaagttcaactggtacgtggacggcgtggaggtgcac......
+...aatgcccagacgaagccacgggaggagcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaagcc......ctcccggccccaaggcagaaa
+actgtctccaaaaccaaa
+>AY292519|IGHG2*01|Macaca mulatta_Indian RWy2|F|CH3-CHS|g,1268..1539|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccacaggtgtacaccctgcccccgccccgggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
+ccc......agcgacatcgtcgtggagtgggcgagcaacgggcagccggagaac......
+...acctacaagaccacgccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct
+>AY292514|IGHG2*02|Macaca mulatta_Chinese RJz7|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+cct......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttccaggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+acagtt
+>AY292514|IGHG2*02|Macaca mulatta_Chinese RJz7|F|H|g,690..724|36 nt|1|+1|-1| | |36+0=36| | |
+gggctcccatgtcgttccacgtgcccaccgtgccca
+>AY292514|IGHG2*02|Macaca mulatta_Chinese RJz7|F|CH2|g,844..1169|327 nt|1|+1|-1| | |327+51=378| | |
+......gct...gaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatt...tcccggacccctgaggtcacgtgcgtggtggtagacgtgagc
+caggaagaacccgatgtcaagttcaactggtacgtggacggcgtggaggtgcac......
+...aatgcccagacgaagccacgggaggagcagttcaac..................agc
+acgtaccgtgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaagcc......ctcccggccccaaggcagaaa
+actgtctccaaaaccaaa
+>AY292514|IGHG2*02|Macaca mulatta_Chinese RJz7|F|CH3-CHS|g,1268..1539|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccacaggtgtacaccctgcccccgtcccgggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
+ccc......agcgacatcgtcgtggagtgggcgagcaacgggcagccggagaac......
+...acctacaagaccacgccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct
+>AY292517|IGHG2*03|Macaca mulatta_Indian RGr|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttccaggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+acagtt
+>AY292517|IGHG2*03|Macaca mulatta_Indian RGr|F|H|g,690..724|36 nt|1|+1|-1| | |36+0=36| | |
+gggctcccatgtcgttccacgtgcccaccgtgccca
+>AY292517|IGHG2*03|Macaca mulatta_Indian RGr|F|CH2|g,844..1169|327 nt|1|+1|-1| | |327+51=378| | |
+......gct...gaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatt...tcccggacccctgaggtcacgtgcgtggtggtagacgtgagc
+caggaagaacccgatgtcaagttcaactggtacgtggacggcgtggaggtgcac......
+...aatgcccagacgaagccacgggaggagcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaagcc......ctcccggccccaaggcagaaa
+actgtctccaaaaccaaa
+>AY292517|IGHG2*03|Macaca mulatta_Indian RGr|F|CH3-CHS|g,1268..1539|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccacaggtgtacaccctgcccccgccccgggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
+ccc......agcgacatcgtcgtggagtgggcgagcaacgggcagccggagaac......
+...acctacaagaccacgccgcctgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct
+>AY292518|IGHG2*04|Macaca mulatta_Indian RLi1|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttccaggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+acagtt
+>AY292518|IGHG2*04|Macaca mulatta_Indian RLi1|F|H|g,690..724|36 nt|1|+1|-1| | |36+0=36| | |
+gggctcccatgtcgttccacgtgcccaccgtgccca
+>AY292518|IGHG2*04|Macaca mulatta_Indian RLi1|F|CH2|g,844..1169|327 nt|1|+1|-1| | |327+51=378| | |
+......gct...gaactcctggggggaccatcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatt...tcccggacccctgaggtcacgtgcgtggtggtagacgtgagc
+caggaagaacccgatgtcaagttcaactggtacgtggacggcgtggaggtgcac......
+...aatgcccagacgaagccacgggaggagcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaagcc......ctcccggccccaaggcagaaa
+actgtctccaaaaccaaa
+>AY292518|IGHG2*04|Macaca mulatta_Indian RLi1|F|CH3-CHS|g,1268..1539|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccacaggtgtacaccctgcccccgccccgggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
+ccc......agcgacatcgtcgtggagtgggcgagcaacgggcagccggagaac......
+...acctacaagaccacgccgcctgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct
+>AF045539|IGHG2*05|Macaca mulatta|(F)|CH1|1..294|294 nt|1| | | | |294+72=366| | |
+............gcctccaccaagggcccatcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacaggcgccctgggctgcctggtcaaggactacttc
+ccc......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttccaggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+acagtt
+>AF045539|IGHG2*05|Macaca mulatta|(F)|H|295..330|36 nt|1| | | | |36+0=36| | |
+gggctcccatgtcgttccacgtgcccaccgtgccca
+>AF045539|IGHG2*05|Macaca mulatta|(F)|CH2|331..657|327 nt|1| | | | |327+51=378| | |
+......gct...gaactcctggggggaccatcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatt...tcccggacccctgaggtcacgtgcgtggtggtagacgtgagc
+caggaagaacccgatgtcaagttcaactggtacgtggacggcgtggaggtgcac......
+...aatgcccagacgaagccacgggaggagcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaagcc......ctcccggccccaaagcagaaa
+actgtctccaaaaccaaa
+>AF045539|IGHG2*05|Macaca mulatta|(F)|CH3-CHS|658..978|321 nt|1| | | | |321+72=393| | |
+............gggcagccccgagagccacaggtgtacaccctgcccccgccccggaag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
+ccc......agcgacatcgtcgtggagtgggcgagcaacgggcagccggagaac......
+...acctacaagaccacgccgcctgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct...ctgcacaaccactacacccagaag
+agcctctccctgtctccg.........ggtaaa
+>AF300440|IGHG2*06|Macaca mulatta_PMac|F|CH1|1..132|132 nt|1| | | | |132+234=366|partial in 5'| |
+............................................................
+............................................................
+............................................................
+.....................gctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+acagtt
+>AF300440|IGHG2*06|Macaca mulatta_PMac|F|H|521..556|36 nt|1| | | | |36+0=36| | |
+gggctcccatgtcgttccacgtgcccaccgtgccca
+>AF300440|IGHG2*06|Macaca mulatta_PMac|F|CH2|675..765|91 nt|1| | | | |91+12=103|partial in 3'| |
+......gct...gaactcctggggggaccatcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatt...tcccggacccctgaggtcacatgcg
+>NW_001121238|IGHG2*07|Macaca mulatta_17573|F|CH3-CHS|g,43790..44109|321 nt|1|+1| | | |321+72=393| |rev-compl|
+............gggcagccccgagagccacaggtgtacaccctgcccccgtcccgggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
+ccc......agcgacatcgtcgtggagtgggcgagcaacgggcagccggagaac......
+...acctacaagaccacgccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct...ctgcacaaccactacacccagaag
+agcctctccgtgtctccg.........ggtaaa
+>NW_001121238|IGHG2*07|Macaca mulatta_17573|F|M1|g,42358..42488|132 nt|1|+1| | | |132+0=132| |rev-compl|
+gagctgcaactggaggagagctgtgtggaggcgcaggacggggagctggacgggctgtgg
+acgaccatcaccatcttcatcacactcttcctgctaagcgtgtgctacagtgccaccgtc
+accttcttcaag
+>NW_001121238|IGHG2*07|Macaca mulatta_17573|F|M2|40413..40493|81 nt|1| | | | |81+0=81| |rev-compl|
+gtgaagtggatcttctcctcggtggtggacctgaagcagaccatcatccccgactacagg
+aacatgatcgggcaggggccc
+>BK063715|IGHG2*08|Macaca mulatta_AG07107|F|CH1|g,1862106..1862398|294 nt|1|+1|-1| | |294+72=366| | |
+............gcctccaccaagggcccatcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttccaggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+acagtt
+>BK063715|IGHG2*08|Macaca mulatta_AG07107|F|H|g,1862788..1862822|36 nt|1|+1|-1| | |36+0=36| | |
+gggctcccatgtcgttccacgtgcccaccgtgccca
+>BK063715|IGHG2*08|Macaca mulatta_AG07107|F|CH2|g,1862942..1863267|327 nt|1|+1|-1| | |327+51=378| | |
+......gct...gaactcctggggggaccatcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatt...tcccggacccctgaggtcacgtgcgtggtggtagacgtgagc
+caggaagaacccgatgtcaagttcaactggtacgtggacggcgtggaggtgcac......
+...aatgcccagacgaagccacgggaggagcagttcaac..................agc
+acgtaccgtgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaagcc......ctcccggccccaaagcagaaa
+actgtctccaaaaccaaa
+>BK063715|IGHG2*08|Macaca mulatta_AG07107|F|CH3-CHS|g,1863366..1863685|321 nt|1|+1| | | |321+72=393| | |
+............gggcagccccgagagccacaggtgtacaccctgcccccgccccgggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
+ccc......agcgacatcgtcgtggagtgggcgagcaacgggcagccggagaac......
+...acctacaagaccacgccgcctgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct...ctgcacaaccactacacccagaag
+agcctctccgtgtctccg.........ggtaaa
+>BK063715|IGHG2*08|Macaca mulatta_AG07107|F|M1|g,1864986..1865116|132 nt|1|+1| | | |132+0=132| | |
+gagctgcaactggaggagagctgtgtggaggcgcaggacggggagctggacgggctgtgg
+acgaccatcaccatcttcatcacactcttcctgctaagcgtgtgctacagtgccaccgtc
+accttcttcaag
+>BK063715|IGHG2*08|Macaca mulatta_AG07107|F|M2|1867127..1867207|81 nt|1| | | | |81+0=81| | |
+gtgaagtggatcttctcctcggtggtggacctgaagcagaccatcatccccgactacagg
+aacatgatcgggcaggggccc
+>IMGT000099|IGHG2*09|Macaca mulatta_rheMacS_CGG.01|F|CH1|g,2379253..2379545|294 nt|1|+1|-1| | |294+72=366| | |
+............gcctccaccaagggcccatcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+cct......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttccaggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+acagtt
+>IMGT000099|IGHG2*09|Macaca mulatta_rheMacS_CGG.01|F|H|g,2379935..2379969|36 nt|1|+1|-1| | |36+0=36| | |
+gggctcccatgtcgttccacgtgcccaccgtgccca
+>IMGT000099|IGHG2*09|Macaca mulatta_rheMacS_CGG.01|F|CH2|g,2380089..2380414|327 nt|1|+1|-1| | |327+51=378| | |
+......gct...gaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatt...tcccggacccctgaggtcacgtgcgtggtggtagacgtgagc
+caggaagaacccgatgtcaagttcaactggtacgtggacggcgtggaggtgcac......
+...aatgcccagacgaagccacgggaggagcagttcaac..................agc
+acgtaccgtgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaagcc......ctcccggccccaaggcagaaa
+actgtctccaaaaccaaa
+>IMGT000099|IGHG2*09|Macaca mulatta_rheMacS_CGG.01|F|CH3-CHS|g,2380513..2380832|321 nt|1|+1| | | |321+72=393| | |
+............gggcagccccgagagccacaggtgtacaccctgcccccgtcccgggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
+ccc......agcgacatcgtcgtggagtgggcgagcaacgggcagccggagaac......
+...acctacaagaccacgccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct...ctgcacaaccactacacccagaag
+agcctctccgtgtctccg.........ggtaaa
+>IMGT000099|IGHG2*09|Macaca mulatta_rheMacS_CGG.01|F|M1|g,2382133..2382263|132 nt|1|+1| | | |132+0=132| | |
+gagctgcaactggaggagagctgtgtggaggcgcaggacggggagctggacgggctgtgg
+acgaccatcaccatcttcatcacactcttcctgctaagcgtgtgctacagtgccaccgtc
+accttcttcaag
+>IMGT000099|IGHG2*09|Macaca mulatta_rheMacS_CGG.01|F|M2|2384238..2384318|81 nt|1| | | | |81+0=81| | |
+gtgaagtggatcttctcctcggtggtggacctgaagcagaccatcatccccgactacagg
+aacatgatcgggcaggggccc
+>AY292512|IGHG3*01|Macaca mulatta_Indian RLi1|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacctgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>AY292512|IGHG3*01|Macaca mulatta_Indian RLi1|F|H|g,691..740|51 nt|1|+1|-1| | |51+0=51| | |
+gagttcacacccccatgtggtgacacaactcccccatgcccaccatgccca
+>AY292512|IGHG3*01|Macaca mulatta_Indian RLi1|F|CH2|g,860..1188|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatt...tcccggacccctgaggtcacgtgcgtggtggtagacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgcggaggtgcat......
+...catgcccagacgaagccacgggagaggcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>AY292512|IGHG3*01|Macaca mulatta_Indian RLi1|F|CH3|g,1287..1558|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacatcgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccacaccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct
+>AY292511|IGHG3*02|Macaca mulatta_Indian RGr|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacctgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>AY292511|IGHG3*02|Macaca mulatta_Indian RGr|F|H|g,691..740|51 nt|1|+1|-1| | |51+0=51| | |
+gagttcacacccccatgtggtgacacaactcccccatgcccaccatgccca
+>AY292511|IGHG3*02|Macaca mulatta_Indian RGr|F|CH2|g,860..1188|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaacttctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacatgcgtggtggtggacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgcggaggtgcat......
+...catgcccagacgaagccacgggagaggcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>AY292511|IGHG3*02|Macaca mulatta_Indian RGr|F|CH3|g,1287..1558|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacatcgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccacaccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct
+>AY292508|IGHG3*03|Macaca mulatta_Chinese RJz7|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacctgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>AY292508|IGHG3*03|Macaca mulatta_Chinese RJz7|F|H|g,691..740|51 nt|1|+1|-1| | |51+0=51| | |
+gagttcacacccccatgtggtgacacaactcccccatgcccaccatgccca
+>AY292508|IGHG3*03|Macaca mulatta_Chinese RJz7|F|CH2|g,860..1188|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacatgcgtggtggtggacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgcggaggtgcat......
+...catgcccagacgaagccacgggagaggcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>AY292508|IGHG3*03|Macaca mulatta_Chinese RJz7|F|CH3|g,1287..1558|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacatcgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccaccccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct
+>AY292510|IGHG3*04|Macaca mulatta_Chinese RUa8|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacctgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>AY292510|IGHG3*04|Macaca mulatta_Chinese RUa8|F|H|g,691..740|51 nt|1|+1|-1| | |51+0=51| | |
+gagttcacacccccatgtggtgacacaactcccccatgcccaccatgccca
+>AY292510|IGHG3*04|Macaca mulatta_Chinese RUa8|F|CH2|g,860..1188|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacatgcgtggtggtggacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgcggaggtgcat......
+...catgcccagacgaagccacgggagaggcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>AY292510|IGHG3*04|Macaca mulatta_Chinese RUa8|F|CH3|g,1287..1558|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacatcgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccaccccgcccgtactggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct
+>AF045538|IGHG3*05|Macaca mulatta|(P)|CH1|17..310|294 nt|1| | | | |294+72=366| | |
+............gcctccaccaagggcccatcggtyttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacctgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>AF045538|IGHG3*05|Macaca mulatta|(P)|H|311..361|51 nt|1| | | | |51+0=51| | |
+gagttcacacccccatgtggtgacacaactcccccatgcccaccatgccca
+>AF045538|IGHG3*05|Macaca mulatta|(P)|CH2|362..691|330 nt|1| | | | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatt...tcccggacccctgaggtcacgtgcgtggtggtagacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgcggaggtgcat......
+...catgcccagacgaagccacgggaggagcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>AF045538|IGHG3*05|Macaca mulatta|(P)|CH3|692..1006|315 nt|1| | | | |315+63=378| | |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacatcgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccacaccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct...ctgcacaaccactacacccagaag
+agcctctccgtgtctccg
+>AF300438|IGHG3*06|Macaca mulatta|F|CH1|1..132|132 nt|1| |-1| | |132+234=366|partial in 5'| |
+............................................................
+............................................................
+............................................................
+.....................gctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>AF300438|IGHG3*06|Macaca mulatta|F|H|g,523..572|51 nt|1|+1|-1| | |51+0=51| | |
+gagttcacacccccatgtggtgacacaactcccccatgcccaccatgccca
+>AF300438|IGHG3*06|Macaca mulatta|F|CH2|g,692..784|94 nt|1|+1| | | |94+9=103|partial in 3'| |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatt...tcccggacccctgaggtcacatgcg
+>BK063715|IGHG3*07|Macaca mulatta_AG07107|F|CH1|g,1888750..1889042|294 nt|1|+1|-1| | |294+72=366| | |
+............gcctccaccaagggcccatcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacctgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>BK063715|IGHG3*07|Macaca mulatta_AG07107|F|H|g,1889433..1889482|51 nt|1|+1|-1| | |51+0=51| | |
+gagttcacacccccatgtggtgacacaactcccccatgcccaccatgccca
+>BK063715|IGHG3*07|Macaca mulatta_AG07107|F|CH2|g,1889602..1889930|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgcggaggtgcat......
+...catgcccagacgaagccacgggagaggcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>BK063715|IGHG3*07|Macaca mulatta_AG07107|F|CH3-CHS|g,1890029..1890348|321 nt|1|+1| | | |321+72=393| | |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacatcgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccaccccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcatcgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct...ctgcacaaccactacacccagaag
+agcctctccgtgtctccg.........ggtaaa
+>BK063715|IGHG3*07|Macaca mulatta_AG07107|F|M1|g,1891649..1891779|132 nt|1|+1| | | |132+0=132| | |
+gagctgcaactggaggagagctgtgtggaggcgcaggacggggagctggacgggctgtgg
+acgaccatcaccatcttcatcacactcttcctgctaagcgtgtgctacagtgccaccgtc
+accttcttcaag
+>BK063715|IGHG3*07|Macaca mulatta_AG07107|F|M2|1894491..1894571|81 nt|1| | | | |81+0=81| | |
+gtgaagtggatcttctcctcggtggtggacctgaagcagaccatcgtccctgactacagg
+aacatgattgggcagggaccc
+>IMGT000099|IGHG3*08|Macaca mulatta_rheMacS_CGG.01|F|CH1|g,2405896..2406188|294 nt|1|+1|-1| | |294+72=366| | |
+............gcctccaccaagggcccatcggtcttccccctggcgtcctgctccagg
+agcacctcc.........cagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacctgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>IMGT000099|IGHG3*08|Macaca mulatta_rheMacS_CGG.01|F|H|g,2406579..2406628|51 nt|1|+1|-1| | |51+0=51| | |
+gagttcacacccccatgtggtgacacaactcccccatgcccaccatgccca
+>IMGT000099|IGHG3*08|Macaca mulatta_rheMacS_CGG.01|F|CH2|g,2406748..2407076|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacatgcgtggtggtggacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgcggaggtgcat......
+...catgcccagacgaagccacgggagaggcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>IMGT000099|IGHG3*08|Macaca mulatta_rheMacS_CGG.01|F|CH3-CHS|g,2407175..2407494|321 nt|1|+1| | | |321+72=393| | |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacatcgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccaccccgcccgtgctggactccgac..................ggc
+tcctacttcctctacagcaagctcatcgtggacaagagcaggtgg......cagcagggg
+aacaccttctcatgctccgtgatgcatgaggct...ctgcacaaccactacacccagaag
+agcctctccgtgtctccg.........ggtaaa
+>IMGT000099|IGHG3*08|Macaca mulatta_rheMacS_CGG.01|F|M1|g,2408795..2408925|132 nt|1|+1| | | |132+0=132| | |
+gagctgcaactggaggagagctgtgtggaggcgcaggacggggagctggacgggctgtgg
+acgaccatcaccatcttcatcacactcttcctgctaagcgtgtgctacagtgccaccgtc
+accttcttcaag
+>IMGT000099|IGHG3*08|Macaca mulatta_rheMacS_CGG.01|F|M2|2411574..2411654|81 nt|1| | | | |81+0=81| | |
+gtgaagtggatcttctcctcggtggtggacctgaagcagaccatcgtccctgactacagg
+aacatgattgggcagggaccc
+>AY292520|IGHG4*01|Macaca mulatta_Chinese RGr|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgtcctcctccagg
+agcacctcc.........gagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>AY292520|IGHG4*01|Macaca mulatta_Chinese RGr|F|H|g,691..719|30 nt|1|+1|-1| | |30+0=30| | |
+gagttcacacccccatgcccaccatgccca
+>AY292520|IGHG4*01|Macaca mulatta_Chinese RGr|F|CH2|g,839..1167|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgtggaggtgcac......
+...aatgcccagacaaagccgcgggagaggcagttcaac..................agc
+acgtatcgtgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>AY292520|IGHG4*01|Macaca mulatta_Chinese RGr|F|CH3-CHS|g,1266..1537|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacattgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccacgccgcccgtgctggactccgac..................ggc
+tcctacttgctctacagcaagctcaccgtgaacaagagcaggtgg......caaccgggg
+aacatcttcacatgctccgtgatgcatgaggct
+>AY292522|IGHG4*02|Macaca mulatta_Indian RLi1|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcagtcttccccctggcgtcctcctccagg
+agcacctcc.........gagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcatggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>AY292522|IGHG4*02|Macaca mulatta_Indian RLi1|F|H|g,691..719|30 nt|1|+1|-1| | |30+0=30| | |
+gagttcacacccccatgcccaccatgccca
+>AY292522|IGHG4*02|Macaca mulatta_Indian RLi1|F|CH2|g,839..1167|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgtggaggtgcac......
+...aatgcccagacaaagccgcgggagaggcagttcaac..................agc
+acgtatcgtgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>AY292522|IGHG4*02|Macaca mulatta_Indian RLi1|F|CH3-CHS|g,1266..1537|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacattgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccacgccgcccgtgctggactccgac..................ggc
+tcctacttgctctacagcaagctcaccgtgaacaagagcaggtgg......caaccgggg
+aacatcttcacatgctccgtgatgcatgaggct
+>AY292523|IGHG4*03|Macaca mulatta_Chinese RJz7|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgtcctcctccagg
+agcacctcc.........gagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>AY292523|IGHG4*03|Macaca mulatta_Chinese RJz7|F|H|g,691..719|30 nt|1|+1|-1| | |30+0=30| | |
+gagttcacacccccatgcccagcatgccca
+>AY292523|IGHG4*03|Macaca mulatta_Chinese RJz7|F|CH2|g,839..1167|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccatcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtagacggcgcggaggtgcat......
+...catgcccagacgaagccacgggagaggcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>AY292523|IGHG4*03|Macaca mulatta_Chinese RJz7|F|CH3-CHS|g,1266..1537|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacatcgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccaccccgcccgtgctggactccgac..................ggc
+tcctacttgctctacagcaagctcaccgtgaacaagagcaggtgg......caaccgggg
+aacatcttcacatgctccgtgatgcatgaggct
+>AY292525|IGHG4*04|Macaca mulatta_Chinese RUa8|F|CH1|25..300|276 nt|1| |-1| | |276+90=366|partial in 5'| |
+..............................tcggtcttccccctggcgtcctcctccagg
+agcacctcc.........gagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>AY292525|IGHG4*04|Macaca mulatta_Chinese RUa8|F|H|g,691..719|30 nt|1|+1|-1| | |30+0=30| | |
+gagttcacacccccatgcccagcatgccca
+>AY292525|IGHG4*04|Macaca mulatta_Chinese RUa8|F|CH2|g,839..1167|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgtggaggtgcat......
+...catgcccagacgaagccacgggagaggcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>AY292525|IGHG4*04|Macaca mulatta_Chinese RUa8|F|CH3-CHS|g,1266..1537|273 nt|1|+1| | | |273+60=333|partial in 3'| |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacatcgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccacaccgcccgtgctggactccgac..................ggc
+tcctacttgctctacagcaagctcaccgtgaacaagagcaggtgg......caaccgggg
+aacatcttcacatgctccgtgatgcatgaggct
+>BK063715|IGHG4*05|Macaca mulatta_AG07107|F|CH1|g,1913065..1913357|294 nt|1|+1|-1| | |294+72=366| | |
+............gcctccaccaagggcccatcggtcttccccctggcgtcctcctccagg
+agcacctcc.........gagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacccgtgactgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctacgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>BK063715|IGHG4*05|Macaca mulatta_AG07107|F|H|g,1913752..1913780|30 nt|1|+1|-1| | |30+0=30| | |
+gagttcacacccccatgcccagcatgccca
+>BK063715|IGHG4*05|Macaca mulatta_AG07107|F|CH2|g,1913900..1914228|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgtggaggtgcac......
+...aatgcccagacaaagccgcgggagaggcagttcaac..................agc
+acgtatcgtgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>BK063715|IGHG4*05|Macaca mulatta_AG07107|F|CH3-CHS|g,1914327..1914646|321 nt|1|+1| | | |321+72=393| | |
+............gggcagccccgagagccgcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacattgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccacaccgcccgtgctggactccgac..................ggc
+tcctacttgctctacagcaagctcaccgtgaacaagagcaggtgg......caaccgggg
+aacatcttcacatgctccgtgatgcatgaggct...ctgcacaaccactacacccagaag
+agcctctctgtgtctccg.........ggtaaa
+>BK063715|IGHG4*05|Macaca mulatta_AG07107|F|M1|g,1915949..1916079|132 nt|1|+1| | | |132+0=132| | |
+gagctgcaactggaggagagctgtgcggaggcgcaggacggggagctggacgggctgtgg
+acgaccatcaccatcttcatcacactcttcctgctaagcgtgtgctacagtgccaccgtc
+accttcttcaag
+>BK063715|IGHG4*05|Macaca mulatta_AG07107|F|M2|1919557..1919637|81 nt|1| | | | |81+0=81| | |
+gtgaagtggatcttctcctcggtggtggacctgaagcagaccatcgtccccgactatagg
+aacatgatcgggcaggggccc
+>IMGT000099|IGHG4*06|Macaca mulatta_rheMacS_CGG.01|F|CH1|g,2430201..2430493|294 nt|1|+1|-1| | |294+72=366| | |
+............gcctccaccaagggcccatcggtcttccccctggcgtcctcctccagg
+agcacctcc.........gagagcacagcggccctgggctgcctggtcaaggactacttc
+ccc......gaacccgtgaccgtgtcgtggaactcaggcgccctgaccagc.........
+...ggcgtgcacaccttcccggctgtcctacagtcctca..................ggg
+ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
+cagacctatgtctgcaacgtcgttcatgagccc......agcaacaccaaggtggacaag
+agagtt
+>IMGT000099|IGHG4*06|Macaca mulatta_rheMacS_CGG.01|F|H|g,2430883..2430911|30 nt|1|+1|-1| | |30+0=30| | |
+gagttcacacccccatgcccagcatgccca
+>IMGT000099|IGHG4*06|Macaca mulatta_rheMacS_CGG.01|F|CH2|g,2431031..2431359|330 nt|1|+1|-1| | |330+48=378| | |
+......gcacctgaactcctggggggaccatcagtcttcctcttccccccaaaacccaag
+gacaccctcatgatc...tcccggacccctgaggtcacatgcgtggtggtggacgtgagc
+caggaagaccccgaggtccagttcaactggtacgtggacggcgcggaggtgcat......
+...catgcccagacgaagccacgggagaggcagttcaac..................agc
+acgtaccgcgtggtcagcgtcctcaccgtcacacaccaggactgg......ctgaacggc
+aaggagtacacgtgcaaggtctccaacaaaggc......ctcccggcccccatcgagaaa
+accatctccaaagccaaa
+>IMGT000099|IGHG4*06|Macaca mulatta_rheMacS_CGG.01|F|CH3-CHS|g,2431458..2431777|321 nt|1|+1| | | |321+72=393| | |
+............gggcagccccgagagcctcaggtgtacatcctgcccccgccccaggag
+gagctgacc.........aagaaccaggtcagcctgacctgcctggtcacaggcttctac
+ccc......agcgacatcgccgtggagtgggagagcaacgggcagccggagaac......
+...acctacaagaccacaccgcccatgctggactccgac..................ggc
+tcctacttgctctacagcaagctcaccgtgaacaagagcaggtgg......caaccgggg
+aacatcttcacatgctccgtgatgcatgaggct...ctgcacaaccactacacccagaag
+agcctctccgtgtctccg.........ggtaaa
+>IMGT000099|IGHG4*06|Macaca mulatta_rheMacS_CGG.01|F|M1|g,2433078..2433208|132 nt|1|+1| | | |132+0=132| | |
+gagctgcaactggaggagagctgtgcggaggcgcaggacggggagctggacgggctgtgg
+acgaccatcaccatcttcatcacactcttcctgctaagcgtgtgctacagtgccaccgtc
+accttcttcaag
+>IMGT000099|IGHG4*06|Macaca mulatta_rheMacS_CGG.01|F|M2|2439980..2440060|81 nt|1| | | | |81+0=81| | |
+gtgaagtggatcttctcctcggtggtggacctgaagcagaccatcgtccccgactatagg
+aacatgatcgggcaggcgccc
+>AF046784|IGHM*01|Macaca mulatta|(F)|CH1|1..315|315 nt|1| | | | |315+60=375| | |
+............gggagtgcatccgccccaacccttttccccctcgtctcctgtgagaat
+gccccgttggat......acaaacgaagtggccgttggctgcctcgcacaggacttcctt
+ccc......gactccatcactttctcctggaaattcaagaacaactctaacatcagcaaa
+...ggcgtctggggcttcccatcagtcctgagagggggc.....................
+aagtacgcggccacctcgcaggtgctgctggcttccaaggacgtcatgcagggcacagac
+gaacacgtggtatgcaaagtccagcacccc............aatggcaacaaagaacag
+aacgtgcctcttcca
+>AF046784|IGHM*01|Macaca mulatta|(F)|CH2|316..651|336 nt|1| | | | |336+48=384| | |
+.........gtgcttgccgagcggcctcccaacgtgagtgtcttcgtcccaccccgagac
+ggcttcgtcggcaac...ccccgcgagtccaagctcatctgccaggccacaggtttcagc
+ccc......cggcagattgaggtgtcctggctgcgcgaggggaagcaggtggggtct...
+...ggcatcaccacggaccgggtggaggctgaagccaaagagtct......gggcccaca
+accttcaaggtgaccagcacactgaccgtcagcgagagagactgg......ctcagccag
+agcgtgttcacctgccgcgtggatcacagg............ggcctgaccttccagaag
+aacgtgtcctccgtgtgtggcccc
+>AF046784|IGHM*01|Macaca mulatta|(F)|CH3|652..969|318 nt|1| | | | |318+60=378| | |
+............aatccagacacagccatccgggtcttcgccatccccccatcctttgcc
+agcatcttcctc......accaagtccaccaagttgacctgcctggtcacagacctggcc
+acctac...gacagtgtgaccatcacctggacccgccagaatggcgaagctctg......
+...aaaacccacaccaacatctccgagagccaccccaat..................ggc
+accttcagtgctgtgggtgaggccagcatctgcgaggacgactgg......aactccggg
+gagaggttcaggtgcaccgtgacccacacggac......ctgccctcgccgctgaagcag
+accatctccaggcccaag
+>AF046784|IGHM*01|Macaca mulatta|(F)|CH4|970..1302|333 nt|1| | | | |333+45=378| | |
+.........ggggtggccatgcacaggcccgatgtctacttgctgccaccagcccgggaa
+cagctgaacctg......cgggagtcggccaccatcacctgcctggtgacgggcttctct
+ccc......gcggacatcttcgtgcagtggatgcagagggggcagcctttgtccccggag
+...aagtatgtgaccagcgccccaatgcctgagccccaggcc............ccaggc
+cggtacttcgcccacagcatcctgaccgtgtctgaagaggactgg......aacacgggg
+gagacctacacctgcgtcgtggcccatgaggcc...ctgcccaacagggtcaccgagagg
+accgtggacaagtccacc
+>AF046784|IGHM*01|Macaca mulatta|(F)|M1|1303..1418|116 nt|1| | | | |116+0=116|partial in 3'| |
+gagggggaggtgagtgctgacgaggagggctttgagaacctgtgggccactgcctccacc
+ttcatcgtcctcttcctcttgagcctcttctacagtaccaccgtcaccttgttcaa
+>NW_001121238|IGHM*02|Macaca mulatta_17573|P|CH2|g,202656..202990|336 nt|1|+1|-1| | |336+48=384| |rev-compl|
+.........gtgcttgccgagcggcctcccaacgtgagtgtcttcgtcccaccccgagac
+ggcttcgtcggcaac...ccccgcgagtccaagctcatctgccaggccacaggtttcagc
+ccc......cggcagattgaggtgtcctggctgcgcgaggggaagcaggtggggtct...
+...ggcatcaccacggaccgggtggaggctgaagccaaagagtct......gggcccaca
+accttcaaggtgaccagcacactgaccgtcagcgagagagactgg......ctcagccag
+agcgtgttcacctgccgcgtggatcacagg............ggcctgaccttccagaag
+aacgtgtcctccgtgtgtggcccc
+>NW_001121238|IGHM*02|Macaca mulatta_17573|P|CH3|a,202116..202432|318 nt|1|+1|-1| | |318+60=378| |rev-compl|
+............aatccagacacagccatccgggtcttcgccatccccccatcctttgcc
+agcatcttcctc......accaagtccaccaagttgacctgcctggtcacagacctggcc
+acctac...gacagggtgaccatcacctggacccgccagaatggcgaagctctg......
+...aaaacccacaccaacatctccgagagccaccccaat..................ggc
+accttcagcgctgtgggtgaggccagcatctgcgaggacgactgg......aactccggg
+gagaggttcaggtgcaccgtgacccacacggac......ctgccctcgccgctgaagcag
+accatctccaggcccaag
+>NW_001121238|IGHM*02|Macaca mulatta_17573|P|CH4-CHS|g,201544..201935|393 nt|1|+1| | | |393+45=438| |rev-compl|
+.........ggggtggccatgcacaggcccgatgtctacttgctgccaccagcccgggaa
+cagctgaacctg......cgggagtcggccaccatcacctgcctggtgacgggcttctct
+ccc......gcggacatcttcgtgcagtggatgcagagggggcagcctttgtccccggag
+...aagtatgtgaccagtgccccaatgcctgagccccaggcc............ccaggc
+cggtacttcgcccacagcatcctgaccgtgtctgaagaggactgg......aacacgggg
+gagacctacacctgcgtcgtggcccatgaggcc...ctgcccaacagggtcaccgagagg
+accgtggacaagtccaccggtaaacccaccctgtacaacgtgtccctcgtcatgtccgac
+acagctggcacctgctac
+>BK063715|IGHM*03|Macaca mulatta_AG07107|F|CH1|g,1712265..1712578|315 nt|1|+1|-1| | |315+60=375| | |
+............gggagtgcatccgccccaacccttttccccctcgtctcctgtgagaat
+gccccgttggat......acaaacgaagtggccgttggctgcctcgcacaggacttcctt
+ccc......gactccatcactttctcctggaaattcaagaacaactctgacatcagcaaa
+...ggcgtctggggcttcccatcagtcctgagagggggc.....................
+aagtacgcggccacctcgcaggtgctgctggcttccaaggacgtcatgcagggcacagac
+gaacacgtggtatgcaaagtccagcacccc............aatggcaacaaagaacag
+aacgtgcctcttcca
+>BK063715|IGHM*03|Macaca mulatta_AG07107|F|CH2|g,1712670..1713004|336 nt|1|+1|-1| | |336+48=384| | |
+.........gtgcttgccgagcggcctcccaacgtgagtgtcttcgtcccaccccgagac
+ggcttcgtcggcaac...ccccgcgagtccaagctcatctgccaggccacaggtttcagc
+ccc......cggcagattgaggtgtcctggctgcgcgaggggaagcaggtggggtct...
+...ggcatcaccacggaccgggtggaggctgaagccaaagagtct......gggcccaca
+accttcaaggtgaccagcacactgaccgtcagcgagagagactgg......ctcagccag
+agcgtgttcacctgccgcgtggatcacagg............ggcctgaccttccagaag
+aacgtgtcctccgtgtgtggcccc
+>BK063715|IGHM*03|Macaca mulatta_AG07107|F|CH3|a,1713228..1713544|318 nt|1|+1|-1| | |318+60=378| | |
+............aatccagacacagccatccgggtcttcgccatccccccatcctttgcc
+agcatcttcctc......accaagtccaccaagttgacctgcctggtcacagacctggcc
+acctac...gacagtgtgaccatcacctggacccgccagaatggcgaagctctg......
+...aaaacccacaccaacatctccgagagccaccccaat..................ggc
+accttcagcgctgtgggtgaggccagcatctgcgaggacgactgg......aactccggg
+gagaggttcaggtgcaccgtgacccacacggac......ctgccctcgccgctgaagcag
+accatctccaggcccaag
+>BK063715|IGHM*03|Macaca mulatta_AG07107|F|CH4-CHS|g,1713726..1714117|393 nt|1|+1| | | |393+45=438| | |
+.........ggggtggccatgcacaggcccgatgtctacttgctgccaccagcccgggaa
+cagctgaacctg......cgggagtcggccaccatcacctgcctggtgacgggcttctct
+ccc......gcggacatcttcgtgcagtggatgcagagggggcagcctttgtccccggag
+...aagtatgtgaccagtgccccaatgcctgagccccaggcc............ccaggc
+cggtacttcgcccacagcatcctgaccgtgtctgaagaggactgg......aacacgggg
+gagacctacacctgcgtcgtggcccatgaggcc...ctgcccaacagggtcaccgagagg
+accgtggacaagtccaccggtaaacccaccctgtacaacgtgtccctcgtcatgtccgac
+acagctggcacctgctac
+>BK063715|IGHM*03|Macaca mulatta_AG07107|F|M1|g,1716180..1716295|117 nt|1|+1| | | |117+0=117| | |
+gagggggaggtgagtgctgacgaggagggctttgagaacctgtgggccactgcctccacc
+ttcatcgtcctcttcctcttgagcctcttctacagtaccactgtcaccttgttcaag
+>BK063715|IGHM*03|Macaca mulatta_AG07107|F|M2|1716485..1716490|6 nt|1| | | | |6+0=6| | |
+gtgaaa
+>IMGT000099|IGHM*04|Macaca mulatta_rheMacS_CGG.01|F|CH1|g,2230115..2230428|315 nt|1|+1|-1| | |315+60=375| | |
+............gggagtgcatccgccccaacccttttccccctcgtctcctgtgagaat
+gccccgttggat......acaaacgaagtggccgttggctgcctcgcacaggacttcctt
+ccc......gactccatcactttctcctggaaattcaagaacaactctgacatcagcaaa
+...ggcgtctggggcttcccatcagtcctgagagggggc.....................
+aagtacgcggccacctcgcaggtgctgctggcttccaaggacgtcatgcagggcacagac
+gaacacgtggtatgcaaagtccagcacccc............aatggcaacaaagaacag
+aacgtgcctcttcca
+>IMGT000099|IGHM*04|Macaca mulatta_rheMacS_CGG.01|F|CH2|g,2230521..2230855|336 nt|1|+1|-1| | |336+48=384| | |
+.........gtgcttgccgagaggcctcccaacgtgagtgtcttcgtcccaccccgagac
+ggcttcgtcggcaac...ccccgcgagtccaagctcatctgccaggccacaggtttcagc
+ccc......cggcagattgaggtgtcctggctgcgcgaggggaagcaggtggggtct...
+...ggcatcaccacggaccgggtggaggctgaagccaaagagtct......gggcccaca
+accttcaaggtgaccagcacactgaccgtcagcgagagagactgg......ctcagccag
+agcgtgttcacctgccgcgtggatcacagg............ggcctgaccttccagaag
+aacgtgtcctccgtgtgtggcccc
+>IMGT000099|IGHM*04|Macaca mulatta_rheMacS_CGG.01|F|CH3|a,2231079..2231395|318 nt|1|+1|-1| | |318+60=378| | |
+............aatccagacacagccatccgggtcttcgccatccccccatcctttgcc
+agcatcttcctc......accaagtccaccaagttgacctgcctggtcacagacctggcc
+acctac...gacagtgtgaccatcacctggacccgccagaatggcgaagctctg......
+...aaaacccacaccaacatctccgagagccaccccaat..................ggc
+accttcagcgctgtgggtgaggccagcatctgcgaggacgactgg......aactccggg
+gagaggttcaggtgcaccgtgacccacacggac......ctgccctcgccgctgaagcag
+accatctccaggcccaag
+>IMGT000099|IGHM*04|Macaca mulatta_rheMacS_CGG.01|F|CH4-CHS|g,2231577..2231968|393 nt|1|+1| | | |393+45=438| | |
+.........ggggtggccatgcacaggcccgatgtctacttgctgccaccagcccgggaa
+cagctgaacctg......cgggagtcggccaccatcacctgcctggtgacgggcttctct
+ccc......gcggacatcttcgtgcagtggatgcagagggggcagcctttgtccccggag
+...aagtatgtgaccagcgccccaatgcctgagccccaggcc............ccaggc
+cggtacttcgcccacagcatcctgaccgtgtctgaagaggactgg......aacacgggg
+gagacctacacctgcgtcgtggcccatgaggcc...ctgcccaacagggtcaccgagagg
+accgtggacaagtccaccggtaaacccaccctgtacaacgtgtccctcgtcatgtccgac
+acagctggcacctgctac
+>IMGT000099|IGHM*04|Macaca mulatta_rheMacS_CGG.01|F|M1|g,2234031..2234146|117 nt|1|+1| | | |117+0=117| | |
+gagggggaggtgagtgctgacgaggagggctttgagaacctgtgggccactgcctccacc
+ttcatcgtcctcttcctcttgagcctcttctacagtaccactgtcaccttgttcaag
+>IMGT000099|IGHM*04|Macaca mulatta_rheMacS_CGG.01|F|M2|2234336..2234341|6 nt|1| | | | |6+0=6| | |
+gtgaaa

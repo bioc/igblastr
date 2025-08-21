@@ -19,6 +19,7 @@ has_igblast <- function()
 ### list_igblast_organisms()
 ###
 
+### We expect this to return 'names(LATIN_NAMES)'. Should we check for it?
 list_igblast_organisms <- function(igblast_root=get_igblast_root())
 {
     internal_data <- get_igblast_root_subdir(igblast_root, "internal_data")
