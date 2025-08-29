@@ -308,6 +308,14 @@ dim(AIRR_df)
 ## with 'as.data.frame()', or to a DataFrame with 'as(., "DataFrame")':
 as(AIRR_df, "DataFrame")
 
+## To call igblastn() on a subset of the FASTA file, load the file as a
+## DNAStringSet object with Biostrings::readDNAStringSet(), then subset
+## the object, and finally pass the result of the subsetting operation
+## to igblastn():
+query_21_30 <- readDNAStringSet(query)[21:30]
+query_21_30  # a DNAStringSet object with 10 sequences
+igblastn(query_21_30)
+
 ## ---------------------------------------------------------------------
 ## More examples
 ## ---------------------------------------------------------------------

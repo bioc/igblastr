@@ -11,7 +11,7 @@
 
 \description{
   By default, the NCBI BLAST+ and IgBLAST programs will "call home" to
-  report usage when they run on a computer with internet access. See
+  report usage when they run on a computer connected to the internet. See
   \url{https://www.ncbi.nlm.nih.gov/books/NBK569851/} for the details.
   This can induce a significant slowdown in some situations e.g. when
   the \code{igblastn} \emph{standalone executable} is called in a loop
