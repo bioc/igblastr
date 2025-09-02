@@ -11,7 +11,7 @@ from installing directly from GitHub).
 
 |BioC version|Status|
 |------------|------|
-| devel   | [![build](https://bioconductor.org/shields/build/devel/bioc/igblastr.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/igblastr/) [![platforms](https://bioconductor.org/shields/availability/devel/igblastr.svg)](https://bioconductor.org/packages/devel/igblastr#archives) [![dependencies](https://bioconductor.org/shields/dependencies/devel/igblastr.svg)](https://bioconductor.org/packages/devel/igblastr#since) |
+| devel   | [![build](https://bioconductor.org/shields/build/devel/bioc/igblastr.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/igblastr/) [![dependencies](https://bioconductor.org/shields/dependencies/devel/igblastr.svg)](https://bioconductor.org/packages/devel/igblastr#since) |
 
 IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>
 
