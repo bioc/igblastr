@@ -1,11 +1,11 @@
 This is the extdata/constant_regions/IMGT/ folder in the igblastr package.
 
-This folder contains the C-region sequences (in FASTA format) obtained from
-IMGT for the 5 official IgBLAST organisms: human, mouse, rat, rabbit,
+This folder contains the C-region sequences (in FASTA format) obtained
+from IMGT for the 5 official IgBLAST organisms: human, mouse, rat, rabbit,
 and rhesus_monkey.
 
 Note that these FASTA files were obtained programmatically by running the
-following code in the folder on Aug 21, 2025:
+following code in the folder on Sep 1, 2025:
 
     igblastr:::download_C_sequence_sets_from_IMGT()
 
@@ -13,13 +13,15 @@ About the 'version' files
 -------------------------
 
 The */14.1/ subfolders have a 'version' file that we added manually. It
-indicates the date of the download in YYYYMM format. This is used by internal
-utility form_builtin_IMGT_c_region_db_name() to form the names of the
-corresponding built-in IMGT C-region dbs.
+indicates the date of the download in YYYYMM format. This is used by
+internal utility form_builtin_IMGT_c_region_db_name() to form the names
+of the corresponding built-in IMGT C-region dbs.
 
-Note that the reason the date for the human/mouse/rabbit dbs is 202412 is
-because the C-region sequences for these organisms were actually downloaded
-from IMGT and included in the igblastr package in December 2024. As of Aug 21,
-2025, they've not changed i.e. igblastr:::download_C_sequence_sets_from_IMGT()
-still retrieves the same sequences.
+Note that the date is 202412 for human/rabbit and 202508 for rat.
+The reason for this is because the C-region sequences for these organisms
+were actually downloaded from IMGT and included in the igblastr package
+in December 2024 (for human/rabbit) and on Aug 21, 2025 for rat.
+However, as of Sep 1, 2025, they've not changed, that is,
+igblastr:::download_C_sequence_sets_from_IMGT() still retrieves
+the same sequences.
 

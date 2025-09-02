@@ -181,7 +181,7 @@ augment_germline_db_V(db_name1, human_V12_alleles,
 ## engineered mice:
 \dontrun{
   use_germline_db(db_name1)
-  use_c_region_db("_IMGT.mouse.IGH.202412")
+  use_c_region_db("_IMGT.mouse.IGH.202509")
   igblastn(query, germline_db_V=engmouseVdb_path, ...)
 }
 

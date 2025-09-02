@@ -28,6 +28,9 @@ find_organism_shortname <- function(organism)
         stop(wmsg("unrecognized organism: ", organism))
     if (length(idx) != 1L)
         stop(wmsg("ambigous organism abbreviation: ", organism))
-    names(LATIN_NAMES)[idx]
+    names(LATIN_NAMES)[[idx]]
 }
+
+find_organism_latin_name <- function(organism)
+    LATIN_NAMES[[find_organism_shortname(organism)]]
 

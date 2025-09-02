@@ -1,20 +1,6 @@
 High-priority TODO list
 =======================
 
-- Work on the built-in IMGT C-region db for rhesus_monkey:
-  - Verify that the C-region sequences in the 14.1 set (C-GENE artificially
-    spliced exons) can be constructed from the C-region sequences in the
-    7.5 set (these are exon sequences). Verify this for human, mouse, rabbit,
-    and rat.
-  - If that turns out to be the case, then use this to construct the
-    rhesus_monkey/14.1 set from the rhesus_monkey/7.5 set, and add it to
-    igblastr/inst/extdata/constant_regions/IMGT/
-  - Finally add the built-in IMGT C-region db for rhesus_monkey to the
-    package.
-  2025/08/28 update : This is work-in-progress. See PROBLEM/QUESTION at the
-  bottom of R/IMGT-c_region-utils.R. Waiting for an answer from the IMGT
-  folks before I resume my work on this.
-
 - bcr_browser() improvements:
   - Should we rename the function to igbrowser()?
   - Display pairwise alignment between BCR query sequence and germline
@@ -56,7 +42,9 @@ High-priority TODO list
 Things to do at BioC 3.22 release time
 ======================================
 
-- Update README.md.
+- Update README.md:
+  - Add "devel" row in BioC_version/Status table.
+  - Update "Install and load igblastr" section.
 
 - Advertize igblastr:
   - Announce on various bioc-community Slack channels.

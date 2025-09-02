@@ -104,41 +104,6 @@
     .scrape_IMGT_GENE_DB_result(html)
 }
 
-### All kinds of conventions are used across the IMGT website to name
-### organisms. I guess picking one and sticking to it would be kind of
-### boring...
-.map_organism_to_IMGT_species <- function(organism)
-{
-    stopifnot(isSingleNonWhiteString(organism))
-    org <- tolower(organism)
-    IMGT_species <- c(human="Homo sapiens",
-                      mouse="Mus",
-                      rat="Rattus norvegicus",
-                      alpaca="Vicugna pacos",
-                      rabbit="Oryctolagus cuniculus",
-                      rhesus_monkey="Macaca mulatta")
-    m <- match(chartr("_", " ", org), tolower(IMGT_species))
-    if (!is.na(m))
-        return(IMGT_species[[m]])
-    m <- match(chartr(" ", "_", org), names(IMGT_species))
-    if (!is.na(m))
-        return(IMGT_species[[m]])
-
-    shortname <- find_organism_shortname(org)
-    ## find_organism_shortname() is guaranteed to return one of
-    ## 'names(LATIN_NAMES)', and 'names(LATIN_NAMES)' is currently
-    ## a subset of 'names(IMGT_species)' (see file LATIN_NAMES.R).
-    ## So 'shortname' is guaranteed to be in 'names(IMGT_species)'.
-    ## This means that 'IMGT_species[[shortname]]' should never fail.
-    ## So why don't we just return that? Because this could change in
-    ## the future e.g. if new entries get added to 'LATIN_NAMES'.
-    ## Hence the extra work below.
-    m <- match(shortname, names(IMGT_species))
-    if (is.na(m))
-        stop(wmsg("unrecognized organism: ", organism))
-    IMGT_species[[m]]
-}
-
 ### Fetch the C-region sequences from the links provided in the tables
 ### displayed at:
 ###
@@ -195,7 +160,7 @@
     function(organism, destfile, group=c("IGHC", "IGKC", "IGLC"),
              seqset_nb=1L)
 {
-    species <- .map_organism_to_IMGT_species(organism)
+    species <- find_organism_latin_name(organism)
     group <- match.arg(group)
     if (isSingleNonWhiteString(seqset_nb)) {
         seqset_internal_nb <- seqset_nb
@@ -244,7 +209,8 @@
     rhesus_monkey=list(
         `7.2`=c("IGHC", "IGKC", "IGLC"),
         `7.5`=c("IGHC", "IGKC", "IGLC"),
-        `7.1`=c("IGHC", "IGKC", "IGLC")
+        `7.1`=c("IGHC", "IGKC", "IGLC"),
+       `14.1`=c("IGHC", "IGKC", "IGLC")
     )
 )
 
@@ -302,68 +268,5 @@ download_C_sequence_sets_from_IMGT <- function(organisms=NULL)
             }
         }
     }
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### PROBLEM: The IMGT folks do not provide the 14.1 IGHC sequences (a.k.a.
-### "Constant gene artificially spliced exons") for Rhesus monkey.
-###
-### QUESTION: Can the 14.1 IGHC sequences for Human be programatically
-### inferred from the 7.5 IGHC sequences? If that turns out to be possible,
-### then we should be able to infer the 14.1 IGHC sequences for Rhesus monkey
-### from the 7.5 IGHC sequences.
-###
-### After a quick examination, this seems to be more complicated than it
-### sounds. Because:
-### 1. Only a small subset of the genes represented in 7.5/IGHC for Human
-###    are found in 14.1/IGHC. So it seems that the IMGT folks are filtering
-###    out some C-genes when they generate the 14.1/IGHC set for Human.
-###    The question is: what criteria do they use for this filtering?
-### 2. There seems to be some alternate splicing involved in the IGHC genes
-###    for Human. This hypothesis is based on the following observations:
-###    - The first two sequences in human/14.1/IGHC.fasta are both for gene
-###      allele IGHA1*01.
-###    - There are 4 exons associated with IGHA1*01 in human/7.5/IGHC.fasta
-###      Splicing the first 3 exons produces exactly the first sequence in
-###      human/14.1/IGHC.fasta.
-###    - However, it's not clear how to splice the exons associated with
-###      IGHA1*01 to produce the second sequence in human/14.1/IGHC.fasta.
-###      The sequence seems to be the result of concatenating the first 2
-###      exons plus something else but it's not clear what this something
-###      else is (it's not the 3rd exons and it's not the 4th exon either).
-###    So quite confusing but this seems to suggest that some sort of alternate
-###    splicing is involved.
-###
-### So because of these complications, my attempt below to programatically
-### infer the 14.1 IGHC sequences for Human from the 7.5 IGHC sequences didn't
-### go very far. Before trying to go any further, I sent an email to the IMGT
-### folks on Aug 27, 2025, to ask for help.
-
-if (FALSE) {
-  IGHC_7.5 <- readDNAStringSet("7.5/IGHC.fasta")
-  IGHC_14.1 <- readDNAStringSet("14.1/IGHC.fasta")
-
-  ### Returns the split FASTA headers in a 15-col matrix.
-  .parse_IMGT_FASTA_headers <- function(dna)
-  {
-    stopifnot(is(dna, "DNAStringSet"))
-    split_names <- strsplit(names(dna), "|", fixed=TRUE)
-    matrix(unlist(split_names), ncol=15L, byrow=TRUE)
-  }
-
-  ### 'heads' must be the matrix returned by calling
-  ### .parse_IMGT_FASTA_headers() on IGHC_14.1.
-  .extract_ranges_of_exon_to_splice <- function(heads)
-  {
-    stopifnot(is.matrix(heads), ncol(heads) == 15L)
-    heads[ , 6L]
-  }
-
-  IGHC_7.5_heads <- .parse_IMGT_FASTA_headers(IGHC_7.5)
-  IGHC_14.1_heads <- .parse_IMGT_FASTA_headers(IGHC_14.1)
-
-  ### The genes in IGHC_14.1 must be a subset of the genes in IGHC_7.5.
-  stopifnot(all(IGHC_14.1_heads[ , 2L] %in% IGHC_7.5_heads[ , 2L]))
 }
 

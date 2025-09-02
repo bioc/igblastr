@@ -28,8 +28,7 @@
     IMGT_c_region_dir <- system.file(package="igblastr",
                                      "extdata", "constant_regions", "IMGT",
                                      mustWork=TRUE)
-    organisms <- c("human", "mouse", "rabbit", "rat")
-    for (organism in organisms) {
+    for (organism in names(LATIN_NAMES)) {
         fastadir <- file.path(IMGT_c_region_dir, organism, "14.1")
         db_name <- form_builtin_IMGT_c_region_db_name(fastadir)
         db_path <- file.path(tmp_destdir, db_name)
@@ -47,13 +46,13 @@
 ### .get_c_region_dbs_path()
 ###
 
-### The built-in IMGT C-region db for rat was added in igblastr 0.99.13
-### (Aug 2025).
-.has_builtin_IMGT_c_region_db_for_rat <- function(c_region_dbs_path)
+### The built-in IMGT C-region db for rhesus monkey was added in igblastr
+### 0.99.15 (Sep 2025).
+.has_builtin_IMGT_c_region_db_for_rhesus_monkey <- function(c_region_dbs_path)
 {
     stopifnot(isSingleNonWhiteString(c_region_dbs_path),
               dir.exists(c_region_dbs_path))
-    db_path <- list.files(c_region_dbs_path, pattern="_IMGT\\.rat\\.",
+    db_path <- list.files(c_region_dbs_path, pattern="_IMGT\\.rhesus_monkey\\.",
                           full.names=TRUE)
     length(db_path) == 1L && dir.exists(db_path)
 }
@@ -67,19 +66,20 @@
     stopifnot(isSingleNonWhiteString(c_region_dbs_path))
     if (!dir.exists(c_region_dbs_path))
         return(TRUE)
-    ## In igblastr 0.99.12, the list of built-in C-region dbs is expected
+    ## In igblastr <= 0.99.12, the list of built-in C-region dbs is expected
     ## to be:
     ##     _IMGT.human.IGH+IGK+IGL.202412
     ##     _IMGT.mouse.IGH.202412
     ##     _IMGT.rabbit.IGH.202412
-    ## These have not changed since their introduction to igblastr back in
-    ## December 2024. In igblastr 0.99.13 (Aug 2025), we added:
+    ## In igblastr 0.99.13 (Aug 2025), we added:
     ##     _IMGT.rat.IGH.202508
+    ## In igblastr 0.99.15 (Sep 2025), we replaced _IMGT.mouse.IGH.202412
+    ## with _IMGT.mouse.IGH.202509 and added:
+    ##     _IMGT.rhesus_monkey.IGH.202509
     ## So we only check for the presence of the built-in IMGT C-region db
-    ## for rat to decide whether the built-in C-region dbs need to be
-    ## recreated or not. Recreating them should only add _IMGT.rat.IGH.202508
-    ## to the output of list_c_region_dbs() for users who don't have it yet.
-    !.has_builtin_IMGT_c_region_db_for_rat(c_region_dbs_path)
+    ## for rhesus_monkey to decide whether the built-in C-region dbs need to
+    ## be recreated or not.
+    !.has_builtin_IMGT_c_region_db_for_rhesus_monkey(c_region_dbs_path)
 }
 
 ### Returns path to C_REGION_DBS cache compartment (see R/cache-utils.R for
