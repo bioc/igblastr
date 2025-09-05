@@ -58,6 +58,6 @@ Collate:
 	outfmt7-utils.R
 	igblastn.R
 	igbrowser.R
-	tabulate_mm_and_indels.R
+	summarizeMismatches.R
 	OAS-utils.R
 	zzz.R

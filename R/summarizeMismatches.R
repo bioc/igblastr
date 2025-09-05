@@ -7,6 +7,24 @@
 ### the sequenceLayer() function.
 
 
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .extract_ROI_ranges()
+###
+
+### TODO: Maybe add the C region to the list of Regions Of Interest. Should
+### be on user request, not by default. Also, we can only tabulate mismatches
+### and indels that fall in that region if a C-region db was specified.
+### The C region corresponds to the (c_sequence_start, c_sequence_end) interval
+### and is located after the (fwr4_start, fwr4_end) interval. In principle,
+### it should be adjacent to the FWR4 region. However, one small gotcha is
+### that, for some queries, fwr4_end is equal to c_sequence_start in the
+### output produced by igblastn. This means that there's sometimes a
+### 1-nucleotide overlap between the FWR4 region and the C region!
+### So in order to keep our Regions Of Interest adjacent and non-overlapping,
+### let's use the (fwr4_start, c_sequence_end) interval for this region. And
+### let's report the counts of mismatches and/or indels that fall in this
+### interval in the "c" column of the returned matrix.
+
 .FWRCDR_NAMES <- c("fwr1", "cdr1", "fwr2", "cdr2", "fwr3", "cdr3", "fwr4")
 .FWRCDR_JUNC_NAMES <- paste0(c("", .FWRCDR_NAMES), ".", c(.FWRCDR_NAMES, ""))
 
@@ -18,16 +36,11 @@
     ans
 }
 
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .extract_fwrcdr_ranges()
-###
-
 ### TODO: Don't use $ to access a column because that works even if the
 ### column does not exist (in which case it returns NULL). Instead, we
 ### want to fail with an informative error message if the column does
 ### not exist.
-.extract_fwrcdr_ranges <- function(AIRR_df, with.junctions=FALSE)
+.extract_ROI_ranges <- function(AIRR_df, with.junctions=FALSE)
 {
     stopifnot(is.data.frame(AIRR_df), isTRUEorFALSE(with.junctions))
     all_ranges <- list(
@@ -77,15 +90,15 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .count_hits_per_region_of_interest()
+### .count_hits_per_ROI()
 ###
 
-.check_roi_ranges <- function(roi_ranges, N, roi_names)
+.check_ROI_ranges <- function(ROI_ranges, N, ROI_names)
 {
-    stopifnot(is(roi_ranges, "CompressedIRangesList"),
-              identical(lengths(roi_ranges), rep.int(length(roi_names), N)),
-              identical(names(unlist(roi_ranges, use.names=FALSE)),
-                        rep.int(roi_names, N)))
+    stopifnot(is(ROI_ranges, "CompressedIRangesList"),
+              identical(lengths(ROI_ranges), rep.int(length(ROI_names), N)),
+              identical(names(unlist(ROI_ranges, use.names=FALSE)),
+                        rep.int(ROI_names, N)))
 }
 
 ### Returns 'length(x)' x 'length(colnames)' matrix.
@@ -97,32 +110,32 @@
            byrow=TRUE, dimnames=list(NULL, colnames))
 }
 
-### 'query' and 'roi_ranges' must be two **parallel** IntegerRangesList
+### 'query' and 'ROI_ranges' must be two **parallel** IntegerRangesList
 ### derivatives of length N.
 ### The following strong assumption is made: for all 1 <= i <= N, every
 ### range in 'query[[i]]' is expected to overlap with **exactly** one range
-### in 'roi_ranges[[i]]'. The function will return an error if this is not
+### in 'ROI_ranges[[i]]'. The function will return an error if this is not
 ### the case.
 ### Returns an integer matrix with N rows (one row per list element in 'query'
-### or in 'roi_ranges') and one column per region of interest.
-.count_hits_per_region_of_interest <- function(query, roi_ranges, roi_names,
-                                               use.query.weights=FALSE)
+### or in 'ROI_ranges') and one column per Region Of Interest.
+.count_hits_per_ROI <- function(query, ROI_ranges, ROI_names,
+                                use.query.weights=FALSE)
 {
     stopifnot(is(query, "CompressedIntegerRangesList"),
-              is.character(roi_names),
+              is.character(ROI_names),
               isTRUEorFALSE(use.query.weights))
     N <- length(query)
-    .check_roi_ranges(roi_ranges, N, roi_names)
+    .check_ROI_ranges(ROI_ranges, N, ROI_names)
     if (use.query.weights)
         stopifnot("weight" %in% colnames(mcols(unlist(query, use.names=FALSE))))
 
-    all_hits <- findOverlaps(query, roi_ranges)
+    all_hits <- findOverlaps(query, ROI_ranges)
 
     ## Because of the "exactly one hit per range in 'query'" assumption,
     ## 'all_hits' is expected to have the same shape as 'query'.
     stopifnot(identical(lengths(all_hits), lengths(query)))
 
-    ## Extract nb of hits per region of interest.
+    ## Extract nb of hits per Region Of Interest.
     ## Note that we use an lapply() loop for this at the moment, which is
     ## not very efficient. TODO: Can we avoid the lapply() loop?
     all_counts <- lapply(seq_along(all_hits),
@@ -133,18 +146,18 @@
             if (use.query.weights) {
                 qweights <- mcols(q)$weight
                 hit_counts <- S4Vectors:::tabulate2(subjectHits(hits),
-                                                    nbins=length(roi_names),
+                                                    nbins=length(ROI_names),
                                                     weight=qweights)
             } else {
                 hit_counts <- tabulate(subjectHits(hits),
-                                       nbins=length(roi_names))
+                                       nbins=length(ROI_names))
             }
-            setNames(hit_counts, roi_names)
+            setNames(hit_counts, ROI_names)
         })
 
     ## Turn list of integer vectors into a matrix with one row per list
     ## element in 'all_counts'.
-    .list2matrix(all_counts, roi_names)
+    .list2matrix(all_counts, ROI_names)
 }
 
 
@@ -229,7 +242,8 @@
                 return(integer(0))
             qbytes <- as.raw(trimmed_qseqs[[i]])
             rbytes <- as.raw(trimmed_rseqs[[i]])
-            mm_pos <- which(qbytes != rbytes) + sequence_start[[i]] - 1L
+            is_mm <- qbytes != rbytes & rbytes != as.raw(DNAString("-"))
+            mm_pos <- which(is_mm) + sequence_start[[i]] - 1L
             ## Keep only positions that fall in the (fwr1_start, fwr4_end)
             ## interval.
             keep_idx <- mm_pos >= AIRR_df$fwr1_start[[i]] &
@@ -316,32 +330,30 @@
 ### Infer nb of nucleotide mismatches in each FWR/CDR region from
 ### a given CIGAR column (one of "[vdjc]_cigar").
 .tabulate_mismatches_for_region_type <-
-    function(AIRR_df, region_type, fwrcdr_ranges, germline_db)
+    function(AIRR_df, region_type, ROI_ranges, germline_db)
 {
     mm_pos <- .compute_mm_pos(AIRR_df, region_type, germline_db)
-    .count_hits_per_region_of_interest(mm_pos, fwrcdr_ranges,
-                                       .FWRCDR_NAMES)
+    .count_hits_per_ROI(mm_pos, ROI_ranges, .FWRCDR_NAMES)
 }
 
 ### Infer nb of single nucleotide insertions in each FWR/CDR region from
 ### a given CIGAR column (one of "[vdjc]_cigar").
 .tabulate_insertions_for_region_type <-
-    function(AIRR_df, region_type, fwrcdr_ranges)
+    function(AIRR_df, region_type, ROI_ranges)
 {
     ins_pos <- .compute_ins_pos(AIRR_df, region_type)
-    .count_hits_per_region_of_interest(ins_pos, fwrcdr_ranges,
-                                       .FWRCDR_NAMES)
+    .count_hits_per_ROI(ins_pos, ROI_ranges, .FWRCDR_NAMES)
 }
 
 ### Infer nb of single nucleotide deletions in each FWR/CDR region and
 ### junction from a given CIGAR column (one of "[vdjc]_cigar").
 .tabulate_deletions_for_region_type <-
-    function(AIRR_df, region_type, full_fwrcdr_ranges)
+    function(AIRR_df, region_type, ROI_ranges)
 {
     del_ranges <- .compute_del_ranges(AIRR_df, region_type)
-    ans_colnames <- .insert_junc_names_between_fwrcdr_names()
-    .count_hits_per_region_of_interest(del_ranges, full_fwrcdr_ranges,
-                                       ans_colnames, use.query.weights=TRUE)
+    ROI_names <- .insert_junc_names_between_fwrcdr_names()
+    .count_hits_per_ROI(del_ranges, ROI_ranges, ROI_names,
+                        use.query.weights=TRUE)
 }
 
 
@@ -364,13 +376,13 @@ tabulate_mismatches <- function(AIRR_df, germline_db_name, c_region_db_name="")
 {
     ## TODO: Try to load GenomicAlignments namespace and fail graciously
     ## if the package is not installed.
-    fwrcdr_ranges <- .extract_fwrcdr_ranges(AIRR_df)
+    ROI_ranges <- .extract_ROI_ranges(AIRR_df)
     region_types <- VDJ_REGION_TYPES
     all_counts <- lapply(setNames(region_types, region_types),
         function(region_type) {
             germline_db <- load_germline_db(germline_db_name, region_type)
             .tabulate_mismatches_for_region_type(AIRR_df, region_type,
-                                                 fwrcdr_ranges, germline_db)
+                                                 ROI_ranges, germline_db)
         })
     if ("c_cigar" %in% colnames(AIRR_df)) {
         if (c_region_db_name == "")
@@ -378,7 +390,7 @@ tabulate_mismatches <- function(AIRR_df, germline_db_name, c_region_db_name="")
                       "that was used to produce 'AIRR_df'"))
         c_region_db <- load_c_region_db(c_region_db_name)
         c_counts <- .tabulate_mismatches_for_region_type(AIRR_df, "C",
-                                                 fwrcdr_ranges, c_region_db)
+                                                 ROI_ranges, c_region_db)
         all_counts <- c(all_counts, list(C=c_counts))
     }
     .collapse_counts(all_counts)
@@ -388,12 +400,12 @@ tabulate_insertions <- function(AIRR_df)
 {
     ## TODO: Try to load GenomicAlignments namespace and fail graciously
     ## if the package is not installed.
-    fwrcdr_ranges <- .extract_fwrcdr_ranges(AIRR_df)
+    ROI_ranges <- .extract_ROI_ranges(AIRR_df)
     region_types <- c(VDJ_REGION_TYPES, "C")
     all_counts <- lapply(setNames(region_types, region_types),
         function(region_type) {
             .tabulate_insertions_for_region_type(AIRR_df, region_type,
-                                                 fwrcdr_ranges)
+                                                 ROI_ranges)
         })
     .collapse_counts(all_counts)
 }
@@ -402,12 +414,12 @@ tabulate_deletions <- function(AIRR_df)
 {
     ## TODO: Try to load GenomicAlignments namespace and fail graciously
     ## if the package is not installed.
-    full_fwrcdr_ranges <- .extract_fwrcdr_ranges(AIRR_df, with.junctions=TRUE)
+    ROI_ranges <- .extract_ROI_ranges(AIRR_df, with.junctions=TRUE)
     region_types <- c(VDJ_REGION_TYPES, "C")
     all_counts <- lapply(setNames(region_types, region_types),
         function(region_type) {
             .tabulate_deletions_for_region_type(AIRR_df, region_type,
-                                                full_fwrcdr_ranges)
+                                                ROI_ranges)
         })
     .collapse_counts(all_counts)
 }
