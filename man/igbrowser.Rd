@@ -1,11 +1,12 @@
-\name{bcr_browser}
+\name{igbrowser}
 
+\alias{igbrowser}
 \alias{bcr_browser}
 
 \title{Display annotated BCR sequences in the browser}
 
 \description{
-  Use \code{bcr_browser()} to display the annotated BCR sequences
+  Use \code{igbrowser()} to display the annotated BCR sequences
   returned by \code{\link{igblastn}()} in the browser.
   For each sequence, the V, D, and J segments are shown as well as
   the FWR1-4 and CDR1-3 regions.
@@ -14,19 +15,19 @@
 }
 
 \usage{
-bcr_browser(AIRR_df, show.full.sequence=FALSE, dna.coloring=TRUE,
-            Vcolor="#FFDDD2", Dcolor="#CFC", Jcolor="#CEF", Ccolor="#EEC",
-            FWRcolor="#C9D", CDRcolor="#EE4")
+igbrowser(AIRR_df, show.full.sequence=FALSE, dna.coloring=TRUE,
+          Vcolor="#FFDDD2", Dcolor="#CFC", Jcolor="#CEF", Ccolor="#EEC",
+          FWRcolor="#C9D", CDRcolor="#EE4")
 }
 
 \arguments{
   \item{AIRR_df}{
     The AIRR-formatted data.frame or \link[tibble]{tibble} returned by
     \code{\link{igblastn}()}.
-    Note that calling \code{bcr_browser()} on a data.frame with thousands
+    Note that calling \code{igbrowser()} on a data.frame with thousands
     of rows is quite resource-intensive (it can even crash your browser!),
     so in this case we recommend subsetting the data.frame before passing
-    it to \code{bcr_browser()} to keep the number of rows under 2000.
+    it to \code{igbrowser()} to keep the number of rows under 2000.
   }
   \item{show.full.sequence}{
     By default, the part of the BCR sequences upstream of the V region
@@ -79,11 +80,11 @@ use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
 
 use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
 AIRR_df <- igblastn(query)
-bcr_browser(AIRR_df)
+igbrowser(AIRR_df)
 
 ## By default, the part of the sequences upstream of the V region is
 ## not shown. Use 'show.full.sequence=TRUE' to show the full sequences:
-bcr_browser(AIRR_df, show.full.sequence=TRUE)
+igbrowser(AIRR_df, show.full.sequence=TRUE)
 
 ## ---------------------------------------------------------------------
 ## No C regions
@@ -91,7 +92,7 @@ bcr_browser(AIRR_df, show.full.sequence=TRUE)
 
 use_c_region_db("")
 AIRR_df2 <- igblastn(query)
-bcr_browser(AIRR_df2)
+igbrowser(AIRR_df2)
 }
 
 \keyword{utilities}

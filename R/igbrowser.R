@@ -1,5 +1,5 @@
 ### =========================================================================
-### bcr_browser()
+### igbrowser()
 ### -------------------------------------------------------------------------
 
 
@@ -467,7 +467,7 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### bcr_browser()
+### igbrowser()
 ###
 
 .display_html_in_browser <- function(html)
@@ -479,15 +479,15 @@
     browseURL(temp_url)
 }
 
-bcr_browser <- function(AIRR_df,
-                        show.full.sequence=FALSE,
-                        dna.coloring=TRUE,
-                        Vcolor="#FFDDD2",
-                        Dcolor="#CFC",
-                        Jcolor="#CEF",
-                        Ccolor="#EEC",
-                        FWRcolor="#C9D",
-                        CDRcolor="#EE4")
+igbrowser <- function(AIRR_df,
+                      show.full.sequence=FALSE,
+                      dna.coloring=TRUE,
+                      Vcolor="#FFDDD2",
+                      Dcolor="#CFC",
+                      Jcolor="#CEF",
+                      Ccolor="#EEC",
+                      FWRcolor="#C9D",
+                      CDRcolor="#EE4")
 {
     stopifnot(is.data.frame(AIRR_df),
               isTRUEorFALSE(show.full.sequence),
@@ -530,10 +530,16 @@ bcr_browser <- function(AIRR_df,
         dna_line1, "\n",
         dna_line2,
         "</pre>\n</td></tr>\n")
-    html <- c("<html><head><title>bcr_browser()</title></head>",
+    html <- c("<html><head><title>igbrowser()</title></head>",
               "<body><table style=\"border-collapse: collapse\">",
               html,
               "</table></body></html>\n")
     .display_html_in_browser(html)
+}
+
+bcr_browser <- function(...)
+{
+    .Deprecated("igbrowser")
+    igbrowser(...)
 }
 

@@ -25,8 +25,8 @@ Depends: R (>= 4.2.0), tibble, Biostrings
 Imports: methods, utils, stats, tools,
 	R.utils, curl, httr, xml2, rvest, xtable, jsonlite,
 	S4Vectors, IRanges, GenomeInfoDb
-Suggests: parallel, testthat, knitr, rmarkdown, BiocStyle,
-	ggplot2, dplyr, scales, ggseqlogo
+Suggests: GenomicAlignments, parallel, testthat, knitr, rmarkdown,
+	BiocStyle, ggplot2, dplyr, scales, ggseqlogo
 SystemRequirements: Perl (for install_IMGT_germline_db() only)
 VignetteBuilder: knitr
 Collate:
@@ -57,6 +57,7 @@ Collate:
 	igblastn-args-utils.R
 	outfmt7-utils.R
 	igblastn.R
-	bcr_browser.R
+	igbrowser.R
+	tabulate_mm_and_indels.R
 	OAS-utils.R
 	zzz.R

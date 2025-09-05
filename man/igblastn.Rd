@@ -242,7 +242,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     \item \code{\link{use_c_region_db}} to select the cached C-region db
           to use with \code{igblastn()}.
 
-    \item \code{\link{bcr_browser}} to display the annotated sequences
+    \item \code{\link{igbrowser}} to display the annotated sequences
           returned by \code{igblastn()} in the browser.
 
     \item \code{\link{list_outfmt7_specifiers}} for how to customize
@@ -301,8 +301,8 @@ AIRR_df
 class(AIRR_df)
 dim(AIRR_df)
 
-## You can call bcr_browser() on 'AIRR_df' to vizualize the annotated
-## sequences in the browser. See '?bcr_browser'.
+## You can call igbrowser() on 'AIRR_df' to vizualize the annotated
+## sequences in the browser. See '?igbrowser'.
 
 ## Note that this tibble can easily be converted to an ordinary data.frame
 ## with 'as.data.frame()', or to a DataFrame with 'as(., "DataFrame")':

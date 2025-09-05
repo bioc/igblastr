@@ -1,8 +1,7 @@
 High-priority TODO list
 =======================
 
-- bcr_browser() improvements:
-  - Should we rename the function to igbrowser()?
+- igbrowser() improvements:
   - Display pairwise alignment between BCR query sequence and germline
     V/D/J/C sequences.
   - Take a look at visualization tool from IMGT/V-QUEST for inspiration.

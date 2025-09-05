@@ -113,8 +113,13 @@ export(
     ## igblastn.R:
     igblastn, igblastn_help,
 
-    ## bcr_browser.R
-    bcr_browser,
+    ## igbrowser.R:
+    igbrowser, bcr_browser,
+
+    ## tabulate_mm_and_indels.R:
+    tabulate_mismatches,
+    tabulate_insertions,
+    tabulate_deletions,
 
     ## OAS-utils.R:
     read_OAS_csv_metadata,
