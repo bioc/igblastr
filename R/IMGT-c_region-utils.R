@@ -97,9 +97,8 @@
 
 ### The workhorse behind .download_C_sequence_set_from_IMGT().
 .fetch_C_sequence_set_from_IMGT <-
-    function(species, seqset_internal_nb, group=c("IGHC", "IGKC", "IGLC"))
+    function(species, seqset_internal_nb, group)
 {
-    group <- match.arg(group)
     html <- .query_IMGT_GENE_DB(species, seqset_internal_nb, group)
     .scrape_IMGT_GENE_DB_result(html)
 }
@@ -157,7 +156,8 @@
 ###
 ### 'seqset_nb' can also be a "sequence set internal number".
 .download_C_sequence_set_from_IMGT <-
-    function(organism, destfile, group=c("IGHC", "IGKC", "IGLC"),
+    function(organism, destfile,
+             group=c("IGHC", "IGKC", "IGLC", "TRAC", "TRBC", "TRGC", "TRDC"),
              seqset_nb=1L)
 {
     species <- find_organism_latin_name(organism)
@@ -178,10 +178,10 @@
 ### download_C_sequence_sets_from_IMGT()
 ###
 
-### Reflects the C-region sequence sets available in IMGT/GENE-DB for
+### Reflects the IG C-region sequence sets available in IMGT/GENE-DB for
 ### the 5 official IgBLAST organisms as of Aug 21, 2025.
 ### See file LATIN_NAMES.R for more information.
-.IMGT_ORGANISM_TO_C_SEQUENCE_SETS <- list(
+.IMGT_IG_C_SEQUENCE_SETS <- list(
     human=list(
         `7.2`=c("IGHC", "IGKC", "IGLC"),
         `7.5`=c("IGHC", "IGKC", "IGLC"),
@@ -214,9 +214,18 @@
     )
 )
 
+### Reflects the TR C-region groups available in IMGT/GENE-DB
+### as of Sep 8, 2025. Note that here we use a simpler list structure
+### than for the IG case above because for the TR case we are only
+### interested in the 14.1 sequence set.
+.IMGT_TR_C_GROUPS <- list(
+    human=c("TRAC", "TRBC", "TRGC", "TRDC"),
+    mouse=c("TRAC", "TRBC", "TRGC", "TRDC")
+)
+
 .normarg_IMGT_organisms <- function(organisms)
 {
-    supported_organisms <- names(.IMGT_ORGANISM_TO_C_SEQUENCE_SETS)
+    supported_organisms <- names(.IMGT_IG_C_SEQUENCE_SETS)
     if (is.null(organisms))
         return(supported_organisms)
     if (!is.character(organisms))
@@ -242,17 +251,20 @@
 ###
 ### 'organisms' should be NULL or a character vector of organism names for
 ### which to download the sequence sets. If set to NULL, then the sequence
-### sets for all the organisms listed in .IMGT_ORGANISM_TO_C_SEQUENCE_SETS
+### sets for all the organisms listed in .IMGT_IG_C_SEQUENCE_SETS
 ### get downloaded.
 download_C_sequence_sets_from_IMGT <- function(organisms=NULL)
 {
     organisms <- .normarg_IMGT_organisms(organisms)
     for (organism in organisms) {
-        sequence_sets <- .IMGT_ORGANISM_TO_C_SEQUENCE_SETS[[organism]]
-        for (seqset_internal_nb in names(sequence_sets)) {
-            destdir <- file.path(organism, seqset_internal_nb)
-            groups <- sequence_sets[[seqset_internal_nb]]
-            for (group in groups) {
+
+        ## Download IG C-region sequences.
+        IG_sequence_sets <- .IMGT_IG_C_SEQUENCE_SETS[[organism]]
+        for (seqset_internal_nb in names(IG_sequence_sets)) {
+            destdir <- file.path(organism, "IG", seqset_internal_nb)
+            stopifnot(dir.exists(destdir))
+            IG_groups <- IG_sequence_sets[[seqset_internal_nb]]
+            for (group in IG_groups) {
                 filename <- paste0(group, ".fasta")
                 destfile <- file.path(destdir, filename)
                 seqset_label <- paste0(seqset_internal_nb, "/", group)
@@ -266,6 +278,24 @@ download_C_sequence_sets_from_IMGT <- function(organisms=NULL)
                 nregion <- length(readDNAStringSet(destfile))
                 message("  (", nregion, " region(s) downloaded)")
             }
+        }
+
+        ## Download TR C-region sequences.
+        TR_groups <- .IMGT_TR_C_GROUPS[[organism]]
+        destdir <- file.path(organism, "TR")
+        for (group in TR_groups) {
+            filename <- paste0(group, ".fasta")
+            destfile <- file.path(destdir, filename)
+            seqset_label <- paste0("14.1/", group)
+            message("Download sequence set ", seqset_label, " ",
+                    "for ", organism, " ",
+                    "to ", destfile, " ... ", appendLF=FALSE)
+            .download_C_sequence_set_from_IMGT(organism, destfile,
+                                               group=group,
+                                               seqset_nb="14.1")
+            message("ok")
+            nregion <- length(readDNAStringSet(destfile))
+            message("  (", nregion, " region(s) downloaded)")
         }
     }
 }

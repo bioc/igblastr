@@ -6,14 +6,38 @@
 ###
 
 
-.list_C_fasta_files <- function(dirpath)
+.list_C_fasta_files <- function(fasta_dir, tcr.db=FALSE)
 {
-    stopifnot(isSingleNonWhiteString(dirpath))
-    pattern <- paste0("^IG[HKL]C\\.fasta$")
-    files <- list.files(dirpath, pattern=pattern)
-    if (length(files) == 0L)
-        stop(wmsg("Anomaly: no C-region sequence files found in ", dirpath))
-    files
+    stopifnot(isSingleNonWhiteString(fasta_dir), dir.exists(fasta_dir))
+    if (!isTRUEorFALSE(tcr.db))
+        stop(wmsg("'tcr.db' must be TRUE or FALSE"))
+    prefix <- if (tcr.db) "TR" else "IG"
+    pattern <- paste0("^", prefix, ".C\\.fasta$")
+    fasta_files <- list.files(fasta_dir, pattern=pattern)
+    stopifnot(length(fasta_files) != 0L)
+    fasta_files
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### get_loci_from_input_c_region_fasta_set()
+###
+
+### Returns a character vector of loci in canonical order.
+.get_loci_from_c_region_fasta_set <- function(fasta_files, tcr.db=FALSE)
+{
+    stopifnot(is.character(fasta_files), isTRUEorFALSE(tcr.db))
+    loci <- unique(sub("C\\.fasta$", "", fasta_files))
+    valid_loci <- if (tcr.db) TR_LOCI else IG_LOCI
+    stopifnot(all(loci %in% valid_loci))
+    valid_loci[valid_loci %in% loci]  # return loci in canonical order
+}
+
+get_loci_from_input_c_region_fasta_set <-
+    function(fasta_dir, tcr.db=FALSE)
+{
+    fasta_files <- .list_C_fasta_files(fasta_dir, tcr.db=tcr.db)
+    .get_loci_from_c_region_fasta_set(fasta_files, tcr.db=tcr.db)
 }
 
 
@@ -39,7 +63,7 @@
 ### C_REGION_DBS cache compartment (see R/cache-utils.R for details about
 ### igblastr's cache organization). This subdir or any of its parent
 ### directories don't need to exist yet.
-create_c_region_db <- function(fastadir, destdir, force=FALSE)
+create_c_region_db <- function(fasta_dir, destdir, tcr.db=FALSE, force=FALSE)
 {
     stopifnot(isSingleNonWhiteString(destdir))
     if (!isTRUEorFALSE(force))
@@ -49,8 +73,8 @@ create_c_region_db <- function(fastadir, destdir, force=FALSE)
     ## get_edit_imgt_file_Perl_script() also checks that Perl script
     ## edit_imgt_file.pl is available and that Perl is functioning.
     edit_imgt_file_Perl_script <- get_edit_imgt_file_Perl_script()
-    fasta_files <- .list_C_fasta_files(fastadir)
-    fasta_files <- file.path(fastadir, fasta_files)
+    fasta_files <- .list_C_fasta_files(fasta_dir, tcr.db=tcr.db)
+    fasta_files <- file.path(fasta_dir, fasta_files)
 
     ## We first create the db in a temporary folder, and, only if successful,
     ## replace 'destdir' with the temporary folder. Otherwise we destroy the
@@ -63,21 +87,5 @@ create_c_region_db <- function(fastadir, destdir, force=FALSE)
     create_region_db(fasta_files, tmp_destdir, region_type="C",
                      edit_imgt_file_Perl_script=edit_imgt_file_Perl_script)
     rename_file(tmp_destdir, destdir, replace=TRUE)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### form_builtin_IMGT_c_region_db_name()
-###
-
-form_builtin_IMGT_c_region_db_name <- function(fastadir)
-{
-    stopifnot(isSingleNonWhiteString(fastadir), has_suffix(fastadir, "/14.1"))
-    fasta_files <- .list_C_fasta_files(fastadir)
-    loci <- paste(sort(substr(fasta_files, 1L, 3L)), collapse="+")
-    version <- read_version_file(fastadir)
-    organism <- basename(sub("/14\\.1$", "", fastadir))
-    ## Prefix name with underscore because it's a built-in db.
-    paste("_IMGT", organism, loci, version, sep=".")
 }
 

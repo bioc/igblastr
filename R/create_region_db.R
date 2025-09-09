@@ -16,30 +16,57 @@
     file.path(destdir, paste0(region_type, ".fasta"))
 }
 
-.region_db_already_exists <- function(destdir, region_type)
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .disambiguate_fasta_seqids()
+###
+
+### Similar to base::make.unique() but mangles with suffixes made of
+### lowercase letters.
+.make_pool_of_suffixes <- function(min_pool_size)
 {
-    original_fasta_dir <- .get_original_fasta_dir(destdir, region_type)
-    final_fasta <- .get_final_fasta_path(destdir, region_type)
-    file.exists(original_fasta_dir) || file.exists(final_fasta)
+    max_pool_size <- (length(letters)**8 - 1) / (length(letters) - 1) - 1
+    if (min_pool_size > max_pool_size)
+        stop(wmsg("too many duplicate seq ids"))
+    ans <- character(0)
+    for (i in 1:7) {
+        ans <- c(ans, mkAllStrings(letters, i))
+        if (length(ans) >= min_pool_size)
+            return(ans)
+    }
+    ## Should never happen because we checked for this condition earlier (see
+    ## above).
+    stop(wmsg("too many duplicate seq ids"))
 }
 
-.nuke_existing_region_db <- function(destdir, region_type)
+.make_unique_seqids <- function(seqids)
 {
-    pattern <- paste0("^", region_type, "\\.fasta$")
-    clean_blastdbs(destdir, pattern)
-    original_fasta_dir <- .get_original_fasta_dir(destdir, region_type)
-    final_fasta <- .get_final_fasta_path(destdir, region_type)
-    nuke_file(original_fasta_dir)
-    nuke_file(final_fasta)
+    stopifnot(is.character(seqids))
+    if (length(seqids) <= 1L)
+        return(seqids)
+    oo <- order(seqids)
+    seqids2 <- seqids[oo]
+    ir <- IRanges(1L, runLength(Rle(seqids2)))
+    pool_of_suffixes <- .make_pool_of_suffixes(max(width(ir)))
+    suffixes <- extractList(pool_of_suffixes, ir)  # CharacterList
+    suffixes[lengths(suffixes) == 1L] <- ""
+    unlist(suffixes, use.names=FALSE)
+    seqids2 <- paste0(seqids2, unlist(suffixes, use.names=FALSE))
+    ans <- seqids2[S4Vectors:::reverseIntegerInjection(oo, length(oo))]
+    setNames(ans, names(seqids))
 }
 
-.stop_on_existing_region_db <- function(destdir, region_type)
+### In-place replacement!
+.disambiguate_fasta_seqids <- function(filepath)
 {
-    msg1 <- c("There already seems to be a ", region_type, "-region ",
-              "database in ", destdir)
-    msg2 <- c("Use 'overwrite=TRUE' to overwrite or choose another ",
-              "destination directory.")
-    stop(wmsg(msg1), "\n  ", wmsg(msg2))
+    stopifnot(isSingleNonWhiteString(filepath))
+    fasta_lines <- readLines(filepath)
+    header_idx <- grep("^>", fasta_lines)
+    header_lines <- fasta_lines[header_idx]
+    if (anyDuplicated(header_lines)) {
+        fasta_lines[header_idx] <- .make_unique_seqids(header_lines)
+        writeLines(fasta_lines, filepath)
+    }
 }
 
 
@@ -83,13 +110,39 @@
     unlink(combined_fasta, force=TRUE)
 
     ## (2b) Mangle seq ids to make them unique if they're not.
-    disambiguate_fasta_seqids(final_fasta)
+    .disambiguate_fasta_seqids(final_fasta)
 }
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### create_region_db()
 ###
+
+.region_db_already_exists <- function(destdir, region_type)
+{
+    original_fasta_dir <- .get_original_fasta_dir(destdir, region_type)
+    final_fasta <- .get_final_fasta_path(destdir, region_type)
+    file.exists(original_fasta_dir) || file.exists(final_fasta)
+}
+
+.stop_on_existing_region_db <- function(destdir, region_type)
+{
+    msg1 <- c("There already seems to be a ", region_type, "-region ",
+              "database in ", destdir)
+    msg2 <- c("Use 'overwrite=TRUE' to overwrite or choose another ",
+              "destination directory.")
+    stop(wmsg(msg1), "\n  ", wmsg(msg2))
+}
+
+.nuke_existing_region_db <- function(destdir, region_type)
+{
+    pattern <- paste0("^", region_type, "\\.fasta$")
+    clean_blastdbs(destdir, pattern)
+    original_fasta_dir <- .get_original_fasta_dir(destdir, region_type)
+    final_fasta <- .get_final_fasta_path(destdir, region_type)
+    nuke_file(original_fasta_dir)
+    nuke_file(final_fasta)
+}
 
 ### Perl required!
 ###

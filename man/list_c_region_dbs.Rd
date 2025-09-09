@@ -141,20 +141,15 @@ load_c_region_db(db_name)
 \examples{
 if (!has_igblast()) install_igblast()
 
-## 5 built-in C-region dbs (prefixed with an underscore):
+## 7 built-in C-region dbs (prefixed with an underscore):
 list_c_region_dbs()
-
-list_c_region_dbs(names.only=TRUE)  # db names only
-
+list_c_region_dbs(names.only=TRUE)    # db names only
 list_c_region_dbs(long.listing=TRUE)  # long listing
 
 ## Select C-region db to use with igblastn():
 use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
-
-use_c_region_db()  # get current selection
-
+use_c_region_db()    # get current selection
 use_c_region_db("")  # cancel current selection
-
 use_c_region_db()
 
 ## Load C-region sequences:

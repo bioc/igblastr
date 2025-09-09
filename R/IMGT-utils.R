@@ -11,8 +11,8 @@ IMGT_URL <- "https://www.imgt.org"
 ### Do not remove the trailing slash.
 .VQUEST_DOWNLOAD_ROOT_URL <- paste0(IMGT_URL, "/download/V-QUEST/")
 
-### .VQUEST_REFERENCE_DIRECTORY
-.VQUEST_REFERENCE_DIRECTORY <- "IMGT_V-QUEST_reference_directory"
+### VQUEST_REFERENCE_DIRECTORY
+VQUEST_REFERENCE_DIRECTORY <- "IMGT_V-QUEST_reference_directory"
 
 .VQUEST_RELEASE_FILE_URL <-
     paste0(.VQUEST_DOWNLOAD_ROOT_URL, "IMGT_vquest_release.txt")
@@ -83,7 +83,7 @@ list_archived_IMGT_zips <- function(as.df=FALSE, recache=FALSE)
 
 .download_and_unzip_latest_IMGT_zip <- function(exdir, ...)
 {
-    zip_filename <- paste0(.VQUEST_REFERENCE_DIRECTORY, ".zip")
+    zip_filename <- paste0(VQUEST_REFERENCE_DIRECTORY, ".zip")
 
     ## Sometimes, after a new release, the IMGT people forget to make
     ## the zip file of the new release available. We're trying to detect
@@ -123,7 +123,7 @@ list_archived_IMGT_zips <- function(as.df=FALSE, recache=FALSE)
 {
     nuke_file(exdir)
     unzip(zipfile, exdir=exdir, junkpaths=TRUE)
-    zip_filename <- paste0(.VQUEST_REFERENCE_DIRECTORY, ".zip")
+    zip_filename <- paste0(VQUEST_REFERENCE_DIRECTORY, ".zip")
     local_zip <- file.path(exdir, zip_filename)
     unzip(local_zip, exdir=exdir)
     unlink(local_zip)
@@ -151,12 +151,20 @@ download_and_unzip_IMGT_release <- function(release, exdir, ...)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### normalize_IMGT_organism()
 ### find_organism_in_IMGT_local_store()
 ###
 
+normalize_IMGT_organism <- function(organism)
+{
+    if (!isSingleNonWhiteString(organism))
+        stop(wmsg("'organism' must be a single (non-empty) string"))
+    chartr(" ", "_", organism)
+}
+
 list_organisms_in_IMGT_local_store <- function(local_store)
 {
-    refdir <- file.path(local_store, .VQUEST_REFERENCE_DIRECTORY)
+    refdir <- file.path(local_store, VQUEST_REFERENCE_DIRECTORY)
     if (!dir.exists(refdir))
         stop(wmsg("Anomaly: directory ", refdir, " not found"))
     sort(list.files(refdir))
@@ -177,7 +185,7 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
     all_organisms <- list_organisms_in_IMGT_local_store(local_store)
     idx <- match(tolower(organism), tolower(all_organisms))
     if (!is.na(idx)) {
-        refdir <- file.path(local_store, .VQUEST_REFERENCE_DIRECTORY)
+        refdir <- file.path(local_store, VQUEST_REFERENCE_DIRECTORY)
         return(file.path(refdir, all_organisms[[idx]]))
     }
     all_in_1string <- paste0("\"", all_organisms, "\"", collapse=", ")
@@ -185,25 +193,5 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
               "IMGT/V-QUEST release ", basename(local_store), "."),
          "\n  ",
          wmsg("Available organisms: ", all_in_1string, "."))
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### normalize_IMGT_organism()
-### form_IMGT_germline_db_name()
-
-normalize_IMGT_organism <- function(organism)
-{
-    if (!isSingleNonWhiteString(organism))
-        stop(wmsg("'organism' must be a single (non-empty) string"))
-    chartr(" ", "_", organism)
-}
-
-form_IMGT_germline_db_name <- function(release, organism="Homo sapiens")
-{
-    if (!isSingleNonWhiteString(release))
-        stop(wmsg("'relesase' must be a single (non-empty) string"))
-    organism <- normalize_IMGT_organism(organism)
-    sprintf("IMGT-%s.%s.%s", release, organism, "IGH+IGK+IGL")
 }
 

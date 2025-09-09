@@ -373,37 +373,3 @@ download_mouse_germline_sequences_from_OGRDB <-
     file_count
 }
 
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### form_AIRR_germline_db_name()
-###
-
-.list_VDJ_fasta_files <- function(dirpath)
-{
-    stopifnot(isSingleNonWhiteString(dirpath))
-    pattern <- paste0("^IG[HKL][VDJ]\\.fasta$")
-    files <- list.files(dirpath, pattern=pattern)
-    if (length(files) == 0L)
-        stop(wmsg("Anomaly: no germline sequence files found in ", dirpath))
-    files
-}
-
-form_AIRR_germline_db_name <- function(organism_path, strain=NULL)
-{
-    if (!is.null(strain)) {
-        stopifnot(isSingleNonWhiteString(strain))
-        strain_path <- file.path(organism_path, strain)
-        fasta_files <- .list_VDJ_fasta_files(strain_path)
-        version <- read_version_file(strain_path)
-    } else {
-        fasta_files <- .list_VDJ_fasta_files(organism_path)
-        version <- read_version_file(organism_path)
-    }
-    loci <- paste(sort(unique(substr(fasta_files, 1L, 3L))), collapse="+")
-    organism <- basename(organism_path)
-    if (!is.null(strain))
-        organism <- paste0(organism, ".", strain)
-    ## Prefix name with underscore because it's a built-in db.
-    paste("_AIRR", organism, loci, version, sep=".")
-}
-

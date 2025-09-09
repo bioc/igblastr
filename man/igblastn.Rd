@@ -4,7 +4,7 @@
 \alias{igblastn}
 \alias{igblastn_help}
 
-\title{BLAST for Ig and TCR sequences}
+\title{BLAST for BCR/Ig and TCR sequences}
 
 \description{
   The \code{igblastn()} function is a wrapper to the \code{igblastn}
@@ -17,7 +17,8 @@ igblastn(query, outfmt="AIRR",
          germline_db_V="auto", germline_db_V_seqidlist=NULL,
          germline_db_D="auto", germline_db_D_seqidlist=NULL,
          germline_db_J="auto", germline_db_J_seqidlist=NULL,
-         organism="auto", c_region_db="auto", auxiliary_data="auto",
+         organism="auto", c_region_db="auto",
+         auxiliary_data="auto", ig_seqtype="auto",
          ...,
          out=NULL, parse.out=TRUE,
          show.in.browser=FALSE, show.command.only=FALSE)
@@ -51,6 +52,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     \code{"AIRR"} is the default and is an alias for \code{19}.
     \code{outfmt} can also be a string describing a customized format 7
     e.g. \code{"7 qseqid sseqid pident nident length score"}.
+
     See \code{?\link{list_outfmt7_specifiers}} for more information about
     customizing format 7.
   }
@@ -60,6 +62,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     Note that, by default (i.e. when \code{germline_db_V} is omitted or set
     to \code{"auto"}), \code{igblastn()} uses the V-region db that belongs
     to the cached germline db currently selected.
+
     See \code{?\link{use_germline_db}} for how to select the cached
     germline db to use with \code{igblastn()}.
   }
@@ -91,6 +94,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     Note that, by default (i.e. when \code{organism} is omitted or set
     to \code{"auto"}), \code{igblastn()} infers the organism from the
     name of the cached germline db currently selected.
+
     See \code{?\link{use_germline_db}} for how to select the cached
     germline db to use with \code{igblastn()}.
   }
@@ -100,6 +104,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     Note that, by default (i.e. when \code{c_region_db} is omitted or
     set to \code{"auto"}), \code{igblastn()} uses the cached C-region db
     currently selected.
+
     See \code{?\link{use_c_region_db}} for how to select the cached
     C-region db to use with \code{igblastn()}.
   }
@@ -131,6 +136,22 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
               \code{productive}, \code{cdr3}, \code{fwr4}, and others)
               will be filled with \code{NA}s.
       }
+  }
+  \item{ig_seqtype}{
+    Set to \code{"Ig"} or \code{"TCR"} depending on whether the query
+    sequences are BCR/Ig or TCR sequences.
+
+    Note that, by default (i.e. when \code{ig_seqtype} is omitted or
+    set to \code{"auto"}), the value of \code{ig_seqtype} is inferred
+    from the germline loci that appear in the name of the cached
+    germline db currently selected (this name can be obtained with
+    \code{\link{use_germline_db}}). If these are BCR/Ig germline loci
+    (i.e. IGH, IGK, IGL), then the inferred value will be \code{"Ig"}.
+    If they are TCR germline loci (TRA, TRB, TRG, TRD), then it will
+    be \code{"TCR"}.
+
+    See \code{?\link{use_germline_db}} for how to select the cached
+    germline db to use with \code{igblastn()}.
   }
   \item{...}{
     Extra arguments to be passed to the \code{igblastn}
@@ -168,13 +189,13 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
   }
   \item{show.in.browser}{
     For \code{igblastn()}: Whether the output of the \code{igblastn}
-    \emph{standalone executable} should also be displayed in the browser
+    \emph{standalone executable} should also be displayed in a browser
     or not (in addition to being returned by the \code{igblastn()}
     function call). \code{FALSE} by default.
 
     For \code{igblastn_help()}: Whether the help printed by the
     \code{igblastn} \emph{standalone executable} (when invoked with
-    the -h or -help argument) should be displayed in the browser or not.
+    the -h or -help argument) should be displayed in a browser or not.
     \code{FALSE} by default.
   }
   \item{show.command.only}{
@@ -243,7 +264,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
           to use with \code{igblastn()}.
 
     \item \code{\link{igbrowser}} to display the annotated sequences
-          returned by \code{igblastn()} in the browser.
+          returned by \code{igblastn()} in a browser.
 
     \item \code{\link{list_outfmt7_specifiers}} for how to customize
           output format 7.
@@ -281,7 +302,7 @@ filenames <- paste0(c("heavy", "light"), "_sequences.fasta")
 query <- system.file(package="igblastr", "extdata", filenames)
 
 ## Install Human germline db from IMGT (Perl required!):
-db_name <- install_IMGT_germline_db("202506-1", "Homo_sapiens", force=TRUE)
+db_name <- install_IMGT_germline_db("202518-3", "Homo_sapiens", force=TRUE)
 
 ## Select germline db to use with igblastn():
 use_germline_db(db_name)
@@ -301,8 +322,8 @@ AIRR_df
 class(AIRR_df)
 dim(AIRR_df)
 
-## You can call igbrowser() on 'AIRR_df' to vizualize the annotated
-## sequences in the browser. See '?igbrowser'.
+## You can call igbrowser() on 'AIRR_df' to visualize the annotated
+## sequences in a browser. See '?igbrowser'.
 
 ## Note that this tibble can easily be converted to an ordinary data.frame
 ## with 'as.data.frame()', or to a DataFrame with 'as(., "DataFrame")':

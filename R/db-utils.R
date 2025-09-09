@@ -6,59 +6,57 @@
 ###
 
 
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Some fundamental global constants
+###
+
 VDJ_REGION_TYPES <- c("V", "D", "J")
+.VJ_REGION_TYPES <- VDJ_REGION_TYPES[-2L]
+
+### Group names are formed by concatenating a locus name (e.g. IGH or TRB)
+### and a region type (e.g. V).
+
+.IG_LOCI_2_REGION_TYPES <- list(IGH=VDJ_REGION_TYPES,
+                                IGK=.VJ_REGION_TYPES,
+                                IGL=.VJ_REGION_TYPES)
+
+.TR_LOCI_2_REGION_TYPES <- list(TRA=.VJ_REGION_TYPES,
+                                TRB=VDJ_REGION_TYPES,
+                                TRG=.VJ_REGION_TYPES,
+                                TRD=VDJ_REGION_TYPES)
+
+IG_LOCI <- names(.IG_LOCI_2_REGION_TYPES)
+TR_LOCI <- names(.TR_LOCI_2_REGION_TYPES)
+
+.revmap <- function(loci2regiontypes)
+{
+    loci <- rep.int(names(loci2regiontypes), lengths(loci2regiontypes))
+    f <- factor(unlist(loci2regiontypes, use.names=FALSE),
+                levels=VDJ_REGION_TYPES)
+    split(loci, f)
+}
+
+IG_REGION_TYPES_2_LOCI <- .revmap(.IG_LOCI_2_REGION_TYPES)
+TR_REGION_TYPES_2_LOCI <- .revmap(.TR_LOCI_2_REGION_TYPES)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### disambiguate_fasta_seqids()
+### map_loci_to_region_types()
 ###
 
-### Similar to base::make.unique() but mangles with suffixes made of
-### lowercase letters.
-.make_pool_of_suffixes <- function(min_pool_size)
+map_loci_to_region_types <- function(loci)
 {
-    max_pool_size <- (length(letters)**8 - 1) / (length(letters) - 1) - 1
-    if (min_pool_size > max_pool_size)
-        stop(wmsg("too many duplicate seq ids"))
-    ans <- character(0)
-    for (i in 1:7) {
-        ans <- c(ans, mkAllStrings(letters, i))
-        if (length(ans) >= min_pool_size)
-            return(ans)
+    stopifnot(is.character(loci), length(loci) != 0L, !anyDuplicated(loci))
+    if (all(loci %in% IG_LOCI)) {
+        loci2regiontypes <- .IG_LOCI_2_REGION_TYPES
+    } else if (all(loci %in% TR_LOCI)) {
+        loci2regiontypes <- .TR_LOCI_2_REGION_TYPES
+    } else {
+        what <- if (length(loci) != 1L) "set of " else ""
+        in1string <- paste(loci, collapse=", ")
+        stop(wmsg("invalid ", what, "loci: ", in1string))
     }
-    ## Should never happen because we checked for this condition earlier (see
-    ## above).
-    stop(wmsg("too many duplicate seq ids"))
-}
-
-.make_unique_seqids <- function(seqids)
-{
-    stopifnot(is.character(seqids))
-    if (length(seqids) <= 1L)
-        return(seqids)
-    oo <- order(seqids)
-    seqids2 <- seqids[oo]
-    ir <- IRanges(1L, runLength(Rle(seqids2)))
-    pool_of_suffixes <- .make_pool_of_suffixes(max(width(ir)))
-    suffixes <- extractList(pool_of_suffixes, ir)  # CharacterList
-    suffixes[lengths(suffixes) == 1L] <- ""
-    unlist(suffixes, use.names=FALSE)
-    seqids2 <- paste0(seqids2, unlist(suffixes, use.names=FALSE))
-    ans <- seqids2[S4Vectors:::reverseIntegerInjection(oo, length(oo))]
-    setNames(ans, names(seqids))
-}
-
-### In-place replacement!
-disambiguate_fasta_seqids <- function(filepath)
-{
-    stopifnot(isSingleNonWhiteString(filepath))
-    fasta_lines <- readLines(filepath)
-    header_idx <- grep("^>", fasta_lines)
-    header_lines <- fasta_lines[header_idx]
-    if (anyDuplicated(header_lines)) {
-        fasta_lines[header_idx] <- .make_unique_seqids(header_lines)
-        writeLines(fasta_lines, filepath)
-    }
+    loci2regiontypes[loci]
 }
 
 
@@ -136,11 +134,11 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
 }
 
 ### Returns an integer matrix with 1 row per db and 1 col per region type.
-.tabulate_dbs_by_region_type <- function(dbs_path, db_names, region_types)
+.tabulate_dbs_by_region_type <- function(dbs_home, db_names, region_types)
 {
     all_counts <- lapply(db_names,
         function(db_name) {
-            db_path <- file.path(dbs_path, db_name)
+            db_path <- file.path(dbs_home, db_name)
             .tabulate_db_by_region_type(db_path, region_types)
         })
     data <- unlist(all_counts, use.names=FALSE)
@@ -174,32 +172,21 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
 }
 
 ### Returns an integer matrix, typically with some NAs.
-.tabulate_db_by_group <- function(db_path, groups)
+.tabulate_db_by_group <- function(db_path, loci)
 {
-    stopifnot(isSingleNonWhiteString(db_path),
-              is.character(groups), all(nchar(groups, type="width") == 4L))
-    prefixes <- substr(groups, 1L, 3L)
-    suffixes <- substr(groups, 4L, 4L)
-    loci <- unique(prefixes)
-    region_types <- unique(suffixes)
-    ans <- matrix(NA_integer_, nrow=length(loci),
-                               ncol=length(region_types),
-                               dimnames=list(loci, region_types))
-    Mindex <- cbind(prefixes, suffixes)
-    ans[Mindex] <- 0L
-    for (region_type in region_types) {
-        fasta_file <- get_db_fasta_file(db_path, region_type)
-        gene_names <- names(fasta.seqlengths(fasta_file))
-        counts <- .tabulate_gene_names_by_prefix(gene_names, groups)
-        stopifnot(identical(names(counts), groups))
-        ok <- has_suffix(groups, region_type) | counts == 0L
-        if (!all(ok)) {
-            in1string <- paste(groups[!ok], collapse=", ")
-            warning(wmsg("some gene names in '" , fasta_file, "' ",
-                         "unexpectedly belong to groups ", in1string))
+    stopifnot(isSingleNonWhiteString(db_path))
+    vdj_counts <- lapply(VDJ_REGION_TYPES,
+        function(region_type) {
+            fasta_file <- get_db_fasta_file(db_path, region_type)
+            gene_names <- names(fasta.seqlengths(fasta_file))
+            counts <- .tabulate_gene_names_by_prefix(gene_names, loci)
+            stopifnot(sum(counts) == length(gene_names),
+                      identical(names(counts), loci))
+            counts
         }
-        ans[Mindex] <- ans[Mindex] + counts
-    }
+    )
+    ans <- do.call(cbind, vdj_counts)
+    colnames(ans) <- VDJ_REGION_TYPES
     ans
 }
 
@@ -217,49 +204,43 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
 ### list_dbs()
 ###
 
-.IG_LOCI <- paste0("IG", c("H", "K", "L"))
-.TR_LOCI <- paste0("TR", c("A", "B", "G", "D"))
-
-### Group names are formed by concatenating a locus name (e.g. IGH or TRB)
-### and a region type (e.g. V).
-
-.VJ_REGION_TYPES <- VDJ_REGION_TYPES[-2L]
-
-.IG_GERMLINE_GROUPS <- c(paste0("IGH", VDJ_REGION_TYPES),
-                         paste0("IGK", .VJ_REGION_TYPES),
-                         paste0("IGL", .VJ_REGION_TYPES))
-
-.TR_GERMLINE_GROUPS <- c(paste0("TRA", .VJ_REGION_TYPES),
-                         paste0("TRB", VDJ_REGION_TYPES),
-                         paste0("TRG", .VJ_REGION_TYPES),
-                         paste0("TRD", VDJ_REGION_TYPES))
+.extract_loci_from_db_name <- function(db_name)
+{
+    stopifnot(isSingleNonWhiteString(db_name))
+    loci_in1string <- sub("^[^+]*\\.([IGHKLTRABGD+]+)[^+]*$", "\\1", db_name)
+    if (loci_in1string == "")
+        stop(wmsg("failed to extract loci from db name \"", db_name, "\""))
+    strsplit(loci_in1string, "+", fixed=TRUE)[[1L]]
+}
 
 ### Returns a named list with 1 list element per db.
-.make_long_listing_for_germline_dbs <- function(dbs_path, db_names, groups)
+.make_long_listing_for_germline_dbs <- function(germline_dbs_home, db_names)
 {
     lapply(setNames(db_names, db_names),
         function(db_name) {
-            db_path <- file.path(dbs_path, db_name)
-            .tabulate_db_by_group(db_path, groups)
+            db_path <- file.path(germline_dbs_home, db_name)
+            loci <- .extract_loci_from_db_name(db_name)
+            .tabulate_db_by_group(db_path, loci)
         })
 }
 
 ### Returns a named list with 1 list element per db.
-.make_long_listing_for_c_region_dbs <- function(dbs_path, db_names, loci)
+.make_long_listing_for_c_region_dbs <- function(c_region_dbs_home, db_names)
 {
     lapply(setNames(db_names, db_names),
         function(db_name) {
-            db_path <- file.path(dbs_path, db_name)
+            db_path <- file.path(c_region_dbs_home, db_name)
+            loci <- .extract_loci_from_db_name(db_name)
             .tabulate_c_region_db_by_locus(db_path, loci)
         })
 }
 
 ### 'long.listing' is ignored when 'names.only' is TRUE.
-list_dbs <- function(dbs_path, what=c("germline", "C-region"),
+list_dbs <- function(dbs_home, what=c("germline", "C-region"),
                      builtin.only=FALSE,
                      names.only=FALSE, long.listing=FALSE)
 {
-    stopifnot(isSingleNonWhiteString(dbs_path), dir.exists(dbs_path))
+    stopifnot(isSingleNonWhiteString(dbs_home), dir.exists(dbs_home))
     what <- match.arg(what)
     if (!isTRUEorFALSE(builtin.only))
         stop(wmsg("'builtin.only' must be TRUE or FALSE"))
@@ -267,9 +248,10 @@ list_dbs <- function(dbs_path, what=c("germline", "C-region"),
         stop(wmsg("'names.only' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(long.listing))
         stop(wmsg("'long.listing' must be TRUE or FALSE"))
-    ## Excluding the 'USING' file for backward compatibility reasons.
-    ## See NOTE preceding '.DB_IN_USE_cache' below in this file.
-    db_names <- setdiff(list.files(dbs_path), "USING")
+    ## Excluding the 'USING' file for backward compatibility with early
+    ## versions of igblastr. See NOTE preceding '.DB_IN_USE_cache' below
+    ## in this file for more information.
+    db_names <- setdiff(list.files(dbs_home), "USING")
     if (builtin.only)
         db_names <- db_names[has_prefix(db_names, "_")]
     db_names <- sort_db_names(db_names)
@@ -277,15 +259,14 @@ list_dbs <- function(dbs_path, what=c("germline", "C-region"),
         return(db_names)
     if (!long.listing) {
         region_types <- if (what == "germline") VDJ_REGION_TYPES else "C"
-        basic_stats <- .tabulate_dbs_by_region_type(dbs_path, db_names,
+        basic_stats <- .tabulate_dbs_by_region_type(dbs_home, db_names,
                                                     region_types)
         return(data.frame(db_name=db_names, basic_stats))
     }
     if (what == "germline") {
-        .make_long_listing_for_germline_dbs(dbs_path, db_names,
-                                            .IG_GERMLINE_GROUPS)
+        .make_long_listing_for_germline_dbs(dbs_home, db_names)
     } else {
-        .make_long_listing_for_c_region_dbs(dbs_path, db_names, .IG_LOCI)
+        .make_long_listing_for_c_region_dbs(dbs_home, db_names)
     }
 }
 
@@ -297,7 +278,7 @@ list_dbs <- function(dbs_path, what=c("germline", "C-region"),
 
 ### NOTE: Early versions of igblastr (prior to submission to Bioconductor)
 ### were recording the selection of the germline and C-region dbs in a
-### persistent manner in a file located in the 'dbs_path' folder called 'USING'.
+### persistent manner in a file located in the 'dbs_home' folder called 'USING'.
 ### This was obviously a very bad idea because it meant that:
 ### - If the user was using igblastr in more than one R session, then all
 ###   sessions were forced to use the same dbs.
@@ -312,15 +293,15 @@ list_dbs <- function(dbs_path, what=c("germline", "C-region"),
 .DB_IN_USE_cache <- new.env(parent=emptyenv())
 
 ### Returns "" if no db is currently in use.
-get_db_in_use <- function(dbs_path, what=c("germline", "C-region"))
+get_db_in_use <- function(dbs_home, what=c("germline", "C-region"))
 {
-    stopifnot(isSingleNonWhiteString(dbs_path), dir.exists(dbs_path))
+    stopifnot(isSingleNonWhiteString(dbs_home), dir.exists(dbs_home))
     what <- match.arg(what)
     db_name <- .DB_IN_USE_cache[[what]]
     if (is.null(db_name) || db_name == "")
         return("")  # no db is currently in use
 
-    db_path <- file.path(dbs_path, db_name)
+    db_path <- file.path(dbs_home, db_name)
     if (!dir.exists(db_path)) {
         if (what == "germline") {
             fun <- "use_germline_db"
@@ -368,14 +349,14 @@ set_db_in_use <- function(what=c("germline", "C-region"), db_name="",
 ###
 
 ### Used by print.germline_dbs_df() and print.c_region_dbs_df().
-print_dbs_df <- function(dbs_df, dbs_path, what=c("germline", "C-region"))
+print_dbs_df <- function(dbs_df, dbs_home, what=c("germline", "C-region"))
 {
     stopifnot(is.data.frame(dbs_df),
-              isSingleNonWhiteString(dbs_path), dir.exists(dbs_path))
+              isSingleNonWhiteString(dbs_home), dir.exists(dbs_home))
     what <- match.arg(what)
     dbs_df <- as.data.frame(dbs_df)
     db_names <- dbs_df[ , "db_name"]
-    db_path <- get_db_in_use(dbs_path, what=what)
+    db_path <- get_db_in_use(dbs_home, what=what)
     if (db_path != "") {
         ## Mark db in use with an asterisk in extra white column.
         used <- character(length(db_names))

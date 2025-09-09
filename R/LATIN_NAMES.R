@@ -34,3 +34,21 @@ find_organism_shortname <- function(organism)
 find_organism_latin_name <- function(organism)
     LATIN_NAMES[[find_organism_shortname(organism)]]
 
+### Tries to map 'db_name' to one of the 5 organisms officially
+### supported by IgBLAST.
+infer_organism_shortname_from_db_name <- function(db_name)
+{
+    stopifnot(isSingleNonWhiteString(db_name))
+    db_name <- chartr(".", "_", tolower(db_name))
+    for (i in seq_along(LATIN_NAMES)) {
+        shortname <- names(LATIN_NAMES)[[i]]
+        pattern <- paste0("_", chartr("_", ".", shortname), "_")
+        if (grepl(pattern, db_name, ignore.case=TRUE))
+            return(shortname)
+        pattern <- paste0("_", chartr(" ", ".", LATIN_NAMES[[i]]), "_")
+        if (grepl(pattern, db_name, ignore.case=TRUE))
+            return(shortname)
+    }
+    NA_character_
+}
+

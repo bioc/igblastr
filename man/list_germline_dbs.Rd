@@ -159,12 +159,12 @@ list_germline_dbs(long.listing=TRUE)
 
 if (IMGT_is_up()) {
   ## Install Mouse germline db from IMGT (Perl required!):
-  install_IMGT_germline_db("202506-1", "Mus_musculus", force=TRUE)
+  install_IMGT_germline_db("202518-3", "Mus_musculus", force=TRUE)
 
   list_germline_dbs()  # all germline dbs
 
   ## Select germline db to use with igblastn():
-  db_name <- "IMGT-202506-1.Mus_musculus.IGH+IGK+IGL"
+  db_name <- "IMGT-202518-3.Mus_musculus.IGH+IGK+IGL"
   use_germline_db(db_name)  # select germline db to use
 
   use_germline_db()  # get current selection

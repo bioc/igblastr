@@ -84,18 +84,40 @@ list_IMGT_organisms <- function(release)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .form_IMGT_germline_db_name()
+###
+
+.form_IMGT_germline_db_name <- function(fasta_store)
+{
+    stopifnot(isSingleNonWhiteString(fasta_store), dir.exists(fasta_store),
+              basename(fasta_store) %in% c("IG", "TR"))
+    organism_path <- dirname(fasta_store)
+    organism <- basename(organism_path)
+    refdir <- dirname(organism_path)
+    stopifnot(basename(refdir) == VQUEST_REFERENCE_DIRECTORY)
+    local_store <- dirname(refdir)
+    release <- basename(local_store)
+    tcr.db <- basename(fasta_store) == "TR"
+    loci <- get_loci_from_input_germline_fasta_set(fasta_store, tcr.db=tcr.db)
+    sprintf("IMGT-%s.%s.%s", release, organism, paste(loci, collapse="+"))
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### install_IMGT_germline_db()
 ###
 
 ### Requires Perl.
 install_IMGT_germline_db <- function(release, organism="Homo sapiens",
-                                     force=FALSE, ...)
+                                     tcr.db=FALSE, force=FALSE, ...)
 {
     ## Check arguments.
     if (missing(release))
         .stop_on_missing_release()
     release <- .validate_IMGT_release(release)
     organism <- normalize_IMGT_organism(organism)
+    if (!isTRUEorFALSE(tcr.db))
+        stop(wmsg("'tcr.db' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(force))
         stop(wmsg("'force' must be TRUE or FALSE"))
 
@@ -104,16 +126,21 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     if (!dir.exists(local_store))
         download_and_unzip_IMGT_release(release, local_store, ...)
 
-    ## Compute 'organism_path' and 'db_name'.
+    ## Compute 'fasta_store'.
     organism_path <- find_organism_in_IMGT_local_store(organism, local_store)
     organism <- basename(organism_path)
-    db_name <- form_IMGT_germline_db_name(release, organism)
+    fasta_store <- file.path(organism_path, if (tcr.db) "TR" else "IG")
+    if (!dir.exists(fasta_store))
+        stop(wmsg("cannot find ", basename(fasta_store), " germline ",
+                  "sequences for ", organism, " in IMGT release ", release))
+
+    ## Compute 'db_name'.
+    db_name <- .form_IMGT_germline_db_name(fasta_store)
 
     ## Create IMGT germline db.
-    IG_path <- file.path(organism_path, "IG")
-    germline_dbs_path <- get_germline_dbs_path(TRUE)  # guaranteed to exist
-    db_path <- file.path(germline_dbs_path, db_name)
-    create_germline_db(IG_path, db_path, force=force)
+    germline_dbs_home <- get_germline_dbs_home(TRUE)  # guaranteed to exist
+    db_path <- file.path(germline_dbs_home, db_name)
+    create_germline_db(fasta_store, db_path, tcr.db=tcr.db, force=force)
 
     ## Success!
     message("Germline db ", db_name, " successfully installed.")

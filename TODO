@@ -1,6 +1,20 @@
 High-priority TODO list
 =======================
 
+- BUG: Perl script edit_imgt_file.pl fails to clean the headers of IMGT
+  FASTA files provided for Mus_musculus_C57BL6J germline dbs.
+  For example, installing any of the following germline dbs breaks
+  list_germline_dbs(long.listing=TRUE) because most headers in the
+  resulting V.fasta/D.fasta/J.fasta files are still the original
+  messy 15-field headers:
+    IMGT-202405-2.Mus_musculus_C57BL6J.IGH+IGK+IGL
+    IMGT-202405-2.Mus_musculus_C57BL6J.TRA+TRB+TRG+TRD
+    IMGT-202518-3.Mus_musculus_C57BL6J.IGH+IGK+IGL
+    IMGT-202518-3.Mus_musculus_C57BL6J.TRA+TRB+TRG+TRD
+  So maybe we need to implement our own header cleaning routine and stop
+  relying on edit_imgt_file.pl. This would allow us to get rid of the
+  dependency on Perl which would be good ridance anyways!
+
 - igbrowser() improvements:
   - Display pairwise alignment between BCR query sequence and germline
     V/D/J/C sequences.
@@ -22,20 +36,6 @@ High-priority TODO list
 
 - Add igblastp(), a wrapper to the igblastp standalone executable included
   in IgBLAST. Requested by Dr Iman Haddad in an email from Aug 12, 2025.
-
-- igblastn() only supports 'ig_seqtype="Ig"' (the default) at the moment.
-  Do we also want to suport 'ig_seqtype="TCR"'? What would it take to properly
-  support this option? As a starter it seems that the user would need to be
-  able to supply germline and constant dbs based on TCR sequences instead
-  of Ig sequences, like the germline sequences provided here:
-    https://www.imgt.org/download/V-QUEST/IMGT_V-QUEST_reference_directory/Homo_sapiens/TR/
-  and the constant sequences provided here (see last table on the page,
-  i.e. bottom-right table):
-    https://www.imgt.org/vquest/refseqh.html#constant-sets
-  What else would it take to properly support 'ig_seqtype="TCR"'?
-  Note that someone mentioned that Koshlan Mayer-Blackwell at the Hutch was
-  maybe using IgBLAST to analyze TCR sequences. Someone else mentioned that
-  some people use mixeR for that.
 
 
 Things to do at BioC 3.22 release time
@@ -59,6 +59,9 @@ Low-priority TODO list
 
 - Add 'clonotype_out' arg to igblastn(). Add examples in man page and
   vignette that use this functionality.
+
+- It was mentioned that some people use mixeR to analyse TCR sequences.
+  How does this compare to using igblastn(..., ig_seqtype="TCR")?
 
 - Add functionality to install/use the updated internal and/or auxiliary
   files that are sometimes made available at:

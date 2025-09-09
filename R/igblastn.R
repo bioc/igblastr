@@ -243,7 +243,7 @@ igblastn <- function(query, outfmt="AIRR",
                      germline_db_D="auto", germline_db_D_seqidlist=NULL,
                      germline_db_J="auto", germline_db_J_seqidlist=NULL,
                      organism="auto", c_region_db="auto",
-                     auxiliary_data="auto",
+                     auxiliary_data="auto", ig_seqtype="auto",
                      ...,
                      out=NULL, parse.out=TRUE,
                      show.in.browser=FALSE, show.command.only=FALSE)
@@ -275,6 +275,7 @@ igblastn <- function(query, outfmt="AIRR",
                      organism=organism,
                      c_region_db=c_region_db,
                      auxiliary_data=auxiliary_data,
+                     ig_seqtype=ig_seqtype,
                      ...)
     exe_args <- make_exe_args(c(cmd_args, out=out))
 

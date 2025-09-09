@@ -202,6 +202,14 @@
 ### that has one list element per row in 'AIRR_df'.
 ### Only the positions that fall in the (fwr1_start, fwr4_end) interval
 ### are returned.
+### TODO: Look into obtaining 'rseqs' (see below) directly from
+### the 'germline_alignment' column (or one of the '[vdj]_germline_alignment'
+### columns). If that works, then we can get rid of the 'germline_db' argument
+### which is inconvenient to use because it requires that the user still has
+### access to the germline or C-region db that was used by igblastn() to
+### produce 'AIRR_df'. In other words, .compute_mm_pos() would be able
+### to get everything it needs from 'AIRR_df' and nothing else, like
+### .compute_ins_pos() and .compute_del_pos().
 .compute_mm_pos <- function(AIRR_df, region_type, germline_db)
 {
     cigar <- .extract_cigar(AIRR_df, region_type)

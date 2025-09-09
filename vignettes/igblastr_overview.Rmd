@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 2 September 2025"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 8 September 2025"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -59,6 +59,8 @@ the package provides:
   region databases) from IMGT/V-QUEST.
 
 - Utility functions to parse the results returned by `igblastn()`.
+
+- A simple tool to vizualize the annotated sequences in a browser.
 
 - Utility functions to download data from OAS, the Observed Antibody
   Space database, and prepare it for use with IgBLAST.
@@ -170,22 +172,22 @@ First, we list the most recent IMGT/V-QUEST releases:
 head(list_IMGT_releases())
 ```
 
-The organisms included in release 202506-1 are:
+The organisms included in release 202518-3 are:
 ```{r}
-list_IMGT_organisms("202506-1")
+list_IMGT_organisms("202518-3")
 ```
 
 Next, we install the human germline database from the latest IMGT/V-QUEST
 release:
 ```{r, message=FALSE}
-install_IMGT_germline_db("202506-1", organism="Homo sapiens", force=TRUE)
+install_IMGT_germline_db("202518-3", organism="Homo sapiens", force=TRUE)
 ```
 See `?install_IMGT_germline_db` for more information.
 
 Finally, we select the newly installed germline database for use
 with `igblastn()`:
 ```{r}
-use_germline_db("IMGT-202506-1.Homo_sapiens.IGH+IGK+IGL")
+use_germline_db("IMGT-202518-3.Homo_sapiens.IGH+IGK+IGL")
 ```
 See `?use_germline_db` for more information.
 
@@ -283,8 +285,8 @@ By default, the result is a tibble in AIRR format:
 AIRR_df
 ```
 
-You can call `igbrowser()` on `AIRR_df` to vizualize the annotated
-sequences in the browser. For each sequence, the V, D, J, and C segments
+You can call `igbrowser()` on `AIRR_df` to visualize the annotated
+sequences in a browser. For each sequence, the V, D, J, and C segments
 will be shown as well as the FWR1-4 and CDR1-3 regions.
 
 See `?igblastn` and `?igbrowser` for more information.
@@ -435,23 +437,17 @@ supplying the `germline_db_V_seqidlist` argument.
 
 
 At the moment, the `r Biocpkg("igblastr")` package does not provide
-access to the full functionality of the IgBLAST software. In particular,
-the `igblastn()` function only supports the analysis of B-cell receptor (BCR)
-sequences. Also, the `igblastp` _standalone executable_ included in IgBLAST
-has no counterpart in `r Biocpkg("igblastr")`.
+access to the full functionality of the IgBLAST software. Most notably,
+the `igblastp` _standalone executable_ included in IgBLAST has no
+counterpart in `r Biocpkg("igblastr")`.
 
 Some future developments include:
-
-- Adding support for T-cell receptor (TCR) sequence analysis.
-  This will require adding facilities to download and install TCR
-  oriented germline databases, and to configure them for use
-  with `igblastn(..., ig_seqtype="TCR")`.
 
 - Implement `igblastp()`, a wrapper to the `igblastp` _standalone executable_
   included in IgBLAST for protein-level alignments.
 
-- Facilities to retrieve germline databases from OGRDB, the AIRR Community’s
-  Open Germline Reference Database.
+- Add facilities to retrieve germline databases from OGRDB, the AIRR
+  Community’s Open Germline Reference Database.
 
 
 # Session information

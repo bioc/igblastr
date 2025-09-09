@@ -3,11 +3,11 @@
 \alias{igbrowser}
 \alias{bcr_browser}
 
-\title{Display annotated BCR sequences in the browser}
+\title{Display annotated BCR sequences in a browser}
 
 \description{
   Use \code{igbrowser()} to display the annotated BCR sequences
-  returned by \code{\link{igblastn}()} in the browser.
+  returned by \code{\link{igblastn}()} in a browser.
   For each sequence, the V, D, and J segments are shown as well as
   the FWR1-4 and CDR1-3 regions.
   Additionally, the C segments are shown if the C-region information
