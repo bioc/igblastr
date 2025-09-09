@@ -107,7 +107,6 @@ list_IMGT_organisms <- function(release)
 ### install_IMGT_germline_db()
 ###
 
-### Requires Perl.
 install_IMGT_germline_db <- function(release, organism="Homo sapiens",
                                      tcr.db=FALSE, force=FALSE, ...)
 {
@@ -148,5 +147,34 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     message("as the germline database to use with igblastn().")
 
     invisible(db_name)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### validate_redit_imgt_file_on_IMGT_release()
+###
+### On Sep 9, 2025, running validate_redit_imgt_file_on_IMGT_release() on
+### releases 202343-3, 202405-2, 202518-3 and 202530-1, produced the
+### following results:
+### - 202330-1:  0 failures
+### - 202343-3:  5 failures (5/5 TR files for Mus_musculus_C57BL6J)
+### - 202405-2: 16 failures (6/7 IG + 10/10 TR files for Mus_musculus_C57BL6J)
+### - 202518-3: 16 failures (6/7 IG + 10/10 TR files for Mus_musculus_C57BL6J)
+### - 202530-1:  0 failures
+### The failures on various Mus_musculus_C57BL6J files are expected and due
+### to Perl script edit_imgt_file.pl not working properly on these files.
+### See R/edit_imgt_file.R for more information.
+###
+
+### Used in unit tests. Requires Perl!
+### Returns number of failures.
+validate_redit_imgt_file_on_IMGT_release <- function(release, ...)
+{
+    release <- .validate_IMGT_release(release)
+    ## Download IMGT/V-QUEST release to local store if it's not there already.
+    local_store <- .path_to_IMGT_local_store(release)
+    if (!dir.exists(local_store))
+        download_and_unzip_IMGT_release(release, local_store, ...)
+    validate_redit_imgt_file(local_store, recursive=TRUE)
 }
 

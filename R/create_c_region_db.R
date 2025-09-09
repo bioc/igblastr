@@ -55,8 +55,6 @@ get_loci_from_input_c_region_fasta_set <-
     stop(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", wmsg(msg3))
 }
 
-### Perl required!
-###
 ### Creates a C-region db (constant regions) from a collection of FASTA
 ### files (typically obtained from IMGT) for a given organism.
 ### Note that 'destdir' will typically be the path to a subdir of the
@@ -70,9 +68,7 @@ create_c_region_db <- function(fasta_dir, destdir, tcr.db=FALSE, force=FALSE)
         stop(wmsg("'force' must be TRUE or FALSE"))
     if (dir.exists(destdir) && !force)
         .stop_on_existing_c_region_db(destdir)
-    ## get_edit_imgt_file_Perl_script() also checks that Perl script
-    ## edit_imgt_file.pl is available and that Perl is functioning.
-    edit_imgt_file_Perl_script <- get_edit_imgt_file_Perl_script()
+
     fasta_files <- .list_C_fasta_files(fasta_dir, tcr.db=tcr.db)
     fasta_files <- file.path(fasta_dir, fasta_files)
 
@@ -84,8 +80,7 @@ create_c_region_db <- function(fasta_dir, destdir, tcr.db=FALSE, force=FALSE)
     tmp_destdir <- tempfile("c_region_db_")
     dir.create(tmp_destdir, recursive=TRUE)
     on.exit(nuke_file(tmp_destdir))
-    create_region_db(fasta_files, tmp_destdir, region_type="C",
-                     edit_imgt_file_Perl_script=edit_imgt_file_Perl_script)
+    create_region_db(fasta_files, tmp_destdir, region_type="C")
     rename_file(tmp_destdir, destdir, replace=TRUE)
 }
 

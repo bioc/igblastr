@@ -7,12 +7,6 @@
 ### .create_builtin_germline_dbs()
 ###
 
-### Do NOT call this in .onLoad()! It relies on create_germline_db()
-### which requires that Perl and a valid IgBLAST installation (for
-### the 'edit_imgt_file.pl' script) are already available on the machine.
-### However, none of these things are guaranteed to be available at load-time,
-### especially if it's the first time that the package gets loaded on the user
-### machine (e.g. right after installing the package from source).
 .create_builtin_germline_dbs <- function(destdir)
 {
     stopifnot(isSingleNonWhiteString(destdir), !dir.exists(destdir))

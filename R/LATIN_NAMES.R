@@ -1,7 +1,7 @@
 ### A named character vector that represents a list of key/value pairs,
 ### where the keys are the short names used by IgBLAST for the 5 organisms
 ### that it officially supports. See function list_igblast_organisms() in
-### file igblast_info.R.
+### file R/igblast_info.R.
 
 LATIN_NAMES <- c(
     human="Homo sapiens",

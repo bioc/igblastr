@@ -301,7 +301,7 @@ igblast_info()
 filenames <- paste0(c("heavy", "light"), "_sequences.fasta")
 query <- system.file(package="igblastr", "extdata", filenames)
 
-## Install Human germline db from IMGT (Perl required!):
+## Install Human germline db from IMGT:
 db_name <- install_IMGT_germline_db("202518-3", "Homo_sapiens", force=TRUE)
 
 ## Select germline db to use with igblastn():

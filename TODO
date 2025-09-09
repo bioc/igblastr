@@ -1,19 +1,9 @@
 High-priority TODO list
 =======================
 
-- BUG: Perl script edit_imgt_file.pl fails to clean the headers of IMGT
-  FASTA files provided for Mus_musculus_C57BL6J germline dbs.
-  For example, installing any of the following germline dbs breaks
-  list_germline_dbs(long.listing=TRUE) because most headers in the
-  resulting V.fasta/D.fasta/J.fasta files are still the original
-  messy 15-field headers:
-    IMGT-202405-2.Mus_musculus_C57BL6J.IGH+IGK+IGL
-    IMGT-202405-2.Mus_musculus_C57BL6J.TRA+TRB+TRG+TRD
-    IMGT-202518-3.Mus_musculus_C57BL6J.IGH+IGK+IGL
-    IMGT-202518-3.Mus_musculus_C57BL6J.TRA+TRB+TRG+TRD
-  So maybe we need to implement our own header cleaning routine and stop
-  relying on edit_imgt_file.pl. This would allow us to get rid of the
-  dependency on Perl which would be good ridance anyways!
+- Implement rm_germline_db() to let the user remove a germline db. It
+  should refuse to remove a built-in db. Also in the case of a selected db,
+  it should reset to a no-selection state.
 
 - igbrowser() improvements:
   - Display pairwise alignment between BCR query sequence and germline

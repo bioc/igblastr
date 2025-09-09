@@ -155,17 +155,17 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
 ###
 
 ### All prefixes must have the same length.
-.tabulate_gene_names_by_prefix <- function(gene_names, prefixes)
+.tabulate_allele_names_by_prefix <- function(allele_names, prefixes)
 {
-    stopifnot(is.character(gene_names),
+    stopifnot(is.character(allele_names),
               is.character(prefixes), length(prefixes) >= 1L)
     nc <- nchar(prefixes)
     stopifnot(all(nc == nc[[1L]]))
-    gene_prefixes <- substr(gene_names, 1L, nc)
-    m <- match(gene_prefixes, prefixes)
+    allele_prefixes <- substr(allele_names, 1L, nc)
+    m <- match(allele_prefixes, prefixes)
     if (anyNA(m)) {
         in1string <- paste0(prefixes, collapse=", ")
-        stop(wmsg("not all gene names start with one of the ",
+        stop(wmsg("not all allele names start with one of the ",
                   "following prefixes: ", in1string))
     }
     setNames(tabulate(m, length(prefixes)), prefixes)
@@ -178,9 +178,9 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
     vdj_counts <- lapply(VDJ_REGION_TYPES,
         function(region_type) {
             fasta_file <- get_db_fasta_file(db_path, region_type)
-            gene_names <- names(fasta.seqlengths(fasta_file))
-            counts <- .tabulate_gene_names_by_prefix(gene_names, loci)
-            stopifnot(sum(counts) == length(gene_names),
+            allele_names <- names(fasta.seqlengths(fasta_file))
+            counts <- .tabulate_allele_names_by_prefix(allele_names, loci)
+            stopifnot(sum(counts) == length(allele_names),
                       identical(names(counts), loci))
             counts
         }
@@ -195,8 +195,8 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
 {
     stopifnot(isSingleNonWhiteString(db_path), is.character(loci))
     fasta_file <- get_db_fasta_file(db_path, "C")
-    gene_names <- names(fasta.seqlengths(fasta_file))
-    .tabulate_gene_names_by_prefix(gene_names, loci)
+    allele_names <- names(fasta.seqlengths(fasta_file))
+    .tabulate_allele_names_by_prefix(allele_names, loci)
 }
 
 

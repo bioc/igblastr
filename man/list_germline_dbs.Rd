@@ -158,7 +158,7 @@ list_germline_dbs(builtin.only=TRUE, names.only=TRUE)  # db names only
 list_germline_dbs(long.listing=TRUE)
 
 if (IMGT_is_up()) {
-  ## Install Mouse germline db from IMGT (Perl required!):
+  ## Install Mouse germline db from IMGT:
   install_IMGT_germline_db("202518-3", "Mus_musculus", force=TRUE)
 
   list_germline_dbs()  # all germline dbs

@@ -97,18 +97,14 @@ get_loci_from_input_germline_fasta_set <-
 }
 
 ### Create the three "region dbs": one V-, one D-, and one J-region db.
-.create_VDJ_region_dbs <- function(fasta_dir, destdir, tcr.db,
-                                   edit_imgt_file_Perl_script)
+.create_VDJ_region_dbs <- function(fasta_dir, destdir, tcr.db)
 {
     for (region_type in VDJ_REGION_TYPES) {
         fasta_files <- .list_fasta_files(fasta_dir, region_type)
-        create_region_db(fasta_files, destdir, region_type=region_type,
-                         edit_imgt_file_Perl_script=edit_imgt_file_Perl_script)
+        create_region_db(fasta_files, destdir, region_type=region_type)
     }
 }
 
-### Perl required!
-###
 ### A "germline db" is made of three "region dbs": one V-, one D-, and one
 ### J-region db. Calls create_region_db() to create each "region db".
 ### Note that 'destdir' will typically be the path to a subdir of the
@@ -124,9 +120,6 @@ create_germline_db <- function(fasta_dir, destdir, tcr.db=FALSE, force=FALSE)
     stopifnot(isSingleNonWhiteString(destdir))
     if (dir.exists(destdir) && !force)
         .stop_on_existing_germline_db(destdir)
-    ## get_edit_imgt_file_Perl_script() also checks that Perl script
-    ## edit_imgt_file.pl is available and that Perl is functioning.
-    edit_imgt_file_Perl_script <- get_edit_imgt_file_Perl_script()
 
     ## We ignore the returned loci. Only purpose is to check the set
     ## of input germline FASTA files.
@@ -141,8 +134,7 @@ create_germline_db <- function(fasta_dir, destdir, tcr.db=FALSE, force=FALSE)
     tmp_destdir <- tempfile("germline_db_")
     dir.create(tmp_destdir, recursive=TRUE)
     on.exit(nuke_file(tmp_destdir))
-    .create_VDJ_region_dbs(fasta_dir, tmp_destdir, tcr.db,
-                           edit_imgt_file_Perl_script)
+    .create_VDJ_region_dbs(fasta_dir, tmp_destdir, tcr.db)
     rename_file(tmp_destdir, destdir, replace=TRUE)
 }
 

@@ -41,7 +41,7 @@
     if (isTRUE(attr(novel_fasta, "safe_to_remove")))
         on.exit(unlink(novel_fasta))
     edited_novel_fasta <- tempfile("edited_novel_fasta_", fileext = ".fasta")
-    edit_imgt_file(novel_fasta, edited_novel_fasta)
+    redit_imgt_file(novel_fasta, edited_novel_fasta)
     edited_novel_fasta
 }
 
@@ -51,7 +51,7 @@
 ###
 
 ### 'alleles' must be the path to a FASTA file that is assumed to have been
-### processed with Perl script 'edit_imgt_file.pl'.
+### processed with redit_imgt_file().
 .extract_allele_names <- function(alleles, in_what)
 {
     stopifnot(isSingleNonWhiteString(alleles))

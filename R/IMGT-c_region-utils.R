@@ -180,7 +180,7 @@
 
 ### Reflects the IG C-region sequence sets available in IMGT/GENE-DB for
 ### the 5 official IgBLAST organisms as of Aug 21, 2025.
-### See file LATIN_NAMES.R for more information.
+### See file R/LATIN_NAMES.R for more information.
 .IMGT_IG_C_SEQUENCE_SETS <- list(
     human=list(
         `7.2`=c("IGHC", "IGKC", "IGLC"),

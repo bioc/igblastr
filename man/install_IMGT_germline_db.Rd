@@ -118,10 +118,6 @@ IMGT_is_up()
   \code{install_IMGT_germline_db()} generates the local
   database by performing the instructions provided at
   \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html}.
-
-  In particular, utility tool \emph{edit_imgt_file.pl} (Perl script
-  included in the IgBLAST installation) is invoked to process the
-  sequences. This means that Perl must be available on your machine.
 }
 
 \seealso{
