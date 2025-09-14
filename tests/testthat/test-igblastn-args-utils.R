@@ -4,7 +4,8 @@ test_that("make_igblastn_command_line_args()", {
         igblastr:::make_igblastn_command_line_args
     CORE_ARGNAMES <- c("query", "outfmt",
                        paste0("germline_db_", c("V", "D", "J")),
-                       "organism")
+                       "organism", "ig_seqtype")
+    organism_idx <- match("organism", CORE_ARGNAMES)
 
     ## For this test, we use invalid V-, D-, J-region dbs but
     ## make_igblastn_command_line_args() should still accept them.
@@ -19,7 +20,8 @@ test_that("make_igblastn_command_line_args()", {
                      germline_db_J=germline_db_J,
                      organism="rhesus_monkey",
                      c_region_db=NULL,
-                     auxiliary_data=NULL)
+                     auxiliary_data=NULL,
+                     ig_seqtype="Ig")
     expect_true(is.character(cmd_args))
     expect_identical(names(cmd_args), CORE_ARGNAMES)
 
@@ -37,7 +39,7 @@ test_that("make_igblastn_command_line_args()", {
     cmd_args <- make_igblastn_command_line_args("path/to/query",
                                                 c_region_db=NULL)
     expect_true(is.character(cmd_args))
-    expected_argnames <- c(CORE_ARGNAMES, "auxiliary_data")
+    expected_argnames <- append(CORE_ARGNAMES, "auxiliary_data", organism_idx)
     expect_identical(names(cmd_args), expected_argnames)
 
     use_c_region_db("")
@@ -51,12 +53,14 @@ test_that("make_igblastn_command_line_args()", {
     cmd_args <- make_igblastn_command_line_args("path/to/query",
                                                 auxiliary_data=NULL)
     expect_true(is.character(cmd_args))
-    expected_argnames <- c(CORE_ARGNAMES, "c_region_db")
+    expected_argnames <- append(CORE_ARGNAMES, "c_region_db", organism_idx)
     expect_identical(names(cmd_args), expected_argnames)
 
     cmd_args <- make_igblastn_command_line_args("path/to/query")
     expect_true(is.character(cmd_args))
-    expected_argnames <- c(CORE_ARGNAMES, "c_region_db", "auxiliary_data")
+    expected_argnames <- append(CORE_ARGNAMES,
+                                c("c_region_db", "auxiliary_data"),
+                                organism_idx)
     expect_identical(names(cmd_args), expected_argnames)
 })
 
