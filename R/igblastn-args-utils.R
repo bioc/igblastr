@@ -360,7 +360,8 @@ make_igblastn_command_line_args <-
                   germline_db_J_seqidlist=germline_db_J_seqidlist,
                   organism=organism,
                   c_region_db=c_region_db,
-                  auxiliary_data=auxiliary_data)
+                  auxiliary_data=auxiliary_data,
+                  ig_seqtype=ig_seqtype)
 
     xargs <- .extra_args_as_named_character(...)
     .check_igblastn_extra_args(xargs)
