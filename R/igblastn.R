@@ -123,8 +123,11 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
 ### Must return an absolute path.
 .normarg_out <- function(out)
 {
-    if (is.null(out))
-        return(tempfile("igblastn_out_", fileext=".txt"))
+    if (is.null(out)) {
+        out <- tempfile("igblastn_out_", fileext=".txt")
+        attr(out, "safe_to_remove") <- TRUE
+        return(out)
+    }
     if (!isSingleNonWhiteString(out))
         stop(wmsg("'out' must be NULL or a single (non-empty) string"))
     dirpath <- dirname(out)
@@ -142,13 +145,26 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
 ### .parse_igblastn_out()
 ###
 
-.fix_AIRR_logical_cols <- function(AIRR_df)
+.sanitize_AIRR_df <- function(AIRR_df)
 {
-    stopifnot(is.data.frame(AIRR_df))
+    stopifnot(is.data.frame(AIRR_df),
+              is.character(AIRR_df[ , "sequence_id"]),
+              is.character(AIRR_df[ , "sequence"]),
+              is.character(AIRR_df[ , "sequence_aa"]),
+              is.character(AIRR_df[ , "locus"]))
+
+    CHARACTER_COLS <- paste0(c("v", "d", "j"), "_call")
+    for (colname in CHARACTER_COLS)
+        AIRR_df[ , colname] <- as.character(AIRR_df[ , colname])
+    c_call <- AIRR_df$c_call
+    if (!is.null(c_call))
+        AIRR_df$c_call <- as.character(c_call)
+
     LOGICAL_COLS <- c("stop_codon", "vj_in_frame", "v_frameshift",
                       "productive", "rev_comp", "complete_vdj", "d_frame")
     for (colname in LOGICAL_COLS)
         AIRR_df[ , colname] <- as.logical(AIRR_df[ , colname])
+
     AIRR_df
 }
 
@@ -166,7 +182,7 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
         ## or F (Phe).
         AIRR_df <- read.table(out, header=TRUE, sep="\t",
                               tryLogical=FALSE, na.strings="")
-        return(.fix_AIRR_logical_cols(AIRR_df))
+        return(.sanitize_AIRR_df(AIRR_df))
     }
     out_lines <- readLines(out)
     if (outfmt_nb == 7L)
@@ -236,6 +252,7 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
     .parse_and_issue_warnings(stderr_file)
     if (status != 0)
         .stop_on_igblastn_exe_error(stderr_file)
+    unlink(stderr_file)
 }
 
 igblastn <- function(query, outfmt="AIRR",
@@ -248,9 +265,9 @@ igblastn <- function(query, outfmt="AIRR",
                      out=NULL, parse.out=TRUE,
                      show.in.browser=FALSE, show.command.only=FALSE)
 {
-    if (is.null(out))
-        on.exit(unlink(out))
     out <- .normarg_out(out)
+    if (isTRUE(attr(out, "safe_to_remove")))
+        on.exit(unlink(out))
     if (!isTRUEorFALSE(parse.out))
         stop(wmsg("'parse.out' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(show.in.browser))

@@ -24,6 +24,15 @@ High-priority TODO list
   data.frame as additional columns or not. Should be FALSE by default.
   E.g. 'bind.results=FALSE'.
 
+- Maybe implement the following advice given by IgBLAST when using one
+  of the num_alignments_V/D/J arguments:
+
+  Warning messages:
+  1: In .parse_and_issue_warnings(stderr_file) :
+    Warning: To obtain better run time performance, please run blastdb_aliastool
+    -seqid_file_in <INPUT_FILE_NAME> -seqid_file_out <OUT_FILE_NAME> and use
+    <OUT_FILE_NAME> as the argument to -seqidlist
+
 - Add igblastp(), a wrapper to the igblastp standalone executable included
   in IgBLAST. Requested by Dr Iman Haddad in an email from Aug 12, 2025.
 
