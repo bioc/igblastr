@@ -117,31 +117,6 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .normarg_out()
-###
-
-### Must return an absolute path.
-.normarg_out <- function(out)
-{
-    if (is.null(out)) {
-        out <- tempfile("igblastn_out_", fileext=".txt")
-        attr(out, "safe_to_remove") <- TRUE
-        return(out)
-    }
-    if (!isSingleNonWhiteString(out))
-        stop(wmsg("'out' must be NULL or a single (non-empty) string"))
-    dirpath <- dirname(out)
-    if (!dir.exists(dirpath))
-        stop(wmsg(dirpath, ": no such directory"))
-    dirpath <- file_path_as_absolute(dirpath)
-    out <- file.path(dirpath, basename(out))
-    if (file.exists(out))
-        stop(wmsg(out, ": file exists"))
-    out
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .parse_igblastn_out()
 ###
 
@@ -265,9 +240,6 @@ igblastn <- function(query, outfmt="AIRR",
                      out=NULL, parse.out=TRUE,
                      show.in.browser=FALSE, show.command.only=FALSE)
 {
-    out <- .normarg_out(out)
-    if (isTRUE(attr(out, "safe_to_remove")))
-        on.exit(unlink(out))
     if (!isTRUEorFALSE(parse.out))
         stop(wmsg("'parse.out' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(show.in.browser))
@@ -277,24 +249,36 @@ igblastn <- function(query, outfmt="AIRR",
 
     igblast_root <- get_igblast_root()
     query <- .normarg_query(query)
-    if (isTRUE(attr(query, "safe_to_remove")))
-        on.exit(unlink(query), add=TRUE)
     outfmt <- .normarg_outfmt(outfmt)
     outfmt_nb <- .extract_outfmt_nb(outfmt)
+
+    ## Collect arguments that will be passed to igblastn standalone executable.
     cmd_args <- make_igblastn_command_line_args(
-                     query, outfmt=outfmt,
-                     germline_db_V=germline_db_V,
-                     germline_db_V_seqidlist=germline_db_V_seqidlist,
-                     germline_db_D=germline_db_D,
-                     germline_db_D_seqidlist=germline_db_D_seqidlist,
-                     germline_db_J=germline_db_J,
-                     germline_db_J_seqidlist=germline_db_J_seqidlist,
-                     organism=organism,
-                     c_region_db=c_region_db,
-                     auxiliary_data=auxiliary_data,
-                     ig_seqtype=ig_seqtype,
-                     ...)
-    exe_args <- make_exe_args(c(cmd_args, out=out))
+                          query, outfmt=outfmt,
+                          germline_db_V=germline_db_V,
+                          germline_db_V_seqidlist=germline_db_V_seqidlist,
+                          germline_db_D=germline_db_D,
+                          germline_db_D_seqidlist=germline_db_D_seqidlist,
+                          germline_db_J=germline_db_J,
+                          germline_db_J_seqidlist=germline_db_J_seqidlist,
+                          organism=organism,
+                          c_region_db=c_region_db,
+                          auxiliary_data=auxiliary_data,
+                          ig_seqtype=ig_seqtype,
+                          ...,
+                          out=out)
+
+    ## Set "safe_to_remove" files for removal on exit.
+    remove_idx <- which(vapply(cmd_args,
+        function(arg) isTRUE(attr(arg, "safe_to_remove")),
+        logical(1)))
+    if (length(remove_idx) != 0L) {
+        files_to_remove_on_exit <- as.character(cmd_args[remove_idx])
+        on.exit(unlink(files_to_remove_on_exit))
+    }
+
+    ## Put arguments in command line format.
+    exe_args <- make_exe_args(cmd_args)
 
     if (show.command.only) {
         ans <- .show_igblastn_command(igblast_root, exe_args,
@@ -307,24 +291,24 @@ igblastn <- function(query, outfmt="AIRR",
 
     if (outfmt_nb == 19L) {
         if (show.in.browser || parse.out)
-            AIRR_df <- .parse_igblastn_out(out, outfmt_nb)
+            AIRR_df <- .parse_igblastn_out(cmd_args$out, outfmt_nb)
         if (show.in.browser)
             display_data_frame_in_browser(AIRR_df)
         if (parse.out) {
             ans  <- tibble(AIRR_df)
         } else {
-            ans <- readLines(out)
+            ans <- readLines(cmd_args$out)
             class(ans) <- "igblastn_raw_output"
         }
         return(ans)
     }
 
     if (show.in.browser)
-        display_local_file_in_browser(out)
+        display_local_file_in_browser(cmd_args$out)
     if (parse.out) {
-        ans <- .parse_igblastn_out(out, outfmt_nb)
+        ans <- .parse_igblastn_out(cmd_args$out, outfmt_nb)
     } else {
-        ans <- readLines(out)
+        ans <- readLines(cmd_args$out)
         class(ans) <- "igblastn_raw_output"
     }
     ans

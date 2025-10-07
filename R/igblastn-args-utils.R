@@ -105,6 +105,7 @@
         stop(wmsg("character vector 'seqidlist' contains ",
                   "empty or white strings"))
     path <- tempfile()
+    attr(path, "safe_to_remove") <- TRUE
     writeLines(seqidlist, path)
     path
 }
@@ -312,19 +313,50 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .normarg_out()
+###
+
+### Must return an **absolute** path.
+.normarg_out <- function(out)
+{
+    if (is.null(out)) {
+        out <- tempfile("igblastn_out_", fileext=".txt")
+        attr(out, "safe_to_remove") <- TRUE
+        return(out)
+    }
+    if (!isSingleNonWhiteString(out))
+        stop(wmsg("'out' must be NULL or a single (non-empty) string"))
+    dirpath <- dirname(out)
+    if (!dir.exists(dirpath))
+        stop(wmsg(dirpath, ": no such directory"))
+    dirpath <- file_path_as_absolute(dirpath)
+    out <- file.path(dirpath, basename(out))
+    if (file.exists(out))
+        stop(wmsg(out, ": file exists"))
+    out
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### make_igblastn_command_line_args()
 ###
 
-### Returns the arguments in a named character vector where the names
-### are valid igblastn command line argument names (e.g. "organism")
-### and the values valid argument values (e.g. "rabbit").
+### Returns the arguments in a named list of single strings where the names
+### are valid igblastn command line argument names (e.g. "organism") and the
+### valid argument values (e.g. "rabbit").
+### Note that the reason we return a list and not a character vector is
+### because we sometimes need to put attributes on some of the strings
+### e.g. sometimes we need to put the "safe_to_remove" attribute on
+### the 'germline_db_[VDJ]_seqidlist' arguments.
 make_igblastn_command_line_args <-
     function(query, outfmt="AIRR",
              germline_db_V="auto", germline_db_V_seqidlist=NULL,
              germline_db_D="auto", germline_db_D_seqidlist=NULL,
              germline_db_J="auto", germline_db_J_seqidlist=NULL,
              organism="auto", c_region_db="auto",
-             auxiliary_data="auto", ig_seqtype="auto", ...)
+             auxiliary_data="auto", ig_seqtype="auto",
+             ...,
+             out=NULL)
 {
     stopifnot(isSingleNonWhiteString(query),
               isSingleNonWhiteString(outfmt))
@@ -351,21 +383,24 @@ make_igblastn_command_line_args <-
     auxiliary_data <- .normarg_auxiliary_data(auxiliary_data, organism)
     ig_seqtype <- .normarg_ig_seqtype(ig_seqtype)
 
-    cmd_args <- c(query=query, outfmt=outfmt,
-                  germline_db_V=germline_db_V,
-                  germline_db_V_seqidlist=germline_db_V_seqidlist,
-                  germline_db_D=germline_db_D,
-                  germline_db_D_seqidlist=germline_db_D_seqidlist,
-                  germline_db_J=germline_db_J,
-                  germline_db_J_seqidlist=germline_db_J_seqidlist,
-                  organism=organism,
-                  c_region_db=c_region_db,
-                  auxiliary_data=auxiliary_data,
-                  ig_seqtype=ig_seqtype)
+    cmd_args <- list(query=query, outfmt=outfmt,
+                     germline_db_V=germline_db_V,
+                     germline_db_V_seqidlist=germline_db_V_seqidlist,
+                     germline_db_D=germline_db_D,
+                     germline_db_D_seqidlist=germline_db_D_seqidlist,
+                     germline_db_J=germline_db_J,
+                     germline_db_J_seqidlist=germline_db_J_seqidlist,
+                     organism=organism,
+                     c_region_db=c_region_db,
+                     auxiliary_data=auxiliary_data,
+                     ig_seqtype=ig_seqtype)
 
     xargs <- .extra_args_as_named_character(...)
     .check_igblastn_extra_args(xargs)
-    c(cmd_args, xargs)
+
+    out <- .normarg_out(out)
+
+    S4Vectors:::delete_NULLs(c(cmd_args, as.list(xargs), list(out=out)))
 }
 
 
@@ -373,14 +408,15 @@ make_igblastn_command_line_args <-
 ### make_exe_args()
 ###
 
-### 'cmd_args' must be a named character vector as returned
-### by make_igblastn_command_line_args() above.
+### 'cmd_args' must be a named list of single strings character as
+### returned by make_igblastn_command_line_args() above.
 ### Returns an **unnamed** character vector parallel to 'cmd_args'.
 make_exe_args <- function(cmd_args)
 {
-    stopifnot(is.character(cmd_args))
+    stopifnot(is.list(cmd_args), all(lengths(cmd_args) == 1L))
     args_names <- names(cmd_args)
     stopifnot(!is.null(args_names))
+    cmd_args <- as.character(cmd_args)
     ## For now we only put quotes around arguments that contain a space.
     ## Should we preventively quote all arguments, just in case?
     quoteme_idx <- grep(" ", cmd_args, fixed=TRUE)
