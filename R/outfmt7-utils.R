@@ -254,6 +254,7 @@ print.subregion_sequence_details <- print.VDJ_rearrangement_summary
                 "gaps", "percent_identity")
     table_lines <- section_lines[!has_prefix(section_lines, prefix="#")]
     file <- tempfile()
+    on.exit(unlink(file))
     writeLines(table_lines, file)
     df <- read.table(file, sep="\t", row.names=1L)
     colnames(df) <- fields
@@ -309,6 +310,7 @@ print.alignment_summary <- function(x, ...)
     fields <- c("chaintype", .parse_hit_table_fields(section_lines))
     table_lines <- section_lines[!has_prefix(section_lines, prefix="#")]
     file <- tempfile()
+    on.exit(unlink(file))
     writeLines(table_lines, file)
     read.table(file, sep="\t", col.names=fields, check.names=FALSE,
                comment.char="")
