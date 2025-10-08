@@ -8,16 +8,18 @@
 \title{List cached C-region dbs and select one to use with igblastn()}
 
 \description{
-  Use \code{list_c_region_dbs()} to list all the \emph{cached C-region dbs},
-  that is, all the C-region databases currently installed in \pkg{igblastr}'s
-  persistent cache.
-
-  Use \code{use_c_region_db()} to select the cached C-region db to use with
-  \code{\link{igblastn}()}. This choice will be remembered for the duration
-  of the current R session but can be changed anytime.
-
-  Use \code{load_c_region_db()} to load the nucleotide sequences of the
-  gene regions stored in a cached C-region db.
+  A small set of utilities for basic manipulation of \emph{cached
+  C-region dbs}:
+  \itemize{
+    \item \code{list_c_region_dbs()}: List all the \emph{cached C-region dbs},
+          that is, all the C-region databases currently installed in
+          \pkg{igblastr}'s persistent cache.
+    \item \code{use_c_region_db()}: Select the cached C-region db to use with
+          \code{\link{igblastn}()}. This choice will be remembered for the
+          duration of the current R session but can be changed anytime.
+    \item \code{load_c_region_db()}: Load the nucleotide sequences of the
+          gene regions stored in a cached C-region db.
+  }
 }
 
 \usage{
@@ -76,9 +78,9 @@ load_c_region_db(db_name)
 }
 
 \details{
-  The \pkg{igblastr} package provides a small set of utilities to
-  manage the cached germline and C-region databases to use with
-  \code{\link{igblastn}()}.
+  The \pkg{igblastr} package provides utility functions to perform basic
+  manipulation of the cached germline databases and cached C-region databases
+  to use with \code{\link{igblastn}()}.
 
   Terminology:
   \itemize{
@@ -88,11 +90,11 @@ load_c_region_db(db_name)
           the C regions (i.e. constant gene regions) for a given organism.
   }
 
-  This man page documents the basic utilities to operate on cached
+  This man page documents the basic utilities to operate on the cached
   C-region dbs: \code{list_c_region_dbs()}, \code{use_c_region_db()},
   and \code{load_c_region_db()}.
 
-  The basic utilities to operate on cached germline dbs are documented
+  The basic utilities to operate on the cached germline dbs are documented
   in the man page for \code{\link{list_germline_dbs}}.
 }
 

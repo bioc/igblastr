@@ -86,6 +86,7 @@ export(
     list_germline_dbs,
     use_germline_db,
     load_germline_db,
+    rm_germline_db,
 
     ## list_c_region_dbs.R:
     list_c_region_dbs,

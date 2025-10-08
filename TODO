@@ -1,10 +1,6 @@
 High-priority TODO list
 =======================
 
-- Implement rm_germline_db() to let the user remove a germline db. It
-  should refuse to remove a built-in db. Also in the case of a selected db,
-  it should reset to a no-selection state.
-
 - igbrowser() improvements:
   - Display pairwise alignment between BCR query sequence and germline
     V/D/J/C sequences.

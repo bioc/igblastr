@@ -4,20 +4,25 @@
 \alias{print.germline_dbs_df}
 \alias{use_germline_db}
 \alias{load_germline_db}
+\alias{rm_germline_db}
 
 \title{List cached germline dbs and select one to use with igblastn()}
 
 \description{
-  Use \code{list_germline_dbs()} to list all the \emph{cached germline dbs},
-  that is, all the germline databases currently installed in \pkg{igblastr}'s
-  persistent cache.
-
-  Use \code{use_germline_db()} to select the cached germline db to use with
-  \code{\link{igblastn}()}. This choice will be remembered for the duration
-  of the current R session but can be changed anytime.
-
-  Use \code{load_germline_db()} to load the nucleotide sequences of the
-  gene regions stored in a cached germline db.
+  A small set of utilities for basic manipulation of \emph{cached
+  germline dbs}:
+  \itemize{
+    \item \code{list_germline_dbs()}: List all the \emph{cached germline dbs},
+          that is, all the germline databases currently installed in
+          \pkg{igblastr}'s persistent cache.
+    \item \code{use_germline_db()}: Select the cached germline db to use with
+          \code{\link{igblastn}()}. This choice will be remembered for the
+          duration of the current R session but can be changed anytime.
+    \item \code{load_germline_db()}: Load the nucleotide sequences of the
+          gene regions stored in a cached germline db.
+    \item \code{rm_germline_db()}: Remove a germline db from \pkg{igblastr}'s
+          persistent cache.
+  }
 }
 
 \usage{
@@ -26,6 +31,8 @@ list_germline_dbs(builtin.only=FALSE, names.only=FALSE, long.listing=FALSE)
 use_germline_db(db_name=NULL, verbose=FALSE)
 
 load_germline_db(db_name, region_types=NULL)
+
+rm_germline_db(db_name)
 }
 
 \arguments{
@@ -66,6 +73,11 @@ load_germline_db(db_name, region_types=NULL)
     A single string specifying the name of the cached germline db
     from which to load the V, D, and/or J regions. Use
     \code{list_germline_dbs()} to list all the cached germline dbs.
+
+    For \code{rm_germline_db()}:
+
+    A single string specifying the name of the germline db to remove
+    from the cache. This cannot be a built-in db.
   }
   \item{verbose}{
     If set to \code{TRUE}, then \code{use_germline_db()} will display
@@ -81,9 +93,9 @@ load_germline_db(db_name, region_types=NULL)
 }
 
 \details{
-  The \pkg{igblastr} package provides a small set of utilities to
-  manage the cached germline and C-region databases to use with
-  \code{\link{igblastn}()}.
+  The \pkg{igblastr} package provides utility functions to perform basic
+  manipulation of the cached germline databases and cached C-region databases
+  to use with \code{\link{igblastn}()}.
 
   Terminology:
   \itemize{
@@ -93,11 +105,11 @@ load_germline_db(db_name, region_types=NULL)
           the C regions (i.e. constant gene regions) for a given organism.
   }
 
-  This man page documents the basic utilities to operate on cached
+  This man page documents the basic utilities to operate on the cached
   germline dbs: \code{list_germline_dbs()}, \code{use_germline_db()},
-  and \code{load_germline_db()}.
+  \code{load_germline_db()}, and \code{rm_germline_db()}.
 
-  The basic utilities to operate on cached C-region dbs are documented
+  The basic utilities to operate on the cached C-region dbs are documented
   in the man page for \code{\link{list_c_region_dbs}}.
 }
 
@@ -125,6 +137,8 @@ load_germline_db(db_name, region_types=NULL)
 
   \code{load_germline_db()} returns the nucleotide sequences from the
   specified germline db in a named \link[Biostrings]{DNAStringSet} object.
+
+  \code{rm_germline_db()} returns an invisible \code{NULL}.
 }
 
 \seealso{

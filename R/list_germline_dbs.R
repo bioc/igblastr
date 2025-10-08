@@ -236,3 +236,23 @@ clean_germline_blastdbs <- function()
     }
 }
 
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### rm_germline_db()
+###
+
+rm_germline_db <- function(db_name)
+{
+    check_germline_db_name(db_name)
+    if (has_prefix(db_name, "_"))
+        stop(wmsg("cannot remove a built-in germline db"))
+
+    germline_dbs_home <- get_germline_dbs_home(TRUE)  # guaranteed to exist
+    db_in_use_path <- get_db_in_use(germline_dbs_home, what="germline")
+    if (db_in_use_path != "" && basename(db_in_use_path) == db_name)
+        set_db_in_use("germline", "")  # cancel current selection
+
+    db_path <- make_germline_db_path(db_name)
+    nuke_file(db_path)
+}
+

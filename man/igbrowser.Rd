@@ -71,7 +71,7 @@ igbrowser(AIRR_df, show.full.sequence=FALSE, dna.coloring=TRUE,
 if (!has_igblast()) install_igblast()
 
 query <- system.file(package="igblastr", "extdata",
-                     "heavy_sequences.fasta")
+                     "BCR", "heavy_sequences.fasta")
 use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
 
 ## ---------------------------------------------------------------------

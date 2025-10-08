@@ -52,7 +52,7 @@ augment_germline_db_J(db_name, novel_alleles, destdir=".", overwrite=FALSE)
 }
 
 \value{
-  An invisible NULL.
+  An invisible \code{NULL}.
 }
 
 \seealso{
@@ -72,7 +72,7 @@ augment_germline_db_J(db_name, novel_alleles, destdir=".", overwrite=FALSE)
 if (!has_igblast()) install_igblast()
 
 query <- system.file(package="igblastr", "extdata",
-                     "heavy_sequences.fasta")
+                     "BCR", "heavy_sequences.fasta")
 
 use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
 

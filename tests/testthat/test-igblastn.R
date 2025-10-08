@@ -1,7 +1,8 @@
 test_that("igblastn(): basic operations", {
     use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
     use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
-    query <- system.file(package="igblastr", "extdata", "heavy_sequences.fasta")
+    query <- system.file(package="igblastr", "extdata",
+                         "BCR", "heavy_sequences.fasta")
     query <- readDNAStringSet(query)
 
     ## Call igblastn() on first 10 sequences.
@@ -52,7 +53,8 @@ test_that("igblastn(): basic operations", {
 test_that("igblastn(): germline_db_[VDJ]_seqidlist arguments", {
     use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
     use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
-    query <- system.file(package="igblastr", "extdata", "heavy_sequences.fasta")
+    query <- system.file(package="igblastr", "extdata",
+                         "BCR", "heavy_sequences.fasta")
     query10 <- head(readDNAStringSet(query), n=10L)
 
     temp_files0 <- list.files(tempdir(), all.files=TRUE, recursive=TRUE)

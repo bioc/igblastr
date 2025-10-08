@@ -65,7 +65,7 @@ if (!has_igblast()) install_igblast()
 ## sequences in each file) downloaded from OAS (the Observed Antibody
 ## Space database):
 filenames <- paste0(c("heavy", "light"), "_sequences.fasta")
-query <- system.file(package="igblastr", "extdata", filenames)
+query <- system.file(package="igblastr", "extdata", "BCR", filenames)
 
 ## Keep only the first 10 sequences from each file:
 query <- c(head(readDNAStringSet(query[[1L]]), n=10),

@@ -25,7 +25,8 @@
 }
 
 test_that("parse_outfmt7()", {
-    query <- system.file(package="igblastr", "extdata", "heavy_sequences.fasta")
+    query <- system.file(package="igblastr", "extdata",
+                         "BCR", "heavy_sequences.fasta")
     query <- head(readDNAStringSet(query), n=10)
     db_name <- "_AIRR.human.IGH+IGK+IGL.202501"
     use_germline_db(db_name)

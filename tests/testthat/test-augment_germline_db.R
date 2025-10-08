@@ -1,5 +1,6 @@
 test_that("augment_germline_db_*()", {
-    query <- system.file(package="igblastr", "extdata", "heavy_sequences.fasta")
+    query <- system.file(package="igblastr", "extdata",
+                         "BCR", "heavy_sequences.fasta")
     query <- readDNAStringSet(query)[c(1:2, 117:120)]
 
     db_name <- "_AIRR.human.IGH+IGK+IGL.202501"

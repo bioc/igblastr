@@ -288,18 +288,18 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
 \examples{
 if (!has_igblast()) install_igblast()
 
-## ---------------------------------------------------------------------
-## Preliminary steps
-## ---------------------------------------------------------------------
-
 igblast_info()
+
+## ---------------------------------------------------------------------
+## Access query sequences and select germline and C-region dbs to use
+## ---------------------------------------------------------------------
 
 ## Files 'heavy_sequences.fasta' and 'light_sequences.fasta' included
 ## in igblastr contain 250 paired heavy- and light- chain sequences (125
 ## sequences in each file) downloaded from OAS (the Observed Antibody
 ## Space database):
 filenames <- paste0(c("heavy", "light"), "_sequences.fasta")
-query <- system.file(package="igblastr", "extdata", filenames)
+query <- system.file(package="igblastr", "extdata", "BCR", filenames)
 
 ## Install Human germline db from IMGT:
 db_name <- install_IMGT_germline_db("202518-3", "Homo_sapiens", force=TRUE)
@@ -314,7 +314,8 @@ use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
 ## Call igblastn()
 ## ---------------------------------------------------------------------
 
-## We don't specify the 'outfmt' argument so output will be in AIRR format.
+## We don't specify the 'outfmt' argument so output will be in AIRR
+## format:
 AIRR_df <- igblastn(query)
 AIRR_df
 
@@ -336,6 +337,36 @@ as(AIRR_df, "DataFrame")
 query_21_30 <- readDNAStringSet(query)[21:30]
 query_21_30  # a DNAStringSet object with 10 sequences
 igblastn(query_21_30)
+
+## ---------------------------------------------------------------------
+## TCR analysis
+## ---------------------------------------------------------------------
+## NCBI IgBLAST can also be used for TCR sequence analysis, and so does
+## igblastn().
+
+## File 'SRR11341217.fasta.gz' included in igblastr contains 10,875 human
+## beta chain TCR transcripts running from 5' of reverse transcription
+## reaction to beginning of constant region:
+filename <- "SRR11341217.fasta.gz"
+query <- system.file(package="igblastr", "extdata", "TCR", filename)
+
+## For this example, we're only keeping the first 100 sequences:
+query <- head(readDNAStringSet(query), n=100)
+
+## Install Human TCR germline db from IMGT:
+db_name <- install_IMGT_germline_db("202518-3", "Homo_sapiens",
+                                    tcr.db=TRUE, force=TRUE)
+
+## Select germline db to use with igblastn():
+use_germline_db(db_name)
+
+## Select C-region db to use with igblastn():
+use_c_region_db("_IMGT.human.TRA+TRB+TRG+TRD.202509")
+
+## Call igblastn(). Note that the 'ig_seqtype' argument will be
+## automatically set to "TCR" (see documentation of the 'ig_seqtype'
+## argument above in this man page for more information):
+AIRR_df <- igblastn(query)
 
 ## ---------------------------------------------------------------------
 ## More examples
