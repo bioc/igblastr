@@ -164,6 +164,26 @@ make_germline_db_path <- function(db_name)
     basename(db_path)
 }
 
+.note_if_selecting_builtin_AIRR_src_db <- function(db_name)
+{
+    is_src_db <- has_prefix(db_name, "_AIRR.") && has_suffix(db_name, ".src")
+    if (!is_src_db)
+        return()
+    ref_db_name <- sub("\\.src$", "", db_name)
+    url <- "https://ogrdb.airr-community.org/germline_set/75"
+    msg1 <- c("Use ", db_name, " only if you know what you are doing.")
+    msg2 <- c("Note that the allele sequences in ", db_name, " come from ",
+              "the \"Source Set\" datasets provided by AIRR-community/OGRDB. ",
+              "However, the AIRR-community/OGRDB maintainers recommend ",
+              "using the allele sequences from the \"Reference Set\" ",
+              "datasets for AIRR-seq analysis (see for example ", url, "), ",
+              "which are provided by ", ref_db_name, ".")
+    msg3a <- "To suppress this message, use:"
+    msg3b <- c("suppressMessages(use_germline_db(\"", db_name, "\"))")
+    message("  ", wmsg(msg1), "\n\n  ", wmsg(msg2), "\n\n  ",
+            wmsg(msg3a), "\n    ", wmsg(msg3b))
+}
+
 use_germline_db <- function(db_name=NULL, verbose=FALSE)
 {
     if (!isTRUEorFALSE(verbose))
@@ -172,8 +192,11 @@ use_germline_db <- function(db_name=NULL, verbose=FALSE)
         return(.get_germline_db_in_use(verbose=verbose))
 
     check_germline_db_name(db_name)
-    if (db_name == .OLD_BUILTIN_AIRR_HUMAN_DB)
+    if (db_name == .OLD_BUILTIN_AIRR_HUMAN_DB) {
         .warn_if_old_builtin_AIRR_human_db_exists()
+    } else {
+        .note_if_selecting_builtin_AIRR_src_db(db_name)
+    }
 
     db_path <- make_germline_db_path(db_name)
     make_blastdbs(db_path, verbose=verbose)
