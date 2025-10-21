@@ -106,7 +106,7 @@ load_c_region_db(db_name)
   C-region sequences in each db.
 
   Built-in dbs are prefixed with an underscore (\code{_}).
-  Note that the C-region built-in dbs from IMGT were downloaded from
+  Note that the built-in C-region dbs from IMGT were downloaded from
   \url{https://www.imgt.org/vquest/refseqh.html#constant-sets} and
   included in the \pkg{igblastr} package on the date indicated by the
   suffix of the db name.

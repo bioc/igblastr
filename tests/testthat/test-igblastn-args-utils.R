@@ -29,7 +29,7 @@ test_that("make_igblastn_command_line_args()", {
     ## For this test we're not specifying any of the 'germline_db_[VDJ]'
     ## arguments so we need to select a cached germline db. Once we do
     ## this, we don't need to specify 'organism' either.
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202501"
+    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
     use_germline_db(db_name)
     cmd_args <- make_igblastn_command_line_args("path/to/query",
                                                 c_region_db=NULL,

@@ -4,45 +4,6 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .create_builtin_germline_dbs()
-###
-
-.create_builtin_germline_dbs <- function(destdir)
-{
-    stopifnot(isSingleNonWhiteString(destdir), !dir.exists(destdir))
-
-    ## We first create the dbs in a temporary folder, and, only if successful,
-    ## rename the temporary folder to 'destdir'. Otherwise we destroy the
-    ## temporary folder and raise an error. This achieves atomicity.
-    tmp_destdir <- tempfile("builtin_germline_dbs_")
-    dir.create(tmp_destdir, recursive=TRUE)
-    on.exit(nuke_file(tmp_destdir))
-
-    AIRR_germline_seq_dir <- system.file(package="igblastr",
-                                 "extdata", "germline_sequences", "AIRR",
-                                 mustWork=TRUE)
-
-    ## Create AIRR germline db for Human.
-    human_dir <- file.path(AIRR_germline_seq_dir, "human")
-    create_builtin_AIRR_germline_db(human_dir, "human", tmp_destdir)
-
-    ## Create AIRR germline dbs for Mouse strains.
-    mouse_dir <- file.path(AIRR_germline_seq_dir, "mouse")
-    strains <- list.dirs(mouse_dir, full.names=FALSE, recursive=FALSE)
-    for (strain in strains) {
-        fasta_dir <- file.path(mouse_dir, strain)
-        organism <- paste0("mouse.", strain)
-        create_builtin_AIRR_germline_db(fasta_dir, organism, tmp_destdir)
-    }
-
-    ## Any other built-in germline dbs to create?
-
-    ## Everyting went fine so we can rename 'tmp_destdir' to 'destdir'.
-    rename_file(tmp_destdir, destdir)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### get_germline_dbs_home()
 ###
 
@@ -59,8 +20,13 @@ get_germline_dbs_home <- function(init.path=FALSE)
 {
     stopifnot(isTRUEorFALSE(init.path))
     germline_dbs_home <- igblastr_cache(GERMLINE_DBS)
-    if (!dir.exists(germline_dbs_home) && init.path)
-        .create_builtin_germline_dbs(germline_dbs_home)
+    if (init.path) {
+        if (dir.exists(germline_dbs_home)) {
+            create_missing_builtin_germline_dbs(germline_dbs_home)
+        } else {
+            create_all_builtin_germline_dbs(germline_dbs_home)
+        }
+    }
     germline_dbs_home
 }
 
@@ -68,6 +34,34 @@ get_germline_dbs_home <- function(init.path=FALSE)
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### list_germline_dbs()
 ###
+
+.OLD_BUILTIN_AIRR_HUMAN_DB <- "_AIRR.human.IGH+IGK+IGL.202501"
+
+.warn_if_old_builtin_AIRR_human_db_exists <- function()
+{
+    germline_dbs_home <- get_germline_dbs_home()
+    old_db <- .OLD_BUILTIN_AIRR_HUMAN_DB
+    db_path <- file.path(germline_dbs_home, old_db)
+    if (dir.exists(db_path)) {
+        new_dbs <- paste0("_AIRR.human.IGH+IGK+IGL.",
+                          c("202309", "202309.src", "202410", "202410.src"))
+        new_db <- new_dbs[[4L]]
+        msg1 <- c("In igblastr 0.99.23, the following built-in germline dbs ",
+                  "were added: ", paste(new_dbs, collapse=", "), ".")
+        msg2 <- c("Note that ", new_db, " is exactly the same as ",
+                  old_db, ", only the name of the db is different.")
+        msg3 <- c("The new name is the result of a revisited naming ",
+                  "scheme for the built-in AIRR germline dbs for human. ",
+                  "See the Value section in '?germline_dbs_home' for ",
+                  "more information.")
+        msg4 <- c("From now on, please make sure to always use ",
+                  "\"", new_db, "\" instead of \"", old_db, "\" in your code.")
+        msg5 <- c("To get rid of this warning, remove germline db ",
+                  old_db, " with 'rm_germline_db(\"", old_db, "\")'")
+        warning(wmsg(msg1), "\n\n  ", wmsg(msg2), "\n  ",
+                wmsg(msg3), "\n\n  ", wmsg(msg4), "\n\n  ", wmsg(msg5))
+    }
+}
 
 ### 'long.listing' is ignored when 'names.only' is TRUE.
 ### Returns a germline_dbs_df object (data.frame extension) by default.
@@ -80,6 +74,8 @@ list_germline_dbs <- function(builtin.only=FALSE,
                     names.only=names.only, long.listing=long.listing)
     if (is.data.frame(ans))
         class(ans) <- c("germline_dbs_df", class(ans))
+    if (!names.only)
+        .warn_if_old_builtin_AIRR_human_db_exists()
     ans
 }
 
@@ -176,6 +172,9 @@ use_germline_db <- function(db_name=NULL, verbose=FALSE)
         return(.get_germline_db_in_use(verbose=verbose))
 
     check_germline_db_name(db_name)
+    if (db_name == .OLD_BUILTIN_AIRR_HUMAN_DB)
+        .warn_if_old_builtin_AIRR_human_db_exists()
+
     db_path <- make_germline_db_path(db_name)
     make_blastdbs(db_path, verbose=verbose)
 
@@ -244,7 +243,7 @@ clean_germline_blastdbs <- function()
 rm_germline_db <- function(db_name)
 {
     check_germline_db_name(db_name)
-    if (has_prefix(db_name, "_"))
+    if (has_prefix(db_name, "_") && db_name != .OLD_BUILTIN_AIRR_HUMAN_DB)
         stop(wmsg("cannot remove a built-in germline db"))
 
     germline_dbs_home <- get_germline_dbs_home(TRUE)  # guaranteed to exist

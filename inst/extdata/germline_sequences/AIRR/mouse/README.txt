@@ -1,8 +1,8 @@
 This is the extdata/germline_sequences/AIRR/mouse/ folder in the igblastr
 package.
 
-This folder contains the germline sequences (in FASTA format) downloaded
-from AIRR-community/OGRDB for various mouse strains.
+This folder contains germline sequences (in FASTA format) downloaded from
+AIRR-community/OGRDB for various mouse strains.
 
 Content
 =======

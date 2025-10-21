@@ -1,5 +1,5 @@
 test_that("use_germline_db()", {
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202501"
+    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
     use_germline_db(db_name)
     expect_identical(use_germline_db(), db_name)
 })
@@ -10,7 +10,7 @@ test_that("list_germline_dbs()", {
     expected_colnames <- c("db_name", "V", "D", "J")
     expect_identical(colnames(df), expected_colnames)
 
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202501"
+    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
     use_germline_db(db_name)
     printed <- print(df)
     expect_true(is.data.frame(printed))

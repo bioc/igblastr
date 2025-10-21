@@ -4,42 +4,6 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .create_builtin_c_region_dbs()
-###
-
-.create_builtin_c_region_dbs <- function(destdir)
-{
-    stopifnot(isSingleNonWhiteString(destdir))
-
-    ## We first create the dbs in a temporary folder, and, only if successful,
-    ## rename the temporary folder to 'destdir'. Otherwise we destroy the
-    ## temporary folder and raise an error. This achieves atomicity.
-    tmp_destdir <- tempfile("builtin_c_region_dbs_")
-    dir.create(tmp_destdir, recursive=TRUE)
-    on.exit(nuke_file(tmp_destdir))
-
-    ## Create IMGT C-region dbs.
-    IMGT_c_region_dir <- system.file(package="igblastr",
-                                     "extdata", "constant_regions", "IMGT",
-                                     mustWork=TRUE)
-    for (organism in names(LATIN_NAMES)) {
-        organism_dir <- file.path(IMGT_c_region_dir, organism)
-        fasta_dir <- file.path(organism_dir, "IG", "14.1")
-        create_builtin_IMGT_c_region_db(fasta_dir, organism, tmp_destdir)
-        fasta_dir <- file.path(organism_dir, "TR")
-        if (dir.exists(fasta_dir))
-            create_builtin_IMGT_c_region_db(fasta_dir, organism, tmp_destdir,
-                                            tcr.db=TRUE)
-    }
-
-    ## Any other built-in C-region dbs to create?
-
-    ## Everyting went fine so we can rename 'tmp_destdir' to 'destdir'.
-    rename_file(tmp_destdir, destdir, replace=TRUE)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .get_c_region_dbs_home()
 ###
 
@@ -95,8 +59,8 @@
 {
     stopifnot(isTRUEorFALSE(init.path))
     c_region_dbs_home <- igblastr_cache(C_REGION_DBS)
-    if (.need_to_create_builtin_c_region_dbs(c_region_dbs_home) && init.path)
-        .create_builtin_c_region_dbs(c_region_dbs_home)
+    if (init.path && .need_to_create_builtin_c_region_dbs(c_region_dbs_home))
+        create_all_builtin_c_region_dbs(c_region_dbs_home)
     c_region_dbs_home
 }
 

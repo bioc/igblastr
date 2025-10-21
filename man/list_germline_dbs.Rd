@@ -121,11 +121,21 @@ rm_germline_db(db_name)
   of germline sequences for each region in each db.
 
   Built-in dbs are prefixed with an underscore (\code{_}).
-  Note that the germline built-in dbs from AIRR were obtained from
+  Note that the built-in germline dbs starting with \code{_AIRR}
+  are made of the AIRR-community/OGRDB datasets available at
   \url{https://ogrdb.airr-community.org/germline_sets/Homo\%20sapiens}
-  and \url{https://ogrdb.airr-community.org/germline_sets/Mus\%20musculus}
-  and included in the \pkg{igblastr} package on the date indicated by the
-  suffix of the db name.
+  for human and
+  \url{https://ogrdb.airr-community.org/germline_sets/Mus\%20musculus}.
+  for mouse.
+  Each AIRR db is populated with the latest germline datasets that were
+  available at AIRR-community/OGRDB at the time indicated by the date (in
+  YYYYMM format) embedded in the db name.
+  The AIRR dbs with the \code{.src} suffix contain the \emph{Source Sets}.
+  The AIRR dbs without the \code{.src} suffix contain the \emph{Reference Sets}.
+  See \url{https://github.com/HyrienLab/igblastr/tree/devel/inst/extdata/germline_sequences/AIRR/human/202410/README.md}
+  for more information. The OGRDB maintainers recommend to use the
+  \emph{Reference Sets} for AIRR-seq analysis.
+  See \url{https://ogrdb.airr-community.org/germline_set/75}
 
   When called with no argument, \code{use_germline_db()} returns a single
   string containing the name of the cached germline db currently used by

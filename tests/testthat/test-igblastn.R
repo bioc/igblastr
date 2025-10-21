@@ -1,5 +1,5 @@
 test_that("igblastn(): basic operations", {
-    use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
+    use_germline_db("_AIRR.human.IGH+IGK+IGL.202410")
     use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
     query <- system.file(package="igblastr", "extdata",
                          "BCR", "heavy_sequences.fasta")
@@ -51,7 +51,7 @@ test_that("igblastn(): basic operations", {
 })
 
 test_that("igblastn(): germline_db_[VDJ]_seqidlist arguments", {
-    use_germline_db("_AIRR.human.IGH+IGK+IGL.202501")
+    use_germline_db("_AIRR.human.IGH+IGK+IGL.202410")
     use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
     query <- system.file(package="igblastr", "extdata",
                          "BCR", "heavy_sequences.fasta")
@@ -68,11 +68,8 @@ test_that("igblastn(): germline_db_[VDJ]_seqidlist arguments", {
                      "IGHV3-7*01",
                      "IGHV3-7*05",
                      "IGHV3-23*01",
-                     "IGHV3-23D*01",
                      "IGHV3-30*02",
                      "IGHV3-30*18",
-                     "IGHV3-30-5*01",
-                     "IGHV3-30-5*02",
                      "IGHV4-38-2*01",
                      "IGHV4-59*01")
     D_seqidlist <- c("IGHD2-2*01",
@@ -82,7 +79,7 @@ test_that("igblastn(): germline_db_[VDJ]_seqidlist arguments", {
                      "IGHD3-10*01",
                      "IGHD3-10*03",
                      "IGHD3-16*03",
-                     "IGHD4-11*01",
+                     "IGHD4-4*01",
                      "IGHD4-23*01",
                      "IGHD6-6*01",
                      "IGHD6-13*01",
@@ -109,14 +106,12 @@ test_that("igblastn(): germline_db_[VDJ]_seqidlist arguments", {
                      "IGHV3-7*01",
                      "IGHV3-23*01",
                      "IGHV3-30*02",
-                     "IGHV3-30-5*01",
-                     "IGHV4-38-2*01",
                      "IGHV4-59*01")
     D_seqidlist <- c("IGHD2-2*01",
                      "IGHD2-8*01",
                      "IGHD3-10*01",
                      "IGHD3-16*03",
-                     "IGHD4-11*01",
+                     "IGHD4-4*01",
                      "IGHD4-23*01",
                      "IGHD6-6*01",
                      "IGHD6-13*01",
