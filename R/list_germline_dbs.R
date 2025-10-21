@@ -52,7 +52,7 @@ get_germline_dbs_home <- function(init.path=FALSE)
                   old_db, ", only the name of the db is different.")
         msg3 <- c("The new name is the result of a revisited naming ",
                   "scheme for the built-in AIRR germline dbs for human. ",
-                  "See the Value section in '?germline_dbs_home' for ",
+                  "See the Value section in '?list_germline_dbs' for ",
                   "more information.")
         msg4 <- c("From now on, please make sure to always use ",
                   "\"", new_db, "\" instead of \"", old_db, "\" in your code.")
