@@ -165,6 +165,11 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     be passed as \code{num_alignments_V=1, num_threads=8} when
     calling the \code{igblastn()} function:
     \preformatted{    igblastn(query, num_alignments_V=1, num_threads=8)}
+
+    For options that don't require a value (e.g. \code{-extend_align5end},
+    \code{-extend_align3end}, \code{-ungapped}, etc...), pass the empty string
+    (or a white string) to the argument. For example:
+    \preformatted{    igblastn(query, extend_align5end="", extend_align3end="")}
   }
   \item{out}{
     \code{NULL} (the default), or the path to the file where the
