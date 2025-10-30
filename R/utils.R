@@ -7,7 +7,7 @@
 
 
 ### TODO: wmsg() was replaced with this in S4Vectors >= 0.45.1 so drop
-### wmsg2() and use wmsg() instead.
+### wmsg2() and use wmsg() instead in BioC >= 3.23.
 wmsg2 <- function(..., margin=2)
 {
     width <- getOption("width") - margin
@@ -15,7 +15,8 @@ wmsg2 <- function(..., margin=2)
            collapse=paste0("\n", strrep(" ", margin)))
 }
 
-### TODO: Move this to S4Vectors (or BiocBaseUtils).
+### TODO: load_package_gracefully() was added to S4Vectors 0.47.6 so drop
+### this and use S4Vectors:::load_package_gracefully() instead in BioC >= 3.23.
 load_package_gracefully <- function(package, ...)
 {
     if (!requireNamespace(package, quietly=TRUE))
@@ -69,14 +70,16 @@ drop_heading_and_trailing_white_lines <- function(lines)
     lines[keep_idx]
 }
 
-### Vectorized.
+### TODO: has_prefix() was added to S4Vectors 0.47.5 so drop this and
+### use S4Vectors:::has_prefix() instead in BioC >= 3.23.
 has_prefix <- function(x, prefix)
 {
     stopifnot(is.character(x), isSingleString(prefix))
     substr(x, 1L, nchar(prefix)) == prefix
 }
 
-### Vectorized.
+### TODO: has_suffix() was added to S4Vectors 0.47.5 so drop this and
+### use S4Vectors:::has_suffix() instead in BioC >= 3.23.
 has_suffix <- function(x, suffix)
 {
     stopifnot(is.character(x), isSingleString(suffix))
