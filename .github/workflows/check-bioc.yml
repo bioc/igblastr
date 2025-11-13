@@ -49,9 +49,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest, r: '4.5', bioc: '3.21', cont: "bioconductor/bioconductor_docker:devel", rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest" }
-          - { os: macOS-latest, r: '4.5', bioc: '3.21'}
-          - { os: windows-latest, r: '4.5', bioc: '3.21'}
+          - { os: ubuntu-latest, r: '4.5', bioc: '3.22', cont: "bioconductor/bioconductor_docker:RELEASE_3_22", rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest" }
+          - { os: macOS-latest, r: '4.5', bioc: '3.22'}
+          - { os: windows-latest, r: '4.5', bioc: '3.22'}
           ## Check https://github.com/r-lib/actions/tree/master/examples
           ## for examples using the http-user-agent
     env:
@@ -96,22 +96,6 @@ jobs:
           install.packages('remotes')
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
         shell: Rscript {0}
-
-      - name: Restore R package cache
-        if: "!contains(github.event.head_commit.message, '/nocache') && runner.os != 'Linux'"
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ env.cache-version }}-${{ runner.os }}-biocversion-devel-r-devel-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ env.cache-version }}-${{ runner.os }}-biocversion-devel-r-devel-
-
-      - name: Cache R packages on Linux
-        if: "!contains(github.event.head_commit.message, '/nocache') && runner.os == 'Linux' "
-        uses: actions/cache@v3
-        with:
-          path: /home/runner/work/_temp/Library
-          key: ${{ env.cache-version }}-${{ runner.os }}-biocversion-devel-r-devel-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ env.cache-version }}-${{ runner.os }}-biocversion-devel-r-devel-
 
       - name: Install macOS system dependencies
         if: matrix.config.os == 'macOS-latest'
@@ -191,11 +175,4 @@ jobs:
       - name: Reveal testthat details
         if:  env.has_testthat == 'true'
         run: find . -name testthat.Rout -exec cat '{}' ';'
-
-      - name: Upload check results
-        if: failure()
-        uses: actions/upload-artifact@master
-        with:
-          name: ${{ runner.os }}-biocversion-devel-r-devel-results
-          path: check
 
