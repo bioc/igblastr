@@ -6,17 +6,33 @@
 ###
 
 
+.read_version_file <- function(dirpath)
+{
+    stopifnot(isSingleNonWhiteString(dirpath))
+    version_path <- file.path(dirpath, "version")
+    if (!file.exists(version_path))
+        stop(wmsg("missing 'version' file in ", dirpath, "/"))
+    version <- readLines(version_path)
+    if (length(version) != 1L)
+        stop(wmsg("file '", version_path, "' should contain exactly one line"))
+    version <- trimws2(version)
+    if (version == "")
+        stop(wmsg("file '", version_path, "' contains only white spaces"))
+    version
+}
+
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .create_missing_builtin_AIRR_human_germline_dbs()
 ###
 
 .form_builtin_AIRR_human_germline_db_name <- function(fasta_dir)
 {
-    loci <- get_loci_from_input_germline_fasta_set(fasta_dir)
+    loci_in1string <- paste(IG_LOCI, collapse="+")
+    version <- basename(dirname(fasta_dir))
+    db_name <- sprintf("_AIRR.human.%s.%s", loci_in1string, version)
     flavor <- basename(fasta_dir)
     stopifnot(flavor %in% c("ref", "src"))
-    version <- basename(dirname(fasta_dir))
-    db_name <- sprintf("_AIRR.human.%s.%s", paste(loci, collapse="+"), version)
     if (flavor == "src")
         db_name <- paste0(db_name, ".src")
     db_name
@@ -30,7 +46,7 @@
     db_name <- .form_builtin_AIRR_human_germline_db_name(fasta_dir)
     db_path <- file.path(destdir, db_name)
     if (!(only.if.missing && dir.exists(db_path)))
-        create_germline_db(fasta_dir, db_path)
+        create_germline_db(fasta_dir, IG_LOCI, db_path)
 }
 
 .create_missing_builtin_AIRR_human_germline_dbs <- function(human_dir, destdir)
@@ -38,10 +54,9 @@
     stopifnot(isSingleNonWhiteString(human_dir), dir.exists(human_dir))
     human_subdirs <- list.dirs(human_dir, recursive=FALSE)
     fasta_dirs <- file.path(rep(human_subdirs, each=2L), c("ref", "src"))
-    for (fasta_dir in fasta_dirs) {
+    for (fasta_dir in fasta_dirs)
         .create_builtin_AIRR_human_germline_db(fasta_dir, destdir,
                                                only.if.missing=TRUE)
-    }
 }
 
 
@@ -51,10 +66,10 @@
 
 .form_builtin_AIRR_mouse_germline_db_name <- function(fasta_dir)
 {
-    loci <- get_loci_from_input_germline_fasta_set(fasta_dir)
     strain <- basename(fasta_dir)
-    version <- read_version_file(fasta_dir)
-    sprintf("_AIRR.mouse.%s.%s.%s", strain, paste(loci, collapse="+"), version)
+    loci_in1string <- paste(IG_LOCI, collapse="+")
+    version <- .read_version_file(fasta_dir)
+    sprintf("_AIRR.mouse.%s.%s.%s", strain, loci_in1string, version)
 }
 
 .create_builtin_AIRR_mouse_germline_db <- function(fasta_dir, destdir,
@@ -65,16 +80,15 @@
     db_name <- .form_builtin_AIRR_mouse_germline_db_name(fasta_dir)
     db_path <- file.path(destdir, db_name)
     if (!(only.if.missing && dir.exists(db_path)))
-        create_germline_db(fasta_dir, db_path)
+        create_germline_db(fasta_dir, IG_LOCI, db_path)
 }
 
 .create_missing_builtin_AIRR_mouse_germline_dbs <- function(mouse_dir, destdir)
 {
     fasta_dirs <- list.dirs(mouse_dir, recursive=FALSE)
-    for (fasta_dir in fasta_dirs) {
+    for (fasta_dir in fasta_dirs)
         .create_builtin_AIRR_mouse_germline_db(fasta_dir, destdir,
                                                only.if.missing=TRUE)
-    }
 }
 
 
@@ -119,7 +133,7 @@ create_all_builtin_germline_dbs <- function(destdir)
 
     create_missing_builtin_germline_dbs(tmp_destdir)
 
-    ## Everyting went fine so we can rename 'tmp_destdir' to 'destdir'.
+    ## Everything went fine so we can rename 'tmp_destdir' to 'destdir'.
     rename_file(tmp_destdir, destdir)
 }
 
@@ -128,23 +142,21 @@ create_all_builtin_germline_dbs <- function(destdir)
 ### .create_builtin_IMGT_c_region_db()
 ###
 
-.form_builtin_IMGT_c_region_db_name <- function(organism, fasta_dir,
-                                                tcr.db=FALSE)
+.form_builtin_IMGT_c_region_db_name <- function(organism, loci, version)
 {
     stopifnot(isSingleNonWhiteString(organism))
-    loci <- get_loci_from_input_c_region_fasta_set(fasta_dir, tcr.db=tcr.db)
-    version <- read_version_file(fasta_dir)
     sprintf("_IMGT.%s.%s.%s", organism, paste(loci, collapse="+"), version)
 }
 
-.create_builtin_IMGT_c_region_db <- function(fasta_dir, organism, destdir,
-                                             tcr.db=FALSE)
+.create_builtin_IMGT_c_region_db <- function(fasta_dir, loci_prefix,
+                                             organism, destdir)
 {
     stopifnot(isSingleNonWhiteString(destdir), dir.exists(destdir))
-    db_name <- .form_builtin_IMGT_c_region_db_name(organism, fasta_dir,
-                                                   tcr.db=tcr.db)
+    loci <- list_loci_in_c_region_fasta_dir(fasta_dir, loci_prefix)
+    version <- .read_version_file(fasta_dir)
+    db_name <- .form_builtin_IMGT_c_region_db_name(organism, loci, version)
     db_path <- file.path(destdir, db_name)
-    create_c_region_db(fasta_dir, db_path, tcr.db=tcr.db)
+    create_c_region_db(fasta_dir, loci, db_path)
 }
 
 
@@ -170,16 +182,17 @@ create_all_builtin_c_region_dbs <- function(destdir)
     for (organism in names(LATIN_NAMES)) {
         organism_dir <- file.path(IMGT_c_region_dir, organism)
         fasta_dir <- file.path(organism_dir, "IG", "14.1")
-        .create_builtin_IMGT_c_region_db(fasta_dir, organism, tmp_destdir)
+        .create_builtin_IMGT_c_region_db(fasta_dir, "IG", organism,
+                                         tmp_destdir)
         fasta_dir <- file.path(organism_dir, "TR")
         if (dir.exists(fasta_dir))
-            .create_builtin_IMGT_c_region_db(fasta_dir, organism, tmp_destdir,
-                                             tcr.db=TRUE)
+            .create_builtin_IMGT_c_region_db(fasta_dir, "TR", organism,
+                                             tmp_destdir)
     }
 
     ## Any other built-in C-region dbs to create?
 
-    ## Everyting went fine so we can rename 'tmp_destdir' to 'destdir'.
+    ## Everything went fine so we can rename 'tmp_destdir' to 'destdir'.
     rename_file(tmp_destdir, destdir, replace=TRUE)
 }
 

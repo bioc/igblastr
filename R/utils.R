@@ -88,6 +88,22 @@ has_suffix <- function(x, suffix)
 }
 
 ### Not used at the moment.
+.tabulate_strings_by_prefix <- function(x, prefixes)
+{
+    stopifnot(is.character(x), is.character(prefixes), length(prefixes) >= 1L)
+    nc <- nchar(prefixes)
+    stopifnot(all(nc == nc[[1L]]))
+    x_prefixes <- substr(x, 1L, nc)
+    m <- match(x_prefixes, prefixes)
+    if (anyNA(m)) {
+        in1string <- paste0(prefixes, collapse=", ")
+        stop(wmsg("all strings in 'x' must start with one of ",
+                  "the following prefixes: ", in1string))
+    }
+    setNames(tabulate(m, length(prefixes)), prefixes)
+}
+
+### Not used at the moment.
 strslice <- function(x, width)
 {
     stopifnot(isSingleString(x), isSingleNumber(width))

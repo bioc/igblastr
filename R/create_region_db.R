@@ -161,8 +161,10 @@ create_region_db <- function(fasta_files, destdir,
                              region_type=c(VDJ_REGION_TYPES, "C"),
                              overwrite=FALSE)
 {
-    if (!is.character(fasta_files) || anyNA(fasta_files))
-        stop(wmsg("'fasta_files' must be a character vector with no NAs"))
+    if (!is.character(fasta_files) || length(fasta_files) == 0L)
+        stop(wmsg("'fasta_files' must be a non-empty character vector"))
+    if (anyNA(fasta_files) || anyDuplicated(fasta_files))
+        stop(wmsg("'fasta_files' cannot contain NAs or duplicates"))
     if (!isSingleNonWhiteString(destdir))
         stop(wmsg("'destdir' must be a single (non-empty) string"))
     if (!dir.exists(destdir))

@@ -84,21 +84,51 @@ list_IMGT_organisms <- function(release)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .get_effective_loci()
+###
+
+### Returns the intersection between 'wanted_loci' and 'found_loci'
+### but with lots of sanity checks, bells and whistles.
+.get_effective_loci <- function(wanted_loci, found_loci)
+{
+    stopifnot(is.character(wanted_loci), is.character(found_loci))
+    keep_idx <- which(wanted_loci %in% found_loci)
+    if (length(keep_idx) == 0L) {
+        what <- if (length(wanted_loci) == 1L) "locus" else "loci"
+        in1string <- paste0(wanted_loci, collapse=", ")
+        stop(wmsg("no FASTA files found for ", what, " ", in1string))
+    }
+    missing_loci <- wanted_loci[-keep_idx]
+    ## Like 'intersect(found_loci, wanted_loci)' but the returned
+    ## intersection is guaranteed to be ordered like in 'found_loci'.
+    loci <- found_loci[found_loci %in% wanted_loci]
+    if (length(missing_loci) != 0L) {
+        what1 <- if (length(missing_loci) == 1L) "locus" else "loci"
+        in1string1 <- paste0(missing_loci, collapse=", ")
+        what2 <- if (length(loci) == 1L) "locus" else "loci"
+        in1string2 <- paste0(loci, collapse=", ")
+        warning(wmsg("No FASTA files found for ", what1, " ", in1string1, " ",
+                     "--> Installing germline db for ", what2, " ", in1string2,
+                     "."),
+                immediate.=TRUE)
+    }
+    loci
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .form_IMGT_germline_db_name()
 ###
 
-.form_IMGT_germline_db_name <- function(fasta_store)
+.form_IMGT_germline_db_name <- function(organism_path, loci)
 {
-    stopifnot(isSingleNonWhiteString(fasta_store), dir.exists(fasta_store),
-              basename(fasta_store) %in% c("IG", "TR"))
-    organism_path <- dirname(fasta_store)
+    stopifnot(isSingleNonWhiteString(organism_path), dir.exists(organism_path))
+    stop_if_bad_loci(loci)
     organism <- basename(organism_path)
     refdir <- dirname(organism_path)
     stopifnot(basename(refdir) == VQUEST_REFERENCE_DIRECTORY)
     local_store <- dirname(refdir)
     release <- basename(local_store)
-    tcr.db <- basename(fasta_store) == "TR"
-    loci <- get_loci_from_input_germline_fasta_set(fasta_store, tcr.db=tcr.db)
     sprintf("IMGT-%s.%s.%s", release, organism, paste(loci, collapse="+"))
 }
 
@@ -108,15 +138,17 @@ list_IMGT_organisms <- function(release)
 ###
 
 install_IMGT_germline_db <- function(release, organism="Homo sapiens",
-                                     tcr.db=FALSE, force=FALSE, ...)
+                                     tcr.db=FALSE, loci="auto",
+                                     force=FALSE, ...)
 {
     ## Check arguments.
     if (missing(release))
         .stop_on_missing_release()
     release <- .validate_IMGT_release(release)
     organism <- normalize_IMGT_organism(organism)
-    if (!isTRUEorFALSE(tcr.db))
-        stop(wmsg("'tcr.db' must be TRUE or FALSE"))
+    loci <- normalize_loci(loci, tcr.db=tcr.db)
+    loci_prefix <- unique(substr(loci, 1L, 2L))
+    stopifnot(length(loci_prefix) == 1L, !is.na(loci_prefix))
     if (!isTRUEorFALSE(force))
         stop(wmsg("'force' must be TRUE or FALSE"))
 
@@ -128,23 +160,27 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     ## Compute 'fasta_store'.
     organism_path <- find_organism_in_IMGT_local_store(organism, local_store)
     organism <- basename(organism_path)
-    fasta_store <- file.path(organism_path, if (tcr.db) "TR" else "IG")
+    fasta_store <- file.path(organism_path, loci_prefix)
     if (!dir.exists(fasta_store))
-        stop(wmsg("cannot find ", basename(fasta_store), " germline ",
+        stop(wmsg("cannot find ", loci_prefix, " germline ",
                   "sequences for ", organism, " in IMGT release ", release))
 
+    ## Keep loci for which IMGT actually provides FASTA files.
+    found_loci <- list_loci_in_germline_fasta_dir(fasta_store, loci_prefix)
+    loci <- .get_effective_loci(loci, found_loci)
+
     ## Compute 'db_name'.
-    db_name <- .form_IMGT_germline_db_name(fasta_store)
+    db_name <- .form_IMGT_germline_db_name(organism_path, loci)
 
     ## Create IMGT germline db.
     germline_dbs_home <- get_germline_dbs_home(TRUE)  # guaranteed to exist
     db_path <- file.path(germline_dbs_home, db_name)
-    create_germline_db(fasta_store, db_path, tcr.db=tcr.db, force=force)
+    create_germline_db(fasta_store, loci, db_path, force=force)
 
     ## Success!
     message("Germline db ", db_name, " successfully installed.")
     message("Call use_germline_db(\"", db_name, "\") to select it")
-    message("as the germline database to use with igblastn().")
+    message("as the germline db to use with igblastn().")
 
     invisible(db_name)
 }

@@ -11,8 +11,8 @@ These were the most current versions at the date indicated by the name
 of this folder (202309 i.e. Sept 2023).
 
 AIRR-community/OGRDB provides two flavors of each dataset, one called
-the "Reference Set" and the other one called the "Source Set". The `ref`
-subfolder contains the former and the `src` the latter.
+the "Reference Set" and the other one called the "Source Set". The `ref/`
+subfolder contains the former and `src/` the latter.
 
 See `README.md` file in each subfolder for more information.
 
