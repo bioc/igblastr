@@ -17,7 +17,7 @@
 
 \usage{
 install_IMGT_germline_db(release, organism="Homo sapiens", tcr.db=FALSE,
-                         force=FALSE, ...)
+                         loci="auto", force=FALSE, ...)
 
 ## Related utilities:
 list_IMGT_releases(recache=FALSE)
@@ -47,6 +47,9 @@ IMGT_is_up()
     By default, the V/D/J allele sequences from the BCR germline loci
     are downloaded. Set \code{tcr.db} to \code{TRUE} to download the
     V/D/J allele sequences from the TCR germline loci instead.
+  }
+  \item{loci}{
+    COMING SOON...
   }
   \item{force}{
     Set to \code{TRUE} to reinstall if the requested database is already

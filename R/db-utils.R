@@ -7,80 +7,6 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### Some fundamental global constants
-###
-
-VDJ_REGION_TYPES <- c("V", "D", "J")
-.VJ_REGION_TYPES <- VDJ_REGION_TYPES[-2L]
-
-### Group names are formed by concatenating a locus name (e.g. IGH or TRB)
-### and a region type (e.g. V).
-
-.IG_LOCI_2_REGION_TYPES <- list(IGH=VDJ_REGION_TYPES,
-                                IGK=.VJ_REGION_TYPES,
-                                IGL=.VJ_REGION_TYPES)
-
-.TR_LOCI_2_REGION_TYPES <- list(TRA=.VJ_REGION_TYPES,
-                                TRB=VDJ_REGION_TYPES,
-                                TRG=.VJ_REGION_TYPES,
-                                TRD=VDJ_REGION_TYPES)
-
-IG_LOCI <- names(.IG_LOCI_2_REGION_TYPES)
-TR_LOCI <- names(.TR_LOCI_2_REGION_TYPES)
-
-.revmap <- function(loci2regiontypes)
-{
-    loci <- rep.int(names(loci2regiontypes), lengths(loci2regiontypes))
-    f <- factor(unlist(loci2regiontypes, use.names=FALSE),
-                levels=VDJ_REGION_TYPES)
-    split(loci, f)
-}
-
-IG_REGION_TYPES_2_LOCI <- .revmap(.IG_LOCI_2_REGION_TYPES)
-TR_REGION_TYPES_2_LOCI <- .revmap(.TR_LOCI_2_REGION_TYPES)
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### map_loci_to_region_types()
-###
-
-map_loci_to_region_types <- function(loci)
-{
-    stopifnot(is.character(loci), length(loci) != 0L, !anyDuplicated(loci))
-    if (all(loci %in% IG_LOCI)) {
-        loci2regiontypes <- .IG_LOCI_2_REGION_TYPES
-    } else if (all(loci %in% TR_LOCI)) {
-        loci2regiontypes <- .TR_LOCI_2_REGION_TYPES
-    } else {
-        what <- if (length(loci) != 1L) "set of " else ""
-        in1string <- paste(loci, collapse=", ")
-        stop(wmsg("invalid ", what, "loci: ", in1string))
-    }
-    loci2regiontypes[loci]
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### read_version_file()
-###
-
-read_version_file <- function(dirpath)
-{
-    stopifnot(isSingleNonWhiteString(dirpath))
-    version_path <- file.path(dirpath, "version")
-    if (!file.exists(version_path))
-        stop(wmsg("missing 'version' file in ", dirpath, "/"))
-    version <- readLines(version_path)
-    if (length(version) != 1L)
-        stop(wmsg("file '", version_path, "' should contain exactly one line"))
-    version <- trimws2(version)
-    if (version == "")
-        stop(wmsg("file '", version_path, "' contains only white spaces"))
-    version
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### sort_db_names()
 ###
 
@@ -150,42 +76,44 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .tabulate_db_by_group()
+### .tabulate_germline_db_by_group()
 ### .tabulate_c_region_db_by_locus()
 ###
 
-### All prefixes must have the same length.
-.tabulate_allele_names_by_prefix <- function(allele_names, prefixes)
+### Returns a named integer vector with 'loci' as names.
+.tabulate_db_original_fasta_files_by_locus <-
+    function(original_fasta_dir, loci)
 {
-    stopifnot(is.character(allele_names),
-              is.character(prefixes), length(prefixes) >= 1L)
-    nc <- nchar(prefixes)
-    stopifnot(all(nc == nc[[1L]]))
-    allele_prefixes <- substr(allele_names, 1L, nc)
-    m <- match(allele_prefixes, prefixes)
-    if (anyNA(m)) {
-        in1string <- paste0(prefixes, collapse=", ")
-        stop(wmsg("not all allele names start with one of the ",
-                  "following prefixes: ", in1string))
-    }
-    setNames(tabulate(m, length(prefixes)), prefixes)
+    stopifnot(isSingleNonWhiteString(original_fasta_dir),
+              dir.exists(original_fasta_dir))
+    fasta_files <- list.files(original_fasta_dir, pattern="\\.fasta$")
+    stopifnot(length(fasta_files) != 0L)
+    found_loci <- substr(fasta_files, 1L, 3L)
+    stopifnot(all(found_loci %in% loci))
+    fasta_files <- setNames(fasta_files[match(loci, found_loci)], loci)
+    vapply(fasta_files,
+        function(fasta_file) {
+            if (is.na(fasta_file))
+                return(0L)
+            length(fasta.seqlengths(file.path(original_fasta_dir, fasta_file)))
+        }, integer(1))
 }
 
-### Returns an integer matrix, typically with some NAs.
-.tabulate_db_by_group <- function(db_path, loci)
+### Returns a 3-column integer matrix with 'loci' as rownames
+### and V/D/J as colnames.
+.tabulate_germline_db_by_group <- function(db_path, loci)
 {
     stopifnot(isSingleNonWhiteString(db_path))
+    stop_if_bad_loci(loci)
     vdj_counts <- lapply(VDJ_REGION_TYPES,
         function(region_type) {
-            fasta_file <- get_db_fasta_file(db_path, region_type)
-            allele_names <- names(fasta.seqlengths(fasta_file))
-            counts <- .tabulate_allele_names_by_prefix(allele_names, loci)
-            stopifnot(sum(counts) == length(allele_names),
-                      identical(names(counts), loci))
-            counts
+            basename <- paste0(region_type, "_original_fasta")
+            original_fasta_dir <- file.path(db_path, basename)
+            .tabulate_db_original_fasta_files_by_locus(original_fasta_dir, loci)
         }
     )
     ans <- do.call(cbind, vdj_counts)
+    stopifnot(all(rowSums(ans) != 0L), all(colSums(ans) != 0L))
     colnames(ans) <- VDJ_REGION_TYPES
     ans
 }
@@ -193,10 +121,12 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
 ### Returns a named integer vector with 'loci' as names.
 .tabulate_c_region_db_by_locus <- function(db_path, loci)
 {
-    stopifnot(isSingleNonWhiteString(db_path), is.character(loci))
-    fasta_file <- get_db_fasta_file(db_path, "C")
-    allele_names <- names(fasta.seqlengths(fasta_file))
-    .tabulate_allele_names_by_prefix(allele_names, loci)
+    stopifnot(isSingleNonWhiteString(db_path))
+    stop_if_bad_loci(loci)
+    original_fasta_dir <- file.path(db_path, "C_original_fasta")
+    ans <- .tabulate_db_original_fasta_files_by_locus(original_fasta_dir, loci)
+    stopifnot(all(ans != 0L))
+    ans
 }
 
 
@@ -220,7 +150,7 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
         function(db_name) {
             db_path <- file.path(germline_dbs_home, db_name)
             loci <- .extract_loci_from_db_name(db_name)
-            .tabulate_db_by_group(db_path, loci)
+            .tabulate_germline_db_by_group(db_path, loci)
         })
 }
 

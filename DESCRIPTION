@@ -32,6 +32,7 @@ Collate:
 	utils.R
 	long_to_wide_airr.R
 	file-utils.R
+	loci-utils.R
 	db-utils.R
 	LATIN_NAMES.R
 	IMGT-utils.R

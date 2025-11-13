@@ -6,38 +6,52 @@
 ###
 
 
-.list_C_fasta_files <- function(fasta_dir, tcr.db=FALSE)
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### list_loci_in_c_region_fasta_dir()
+###
+
+.list_C_fasta_files <- function(fasta_dir, loci_prefix)
 {
-    stopifnot(isSingleNonWhiteString(fasta_dir), dir.exists(fasta_dir))
-    if (!isTRUEorFALSE(tcr.db))
-        stop(wmsg("'tcr.db' must be TRUE or FALSE"))
-    prefix <- if (tcr.db) "TR" else "IG"
-    pattern <- paste0("^", prefix, ".C\\.fasta$")
+    stopifnot(isSingleNonWhiteString(fasta_dir), dir.exists(fasta_dir),
+              isSingleNonWhiteString(loci_prefix))
+    pattern <- paste0("^", loci_prefix, ".C\\.fasta$")
     fasta_files <- list.files(fasta_dir, pattern=pattern)
     stopifnot(length(fasta_files) != 0L)
     fasta_files
 }
 
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### get_loci_from_input_c_region_fasta_set()
-###
-
 ### Returns a character vector of loci in canonical order.
-.get_loci_from_c_region_fasta_set <- function(fasta_files, tcr.db=FALSE)
+.get_loci_from_c_region_fasta_set <- function(fasta_files, loci_prefix)
 {
-    stopifnot(is.character(fasta_files), isTRUEorFALSE(tcr.db))
+    stopifnot(is.character(fasta_files),
+              isSingleString(loci_prefix), loci_prefix %in% c("IG", "TR"))
     loci <- unique(sub("C\\.fasta$", "", fasta_files))
-    valid_loci <- if (tcr.db) TR_LOCI else IG_LOCI
+    valid_loci <- if (loci_prefix == "IG") IG_LOCI else TR_LOCI
     stopifnot(all(loci %in% valid_loci))
     valid_loci[valid_loci %in% loci]  # return loci in canonical order
 }
 
-get_loci_from_input_c_region_fasta_set <-
-    function(fasta_dir, tcr.db=FALSE)
+list_loci_in_c_region_fasta_dir <- function(fasta_dir, loci_prefix)
 {
-    fasta_files <- .list_C_fasta_files(fasta_dir, tcr.db=tcr.db)
-    .get_loci_from_c_region_fasta_set(fasta_files, tcr.db=tcr.db)
+    fasta_files <- .list_C_fasta_files(fasta_dir, loci_prefix)
+    .get_loci_from_c_region_fasta_set(fasta_files, loci_prefix)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .collect_C_fasta_files()
+###
+
+.collect_C_fasta_files <- function(fasta_dir, loci)
+{
+    if (!isSingleNonWhiteString(fasta_dir))
+        stop(wmsg("'fasta_dir' must be a single (non-empty) string"))
+    if (!dir.exists(fasta_dir))
+        stop(wmsg("directory ", fasta_dir, " not found"))
+    stop_if_bad_loci(loci)
+    wanted_files <- file.path(fasta_dir, paste0(loci, "C.fasta"))
+    stopifnot(all(file.exists(wanted_files)))
+    wanted_files
 }
 
 
@@ -61,7 +75,7 @@ get_loci_from_input_c_region_fasta_set <-
 ### C_REGION_DBS cache compartment (see R/cache-utils.R for details about
 ### igblastr's cache organization). This subdir or any of its parent
 ### directories don't need to exist yet.
-create_c_region_db <- function(fasta_dir, destdir, tcr.db=FALSE, force=FALSE)
+create_c_region_db <- function(fasta_dir, loci, destdir, force=FALSE)
 {
     stopifnot(isSingleNonWhiteString(destdir))
     if (!isTRUEorFALSE(force))
@@ -69,14 +83,13 @@ create_c_region_db <- function(fasta_dir, destdir, tcr.db=FALSE, force=FALSE)
     if (dir.exists(destdir) && !force)
         .stop_on_existing_c_region_db(destdir)
 
-    fasta_files <- .list_C_fasta_files(fasta_dir, tcr.db=tcr.db)
-    fasta_files <- file.path(fasta_dir, fasta_files)
+    fasta_files <- .collect_C_fasta_files(fasta_dir, loci)
 
     ## We first create the db in a temporary folder, and, only if successful,
-    ## replace 'destdir' with the temporary folder. Otherwise we destroy the
-    ## temporary folder and raise an error. This achieves atomicity and avoids
-    ## loosing the content of the existing 'destdir' in case something goes
-    ## wrong.
+    ## we replace 'destdir' with the temporary folder. Otherwise we destroy
+    ## the temporary folder and raise an error. This achieves atomicity and
+    ## avoids loosing the content of the existing 'destdir' in case something
+    ## goes wrong.
     tmp_destdir <- tempfile("c_region_db_")
     dir.create(tmp_destdir, recursive=TRUE)
     on.exit(nuke_file(tmp_destdir))
