@@ -1,7 +1,7 @@
 # igblastr [<img src="https://bioconductor.org/images/logo/jpg/bioconductor_logo_rgb.jpg" width="200" align="right"/>](https://bioconductor.org/)
 
 [![in_Bioc](https://bioconductor.org/shields/years-in-bioc/igblastr.svg)](https://bioconductor.org/packages/igblastr)
-[![rank](https://bioconductor.org/shields/downloads/devel/igblastr.svg)](https://bioconductor.org/packages/stats/bioc/igblastr)
+[![rank](https://bioconductor.org/shields/downloads/release/igblastr.svg)](https://bioconductor.org/packages/stats/bioc/igblastr)
 
 **igblastr** is an R/Bioconductor package that provides functions to conveniently install and use a local IgBLAST installation from within R.
 
@@ -11,7 +11,8 @@ from installing directly from GitHub).
 
 |BioC version|Status|
 |------------|------|
-| devel   | [![build](https://bioconductor.org/shields/build/devel/bioc/igblastr.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/igblastr/) [![dependencies](https://bioconductor.org/shields/dependencies/devel/igblastr.svg)](https://bioconductor.org/packages/devel/igblastr#since) |
+| release    | [![build](https://bioconductor.org/shields/build/release/bioc/igblastr.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/igblastr/) [![dependencies](https://bioconductor.org/shields/dependencies/release/igblastr.svg)](https://bioconductor.org/packages/release/igblastr#since) |
+| devel      | [![build](https://bioconductor.org/shields/build/devel/bioc/igblastr.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/igblastr/) [![dependencies](https://bioconductor.org/shields/dependencies/devel/igblastr.svg)](https://bioconductor.org/packages/devel/igblastr#since) |
 
 IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>
 
