@@ -1,26 +1,62 @@
 High-priority TODO list
 =======================
 
-- igbrowser() improvements:
+o Investigate BIG inconsistency between local IgBLAST and online IgBLAST:
+  https://www.ncbi.nlm.nih.gov/igblast/
+
+  Try to run the former with the -remote option to execute search remotely,
+  and compare. Collect as much data on this issue as possible and send an
+  email to the IgBLAST folks at NCBI (blast-help@ncbi.nlm.nih.gov or
+  nlm-support@nlm.nih.gov).
+
+o Let the user choose what loci to include in the germline dbs that they
+  install from IMGT. That seems to be of interest when doing TCR sequence
+  analysis, but not sure about BCR sequence analysis.
+  In any case this can be achieved by adding the 'loci' argument to
+  install_IMGT_germline_db(). It would take a character vector of locus
+  names (i.e. a subset of IGH, IGK, IGL, TRA, TRB, TRG, TRD) or the special
+  value "auto" (the default) in which case it would download all IG loci
+  when 'tcr.db' is FALSE and all TR loci when 'tcr.db' is TRUE. Note that
+  with this interface the user would be able to mix IG and TR loci even
+  though it's not clear that there's a use case for that so maybe emit a
+  warning when they do that?
+
+  In addition to the above the user should be able to install C-region dbs
+  with the desired TR loci. So maybe we need an install_IMGT_c_region_db()
+  for that? All the C-region data is already included in the package so
+  install_IMGT_c_region_db() wouldn't need to download anything.
+
+o Mismatch/indel summarization:
+
+  The goal is to summarize information about the mismatches and indels
+  between the query sequences (BCR or TCR nucleotide sequences) and the
+  germline gene alleles sequences that they’re aligned to.
+
+  Deliverables:
+
+  - tabulate_mismatches(), tabulate_insertions(), tabulate_deletions():
+    take the AIRR-formatted data.frame and return a matrix of counts
+    with one row per query sequence (i.e. one row per row in the data.frame)
+    and 7 columns: fwr1, cdr1, fwr2, cdr2, fwr3, cdr3, fwr4.
+    By default the counts are for the mismatches/indels at the nucleotide
+    level. What we counte is the number of nucleotides involved in
+    mismatches or indels, not the number of events e.g. an insertion
+    of 3 nucleotides counts for 3 not for 1.
+
+  - Discussed at Hyrien lab meeting on Oct 29:
+    (a) support summarization at amino acid level
+    (b) report % identity per CDR/FR regions
+
+  Questions:
+
+  - Should we also add columns for the V, D, J, C regions?
+
+o igbrowser() improvements:
   - Display pairwise alignment between BCR query sequence and germline
     V/D/J/C sequences.
   - Take a look at visualization tool from IMGT/V-QUEST for inspiration.
 
-- Implement summarizeMismatches().
-  The function will take the AIRR data.frame returned by igblastn() as input
-  and, for each BCR query sequence, identify the positions of the mismatches,
-  insertions, and deletions in the pairwise alignment. Then it should count
-  how many of them fall in the following regions:
-    - V, D, J, C
-    - FWR1-4, CDR1-3
-  The counts should be returned in a matrix (or data.frame or tibble?)
-  with 1 row per query sequence and 11 columns (one per region).
-  summarizeMismatches() should also have an argument that lets the user
-  choose whether they want the matrix of counts added to the input AIRR
-  data.frame as additional columns or not. Should be FALSE by default.
-  E.g. 'bind.results=FALSE'.
-
-- Maybe implement the following advice given by IgBLAST when using one
+o Maybe implement the following advice given by IgBLAST when using one
   of the num_alignments_V/D/J arguments:
 
   Warning messages:
@@ -29,17 +65,14 @@ High-priority TODO list
     -seqid_file_in <INPUT_FILE_NAME> -seqid_file_out <OUT_FILE_NAME> and use
     <OUT_FILE_NAME> as the argument to -seqidlist
 
-- Add igblastp(), a wrapper to the igblastp standalone executable included
-  in IgBLAST. Requested by Dr Iman Haddad in an email from Aug 12, 2025.
-
 
 Things to do at BioC 3.22 release time
 ======================================
 
-- Update README.md:
+o Update README.md:
   - Update "Install and load igblastr" section.
 
-- Advertize igblastr:
+o Advertize igblastr:
   - Announce on various bioc-community Slack channels.
   - Announce on the FH-Data Slack (fhdata.slack.com) on channels
     #r-user-comm and #general.
@@ -51,59 +84,59 @@ Things to do at BioC 3.22 release time
 Low-priority TODO list
 ======================
 
-- Add 'clonotype_out' arg to igblastn(). Add examples in man page and
+o Migrate code in R/AIRR-utils.R from OGRDB API v1 to OGRDB API v2.
+  See OGRDB API v2.0.0 Guide here:
+  https://github.com/airr-community/ogrdb/blob/master/schema/ogrdb_api_v2_guide.md
+
+o Add igblastp(), a wrapper to the igblastp standalone executable included
+  in IgBLAST. Requested by Dr Iman Haddad in an email from Aug 12, 2025.
+
+o Add 'clonotype_out' arg to igblastn(). Add examples in man page and
   vignette that use this functionality.
 
-- It was mentioned that some people use mixeR to analyse TCR sequences.
+o It was mentioned that some people use mixeR to analyse TCR sequences.
   How does this compare to using igblastn(..., ig_seqtype="TCR")?
 
-- Add functionality to install/use the updated internal and/or auxiliary
+o Add functionality to install/use the updated internal and/or auxiliary
   files that are sometimes made available at:
     https://ftp.ncbi.nih.gov/blast/executables/igblast/release/patch/
   See https://ncbi.github.io/igblast/cook/How-to-set-up.html for the details.
 
-- Add bibliography to vignette. See AuthoringRmdVignettes.Rmd vignette in
+o Add bibliography to vignette. See AuthoringRmdVignettes.Rmd vignette in
   BiocStyle for how to do this.
 
-- Add Seqinfo to Imports (but wait until BioC 3.23 for that). Note
+o Add Seqinfo to Imports (but wait until BioC 3.23 for that). Note
   that we'll still need GenomeInfoDb just for list_ftp_dir().
 
-- Clarify provenance of 1279067_1_Paired_sequences.fasta.gz and its licence.
+o Clarify provenance of 1279067_1_Paired_sequences.fasta.gz and its licence.
   Give appropriate credit. See https://opig.stats.ox.ac.uk/webapps/oas/
 
-- More investigation to assess the consequences of using the static auxiliary
+o More investigation to assess the consequences of using the static auxiliary
   data included in IgBLAST.
 
-- Try online IgBLAST here https://www.ncbi.nlm.nih.gov/igblast/ and compare
-  results with igblastr.
-
-- Figure out a way to automatically stamp AIRR germline dbs with a
+o Figure out a way to automatically stamp AIRR germline dbs with a
   version number that allows to go back in time when needed.
 
-- One should be able to pass the name of an IMGT germline db to
+o One should be able to pass the name of an IMGT germline db to
   install_IMGT_germline_db(), or a vector of names.
 
-- Improve outfmt7-utils.Rd man page (e.g. document customized format 7
+o Improve outfmt7-utils.Rd man page (e.g. document customized format 7
   and list_outfmt7_specifiers()) as well as associated unit tests (in
   tests/testthat/test-outfmt7-utils.R).
 
-- Make 'num_threads' an explicit argument with default to 4. The doc should
+o Make 'num_threads' an explicit argument with default to 4. The doc should
   show how to specify a higher but still reasonable custom value based on
   detectCores().
 
-- Parse $footer part of output format 7.
+o Parse $footer part of output format 7.
 
-- Implement parsing of output formats 3 and 4?
+o Implement parsing of output formats 3 and 4?
 
-- Set environment variable IGDATA to point to the internal_data directory.
+o Set environment variable IGDATA to point to the internal_data directory.
   Note that IGDATA must be set to the **parent** directory of the internal_data
   directory.
 
-- Add 'loci' argument to install_IMGT_germline_db(). Set to "IGH+IGK+IGL"
-  by default but could also be any subset of the 3 loci e.g. "IGH" or
-  "IGK+IGL" etc...
-
-- Great resource for how to use AIRR Community Reference germline sets with
+o Great resource for how to use AIRR Community Reference germline sets with
   IgBLAST: https://williamdlees.github.io/receptor_utils/_build/html/airrc_sets_with_igblast.html
   In particular, the author seems to be using an OGRDB REST API version 2:
     https://ogrdb.airr-community.org/api_v2
@@ -113,7 +146,7 @@ Low-priority TODO list
     https://ogrdb.airr-community.org/api
   which is poorly documented and is somewhat confusing (see below).
 
-- Investigate the following mysteries about the germline sets provided
+o Investigate the following mysteries about the germline sets provided
   by AIRR/OGRDB:
 
   1. The OGRDB API at https://ogrdb.airr-community.org/api/ allows downloading
@@ -133,6 +166,6 @@ Low-priority TODO list
      and IGLJ) seem to be available.
      See https://ogrdb.airr-community.org/germline_sets/Mus%20musculus
 
-- Implement install_AIRR_germline_db(). Will download the germline sequences
+o Implement install_AIRR_germline_db(). Will download the germline sequences
   from https://ogrdb.airr-community.org/ (link provided by Kellie).
 
