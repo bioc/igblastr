@@ -37,7 +37,6 @@ Things to do at BioC 3.22 release time
 ======================================
 
 - Update README.md:
-  - Add "devel" row in BioC_version/Status table.
   - Update "Install and load igblastr" section.
 
 - Advertize igblastr:
