@@ -5,6 +5,26 @@
 
 **igblastr** is an R/Bioconductor package that provides functions to conveniently install and use a local IgBLAST installation from within R.
 
+To cite the **igblastr** package in publications, please use:
+
+Pagès H, Hyrien O, MacPhee K, Duff M, Taylor J (2025).
+_igblastr: User-friendly R Wrapper to IgBLAST_.
+doi:10.18129/B9.bioc.igblastr
+<https://doi.org/10.18129/B9.bioc.igblastr>.
+<https://bioconductor.org/packages/igblastr>.
+
+A BibTeX entry for LaTeX users is
+```
+@Manual{,
+  title = {igblastr: User-friendly R Wrapper to IgBLAST},
+  author = {Hervé Pagès and Ollivier Hyrien and Kellie MacPhee and Michael Duff and Jason Taylor},
+  year = {2025},
+  doi = {10.18129/B9.bioc.igblastr},
+  url = {https://bioconductor.org/packages/igblastr},
+}
+```
+Please also cite the original IgBLAST tool if you use it in your analysis.
+
 See <https://bioconductor.org/packages/igblastr> for more information,
 including for how to install the release version of the package (please refrain
 from installing directly from GitHub).

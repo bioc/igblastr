@@ -42,7 +42,7 @@ igblastr_cache <- function(which=NULL)
         GERMLINE_DBS    =file.path(path, "germline_dbs"),
         C_REGION_DBS    =file.path(path, "c_region_dbs"),
         IMGT_LOCAL_STORE=file.path(path, "store", "IMGT-releases"),
-	stop(wmsg("'which' must be one of ",
+        stop(wmsg("'which' must be one of ",
                   paste0("\"", .IGBLASTR_CACHES, "\"", collapse=", ")))
     )
 }

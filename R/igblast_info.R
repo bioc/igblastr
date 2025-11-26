@@ -75,7 +75,7 @@ normalize_igblast_organism <- function(organism)
                            silent=TRUE)
         if (!system_command_worked(raw_version))
             stop(wmsg("command '", cmdpath, " -version' failed"))
-	.IGBLAST_VERSION_cache[[cmdpath]] <- raw_version
+        .IGBLAST_VERSION_cache[[cmdpath]] <- raw_version
     }
     if (raw.version)
         return(raw_version)
