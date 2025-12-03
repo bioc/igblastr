@@ -84,6 +84,24 @@ list_IMGT_organisms <- function(release)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .path_to_IMGT_germline_fasta_store()
+###
+
+.path_to_IMGT_germline_fasta_store <- function(local_store, organism,
+                                               loci_prefix)
+{
+    stopifnot(isSingleNonWhiteString(loci_prefix))
+    organism_path <- find_organism_in_IMGT_local_store(organism, local_store)
+    organism <- basename(organism_path)
+    fasta_store <- file.path(organism_path, loci_prefix)
+    if (!dir.exists(fasta_store))
+        stop(wmsg("cannot find ", loci_prefix, " germline sequences ",
+                  "for ", organism, " in IMGT release ", basename(local_store)))
+    fasta_store
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .get_effective_loci()
 ###
 
@@ -117,13 +135,14 @@ list_IMGT_organisms <- function(release)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .form_IMGT_germline_db_name()
+### install_IMGT_germline_db()
 ###
 
-.form_IMGT_germline_db_name <- function(organism_path, loci)
+.form_IMGT_germline_db_name <- function(fasta_store, loci)
 {
-    stopifnot(isSingleNonWhiteString(organism_path), dir.exists(organism_path))
-    stop_if_bad_loci(loci)
+    stopifnot(isSingleNonWhiteString(fasta_store), dir.exists(fasta_store))
+    stop_if_malformed_loci_vector(loci)
+    organism_path <- dirname(fasta_store)
     organism <- basename(organism_path)
     refdir <- dirname(organism_path)
     stopifnot(basename(refdir) == VQUEST_REFERENCE_DIRECTORY)
@@ -131,11 +150,6 @@ list_IMGT_organisms <- function(release)
     release <- basename(local_store)
     sprintf("IMGT-%s.%s.%s", release, organism, paste(loci, collapse="+"))
 }
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### install_IMGT_germline_db()
-###
 
 install_IMGT_germline_db <- function(release, organism="Homo sapiens",
                                      tcr.db=FALSE, loci="auto",
@@ -146,9 +160,9 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
         .stop_on_missing_release()
     release <- .validate_IMGT_release(release)
     organism <- normalize_IMGT_organism(organism)
-    loci <- normalize_loci(loci, tcr.db=tcr.db)
-    loci_prefix <- unique(substr(loci, 1L, 2L))
-    stopifnot(length(loci_prefix) == 1L, !is.na(loci_prefix))
+    loci <- normalize_user_supplied_loci(loci, tcr.db=tcr.db,
+                                         stop.if.missing.regions=TRUE)
+    loci_prefix <- extract_loci_prefix(loci)
     if (!isTRUEorFALSE(force))
         stop(wmsg("'force' must be TRUE or FALSE"))
 
@@ -157,20 +171,16 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     if (!dir.exists(local_store))
         download_and_unzip_IMGT_release(release, local_store, ...)
 
-    ## Compute 'fasta_store'.
-    organism_path <- find_organism_in_IMGT_local_store(organism, local_store)
-    organism <- basename(organism_path)
-    fasta_store <- file.path(organism_path, loci_prefix)
-    if (!dir.exists(fasta_store))
-        stop(wmsg("cannot find ", loci_prefix, " germline ",
-                  "sequences for ", organism, " in IMGT release ", release))
+    ## Get path to local FASTA store for IMGT germline sequences.
+    fasta_store <- .path_to_IMGT_germline_fasta_store(local_store, organism,
+                                                      loci_prefix)
 
     ## Keep loci for which IMGT actually provides FASTA files.
     found_loci <- list_loci_in_germline_fasta_dir(fasta_store, loci_prefix)
     loci <- .get_effective_loci(loci, found_loci)
 
     ## Compute 'db_name'.
-    db_name <- .form_IMGT_germline_db_name(organism_path, loci)
+    db_name <- .form_IMGT_germline_db_name(fasta_store, loci)
 
     ## Create IMGT germline db.
     germline_dbs_home <- get_germline_dbs_home(TRUE)  # guaranteed to exist
@@ -181,6 +191,52 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     message("Germline db ", db_name, " successfully installed.")
     message("Call use_germline_db(\"", db_name, "\") to select it")
     message("as the germline db to use with igblastn().")
+
+    invisible(db_name)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### install_IMGT_c_region_db()
+###
+
+.form_IMGT_c_region_db_name <- function(organism, loci, version)
+{
+    stopifnot(isSingleNonWhiteString(organism))
+    sprintf("IMGT.%s.%s.%s", organism, paste(loci, collapse="+"), version)
+}
+
+install_IMGT_c_region_db <- function(organism, loci, force=FALSE)
+{
+    organism <- find_organism_shortname(normalize_IMGT_organism(organism))
+    loci <- normalize_user_supplied_loci(loci)
+    loci_prefix <- extract_loci_prefix(loci)
+    if (!isTRUEorFALSE(force))
+        stop(wmsg("'force' must be TRUE or FALSE"))
+
+    ## Get path to local FASTA store for IMGT C-region sequences.
+    fasta_store <- path_to_IMGT_c_region_fasta_store(organism, loci_prefix)
+    if (!dir.exists(fasta_store))
+        stop(wmsg("we're not aware of any ", loci_prefix, " C-region ",
+                  "sequences available at IMGT for ", organism, ", sorry"))
+
+    ## Keep loci for which IMGT actually provides FASTA files.
+    found_loci <- list_loci_in_c_region_fasta_dir(fasta_store, loci_prefix)
+    loci <- .get_effective_loci(loci, found_loci)
+
+    ## Compute 'db_name'.
+    version <- read_version_file(fasta_store)
+    db_name <- .form_IMGT_c_region_db_name(organism, loci, version)
+
+    ## Create IMGT C-region db.
+    c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist
+    db_path <- file.path(c_region_dbs_home, db_name)
+    create_c_region_db(fasta_store, loci, db_path, force=force)
+
+    ## Success!
+    message("C-region db ", db_name, " successfully installed.")
+    message("Call use_c_region_db(\"", db_name, "\") to select it as the")
+    message("C-region db to use with igblastn().")
 
     invisible(db_name)
 }

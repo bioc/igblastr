@@ -6,7 +6,7 @@
 ###
 
 
-.read_version_file <- function(dirpath)
+read_version_file <- function(dirpath)
 {
     stopifnot(isSingleNonWhiteString(dirpath))
     version_path <- file.path(dirpath, "version")
@@ -26,36 +26,36 @@
 ### .create_missing_builtin_AIRR_human_germline_dbs()
 ###
 
-.form_builtin_AIRR_human_germline_db_name <- function(fasta_dir)
+.form_builtin_AIRR_human_germline_db_name <- function(fasta_store)
 {
     loci_in1string <- paste(IG_LOCI, collapse="+")
-    version <- basename(dirname(fasta_dir))
+    version <- basename(dirname(fasta_store))
     db_name <- sprintf("_AIRR.human.%s.%s", loci_in1string, version)
-    flavor <- basename(fasta_dir)
+    flavor <- basename(fasta_store)
     stopifnot(flavor %in% c("ref", "src"))
     if (flavor == "src")
         db_name <- paste0(db_name, ".src")
     db_name
 }
 
-.create_builtin_AIRR_human_germline_db <- function(fasta_dir, destdir,
+.create_builtin_AIRR_human_germline_db <- function(fasta_store, destdir,
                                                    only.if.missing=FALSE)
 {
     stopifnot(isSingleNonWhiteString(destdir), dir.exists(destdir),
               isTRUEorFALSE(only.if.missing))
-    db_name <- .form_builtin_AIRR_human_germline_db_name(fasta_dir)
+    db_name <- .form_builtin_AIRR_human_germline_db_name(fasta_store)
     db_path <- file.path(destdir, db_name)
     if (!(only.if.missing && dir.exists(db_path)))
-        create_germline_db(fasta_dir, IG_LOCI, db_path)
+        create_germline_db(fasta_store, IG_LOCI, db_path)
 }
 
 .create_missing_builtin_AIRR_human_germline_dbs <- function(human_dir, destdir)
 {
     stopifnot(isSingleNonWhiteString(human_dir), dir.exists(human_dir))
     human_subdirs <- list.dirs(human_dir, recursive=FALSE)
-    fasta_dirs <- file.path(rep(human_subdirs, each=2L), c("ref", "src"))
-    for (fasta_dir in fasta_dirs)
-        .create_builtin_AIRR_human_germline_db(fasta_dir, destdir,
+    fasta_stores <- file.path(rep(human_subdirs, each=2L), c("ref", "src"))
+    for (fasta_store in fasta_stores)
+        .create_builtin_AIRR_human_germline_db(fasta_store, destdir,
                                                only.if.missing=TRUE)
 }
 
@@ -64,30 +64,30 @@
 ### .create_missing_builtin_AIRR_mouse_germline_dbs()
 ###
 
-.form_builtin_AIRR_mouse_germline_db_name <- function(fasta_dir)
+.form_builtin_AIRR_mouse_germline_db_name <- function(fasta_store)
 {
-    strain <- basename(fasta_dir)
+    strain <- basename(fasta_store)
     loci_in1string <- paste(IG_LOCI, collapse="+")
-    version <- .read_version_file(fasta_dir)
+    version <- read_version_file(fasta_store)
     sprintf("_AIRR.mouse.%s.%s.%s", strain, loci_in1string, version)
 }
 
-.create_builtin_AIRR_mouse_germline_db <- function(fasta_dir, destdir,
+.create_builtin_AIRR_mouse_germline_db <- function(fasta_store, destdir,
                                                    only.if.missing=FALSE)
 {
     stopifnot(isSingleNonWhiteString(destdir), dir.exists(destdir),
               isTRUEorFALSE(only.if.missing))
-    db_name <- .form_builtin_AIRR_mouse_germline_db_name(fasta_dir)
+    db_name <- .form_builtin_AIRR_mouse_germline_db_name(fasta_store)
     db_path <- file.path(destdir, db_name)
     if (!(only.if.missing && dir.exists(db_path)))
-        create_germline_db(fasta_dir, IG_LOCI, db_path)
+        create_germline_db(fasta_store, IG_LOCI, db_path)
 }
 
 .create_missing_builtin_AIRR_mouse_germline_dbs <- function(mouse_dir, destdir)
 {
-    fasta_dirs <- list.dirs(mouse_dir, recursive=FALSE)
-    for (fasta_dir in fasta_dirs)
-        .create_builtin_AIRR_mouse_germline_db(fasta_dir, destdir,
+    fasta_stores <- list.dirs(mouse_dir, recursive=FALSE)
+    for (fasta_store in fasta_stores)
+        .create_builtin_AIRR_mouse_germline_db(fasta_store, destdir,
                                                only.if.missing=TRUE)
 }
 
@@ -148,21 +148,35 @@ create_all_builtin_germline_dbs <- function(destdir)
     sprintf("_IMGT.%s.%s.%s", organism, paste(loci, collapse="+"), version)
 }
 
-.create_builtin_IMGT_c_region_db <- function(fasta_dir, loci_prefix,
+.create_builtin_IMGT_c_region_db <- function(fasta_store, loci_prefix,
                                              organism, destdir)
 {
     stopifnot(isSingleNonWhiteString(destdir), dir.exists(destdir))
-    loci <- list_loci_in_c_region_fasta_dir(fasta_dir, loci_prefix)
-    version <- .read_version_file(fasta_dir)
+    loci <- list_loci_in_c_region_fasta_dir(fasta_store, loci_prefix)
+    version <- read_version_file(fasta_store)
     db_name <- .form_builtin_IMGT_c_region_db_name(organism, loci, version)
     db_path <- file.path(destdir, db_name)
-    create_c_region_db(fasta_dir, loci, db_path)
+    create_c_region_db(fasta_store, loci, db_path)
 }
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### create_all_builtin_c_region_dbs()
 ###
+
+path_to_IMGT_c_region_fasta_store <- function(organism, loci_prefix)
+{
+    stopifnot(isSingleNonWhiteString(organism),
+              organism %in% names(LATIN_NAMES),
+              isSingleNonWhiteString(loci_prefix))
+    IMGT_c_region_store <- system.file(package="igblastr",
+                                       "extdata", "constant_regions", "IMGT",
+                                       mustWork=TRUE)
+    fasta_store <- file.path(IMGT_c_region_store, organism, loci_prefix)
+    if (loci_prefix == "IG")
+        fasta_store <- file.path(fasta_store, "14.1")
+    fasta_store
+}
 
 create_all_builtin_c_region_dbs <- function(destdir)
 {
@@ -176,17 +190,13 @@ create_all_builtin_c_region_dbs <- function(destdir)
     on.exit(nuke_file(tmp_destdir))
 
     ## Create IMGT C-region dbs.
-    IMGT_c_region_dir <- system.file(package="igblastr",
-                                     "extdata", "constant_regions", "IMGT",
-                                     mustWork=TRUE)
     for (organism in names(LATIN_NAMES)) {
-        organism_dir <- file.path(IMGT_c_region_dir, organism)
-        fasta_dir <- file.path(organism_dir, "IG", "14.1")
-        .create_builtin_IMGT_c_region_db(fasta_dir, "IG", organism,
+        fasta_store <- path_to_IMGT_c_region_fasta_store(organism, "IG")
+        .create_builtin_IMGT_c_region_db(fasta_store, "IG", organism,
                                          tmp_destdir)
-        fasta_dir <- file.path(organism_dir, "TR")
-        if (dir.exists(fasta_dir))
-            .create_builtin_IMGT_c_region_db(fasta_dir, "TR", organism,
+        fasta_store <- path_to_IMGT_c_region_fasta_store(organism, "TR")
+        if (dir.exists(fasta_store))
+            .create_builtin_IMGT_c_region_db(fasta_store, "TR", organism,
                                              tmp_destdir)
     }
 

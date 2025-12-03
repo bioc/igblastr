@@ -164,6 +164,7 @@ normalize_IMGT_organism <- function(organism)
 
 list_organisms_in_IMGT_local_store <- function(local_store)
 {
+    stopifnot(isSingleNonWhiteString(local_store), dir.exists(local_store))
     refdir <- file.path(local_store, VQUEST_REFERENCE_DIRECTORY)
     if (!dir.exists(refdir))
         stop(wmsg("Anomaly: directory ", refdir, " not found"))
@@ -182,6 +183,7 @@ list_organisms_in_IMGT_local_store <- function(local_store)
 ###                     └──  Homo_sapiens
 find_organism_in_IMGT_local_store <- function(organism, local_store)
 {
+    stopifnot(isSingleNonWhiteString(organism))
     all_organisms <- list_organisms_in_IMGT_local_store(local_store)
     idx <- match(tolower(organism), tolower(all_organisms))
     if (!is.na(idx)) {

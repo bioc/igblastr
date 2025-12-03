@@ -9,23 +9,6 @@ o Investigate BIG inconsistency between local IgBLAST and online IgBLAST:
   email to the IgBLAST folks at NCBI (blast-help@ncbi.nlm.nih.gov or
   nlm-support@nlm.nih.gov).
 
-o Let the user choose what loci to include in the germline dbs that they
-  install from IMGT. That seems to be of interest when doing TCR sequence
-  analysis, but not sure about BCR sequence analysis.
-  In any case this can be achieved by adding the 'loci' argument to
-  install_IMGT_germline_db(). It would take a character vector of locus
-  names (i.e. a subset of IGH, IGK, IGL, TRA, TRB, TRG, TRD) or the special
-  value "auto" (the default) in which case it would download all IG loci
-  when 'tcr.db' is FALSE and all TR loci when 'tcr.db' is TRUE. Note that
-  with this interface the user would be able to mix IG and TR loci even
-  though it's not clear that there's a use case for that so maybe emit a
-  warning when they do that?
-
-  In addition to the above the user should be able to install C-region dbs
-  with the desired TR loci. So maybe we need an install_IMGT_c_region_db()
-  for that? All the C-region data is already included in the package so
-  install_IMGT_c_region_db() wouldn't need to download anything.
-
 o Mismatch/indel summarization:
 
   The goal is to summarize information about the mismatches and indels

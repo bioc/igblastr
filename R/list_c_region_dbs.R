@@ -4,7 +4,7 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .get_c_region_dbs_home()
+### get_c_region_dbs_home()
 ###
 
 ### The first built-in IMGT TR C-region dbs were added in Sep 2025 in
@@ -55,7 +55,7 @@
 ###   with the built-in C-region dbs.
 ### This means that the returned path is only guaranteed to exist
 ### when 'init.path' is set to TRUE.
-.get_c_region_dbs_home <- function(init.path=FALSE)
+get_c_region_dbs_home <- function(init.path=FALSE)
 {
     stopifnot(isTRUEorFALSE(init.path))
     c_region_dbs_home <- igblastr_cache(C_REGION_DBS)
@@ -74,7 +74,7 @@
 list_c_region_dbs <- function(builtin.only=FALSE,
                               names.only=FALSE, long.listing=FALSE)
 {
-    c_region_dbs_home <- .get_c_region_dbs_home(TRUE)  # guaranteed to exist
+    c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist
     ans <- list_dbs(c_region_dbs_home, what="C-region",
                     builtin.only=builtin.only,
                     names.only=names.only, long.listing=long.listing)
@@ -85,7 +85,7 @@ list_c_region_dbs <- function(builtin.only=FALSE,
 
 print.c_region_dbs_df <- function(x, ...)
 {
-    c_region_dbs_home <- .get_c_region_dbs_home(TRUE)  # guaranteed to exist
+    c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist
     print_dbs_df(x, c_region_dbs_home, what="C-region")
 }
 
@@ -123,8 +123,8 @@ make_c_region_db_path <- function(db_name)
     if (!isSingleNonWhiteString(db_name))
         stop(wmsg("'db_name' must be a single (non-empty) string"))
     stopifnot(db_name != "USING")
-    c_region_dbs_home <- .get_c_region_dbs_home(TRUE)  # guaranteed to exist
-    file.path(c_region_dbs_home, db_name)              # NOT guaranteed to exist
+    c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist
+    file.path(c_region_dbs_home, db_name)             # NOT guaranteed to exist
 }
 
 
@@ -135,7 +135,7 @@ make_c_region_db_path <- function(db_name)
 ### Returns "" if no db is currently in use.
 .get_c_region_db_in_use <- function(verbose=FALSE)
 {
-    c_region_dbs_home <- .get_c_region_dbs_home(TRUE)  # guaranteed to exist
+    c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist
     db_path <- get_db_in_use(c_region_dbs_home, what="C-region")
     if (db_path == "")
         return(db_path)
@@ -185,7 +185,7 @@ load_c_region_db <- function(db_name)
 ### Not used at the moment and not exported!
 clean_c_region_blastdbs <- function()
 {
-    c_region_dbs_home <- .get_c_region_dbs_home()  # NOT guaranteed to exist
+    c_region_dbs_home <- get_c_region_dbs_home()  # NOT guaranteed to exist
     if (dir.exists(c_region_dbs_home)) {
         all_db_names <- list_c_region_dbs(names.only=TRUE)
         for (db_name in all_db_names) {
@@ -193,5 +193,25 @@ clean_c_region_blastdbs <- function()
             clean_blastdbs(db_path)
         }
     }
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### rm_c_region_db()
+###
+
+rm_c_region_db <- function(db_name)
+{
+    .check_c_region_db_name(db_name)
+    if (has_prefix(db_name, "_"))
+        stop(wmsg("cannot remove a built-in C-region db"))
+
+    c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist
+    db_in_use_path <- get_db_in_use(c_region_dbs_home, what="C-region")
+    if (db_in_use_path != "" && basename(db_in_use_path) == db_name)
+        set_db_in_use("C-region", "")  # cancel current selection
+
+    db_path <- make_c_region_db_path(db_name)
+    nuke_file(db_path)
 }
 
