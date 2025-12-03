@@ -87,10 +87,11 @@ list_loci_in_germline_fasta_dir <-
 .collect_fasta_files <- function(fasta_dir, region_type, loci)
 {
     wanted_loci <- get_region_type_loci(region_type, loci)
-    ## 'loci' should have gone thru normalize_loci() so this is not supposed
-    ## to happen. However it also went thru .get_effective_loci() which could
-    ## have removed some loci from the original user selection. So yes, it's
-    ## actually still possible that 'wanted_loci' will be empty!
+    ## 'loci' should have gone thru .check_loci_for_missing_regions()
+    ## so this is not supposed to happen. However it also went thru
+    ## .get_effective_loci() which could have removed some loci from
+    ## the original user selection. So yes, it's actually still possible
+    ## that 'wanted_loci' will be empty!
     if (length(wanted_loci) == 0L)
         stop(wmsg("no fasta files found for region ", region_type, " for ",
                   "the selected loci"))

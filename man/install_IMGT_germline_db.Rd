@@ -4,6 +4,7 @@
 \alias{list_IMGT_releases}
 \alias{list_IMGT_organisms}
 \alias{IMGT_is_up}
+\alias{install_IMGT_c_region_db}
 
 \title{Install a germline db from IMGT}
 
@@ -23,6 +24,10 @@ install_IMGT_germline_db(release, organism="Homo sapiens", tcr.db=FALSE,
 list_IMGT_releases(recache=FALSE)
 list_IMGT_organisms(release)
 IMGT_is_up()
+
+## Can only be used to "subset" a built-in C-region databse (see
+## advanced example in Examples section below):
+install_IMGT_c_region_db(organism, loci, force=FALSE)
 }
 
 \arguments{
@@ -35,10 +40,13 @@ IMGT_is_up()
   \item{organism}{
     A single string specifying the latin name of the organism for which
     to get the germline sequences.
+
+    Note that \code{install_IMGT_c_region_db()} also accepts the
+    common name of the organism (e.g. "human").
   }
   \item{tcr.db}{
-    Should the database be populated with allele sequences from the
-    BCR (B-cell Receptor) or TCR (T-cell Receptor) germline loci?
+    Should the database to install be populated with allele sequences
+    from the BCR (B-cell Receptor) or TCR (T-cell Receptor) germline loci?
 
     The BCR germline loci are: IGH, IGK, IGL.
 
@@ -49,7 +57,13 @@ IMGT_is_up()
     V/D/J allele sequences from the TCR germline loci instead.
   }
   \item{loci}{
-    COMING SOON...
+    By default, the database to install will be populated with the allele
+    sequences from all the BCR or TCR loci.
+    However, if you want to restrict the database to specific loci, you
+    can use the \code{loci} argument to specify these loci.
+    The subset of loci can be specified as a character vector with one
+    element per locus (e.g. \code{"IGH"} or \code{c("TRA", "TRB")}), or
+    as a \code{+}-separated list in a single string (e.g. \code{"TRA+TRB"}).
   }
   \item{force}{
     Set to \code{TRUE} to reinstall if the requested database is already
@@ -115,6 +129,9 @@ IMGT_is_up()
   \code{IMGT_is_up()} returns \code{TRUE} or \code{FALSE}, indicating
   whether the IMGT website at \url{https://www.imgt.org} is up and running
   or down.
+
+  \code{install_IMGT_c_region_db()} returns the name to the newly
+  installed C-region db as an invisible string.
 }
 
 \note{
@@ -146,6 +163,10 @@ IMGT_is_up()
 if (!has_igblast()) install_igblast()
 
 if (IMGT_is_up()) {
+  ## -------------------------------------------------------------------
+  ## BASIC EXAMPLES
+  ## -------------------------------------------------------------------
+
   ## As of March 26, 2025, the latest IMGT/V-QUEST release is 202518-3:
   list_IMGT_releases()
 
@@ -166,6 +187,22 @@ if (IMGT_is_up()) {
   install_IMGT_germline_db("202518-3", organism="Mus musculus",
                            tcr.db=TRUE, force=TRUE)
   list_germline_dbs()
+
+  ## -------------------------------------------------------------------
+  ## ADVANCED EXAMPLES
+  ## -------------------------------------------------------------------
+
+  ## Install an IMGT database for a subset of TCR loci:
+  install_IMGT_germline_db("202518-3", organism="Homo sapiens",
+                           loci="TRA+TRB", force=TRUE)
+  list_germline_dbs()
+
+  ## Install the corresponding C-region database:
+  install_IMGT_c_region_db("human", "TRA+TRB", force=TRUE)
+  list_c_region_dbs()
+
+  ## Note that install_IMGT_c_region_db() can only be used to "subset"
+  ## a built-in C-region databse.
 }
 }
 

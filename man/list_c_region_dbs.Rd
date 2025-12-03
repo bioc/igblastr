@@ -4,6 +4,7 @@
 \alias{print.c_region_dbs_df}
 \alias{use_c_region_db}
 \alias{load_c_region_db}
+\alias{rm_c_region_db}
 
 \title{List cached C-region dbs and select one to use with igblastn()}
 
@@ -19,6 +20,8 @@
           duration of the current R session but can be changed anytime.
     \item \code{load_c_region_db()}: Load the nucleotide sequences of the
           gene regions stored in a cached C-region db.
+    \item \code{rm_c_region_db()}: Remove a C-region db from \pkg{igblastr}'s
+          persistent cache.
   }
 }
 
@@ -28,6 +31,8 @@ list_c_region_dbs(builtin.only=FALSE, names.only=FALSE, long.listing=FALSE)
 use_c_region_db(db_name=NULL, verbose=FALSE)
 
 load_c_region_db(db_name)
+
+rm_c_region_db(db_name)
 }
 
 \arguments{
@@ -70,6 +75,11 @@ load_c_region_db(db_name)
     A single string specifying the name of the cached C-region db
     from which to load the gene regions. Use \code{list_c_region_dbs()}
     to list all the cached C-region dbs.
+
+    For \code{rm_c_region_db()}:
+
+    A single string specifying the name of the C-region db to remove
+    from the cache. This cannot be a built-in db.
   }
   \item{verbose}{
     If set to \code{TRUE}, then \code{use_c_region_db()} will display
@@ -92,7 +102,7 @@ load_c_region_db(db_name)
 
   This man page documents the basic utilities to operate on the cached
   C-region dbs: \code{list_c_region_dbs()}, \code{use_c_region_db()},
-  and \code{load_c_region_db()}.
+  and \code{load_c_region_db()}, and \code{rm_c_region_db()}.
 
   The basic utilities to operate on the cached germline dbs are documented
   in the man page for \code{\link{list_germline_dbs}}.
@@ -121,6 +131,8 @@ load_c_region_db(db_name)
 
   \code{load_c_region_db()} returns the nucleotide sequences from the
   specified C-region db in a named \link[Biostrings]{DNAStringSet} object.
+
+  \code{rm_c_region_db()} returns an invisible \code{NULL}.
 }
 
 \seealso{
