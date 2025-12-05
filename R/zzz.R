@@ -1,5 +1,27 @@
+.print_msg_if_live_igdata_needs_check <- function(dt)
+{
+    stopifnot(isSingleNumber(dt))
+    if (is.infinite(dt)) {
+        msg <- c("You can run 'update_live_igdata()' to check for new ",
+                 "IgBLAST auxiliary or internal data files available at ",
+                 "NCBI. See '?update_live_igdata' for more information.")
+    } else if (dt > 30) {
+        msg <- c("More than 30 days have passed since the last time ",
+                 "you ran 'update_live_igdata()'. Time to run it again!")
+    } else {
+        return(invisible(NULL))
+    }
+    packageStartupMessage(wmsg("igblastr tip: ", msg))
+}
+
 .onLoad <- function(libname, pkgname)
 {
+    if (!dir.exists(igblastr_cache(LIVE_IGDATA)))
+        reset_live_igdata()
+
+    dt <- time_since_live_igdata_last_checked()
+    .print_msg_if_live_igdata_needs_check(dt)
+
     igblastr_usage_report <- getOption("igblastr_usage_report")
     if (is.null(igblastr_usage_report)) {
         igblastr_usage_report <-

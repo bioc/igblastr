@@ -148,7 +148,7 @@ rm_germline_db(db_name)
   \code{load_germline_db()} returns the nucleotide sequences from the
   specified germline db in a named \link[Biostrings]{DNAStringSet} object.
 
-  \code{rm_germline_db()} returns an invisible \code{NULL}.
+  \code{rm_germline_db()} does not return anything (invisible \code{NULL}).
 }
 
 \seealso{

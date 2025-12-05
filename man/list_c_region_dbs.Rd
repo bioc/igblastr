@@ -132,7 +132,7 @@ rm_c_region_db(db_name)
   \code{load_c_region_db()} returns the nucleotide sequences from the
   specified C-region db in a named \link[Biostrings]{DNAStringSet} object.
 
-  \code{rm_c_region_db()} returns an invisible \code{NULL}.
+  \code{rm_c_region_db()} does not return anything (invisible \code{NULL}).
 }
 
 \seealso{
