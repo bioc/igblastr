@@ -165,7 +165,8 @@ extract_sequences_from_paired_OAS_units(dir=".", pattern="\\\\.csv\\\\.gz$")
   \code{list_paired_OAS_units()} returns the list of all the OAS unit files
   that belong to a given study from the "Paired Sequences" database.
 
-  \code{download_paired_OAS_units()} returns an invisible \code{NULL}.
+  \code{download_paired_OAS_units()} does not return anything (invisible
+  \code{NULL}).
 
   \code{extract_metadata_from_OAS_units()} returns the metadata of all the
   OAS unit files found in the specified directory in a data.frame with 1 row

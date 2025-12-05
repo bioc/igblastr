@@ -103,9 +103,7 @@ igblast_build <- function(igblast_root=get_igblast_root())
 
 print.igblast_info <- function(x, ...)
 {
-    x <- lapply(x, function(x) paste(x, collapse="; "))
-    x <- paste0(names(x), ": ", as.character(x))
-    cat(x, sep="\n")
+    cat(named_list_as_character(x), sep="\n")
 }
 
 igblast_info <- function(igblast_root=get_igblast_root())

@@ -160,7 +160,7 @@ create_germline_db <- function(fasta_dir, loci, destdir, force=FALSE)
     ## atomicity and avoids loosing the content of the existing 'destdir' in
     ## case something goes wrong.
     tmp_destdir <- tempfile("germline_db_")
-    dir.create(tmp_destdir, recursive=TRUE)
+    dir.create(tmp_destdir)
     on.exit(nuke_file(tmp_destdir))
     .create_VDJ_region_dbs(fasta_dir, loci, tmp_destdir)
     rename_file(tmp_destdir, destdir, replace=TRUE)

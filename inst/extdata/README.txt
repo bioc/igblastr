@@ -14,8 +14,7 @@ Content
 
 - germline_sequences/: See README.txt in germline_sequences/ subfolder.
 
-- ncbi_igblast_data_files/: See README.txt in ncbi_igblast_data_files/
-  subfolder.
+- igdata_store/: See README.txt in igdata_store/ subfolder.
 
 - novel_germline_alleles/: See README.txt in novel_germline_alleles/
   subfolder.

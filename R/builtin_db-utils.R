@@ -128,7 +128,7 @@ create_all_builtin_germline_dbs <- function(destdir)
     ## rename the temporary folder to 'destdir'. Otherwise we destroy the
     ## temporary folder and raise an error. This achieves atomicity.
     tmp_destdir <- tempfile("builtin_germline_dbs_")
-    dir.create(tmp_destdir, recursive=TRUE)
+    dir.create(tmp_destdir)
     on.exit(nuke_file(tmp_destdir))
 
     create_missing_builtin_germline_dbs(tmp_destdir)
@@ -186,7 +186,7 @@ create_all_builtin_c_region_dbs <- function(destdir)
     ## rename the temporary folder to 'destdir'. Otherwise we destroy the
     ## temporary folder and raise an error. This achieves atomicity.
     tmp_destdir <- tempfile("builtin_c_region_dbs_")
-    dir.create(tmp_destdir, recursive=TRUE)
+    dir.create(tmp_destdir)
     on.exit(nuke_file(tmp_destdir))
 
     ## Create IMGT C-region dbs.

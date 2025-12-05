@@ -1,4 +1,4 @@
-This is the extdata/ncbi_igblast_data_files/ folder in the igblastr package.
+This is the extdata/igdata_store/ folder in the igblastr package.
 
 This folder contains subfolders internal_data/ and optional_file/ extracted
 from the source tarball ncbi-igblast-1.22.0-src.tar.gz provided at

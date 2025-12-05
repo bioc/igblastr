@@ -52,7 +52,7 @@ augment_germline_db_J(db_name, novel_alleles, destdir=".", overwrite=FALSE)
 }
 
 \value{
-  An invisible \code{NULL}.
+  These functions don't return anything (invisible \code{NULL}).
 }
 
 \seealso{

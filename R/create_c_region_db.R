@@ -91,7 +91,7 @@ create_c_region_db <- function(fasta_dir, loci, destdir, force=FALSE)
     ## avoids loosing the content of the existing 'destdir' in case something
     ## goes wrong.
     tmp_destdir <- tempfile("c_region_db_")
-    dir.create(tmp_destdir, recursive=TRUE)
+    dir.create(tmp_destdir)
     on.exit(nuke_file(tmp_destdir))
     create_region_db(fasta_files, tmp_destdir, region_type="C")
     rename_file(tmp_destdir, destdir, replace=TRUE)

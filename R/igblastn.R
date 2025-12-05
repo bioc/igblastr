@@ -233,7 +233,7 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
     stopifnot(is.character(exe_args))
     igblastn_exe <- get_igblast_exe("igblastn", igblast_root=igblast_root)
     oldwd <- getwd()
-    setwd(igblast_root)
+    setwd(igblastr_cache(LIVE_IGDATA))
     on.exit(setwd(oldwd))
 
     stderr_file <- tempfile("igblastn_stderr_", fileext=".txt")

@@ -149,9 +149,9 @@
     } else if (has_suffix(ncbi_igblast_name, ".dmg")) {
         igblast_root <- extract_igblast_dmg(downloaded_file, ncbi_igblast_name,
                                 destdir=internal_roots)
-        ## See README.txt in igblastr/inst/extdata/ncbi_igblast_data_files/
-        ## for why we need to do this.
-        install_ncbi_igblast_data_files(igblast_root)
+        ## See README.txt in igblastr/inst/extdata/igdata_store/ for why we
+        ## need to do this.
+        install_igdata_in_igblast_root(igblast_root)
     } else {
         stop(wmsg("Anomaly: file to extract must be ",
                   "a tarball (.tar.gz file) or .dmg file"))
