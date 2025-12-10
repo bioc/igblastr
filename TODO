@@ -1,7 +1,7 @@
 High-priority TODO list
 =======================
 
-o Investigate BIG inconsistency between local IgBLAST and online IgBLAST:
+o Investigate BIG inconsistency between local IgBLAST and web IgBLAST:
   https://www.ncbi.nlm.nih.gov/igblast/
 
   Try to run the former with the -remote option to execute search remotely,
@@ -103,8 +103,8 @@ o Figure out a way to automatically stamp AIRR germline dbs with a
 o One should be able to pass the name of an IMGT germline db to
   install_IMGT_germline_db(), or a vector of names.
 
-o Improve outfmt7-utils.Rd man page (e.g. document customized format 7
-  and list_outfmt7_specifiers()) as well as associated unit tests (in
+o Improve read_igblastn_fmt7_output.Rd man page (e.g. document customized
+  format 7 and list_outfmt7_specifiers()) as well as associated unit tests (in
   tests/testthat/test-outfmt7-utils.R).
 
 o Make 'num_threads' an explicit argument with default to 4. The doc should

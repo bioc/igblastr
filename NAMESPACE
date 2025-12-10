@@ -24,6 +24,7 @@ import(Biostrings)
 ###
 
 S3method(print, alignment_summary)
+S3method(print, aux_data_md5sum_df)
 S3method(print, c_region_dbs_df)
 S3method(print, fmt7footer)
 S3method(print, fmt7record)
@@ -46,6 +47,7 @@ S3method(summary, query_details)
 
 export(
     print.alignment_summary,
+    print.aux_data_md5sum_df,
     print.c_region_dbs_df,
     print.fmt7footer,
     print.fmt7record,
@@ -112,9 +114,13 @@ export(
     augment_germline_db_D,
     augment_germline_db_J,
 
-    ## outfmt7-utils.R:
+    ## read_igblastn_fmt7_output.R:
     list_outfmt7_specifiers,
     parse_outfmt7,
+    read_igblastn_fmt7_output,
+
+    ## read_igblastn_AIRR_output.R:
+    read_igblastn_AIRR_output,
 
     ## igblastn.R:
     igblastn, igblastn_help,
@@ -144,7 +150,7 @@ export(
 ###
 
 export(
-    # outfmt7-utils.R:
+    ## read_igblastn_fmt7_output.R:
     qseqid
 )
 

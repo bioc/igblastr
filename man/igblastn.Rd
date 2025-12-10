@@ -227,7 +227,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     \item A nested list with two top-level components (\code{records}
           and \code{footer}) if \code{outfmt} is \code{7} (or a customized
           format 7) and \code{parse.out} is \code{TRUE}.
-          See \code{?\link{parse_outfmt7}} for more information.
+          See \code{?\link{read_igblastn_fmt7_output}} for more information.
     \item A character vector with class attribute \code{"igblastn_raw_output"}
           on it in all other cases, that is, if \code{parse.out} is
           \code{FALSE} or \code{outfmt} is \code{3} or \code{4}.
@@ -377,7 +377,7 @@ AIRR_df <- igblastn(query)
 ## More examples
 ## ---------------------------------------------------------------------
 
-## See '?parse_outfmt7' for more examples.
+## See '?read_igblastn_fmt7_output' for more examples.
 }
 
 \keyword{manip}

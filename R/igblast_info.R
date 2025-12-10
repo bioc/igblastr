@@ -103,7 +103,7 @@ igblast_build <- function(igblast_root=get_igblast_root())
 
 print.igblast_info <- function(x, ...)
 {
-    cat(named_list_as_character(x), sep="\n")
+    cat(named_list_as_pretty_keyvals(x), sep="\n")
 }
 
 igblast_info <- function(igblast_root=get_igblast_root())
