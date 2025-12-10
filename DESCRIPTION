@@ -3,11 +3,11 @@ Title: User-friendly R Wrapper to IgBLAST
 Description: The igblastr package provides functions to conveniently install
 	and use a local IgBLAST installation from within R.
 	IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>.
-	Online IgBLAST: <https://www.ncbi.nlm.nih.gov/igblast/>.
+	IgBLAST web interface: <https://www.ncbi.nlm.nih.gov/igblast/>.
 biocViews: Immunology, Immunogenetics, ImmunoOncology, CellBiology
 URL: https://bioconductor.org/packages/igblastr
 BugReports: https://github.com/HyrienLab/igblastr/issues
-Version: 1.0.4
+Version: 1.0.5
 License: Artistic-2.0
 Encoding: UTF-8
 Authors@R: c(
@@ -56,7 +56,8 @@ Collate:
 	install_AIRR_germline_db.R
 	augment_germline_db.R
 	igblastn-args-utils.R
-	outfmt7-utils.R
+	read_igblastn_fmt7_output.R
+	read_igblastn_AIRR_output.R
 	igblastn.R
 	igbrowser.R
 	summarizeMismatches.R

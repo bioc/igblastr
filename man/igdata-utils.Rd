@@ -11,6 +11,7 @@
 \alias{time_since_live_igdata_last_checked}
 \alias{reset_live_igdata}
 
+\alias{print.aux_data_md5sum_df}
 \alias{print.igdata_info}
 
 \title{Low-level manipulation of IgBLAST auxiliary and internal data}

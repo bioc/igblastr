@@ -318,13 +318,16 @@ add_exe_suffix_on_Windows <- function(files, OS=get_OS_arch()[["OS"]])
     paste0(files, ".exe")
 }
 
-named_list_as_character <- function(x, sep="; ")
+### Returns a character vector with one string per key/val.
+named_list_as_pretty_keyvals <- function(x, sep="; ")
 {
     stopifnot(is.list(x))
     x_names <- names(x)
     stopifnot(!is.null(x_names))
-    x <- lapply(x, function(x) paste(x, collapse=sep))
-    paste0(x_names, ": ", as.character(x))
+    keys <- format(paste0(x_names, ": "))
+    margin <- max(nchar(keys))
+    x <- lapply(x, function(x) wmsg2(paste(x, collapse=sep), margin=margin))
+    paste0(keys, as.character(x))
 }
 
 display_local_file_in_browser <- function(file)

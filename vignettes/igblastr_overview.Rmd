@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 7 October 2025"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 9 December 2025"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -69,7 +69,7 @@ the package provides:
 
 IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>
 
-Online IgBLAST: <https://www.ncbi.nlm.nih.gov/igblast/>
+IgBLAST web interface: <https://www.ncbi.nlm.nih.gov/igblast/>
 
 Please use <https://github.com/HyrienLab/igblastr/issues> to report bugs,
 provide feedback, request features (etc) about `r Biocpkg("igblastr")`.

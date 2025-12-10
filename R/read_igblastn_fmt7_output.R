@@ -1,5 +1,5 @@
 ### =========================================================================
-### Handle igblastn output format 7
+### read_igblastn_fmt7_output()
 ### -------------------------------------------------------------------------
 ###
 
@@ -458,5 +458,16 @@ parse_outfmt7 <- function(out_lines)
         function(idx) .parse_fmt7record(all_record_lines[idx]))
 
     list(records=list_of_records, footer=footer)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### read_igblastn_fmt7_output()
+###
+
+### Read and parse igblastn output format 7.
+read_igblastn_fmt7_output <- function(out)
+{
+    parse_outfmt7(readLines(out))
 }
 

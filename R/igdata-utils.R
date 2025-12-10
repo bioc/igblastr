@@ -194,6 +194,50 @@ update_live_igdata <- function(check.only=FALSE)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .make_aux_data_md5sum_df()
+###
+
+.compute_aux_files_md5sums <- function(which=c("live", "original"))
+{
+    aux_dir <- file.path(.path_to_igdata(which), "optional_file")
+    aux_files <- list.files(aux_dir, pattern="\\.(aux|frame)$")
+    setNames(md5sum(file.path(aux_dir, aux_files)), aux_files)
+}
+
+.make_aux_data_md5sum_df <- function()
+{
+    live_md5sums <- .compute_aux_files_md5sums("live")
+    orig_md5sums <- .compute_aux_files_md5sums("original")
+    files <- sort(union(names(live_md5sums), names(orig_md5sums)))
+    ans <- data.frame(file=files,
+                      live=unname(live_md5sums[files]),
+                      original=unname(orig_md5sums[files]))
+    class(ans) <- c("aux_data_md5sum_df", class(ans))
+    ans
+}
+
+.aux_data_md5sum_df_as_character <- function(x)
+{
+    EXPECTED_COLNAMES <- c("file", "live", "original")
+    stopifnot(is.data.frame(x), identical(colnames(x), EXPECTED_COLNAMES))
+    note <- character(nrow(x))
+    note[x$live != x$original] <- " (updated)"
+    note[is.na(x$original)] <- " (new)"
+    ans <- character(3L * nrow(x))
+    ans[3L * seq_len(nrow(x)) - 2L] <- paste0("- file '", x$file, "'")
+    ans[3L * seq_len(nrow(x)) - 1L] <- paste0("    live:     ", x$live, note)
+    ans[3L * seq_len(nrow(x))     ] <- paste0("    original: ", x$original)
+    ans
+}
+
+print.aux_data_md5sum_df <- function(x, margin="", ...)
+{
+    y <- .aux_data_md5sum_df_as_character(x)
+    cat(paste0(margin, y), sep="\n")
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### time_since_live_igdata_last_checked()
 ### igdata_info()
 ###
@@ -212,6 +256,13 @@ update_live_igdata <- function(check.only=FALSE)
     if (file.exists(path)) readLines(path) else NA_character_
 }
 
+.how_old <- function(datetime, units="days")
+{
+    stopifnot(isSingleNonWhiteString(datetime))
+    as.double(difftime(Sys.time(), as.POSIXct(datetime), units=units))
+}
+
+### Used in .onLoad() hook.
 ### By default, time is returned in number of days.
 time_since_live_igdata_last_checked <- function(units="days")
 {
@@ -219,22 +270,25 @@ time_since_live_igdata_last_checked <- function(units="days")
     last_checked <- .get_last_checked(igdata_subdir)
     if (is.na(last_checked))
         return(Inf)
-    as.double(difftime(Sys.time(), as.POSIXct(last_checked), units=units))
+    .how_old(last_checked, units=units)
 }
 
-.dt2msg <- function(dt)
+.annotate_how_old <- function(dt)
 {
-    if (is.infinite(dt))
-        return("n/a")
-    msg <- paste0(sprintf("%.2f", dt), " days")
+    msg <- paste0(sprintf("%.2f", dt), " days ago")
     if (dt > 30)
         msg <- paste0(msg, " --> time to run 'update_live_igdata()' again")
     msg
 }
 
-print.igdata_info <- function(x, ...)
+.annotate_last_checked <- function(last_checked)
 {
-    cat(named_list_as_character(x), sep="\n")
+    if (is.na(last_checked))
+        return(paste0("not checked yet --> ",
+                      "run 'update_live_igdata()' to check for ",
+                      "new updates available at NCBI"))
+    dt <- .how_old(last_checked)
+    paste0(last_checked, " (", .annotate_how_old(dt), ")")
 }
 
 igdata_info <- function()
@@ -242,24 +296,33 @@ igdata_info <- function()
     live_igdata <- .path_to_igdata("live")
     igdata_subdir <- file.path(live_igdata, "optional_file")
     last_checked <- .get_last_checked(igdata_subdir)
-    if (is.na(last_checked))
-        last_checked <- paste0("not checked yet --> ",
-                               "run 'update_live_igdata()' to check for\n",
-                               "              new updates available at NCBI")
     last_updated <- .get_last_updated(igdata_subdir)
-    dt <- time_since_live_igdata_last_checked()
     if (is.na(last_updated))
         last_updated <- "not updated yet"
-    original_igdata <- .path_to_igdata("original")
     ans <- list(
         live_igdata=live_igdata,
-        last_checked=last_checked,
-        time_since_last_checked=.dt2msg(dt),
+        last_checked=.annotate_last_checked(last_checked),
         last_updated=last_updated,
-        original_igdata=original_igdata
+        original_igdata=.path_to_igdata("original"),
+        aux_data_md5sums=.make_aux_data_md5sum_df()
     )
     class(ans) <- "igdata_info"
     ans
+}
+
+print.igdata_info <- function(x, ...)
+{
+    stopifnot(is.list(x))
+    md5sum_df <- x$aux_data_md5sums
+    if (!is.null(md5sum_df))
+        x$aux_data_md5sums <- NULL
+    keyvals <- named_list_as_pretty_keyvals(x)
+    if (!is.null(md5sum_df)) {
+        y <- .aux_data_md5sum_df_as_character(md5sum_df)
+        keyval <- paste0("aux_data_md5sums:\n", paste0("  ", y, collapse="\n"))
+        keyvals <- c(keyvals, keyval)
+    }
+    cat(keyvals, sep="\n")
 }
 
 
@@ -271,11 +334,11 @@ get_igblast_auxiliary_data <- function(organism, which=c("live", "original"))
 {
     organism <- normalize_igblast_organism(organism)
     which <- match.arg(which)
-    dirpath <- file.path(.path_to_igdata(which), "optional_file")
-    auxiliary_data <- file.path(dirpath, paste0(organism, "_gl.aux"))
-    if (!file.exists(auxiliary_data))
-        stop(wmsg("no auxiliary data found in ", dirpath, " for ", organism))
-    auxiliary_data
+    aux_dir <- file.path(.path_to_igdata(which), "optional_file")
+    aux_file <- file.path(aux_dir, paste0(organism, "_gl.aux"))
+    if (!file.exists(aux_file))
+        stop(wmsg("no auxiliary data found in ", aux_dir, " for ", organism))
+    aux_file
 }
 
 

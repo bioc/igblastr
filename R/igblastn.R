@@ -117,68 +117,19 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .parse_igblastn_out()
+### .parse_igblastn_output()
 ###
 
-.sanitize_AIRR_df <- function(AIRR_df)
-{
-    stopifnot(is.data.frame(AIRR_df),
-              is.character(AIRR_df[ , "sequence_id"]),
-              is.character(AIRR_df[ , "sequence"]),
-              is.character(AIRR_df[ , "locus"]))
-
-    ## AIRR field "sequence_aa" was added in igblast 1.21.0.
-    sequence_aa <- AIRR_df$sequence_aa
-    if (!is.null(sequence_aa))
-        stopifnot(is.character(sequence_aa))
-
-    CHARACTER_COLS <- paste0(c("v", "d", "j"), "_call")
-    for (colname in CHARACTER_COLS)
-        AIRR_df[ , colname] <- as.character(AIRR_df[ , colname])
-    c_call <- AIRR_df$c_call
-    if (!is.null(c_call))
-        AIRR_df$c_call <- as.character(c_call)
-
-    LOGICAL_COLS <- c("stop_codon", "vj_in_frame",
-                      "productive", "rev_comp", "complete_vdj")
-    for (colname in LOGICAL_COLS)
-        AIRR_df[ , colname] <- as.logical(AIRR_df[ , colname])
-
-    ## AIRR field "v_frameshift" was added in igblast 1.17.0.
-    v_frameshift <- AIRR_df$v_frameshift
-    if (!is.null(v_frameshift))
-        AIRR_df$v_frameshift <- as.logical(v_frameshift)
-
-    ## AIRR field "d_frame" was added in igblast 1.21.0.
-    d_frame <- AIRR_df$d_frame
-    if (!is.null(d_frame))
-        AIRR_df$d_frame <- as.logical(d_frame)
-
-    AIRR_df
-}
-
 ### TODO: Parse output format 3 and 4.
-.parse_igblastn_out <- function(out, outfmt_nb)
+.parse_igblastn_output <- function(out_lines, outfmt_nb)
 {
-    stopifnot(isSingleNonWhiteString(out),
-              isSingleInteger(outfmt_nb), outfmt_nb %in% c(3L, 4L, 7L, 19L))
-    if (outfmt_nb == 19L) {
-        ## Make sure to use 'tryLogical=FALSE'. By default, i.e.
-        ## when 'tryLogical=TRUE', there's the risk that read.table()
-        ## will erroneously decide to interpret some columns as logical!
-        ## For example this can happen to column "d_sequence_alignment_aa"
-        ## if it contains only single-letter amino acid sequences T (Thr)
-        ## or F (Phe).
-        AIRR_df <- read.table(out, header=TRUE, sep="\t",
-                              tryLogical=FALSE, na.strings="")
-        return(.sanitize_AIRR_df(AIRR_df))
-    }
-    out_lines <- readLines(out)
+    stopifnot(is.character(out_lines),
+              inherits(out_lines, "igblastn_raw_output"),
+              isSingleInteger(outfmt_nb), outfmt_nb %in% c(3L, 4L, 7L))
     if (outfmt_nb == 7L)
         return(parse_outfmt7(out_lines))
     warning(wmsg("parsing of igblastn output format ",
                  outfmt_nb, " is not supported yet"))
-    class(out_lines) <- "igblastn_raw_output"
     out_lines
 }
 
@@ -305,7 +256,7 @@ igblastn <- function(query, outfmt="AIRR",
 
     if (outfmt_nb == 19L) {
         if (show.in.browser || parse.out)
-            AIRR_df <- .parse_igblastn_out(cmd_args$out, outfmt_nb)
+            AIRR_df <- read_igblastn_AIRR_output(cmd_args$out)
         if (show.in.browser)
             display_data_frame_in_browser(AIRR_df)
         if (parse.out) {
@@ -319,12 +270,10 @@ igblastn <- function(query, outfmt="AIRR",
 
     if (show.in.browser)
         display_local_file_in_browser(cmd_args$out)
-    if (parse.out) {
-        ans <- .parse_igblastn_out(cmd_args$out, outfmt_nb)
-    } else {
-        ans <- readLines(cmd_args$out)
-        class(ans) <- "igblastn_raw_output"
-    }
+    ans <- readLines(cmd_args$out)
+    class(ans) <- "igblastn_raw_output"
+    if (parse.out)
+        ans <- .parse_igblastn_output(ans, outfmt_nb)
     ans
 }
 
