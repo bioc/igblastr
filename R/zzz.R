@@ -1,4 +1,4 @@
-.print_msg_if_live_igdata_needs_check <- function(dt)
+.print_tip_if_live_igdata_needs_check <- function(dt)
 {
     stopifnot(isSingleNumber(dt))
     if (is.infinite(dt)) {
@@ -20,7 +20,7 @@
         reset_live_igdata()
 
     dt <- time_since_live_igdata_last_checked()
-    .print_msg_if_live_igdata_needs_check(dt)
+    .print_tip_if_live_igdata_needs_check(dt)
 
     igblastr_usage_report <- getOption("igblastr_usage_report")
     if (is.null(igblastr_usage_report)) {
