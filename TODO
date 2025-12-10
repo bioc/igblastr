@@ -67,6 +67,64 @@ o Advertize igblastr:
 Low-priority TODO list
 ======================
 
+o Older versions of IgBLAST (e.g. version 1.19.0) don't necessarily include
+  the same data as the latest version (version 1.22.0). However, we
+  initialize igblastr_cache(LIVE_IGDATA) with the content of
+  inst/extdata/igdata_store/ (a.k.a. "the igdata store") regardless of what
+  version of IgBLAST is used by igblastr (note that the igdata store contains
+  the data included in IgBLAST 1.22.0). This means that, if we use a version
+  of IgBLAST that includes different data, then igblastr_cache(LIVE_IGDATA)
+  in its original state already differs from the data included in the
+  IgBLAST that we are using.
+  There are some problems with this:
+  1. The content of igblastr_cache(LIVE_IGDATA) is not guaranteed to be
+     compatible with all versions of IgBLAST.
+  2. If we're using a version of IgBLAST that includes data that differs
+     from the igdata store, then from the very start (i.e. before
+     any run of update_live_igdata()), igdata_info() shows differences
+     between live and original auxiliary files. Running reset_live_igdata()
+     of course doesn't help because it's a no-op when
+     igblastr_cache(LIVE_IGDATA) is in its original state.
+  3. Running update_live_igdata() doesn't help either because the updates
+     available at NCBI are for the latest version of IgBLAST.
+  Proposed solution:
+  (a) Implement an internal helper (e.g. compatible_with_igdata_store())
+      that can quickly compare the data included in an installation of
+      IgBLAST with the igdata store. Should return TRUE or FALSE to indicate
+      whether the data is identical or not.
+  (b) When using a non-compatible IgBLAST (could be an internal or external
+      installation), reset igblastr_cache(LIVE_IGDATA) with the data included
+      in that IgBLAST.
+      More generally, calling set_igblast_root() should:
+      - reset igblastr_cache(LIVE_IGDATA) with the data included in the
+        selected IgBLAST;
+      - raise an error if the internal_data/ or optional_file/ subdir is
+        missing in the selected IgBLAST;
+      - print a message that suggests running update_live_igdata() only
+        when selecting a compatible IgBLAST (message should be similar to
+        what .print_tip_if_live_igdata_needs_check() does when is.infinite(dt),
+        see R/zzz.R).
+      Open question: When do we do the above if the IgBLAST to use is an
+      external IgBLAST installation selected via IGBLAST_ROOT?
+  (c) Disable update_live_igdata() if we're using a non-compatible IgBLAST.
+      In this case, the function should raise an error with an error message
+      that explains the situation.
+  (d) The .onLoad() hook should only print the "igblastr tip" if igblastr
+      already has access to an IgBLAST installation (i.e. if get_igblast_root()
+      works) and if that installation compatible with the igdata store. Note
+      that since update_live_igdata() is disabled when the selected IgBLAST
+      non-compatible, time_since_live_igdata_last_checked() will always
+      return Inf in that case, but we shouldn't even need to call
+      time_since_live_igdata_last_checked() in that case.
+  (e) Change what igdata_info() displays when the selected IgBLAST is
+      non-compatible. For example 'last_checked:' and 'last_updated:' could
+      display something like 'checking is disabled' and 'updating is disabled'.
+      Or don't display these fields.
+  (f) About install_igblast(): ncbi-igblast-1.22.0+.dmg is missing the
+      internal_data/ and optional_file/ folders but install_igblast() is
+      able to fix this.
+      Make sure that the fix is applied when installing version 1.22.0 only.
+
 o Migrate code in R/AIRR-utils.R from OGRDB API v1 to OGRDB API v2.
   See OGRDB API v2.0.0 Guide here:
   https://github.com/airr-community/ogrdb/blob/master/schema/ogrdb_api_v2_guide.md
