@@ -284,9 +284,9 @@ time_since_live_igdata_last_checked <- function(units="days")
 .annotate_last_checked <- function(last_checked)
 {
     if (is.na(last_checked))
-        return(paste0("not checked yet --> ",
-                      "run 'update_live_igdata()' to check for ",
-                      "new updates available at NCBI"))
+        return(paste0("Not checked yet --> ",
+                      "run 'update_live_igdata()' to check ",
+                      "for new updates available at NCBI."))
     dt <- .how_old(last_checked)
     paste0(last_checked, " (", .annotate_how_old(dt), ")")
 }
@@ -298,7 +298,7 @@ igdata_info <- function()
     last_checked <- .get_last_checked(igdata_subdir)
     last_updated <- .get_last_updated(igdata_subdir)
     if (is.na(last_updated))
-        last_updated <- "not updated yet"
+        last_updated <- "Not updated yet."
     ans <- list(
         live_igdata=live_igdata,
         last_checked=.annotate_last_checked(last_checked),
