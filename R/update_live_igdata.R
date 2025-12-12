@@ -9,7 +9,7 @@
     system.file(package="igblastr", "extdata", "igdata_store", mustWork=TRUE)
 }
 
-.path_to_igdata <- function(which=c("live", "original"))
+path_to_igdata <- function(which=c("live", "original"))
 {
     which <- match.arg(which)
     if (which == "live") {
@@ -194,29 +194,29 @@ update_live_igdata <- function(check.only=FALSE)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .make_aux_data_md5sum_df()
+### .make_auxdata_md5sum_df()
 ###
 
-.compute_aux_files_md5sums <- function(which=c("live", "original"))
+.compute_auxfiles_md5sums <- function(which=c("live", "original"))
 {
-    aux_dir <- file.path(.path_to_igdata(which), "optional_file")
-    aux_files <- list.files(aux_dir, pattern="\\.(aux|frame)$")
-    setNames(md5sum(file.path(aux_dir, aux_files)), aux_files)
+    auxdir <- file.path(path_to_igdata(which), "optional_file")
+    auxfiles <- list.files(auxdir, pattern="\\.(aux|frame)$")
+    setNames(md5sum(file.path(auxdir, auxfiles)), auxfiles)
 }
 
-.make_aux_data_md5sum_df <- function()
+.make_auxdata_md5sum_df <- function()
 {
-    live_md5sums <- .compute_aux_files_md5sums("live")
-    orig_md5sums <- .compute_aux_files_md5sums("original")
+    live_md5sums <- .compute_auxfiles_md5sums("live")
+    orig_md5sums <- .compute_auxfiles_md5sums("original")
     files <- sort(union(names(live_md5sums), names(orig_md5sums)))
     ans <- data.frame(file=files,
                       live=unname(live_md5sums[files]),
                       original=unname(orig_md5sums[files]))
-    class(ans) <- c("aux_data_md5sum_df", class(ans))
+    class(ans) <- c("auxdata_md5sum_df", class(ans))
     ans
 }
 
-.aux_data_md5sum_df_as_character <- function(x)
+.auxdata_md5sum_df_as_character <- function(x)
 {
     EXPECTED_COLNAMES <- c("file", "live", "original")
     stopifnot(is.data.frame(x), identical(colnames(x), EXPECTED_COLNAMES))
@@ -230,9 +230,9 @@ update_live_igdata <- function(check.only=FALSE)
     ans
 }
 
-print.aux_data_md5sum_df <- function(x, margin="", ...)
+print.auxdata_md5sum_df <- function(x, margin="", ...)
 {
-    y <- .aux_data_md5sum_df_as_character(x)
+    y <- .auxdata_md5sum_df_as_character(x)
     cat(paste0(margin, y), sep="\n")
 }
 
@@ -293,7 +293,7 @@ time_since_live_igdata_last_checked <- function(units="days")
 
 igdata_info <- function()
 {
-    live_igdata <- .path_to_igdata("live")
+    live_igdata <- path_to_igdata("live")
     igdata_subdir <- file.path(live_igdata, "optional_file")
     last_checked <- .get_last_checked(igdata_subdir)
     last_updated <- .get_last_updated(igdata_subdir)
@@ -303,8 +303,8 @@ igdata_info <- function()
         live_igdata=live_igdata,
         last_checked=.annotate_last_checked(last_checked),
         last_updated=last_updated,
-        original_igdata=.path_to_igdata("original"),
-        aux_data_md5sums=.make_aux_data_md5sum_df()
+        original_igdata=path_to_igdata("original"),
+        auxdata_md5sums=.make_auxdata_md5sum_df()
     )
     class(ans) <- "igdata_info"
     ans
@@ -313,101 +313,15 @@ igdata_info <- function()
 print.igdata_info <- function(x, ...)
 {
     stopifnot(is.list(x))
-    md5sum_df <- x$aux_data_md5sums
+    md5sum_df <- x$auxdata_md5sums
     if (!is.null(md5sum_df))
-        x$aux_data_md5sums <- NULL
+        x$auxdata_md5sums <- NULL
     keyvals <- named_list_as_pretty_keyvals(x)
     if (!is.null(md5sum_df)) {
-        y <- .aux_data_md5sum_df_as_character(md5sum_df)
-        keyval <- paste0("aux_data_md5sums:\n", paste0("  ", y, collapse="\n"))
+        y <- .auxdata_md5sum_df_as_character(md5sum_df)
+        keyval <- paste0("auxdata_md5sums:\n", paste0("  ", y, collapse="\n"))
         keyvals <- c(keyvals, keyval)
     }
     cat(keyvals, sep="\n")
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### get_igblast_auxiliary_data()
-###
-
-get_igblast_auxiliary_data <- function(organism, which=c("live", "original"))
-{
-    organism <- normalize_igblast_organism(organism)
-    which <- match.arg(which)
-    aux_dir <- file.path(.path_to_igdata(which), "optional_file")
-    aux_file <- file.path(aux_dir, paste0(organism, "_gl.aux"))
-    if (!file.exists(aux_file))
-        stop(wmsg("no auxiliary data found in ", aux_dir, " for ", organism))
-    aux_file
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### load_igblast_auxiliary_data()
-###
-
-### 'x' must be a list of character vectors of variable length.
-### Conceptually right-pads the list elements with empty strings ("")
-### to make the list "constant-width" before unlisting it.
-### Returns a character vector of length 'length(x) * width'.
-.right_pad_with_empty_strings_and_unlist <- function(x, width=NA)
-{
-    stopifnot(is.list(x), isSingleNumberOrNA(width))
-    x_len <- length(x)
-    if (x_len == 0L)
-        return(character(0))
-    x_lens <- lengths(x)
-    max_x_lens <- max(x_lens)
-    if (is.na(width)) {
-        width <- max_x_lens
-    } else {
-        width <- as.integer(width)
-        stopifnot(width >= max_x_lens)
-    }
-    y_lens <- width - x_lens
-    x_seqalong <- seq_along(x)
-    f <- rep.int(x_seqalong, y_lens)
-    attributes(f) <- list(levels=as.character(x_seqalong), class="factor")
-    y <- split(character(length(f)), f)
-    collate_subscript <- rep(x_seqalong, each=2L)
-    collate_subscript[2L * x_seqalong] <- x_seqalong + x_len
-    unlist(c(x, y)[collate_subscript], recursive=FALSE, use.names=FALSE)
-}
-
-### Returns the table in a character matrix.
-.read_jagged_table_as_character_matrix <- function(file)
-{
-    lines <- readLines(file)
-    lines <- lines[nzchar(lines) & !has_prefix(lines, "#")]
-    data <- strsplit(lines, split="[ \t]+")
-    data <- .right_pad_with_empty_strings_and_unlist(data)
-    matrix(data, nrow=length(lines), byrow=TRUE)
-}
-
-.make_auxiliary_data_df_from_matrix <- function(m, filepath)
-{
-    if (ncol(m) != 5L)
-        stop(wmsg("error loading ", filepath, ": unexpected number of fields"))
-    data.frame(
-        sseqid            =           m[ , 1L],
-        coding_frame_start=as.integer(m[ , 2L]),
-        chaintype         =           m[ , 3L],
-        CDR3_stop         =as.integer(m[ , 4L]),
-        extra_bps         =as.integer(m[ , 5L])
-    )
-}
-
-### IgBLAST *.aux files are supposedly "tab-delimited" but they are
-### broken in various ways:
-###   - they use a mix of whitespaces for the field separators;
-###   - each line contains a variable number of fields;
-###   - some lines contain trailing whitespaces.
-### So we cannot read them with read.table().
-load_igblast_auxiliary_data <- function(organism, which=c("live", "original"))
-{
-    which <- match.arg(which)
-    filepath <- get_igblast_auxiliary_data(organism, which)
-    m <- .read_jagged_table_as_character_matrix(filepath)
-    .make_auxiliary_data_df_from_matrix(m, filepath)
 }
 

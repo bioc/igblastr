@@ -116,7 +116,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     Note that, by default (i.e. when \code{auxiliary_data} is omitted or
     set to \code{"auto"}), \code{igblastn()} uses one of the auxiliary
     data files included in the IgBLAST installation used by \pkg{igblastr}.
-    More precisely, \code{igblastn()} uses \code{get_igblast_auxiliary_data()}
+    More precisely, \code{igblastn()} uses \code{get_auxdata_path()}
     internally to obtain the path to the organism-specific auxiliary data file.
 
     IMPORTANT NOTES:
@@ -125,8 +125,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
               V gene sequences of the selected germline db can cause
               \code{igblastn()} to return improper frame status or CDR3
               information (other returned information will still be correct).
-              See \code{?\link{get_igblast_auxiliary_data}} for more
-              information.
+              See \code{?\link{get_auxdata_path}} for more information.
         \item When \code{auxiliary_data} is set to \code{NULL}, then no
               auxiliary data is used. In this case, \code{igblastn()} can
               emit a significant number of the following warning:

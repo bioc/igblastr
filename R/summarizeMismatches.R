@@ -193,9 +193,9 @@
 .extract_rseqs <- function(germline_db, call)
 {
     stopifnot(is(germline_db, "DNAStringSet"), !is.null(names(germline_db)))
-    NOT_AN_ALLELE_ID <- "_not_an_allele_id_"
-    call[is.na(call)] <- NOT_AN_ALLELE_ID
-    c(germline_db, DNAStringSet(setNames("", NOT_AN_ALLELE_ID)))[call]
+    NOT_A_VALID_ALLELE_NAME <- "_not_a_valid_allele_name_"
+    call[is.na(call)] <- NOT_A_VALID_ALLELE_NAME
+    c(germline_db, DNAStringSet(setNames("", NOT_A_VALID_ALLELE_NAME)))[call]
 }
 
 ### Returns the positions of the nucleotide mismatches in an IPosList object
