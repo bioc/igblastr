@@ -1,54 +1,31 @@
-\name{igdata-utils}
-
-\alias{igdata-utils}
-\alias{igdata_utils}
-
-\alias{get_igblast_auxiliary_data}
-\alias{load_igblast_auxiliary_data}
+\name{update_live_igdata}
 
 \alias{update_live_igdata}
 \alias{igdata_info}
 \alias{time_since_live_igdata_last_checked}
 \alias{reset_live_igdata}
 
-\alias{print.aux_data_md5sum_df}
+\alias{print.auxdata_md5sum_df}
 \alias{print.igdata_info}
 
-\title{Low-level manipulation of IgBLAST auxiliary and internal data}
+\title{Update and manage IgBLAST auxiliary and internal data}
 
 \description{
-  A small set of low-level utility functions to access, manipulate, and
-  update IgBLAST auxiliary and internal data.
+  A small set of low-level utility functions to update and manage
+  IgBLAST auxiliary and internal data.
 }
 
 \usage{
-## Access and manipulate IgBLAST auxiliary data:
-get_igblast_auxiliary_data(organism, which=c("live", "original"))
-load_igblast_auxiliary_data(organism, which=c("live", "original"))
-
-## Update IgBLAST auxiliary and internal data:
 update_live_igdata(check.only=FALSE)
+
 igdata_info()
+
 time_since_live_igdata_last_checked(units="days")
+
 reset_live_igdata(subdirs=c("all", "internal_data", "optional_file"))
 }
 
 \arguments{
-  \item{organism}{
-    A single string containing the name of an organism as
-    returned by \code{\link{list_igblast_organisms}()}.
-  }
-  \item{which}{
-    By default, \code{get_igblast_auxiliary_data()} and
-    \code{load_igblast_auxiliary_data()} access the "live IgBLAST data",
-    that is, the IgBLAST data that the user has possibly updated with
-    \code{update_live_igdata()}. Depending on whether updates
-    were applied or not, the "live IgBLAST data" might differ from
-    the original IgBLAST data.
-
-    Set \code{which} to \code{"original"} if you want to access
-    the original IgBLAST data instead.
-  }
   \item{check.only}{
     By default, \code{update_live_igdata()} checks for new IgBLAST
     auxiliary or internal data files available at NCBI, and it installs
@@ -79,18 +56,6 @@ reset_live_igdata(subdirs=c("all", "internal_data", "optional_file"))
     We sometimes refer to this data simply as the \emph{IgBLAST data}.
   }
 
-  \subsection{Access auxiliary data for a given organism}{
-    The \emph{auxiliary data} consists of one tabulated file per organism.
-    Each file indicates the germline J gene coding frame start position,
-    the J gene type, and the CDR3 end position for each sequence in the
-    germline J sequence database. See
-    \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html} for
-    the details.
-
-    You can use \code{get_igblast_auxiliary_data()} to obtain the path
-    to the file containing the auxiliary data for a given organism.
-  }
-
   \subsection{NCBI updates}{
     NCBI occasionally updates some of the files in the
     \code{internal_data/} and \code{optional_file/} directories between
@@ -109,22 +74,6 @@ reset_live_igdata(subdirs=c("all", "internal_data", "optional_file"))
 }
 
 \value{
-  \code{get_igblast_auxiliary_data()} returns a single string containing
-  the path to the auxiliary data included in the IgBLAST installation used
-  by \pkg{igblastr}, for the specified organism. Not necessarily suitable
-  to use with \code{\link{igblastn}()} (see WARNING below).
-
-  \code{load_igblast_auxiliary_data()} returns the auxiliary data in a
-  data.frame with 1 row per germline J sequence and the following columns:
-  \enumerate{
-    \item \code{sseqid}: gene/allele name a.k.a. subject sequence id;
-    \item \code{coding_frame_start}: first coding frame start
-          position (position is 0-based);
-    \item \code{chaintype}: chain type;
-    \item \code{CDR3_stop}: CDR3 stop;
-    \item \code{extra_bps}: extra base pairs beyond J coding end.
-  }
-
   \code{update_live_igdata()} and \code{reset_live_igdata()} don't return
   anything (invisible \code{NULL}).
 
@@ -136,20 +85,10 @@ reset_live_igdata(subdirs=c("all", "internal_data", "optional_file"))
   units (days by default).
 }
 
-\section{WARNING}{
-  According to \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html}
-  the auxiliary data included in IgBLAST is specific to a particular
-  NCBI or IMGT germline db. Unfortunately this means that this data is
-  NOT guaranteed to be compatible with the germline db that you will
-  use with \code{\link{igblastn}()}. See documentation of the
-  \code{auxiliary_data} argument in \code{?\link{igblastn}} for
-  more information about this.
-}
-
 \seealso{
   \itemize{
-    \item \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html}
-          for important information about the IgBLAST auxiliary data.
+    \item \code{\link{get_auxdata_path}} to access or generate IgBLAST
+          auxiliary data.
 
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This
@@ -172,18 +111,6 @@ if (!has_igblast()) install_igblast()
 igblast_info()
 
 ## ---------------------------------------------------------------------
-## Access and manipulate IgBLAST auxiliary data
-## ---------------------------------------------------------------------
-
-list_igblast_organisms()
-
-get_igblast_auxiliary_data("human")
-load_igblast_auxiliary_data("human")
-
-get_igblast_auxiliary_data("rhesus_monkey")
-load_igblast_auxiliary_data("rhesus_monkey")
-
-## ---------------------------------------------------------------------
 ## Check for NCBI updates
 ## ---------------------------------------------------------------------
 
@@ -196,12 +123,12 @@ igdata_info()
 ## ---------------------------------------------------------------------
 
 ## By default, the "live IgBLAST data" gets accessed or returned:
-get_igblast_auxiliary_data("human")
-live_human_aux <- load_igblast_auxiliary_data("human")
+get_auxdata_path("human")
+live_human_aux <- load_auxdata("human")
 
 ## Access the original IgBLAST data:
-get_igblast_auxiliary_data("human", which="original")
-orig_human_aux <- load_igblast_auxiliary_data("human", which="original")
+get_auxdata_path("human", which="original")
+orig_human_aux <- load_auxdata("human", which="original")
 
 ## "live" and "original" IgBLAST data can differ if the former was
 ## updated with update_live_igdata(). Otherwise, they'll be the same:

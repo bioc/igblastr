@@ -52,8 +52,10 @@ read_version_file <- function(dirpath)
 .create_missing_builtin_AIRR_human_germline_dbs <- function(human_dir, destdir)
 {
     stopifnot(isSingleNonWhiteString(human_dir), dir.exists(human_dir))
-    human_subdirs <- list.dirs(human_dir, recursive=FALSE)
-    fasta_stores <- file.path(rep(human_subdirs, each=2L), c("ref", "src"))
+    human_subdirs <- list.dirs(human_dir, full.names=FALSE, recursive=FALSE)
+    human_subdirs <- setdiff(human_subdirs, "diffs")
+    fasta_stores <- file.path(human_dir,
+                              rep(human_subdirs, each=2L), c("ref", "src"))
     for (fasta_store in fasta_stores)
         .create_builtin_AIRR_human_germline_db(fasta_store, destdir,
                                                only.if.missing=TRUE)

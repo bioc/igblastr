@@ -24,7 +24,7 @@ import(Biostrings)
 ###
 
 S3method(print, alignment_summary)
-S3method(print, aux_data_md5sum_df)
+S3method(print, auxdata_md5sum_df)
 S3method(print, c_region_dbs_df)
 S3method(print, fmt7footer)
 S3method(print, fmt7record)
@@ -47,7 +47,7 @@ S3method(summary, query_details)
 
 export(
     print.alignment_summary,
-    print.aux_data_md5sum_df,
+    print.auxdata_md5sum_df,
     print.c_region_dbs_df,
     print.fmt7footer,
     print.fmt7record,
@@ -79,10 +79,14 @@ export(
     list_igblast_organisms,
     igblastn_version, makeblastdb_version, igblast_build, igblast_info,
 
-    ## igdata-utils.R:
+    ## update_live_igdata.R:
     reset_live_igdata, update_live_igdata,
     time_since_live_igdata_last_checked, igdata_info,
-    get_igblast_auxiliary_data, load_igblast_auxiliary_data,
+
+    ## auxdata-utils.R:
+    get_auxdata_path,
+    load_auxdata,
+    compute_auxdata,
 
     ## install_igblast.R:
     install_igblast,

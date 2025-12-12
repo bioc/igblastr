@@ -15,3 +15,6 @@ Content
 
 - 202410/: See README.md in 202410/ subfolder.
 
+- diffs/: A collection of R scripts that show what has changed between
+          versions of the _AIRR.human.IGH+IGK+IGL.* germline dbs.
+

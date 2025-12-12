@@ -219,7 +219,7 @@
                   "start positions for the sequences in the J-region db",
                   "or NULL"))
     if (auxiliary_data == "auto")
-        return(get_igblast_auxiliary_data(organism))
+        return(get_auxdata_path(organism))
     file_path_as_absolute(auxiliary_data)
 }
 
