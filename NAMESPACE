@@ -86,6 +86,9 @@ export(
     ## auxdata-utils.R:
     get_auxdata_path,
     load_auxdata,
+    translate_J_alleles,
+    J_allele_has_stop_codon,
+    translate_fwr4,
     compute_auxdata,
 
     ## install_igblast.R:
