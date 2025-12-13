@@ -124,15 +124,15 @@ igdata_info()
 
 ## By default, the "live IgBLAST data" gets accessed or returned:
 get_auxdata_path("human")
-live_human_aux <- load_auxdata("human")
+live_human_auxdata <- load_auxdata("human")
 
 ## Access the original IgBLAST data:
 get_auxdata_path("human", which="original")
-orig_human_aux <- load_auxdata("human", which="original")
+orig_human_auxdata <- load_auxdata("human", which="original")
 
 ## "live" and "original" IgBLAST data can differ if the former was
 ## updated with update_live_igdata(). Otherwise, they'll be the same:
-identical(live_human_aux, orig_human_aux)
+identical(live_human_auxdata, orig_human_auxdata)
 }
 
 \keyword{utilities}
