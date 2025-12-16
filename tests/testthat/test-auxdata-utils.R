@@ -128,7 +128,7 @@ test_that("translate_fwr4()", {
     expect_true(is.character(fwr4_aa))
     expect_identical(names(fwr4_aa), names(J_alleles))
     expect_false(anyNA(fwr4_aa))
-    fwr4_head <- translate_fwr4(J_alleles, auxdata, max_codons=4L)
+    fwr4_head <- translate_fwr4(J_alleles, auxdata, max.codons=4L)
     expect_true(is.character(fwr4_head))
     expect_identical(names(fwr4_head), names(J_alleles))
     expect_false(anyNA(fwr4_head))
@@ -138,7 +138,7 @@ test_that("translate_fwr4()", {
     db_name <- "IMGT-202531-1.Homo_sapiens.IGH+IGK+IGL"
     J_alleles <- load_germline_db(db_name, region_types="J")
     allele_is_known <- names(J_alleles) %in% auxdata$allele_name
-    fwr4_head <- translate_fwr4(J_alleles, auxdata, max_codons=4L)
+    fwr4_head <- translate_fwr4(J_alleles, auxdata, max.codons=4L)
     expect_identical(unname(is.na(fwr4_head)), !allele_is_known)
     expect_true(all(grepl("^[WF]G.G$", fwr4_head[allele_is_known])))
 
@@ -154,7 +154,7 @@ test_that("translate_fwr4()", {
     expect_true(sum(!allele_is_known) <= 3L)
     ## Get rid of the "unknown" J alleles.
     known_J_alleles <- J_alleles[allele_is_known]
-    fwr4_head <- translate_fwr4(known_J_alleles, auxdata, max_codons=4L)
+    fwr4_head <- translate_fwr4(known_J_alleles, auxdata, max.codons=4L)
     expect_false(anyNA(fwr4_head))
     ## 3 "known" mouse J alleles in IMGT release 202531-1 don't have
     ## the expected motif at the beginning of their FWR4 region.
@@ -169,7 +169,7 @@ test_that("translate_fwr4()", {
 
     db_name <- "IMGT-202531-1.Rattus_norvegicus.IGH+IGK+IGL"
     J_alleles <- load_germline_db(db_name, region_types="J")
-    fwr4_head <- translate_fwr4(J_alleles, auxdata, max_codons=4L)
+    fwr4_head <- translate_fwr4(J_alleles, auxdata, max.codons=4L)
     ## translate_fwr4() uses 'auxdata$cdr3_end' to get the position of
     ## the first FWR4 codons, but this column has an NA for IGKJ3*01.
     ## This could change in the future.

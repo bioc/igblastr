@@ -138,16 +138,6 @@ load_igblast_auxiliary_data <- function(...)
     setNames(auxdata_col[match(J_names, auxdata_allele_name)], J_names)
 }
 
-.translate_codons <- function(dna, start)
-{
-    stopifnot(is(dna, "DNAStringSet"), is.integer(start),
-              length(dna) == length(start))
-    end <- -1L - (width(dna) - start + 1L) %% 3L
-    codons <- narrow(dna, start=start, end=end)
-    aa <- translate(codons, no.init.codon=TRUE, if.fuzzy.codon="solve")
-    as.character(aa)
-}
-
 ### Translate the coding frame.
 ### Only needs access to the "coding_frame_start" column in 'auxdata'.
 ### Returns the amino acid sequences in a named character vector that
@@ -161,9 +151,10 @@ translate_J_alleles <- function(J_alleles, auxdata)
     ans <- rep.int(NA_character_, length(J_alleles))
     selection_idx <- which(!is.na(coding_frame_start))
     if (length(selection_idx) != 0L) {
-        alleles <- J_alleles[selection_idx]
-        start <- coding_frame_start[selection_idx] + 1L  # 0-based to 1-based
-        ans[selection_idx] <- .translate_codons(alleles, start=start)
+        dna <- J_alleles[selection_idx]
+        offset <- coding_frame_start[selection_idx]
+        aa <- translate_codons(dna, offset=offset)
+        ans[selection_idx] <- as.character(aa)
     }
     setNames(ans, names(J_alleles))
 }
@@ -186,23 +177,24 @@ J_allele_has_stop_codon <- function(J_alleles, auxdata)
 ### is parallel to 'J_alleles' and has the allele names on it.
 ### The returned vector will contain an NA for any allele that is not
 ### annotated in 'auxdata' or for which 'auxdata$cdr3_end' has an NA.
-translate_fwr4 <- function(J_alleles, auxdata, max_codons=NA)
+translate_fwr4 <- function(J_alleles, auxdata, max.codons=NA)
 {
-    if (!isSingleNumberOrNA(max_codons))
-        stop(wmsg("'max_codons' must be a single number or NA"))
-    if (!is.integer(max_codons))
-        max_codons <- as.integer(max_codons)
+    if (!isSingleNumberOrNA(max.codons))
+        stop(wmsg("'max.codons' must be a single number or NA"))
+    if (!is.integer(max.codons))
+        max.codons <- as.integer(max.codons)
 
-    cdr3_end <- .query_auxdata(auxdata, J_alleles, "cdr3_end")
+    cdr3_end <- .query_auxdata(auxdata, J_alleles, "cdr3_end")  # 0-based
     ans <- rep.int(NA_character_, length(J_alleles))
     selection_idx <- which(!is.na(cdr3_end))
     if (length(selection_idx) != 0L) {
-        alleles <- J_alleles[selection_idx]
-        start <- cdr3_end[selection_idx] + 2L  # 1-based FWR4 start
-        ans[selection_idx] <- .translate_codons(alleles, start=start)
+        dna <- J_alleles[selection_idx]
+        offset <- cdr3_end[selection_idx] + 1L  # 0-based FWR4 start
+        aa <- translate_codons(dna, offset=offset)
+        ans[selection_idx] <- as.character(aa)
     }
-    if (!is.na(max_codons))
-        ans <- substr(ans, 1L, max_codons)
+    if (!is.na(max.codons))
+        ans <- substr(ans, 1L, max.codons)
     setNames(ans, names(J_alleles))
 }
 

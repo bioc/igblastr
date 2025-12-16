@@ -71,6 +71,10 @@ export(
 ###
 
 export(
+    ## translate_codons.R:
+    extract_codons,
+    translate_codons,
+
     ## get_igblast_root.R:
     get_igblast_root, set_igblast_root,
 
