@@ -26,7 +26,7 @@ load_auxdata(organism, which=c("live", "original"))
 
 translate_J_alleles(J_alleles, auxdata)
 J_allele_has_stop_codon(J_alleles, auxdata)
-translate_fwr4(J_alleles, auxdata, max_codons=NA)
+translate_fwr4(J_alleles, auxdata, max.codons=NA)
 
 compute_auxdata(J_alleles)
 }
@@ -57,9 +57,9 @@ compute_auxdata(J_alleles)
     A data.frame as returned by \code{load_auxdata()} or
     \code{compute_auxdata()}.
   }
-  \item{max_codons}{
+  \item{max.codons}{
     The maximum number of FWR4 codons to translate. By default (i.e. when
-    \code{max_codons} is \code{NA}) all the FWR4 codons are translated.
+    \code{max.codons} is \code{NA}) all the FWR4 codons are translated.
   }
 }
 
@@ -134,8 +134,8 @@ compute_auxdata(J_alleles)
     \item \link[Biostrings]{DNAStringSet} and \link[Biostrings]{AAStringSet}
           objects in the \pkg{Biostrings} package.
 
-    \item The \code{\link[Biostrings]{translate}} function in the
-          \pkg{Biostrings} package.
+    \item The \code{\link{translate_codons}} function on which
+          \code{translate_J_alleles()} and \code{translate_fwr4()} are based.
 
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This
@@ -178,13 +178,13 @@ stopifnot(setequal(names(J_alleles), rabbit_auxdata$allele_name))
 
 ## Note that this might change with future IMGT releases.
 
-## Let's put the allele sequences in 'J_alleles' in the same order than
+## Let's put the allele sequences in 'J_alleles' in the same order as
 ## in 'rabbit_auxdata':
 J_alleles <- J_alleles[rabbit_auxdata$allele_name]
 stopifnot(identical(names(J_alleles), rabbit_auxdata$allele_name))
 
 ## The 'coding_frame_start' column in 'rabbit_auxdata' contains integer
-## values that are >= 0 and < 3. They indicate how many nucleotides
+## values that are >= 0 and <= 2. They indicate how many nucleotides
 ## precede the first codon on each allele sequence. In other words,
 ## this is the number of nucleotides that we need to trim on the 5'
 ## end of the germline J allele sequence before we start translating
@@ -193,7 +193,7 @@ stopifnot(identical(names(J_alleles), rabbit_auxdata$allele_name))
 J_aa <- translate_J_alleles(J_alleles, rabbit_auxdata)
 J_aa
 
-## No sequence in 'J_aa' should contain the letter "*" that is used
+## No sequence in 'J_aa' should contain the letter "*" which is used
 ## by translate_J_alleles() to represent a stop codon. However, one
 ## J allele in IMGT-202531-1.Oryctolagus_cuniculus.IGH+IGK+IGL seems
 ## to disobey:
@@ -213,7 +213,7 @@ J_aa[has_stop_codon]              # indeed!
 
 ## Let's use translate_fwr4() to extract and translate the first 4
 ## codons of the FWR4 region:
-fwr4_head <- translate_fwr4(J_alleles, rabbit_auxdata, max_codons=4)
+fwr4_head <- translate_fwr4(J_alleles, rabbit_auxdata, max.codons=4)
 
 ## We expect to see the "WGXG" and "FGXG" motifs here, and most of the
 ## time we do:
