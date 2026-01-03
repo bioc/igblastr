@@ -87,9 +87,15 @@ export(
     reset_live_igdata, update_live_igdata,
     time_since_live_igdata_last_checked, igdata_info,
 
+    ## intdata-utils.R:
+    get_intdata_path,
+    load_intdata,
+    translate_V_alleles,
+    V_allele_has_stop_codon,
+
     ## auxdata-utils.R:
-    get_auxdata_path,
-    load_auxdata,
+    get_auxdata_path, get_igblast_auxiliary_data,
+    load_auxdata, load_igblast_auxiliary_data,
     translate_J_alleles,
     J_allele_has_stop_codon,
     translate_fwr4,

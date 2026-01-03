@@ -36,8 +36,8 @@ normalize_igblast_organism <- function(organism)
     all_organisms <- list_igblast_organisms()
     organism <- tolower(organism)
     if (!(organism %in% list_igblast_organisms())) {
-        all_in_1string <- paste0("\"", all_organisms, "\"", collapse=", ")
-        stop(wmsg("'organism' must be one of ", all_in_1string))
+        in1string <- paste0("\"", all_organisms, "\"", collapse=", ")
+        stop(wmsg("'organism' must be one of ", in1string))
     }
     organism
 }

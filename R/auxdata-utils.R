@@ -1,5 +1,5 @@
 ### =========================================================================
-### Access or generate IgBLAST auxiliary data
+### Access, manipulate, and generate IgBLAST auxiliary data
 ### -------------------------------------------------------------------------
 ###
 
@@ -12,11 +12,13 @@ get_auxdata_path <- function(organism, which=c("live", "original"))
 {
     organism <- normalize_igblast_organism(organism)
     which <- match.arg(which)
-    auxdir <- file.path(path_to_igdata(which), "optional_file")
-    auxfile <- file.path(auxdir, paste0(organism, "_gl.aux"))
-    if (!file.exists(auxfile))
-        stop(wmsg("no auxiliary data found in ", auxdir, " for ", organism))
-    auxfile
+    auxdata_dir <- file.path(path_to_igdata(which), "optional_file")
+    auxdata_filename <- paste0(organism, "_gl.aux")
+    auxdata_path <- file.path(auxdata_dir, auxdata_filename)
+    if (!file.exists(auxdata_path))
+        stop(wmsg("no auxiliary data found in ",
+                  auxdata_dir, " for ", organism))
+    auxdata_path
 }
 
 get_igblast_auxiliary_data <- function(...)
@@ -25,49 +27,12 @@ get_igblast_auxiliary_data <- function(...)
     get_auxdata_path(...)
 }
 
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### load_auxdata()
 ###
 
-### 'x' must be a list of character vectors of variable length.
-### Conceptually right-pads the list elements with empty strings ("")
-### to make the list "constant-width" before unlisting it.
-### Returns a character vector of length 'length(x) * width'.
-.right_pad_with_empty_strings_and_unlist <- function(x, width=NA)
-{
-    stopifnot(is.list(x), isSingleNumberOrNA(width))
-    x_len <- length(x)
-    if (x_len == 0L)
-        return(character(0))
-    x_lens <- lengths(x)
-    max_x_lens <- max(x_lens)
-    if (is.na(width)) {
-        width <- max_x_lens
-    } else {
-        width <- as.integer(width)
-        stopifnot(width >= max_x_lens)
-    }
-    y_lens <- width - x_lens
-    x_seqalong <- seq_along(x)
-    f <- rep.int(x_seqalong, y_lens)
-    attributes(f) <- list(levels=as.character(x_seqalong), class="factor")
-    y <- split(character(length(f)), f)
-    collate_subscript <- rep(x_seqalong, each=2L)
-    collate_subscript[2L * x_seqalong] <- x_seqalong + x_len
-    unlist(c(x, y)[collate_subscript], recursive=FALSE, use.names=FALSE)
-}
-
-### Returns the table in a character matrix.
-.read_jagged_table_as_character_matrix <- function(file)
-{
-    lines <- readLines(file)
-    lines <- lines[nzchar(lines) & !has_prefix(lines, "#")]
-    data <- strsplit(lines, split="[ \t]+")
-    data <- .right_pad_with_empty_strings_and_unlist(data)
-    matrix(data, nrow=length(lines), byrow=TRUE)
-}
-
-.make_auxiliary_data_df_from_matrix <- function(m, filepath)
+.make_auxdata_df_from_matrix <- function(m, filepath)
 {
     if (ncol(m) != 5L)
         stop(wmsg("error loading ", filepath, ": unexpected number of fields"))
@@ -81,22 +46,26 @@ get_igblast_auxiliary_data <- function(...)
 }
 
 ### IgBLAST *.aux files are supposedly "tab-delimited" but they are
-### broken in various ways:
+### broken in many ways:
 ###   - they use a mix of whitespaces for the field separators;
 ###   - each line contains a variable number of fields;
 ###   - some lines contain trailing whitespaces.
-### So we cannot read them with read.table().
+### So we cannot simply read them with read.table().
+### IMPORTANT NOTE: Unlike with the data.frame returned by load_intdata(),
+### all the positions in the data.frame returned by load_auxdata() (that is,
+### the positions reported in columns 'coding_frame_start' and 'cdr3_end')
+### are 0-based!
 load_auxdata <- function(organism, which=c("live", "original"))
 {
     which <- match.arg(which)
-    filepath <- get_auxdata_path(organism, which)
-    m <- .read_jagged_table_as_character_matrix(filepath)
-    .make_auxiliary_data_df_from_matrix(m, filepath)
+    auxdata_path <- get_auxdata_path(organism, which)
+    m <- read_jagged_table_as_character_matrix(auxdata_path)
+    .make_auxdata_df_from_matrix(m, auxdata_path)
 }
 
 load_igblast_auxiliary_data <- function(...)
 {
-    .Deprecated("")
+    .Deprecated("load_auxdata")
     load_auxdata(...)
 }
 
@@ -138,7 +107,7 @@ load_igblast_auxiliary_data <- function(...)
     setNames(auxdata_col[match(J_names, auxdata_allele_name)], J_names)
 }
 
-### Translate the coding frame.
+### Translates the coding frame contained in the J allele sequence.
 ### Only needs access to the "coding_frame_start" column in 'auxdata'.
 ### Returns the amino acid sequences in a named character vector that
 ### is parallel to 'J_alleles' and has the allele names on it.
@@ -172,7 +141,7 @@ J_allele_has_stop_codon <- function(J_alleles, auxdata)
     ans
 }
 
-### Only needs access to the "cdr3_end" column in 'auxdata'.
+### Only needs access to the "cdr3_end" column of the 'auxdata' data.frame.
 ### Returns the amino acid sequences in a named character vector that
 ### is parallel to 'J_alleles' and has the allele names on it.
 ### The returned vector will contain an NA for any allele that is not
@@ -287,7 +256,7 @@ translate_fwr4 <- function(J_alleles, auxdata, max.codons=NA)
 .VALID_J_GROUPS <- paste0("IG", c("H", "K", "L"), "J")
 
 ### Returns a data.frame with the same column names as the data.frame
-### returned by .make_auxiliary_data_df_from_matrix() above, plus
+### returned by .make_auxdata_df_from_matrix() above, plus
 ### the "fwr4_start_motif" column.
 ### NOTE: We set coding_frame_start/cdr3_end/extra_bps/fwr4_start_motif
 ### to NA for alleles for which the FWR4 start cannot be determined.

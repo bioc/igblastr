@@ -197,17 +197,17 @@ update_live_igdata <- function(check.only=FALSE)
 ### .make_auxdata_md5sum_df()
 ###
 
-.compute_auxfiles_md5sums <- function(which=c("live", "original"))
+.compute_auxdata_md5sums <- function(which=c("live", "original"))
 {
-    auxdir <- file.path(path_to_igdata(which), "optional_file")
-    auxfiles <- list.files(auxdir, pattern="\\.(aux|frame)$")
-    setNames(md5sum(file.path(auxdir, auxfiles)), auxfiles)
+    auxdata_dir <- file.path(path_to_igdata(which), "optional_file")
+    auxdata_files <- list.files(auxdata_dir, pattern="\\.(aux|frame)$")
+    setNames(md5sum(file.path(auxdata_dir, auxdata_files)), auxdata_files)
 }
 
 .make_auxdata_md5sum_df <- function()
 {
-    live_md5sums <- .compute_auxfiles_md5sums("live")
-    orig_md5sums <- .compute_auxfiles_md5sums("original")
+    live_md5sums <- .compute_auxdata_md5sums("live")
+    orig_md5sums <- .compute_auxdata_md5sums("original")
     files <- sort(union(names(live_md5sums), names(orig_md5sums)))
     ans <- data.frame(file=files,
                       live=unname(live_md5sums[files]),

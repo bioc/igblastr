@@ -190,10 +190,10 @@ find_organism_in_IMGT_local_store <- function(organism, local_store)
         refdir <- file.path(local_store, VQUEST_REFERENCE_DIRECTORY)
         return(file.path(refdir, all_organisms[[idx]]))
     }
-    all_in_1string <- paste0("\"", all_organisms, "\"", collapse=", ")
+    in1string <- paste0("\"", all_organisms, "\"", collapse=", ")
     stop(wmsg(organism, ": organism not found in ",
               "IMGT/V-QUEST release ", basename(local_store), "."),
          "\n  ",
-         wmsg("Available organisms: ", all_in_1string, "."))
+         wmsg("Available organisms: ", in1string, "."))
 }
 

@@ -33,12 +33,12 @@
     if (!isSingleNonWhiteString(release))
         stop(wmsg("'release' must be a single (non-empty) string"))
     if (!(release %in% all_releases)) {
-        all_in_1string <- paste0("\"", all_releases, "\"", collapse=", ")
+        in1string <- paste0("\"", all_releases, "\"", collapse=", ")
         stop(wmsg("'release' must be \"LATEST\" (recommended), or ",
                   "one of the IgBLAST release versions listed at ",
                   .IGBLAST_ALL_RELEASES_FTP_DIR, " (e.g. \"1.21.0\")."),
              "\n  ",
-             wmsg("All available releases: ", all_in_1string, "."),
+             wmsg("All available releases: ", in1string, "."),
              "\n  ",
              wmsg("Note that old releases have not been tested and ",
                   "are not guaranteed to be compatible with the ",
