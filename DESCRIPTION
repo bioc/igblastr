@@ -45,6 +45,7 @@ Collate:
 	edit_imgt_file.R
 	igblast_info.R
 	update_live_igdata.R
+	intdata-utils.R
 	auxdata-utils.R
 	install_igblast.R
 	make_blastdbs.R

@@ -87,8 +87,8 @@ reset_live_igdata(subdirs=c("all", "internal_data", "optional_file"))
 
 \seealso{
   \itemize{
-    \item \code{\link{get_auxdata_path}} to access or generate IgBLAST
-          auxiliary data.
+    \item \code{\link{auxdata_utils}} to access, manipulate, and generate
+          IgBLAST auxiliary data.
 
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This

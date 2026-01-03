@@ -296,10 +296,10 @@ set_igblast_root <- function(version_or_path)
             err_msg1 <- c("The supplied version ('", version_or_path, "') ",
                           "is not the version of an igblastr-managed ",
                           "installation of IgBLAST.")
-            all_in_1string <- paste0("\"", all_versions, "\"", collapse=", ")
+            in1string <- paste0("\"", all_versions, "\"", collapse=", ")
             err_msg2 <- c("List of igblastr-managed installations of IgBLAST ",
                           "(from newest to oldest version): ",
-                          all_in_1string, ".")
+                          in1string, ".")
             stop(wmsg(err_msg1), "\n  ", wmsg(err_msg2))
         }
         igblast_root <- set_internal_igblast_root(version_or_path)

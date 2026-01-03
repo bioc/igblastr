@@ -2,6 +2,7 @@
 
 \alias{auxdata-utils}
 \alias{auxdata_utils}
+\alias{auxdata}
 
 \alias{get_auxdata_path}
 \alias{load_auxdata}
@@ -13,10 +14,15 @@
 \alias{get_igblast_auxiliary_data}
 \alias{load_igblast_auxiliary_data}
 
-\title{Access or generate IgBLAST auxiliary data}
+\title{Access, manipulate, and generate IgBLAST auxiliary data}
 
 \description{
-  A small set of utilities to access or generate IgBLAST auxiliary data.
+  IgBLAST \emph{auxiliary data} is expected to annotate all the known
+  germline J gene alleles for a given organism. It is provided by NCBI
+  and is typically included in a standard IgBLAST installation.
+
+  The \pkg{igblastr} package provides a small set of utilities to access,
+  manipulate, and generate IgBLAST auxiliary data.
 }
 
 \usage{
@@ -64,11 +70,12 @@ compute_auxdata(J_alleles)
 }
 
 \details{
-  The \emph{auxiliary data} is typically included in a standard IgBLAST
+  IgBLAST \emph{auxiliary data} is typically included in a standard IgBLAST
   installation. It's located in the \code{optional_file/} directory which
   is itself a subdirectory of IgBLAST \emph{root directory}.
-  It consists of one tabulated file per organism. Each file indicates the
-  germline J gene coding frame start position, the J gene type, and the
+
+  The data consists of one tabulated file per organism. Each file indicates
+  the germline J gene coding frame start position, the J gene type, and the
   CDR3 end position for all known germline J allele sequences. See
   \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html} for
   additional details.
