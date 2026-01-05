@@ -132,14 +132,16 @@ compute_auxdata(J_alleles)
 
 \seealso{
   \itemize{
+    \item \link{intdata_utils} to access and manipulate IgBLAST internal data.
+
     \item \code{\link{update_live_igdata}} for more information about "live"
           and "original" IgBLAST data.
 
     \item \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html}
           for important information about the IgBLAST auxiliary data.
 
-    \item \link[Biostrings]{DNAStringSet} and \link[Biostrings]{AAStringSet}
-          objects in the \pkg{Biostrings} package.
+    \item \link[Biostrings]{DNAStringSet} objects in the \pkg{Biostrings}
+          package.
 
     \item The \code{\link{translate_codons}} function on which
           \code{translate_J_alleles()} and \code{translate_fwr4()} are based.

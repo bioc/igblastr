@@ -38,10 +38,16 @@ V_allele_has_stop_codon(V_alleles, intdata)
     returned by \code{\link{list_igblast_organisms}()}.
   }
   \item{for.aa}{
-    COMING SOON...
+    By default, the data.frame returned by \code{load_intdata()} contains
+    FWR/CDR start/end positions with respect to the nucleotide sequences
+    of the germline V alleles.
+    Setting \code{for.aa} to \code{TRUE} will return a data.frame with
+    positions that are with respect to the amino acid sequences of the
+    germline V alleles.
   }
   \item{domain_system}{
-    COMING SOON...
+    Domain system to be used for segment annotation. Must be \code{"imgt"}
+    (the default) or \code{"kabat"}.
   }
   \item{which}{
     By default, \code{get_intdata_path()} and \code{load_intdata()}
@@ -61,10 +67,14 @@ V_allele_has_stop_codon(V_alleles, intdata)
     gene allele sequences.
   }
   \item{intdata}{
-    A data.frame as returned by \code{load_intdata()}.
+    A data.frame as returned by
+    \code{load_intdata(., for.aa=FALSE, domain_system="imgt")}.
   }
   \item{region}{
-    COMING SOON...
+    The region to translate. This can be set to \code{"fwr1"}, \code{"cdr1"},
+    \code{"fwr2"}, \code{"cdr2"}, or \code{"fwr3"}.
+    By default (i.e. when \code{region} is omitted or set to \code{NULL}),
+    the entire coding frame in each allele sequence is translated.
   }
 }
 
@@ -113,11 +123,14 @@ V_allele_has_stop_codon(V_alleles, intdata)
 
 \seealso{
   \itemize{
+    \item \link{auxdata_utils} to access, manipulate, and generate IgBLAST
+          auxiliary data.
+
     \item \code{\link{update_live_igdata}} for more information about "live"
           and "original" IgBLAST data.
 
-    \item \link[Biostrings]{DNAStringSet} and \link[Biostrings]{AAStringSet}
-          objects in the \pkg{Biostrings} package.
+    \item \link[Biostrings]{DNAStringSet} objects in the \pkg{Biostrings}
+          package.
 
     \item The \code{\link{translate_codons}} function on which
           \code{translate_V_alleles()} is based.
@@ -142,13 +155,24 @@ igblast_info()
 
 list_igblast_organisms()
 
-get_intdata_path("human")
-human_intdata <- load_intdata("human")
-head(human_intdata)
+get_intdata_path("rabbit")
+rabbit_intdata <- load_intdata("rabbit")
+head(rabbit_intdata)
+
+rabbit_intdata2 <- load_intdata("rabbit", for.aa=TRUE)
+head(rabbit_intdata2)
+
+## The values in the "end" cols in 'rabbit_intdata' are exactly 3 times
+## those in the "end" cols in 'rabbit_intdata2':
+end_colnames <- grep("_end$", colnames(rabbit_intdata), value=TRUE)
+stopifnot(identical(rabbit_intdata [ , end_colnames],
+                    rabbit_intdata2[ , end_colnames] * 3L))
 
 ## ---------------------------------------------------------------------
 ## translate_V_alleles() and V_allele_has_stop_codon()
 ## ---------------------------------------------------------------------
+
+human_intdata <- load_intdata("human")
 
 db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
 V_alleles <- load_germline_db(db_name, region_types="V")

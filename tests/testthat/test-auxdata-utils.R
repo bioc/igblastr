@@ -1,22 +1,15 @@
-### Not the true colnames used in IgBLAST auxdata files.
-### Ours are shorter and have underscores instead of spaces.
-.IGBLAST_AUXDATA_COLNAMES <- c(
-    "allele_name",
-    "coding_frame_start",
-    "chain_type",
-    "cdr3_end",
-    "extra_bps"
-)
+.IGBLAST_AUXDATA_COLNAMES <- names(igblastr:::.IGBLAST_AUXDATA_COL2CLASS)
 
 test_that("load_auxdata()", {
     organisms <- list_igblast_organisms()
     for (organism in organisms) {
-        auxdata <- load_auxdata(organism, "original")
+        auxdata <- load_auxdata(organism, which="original")
         expect_true(is.data.frame(auxdata))
         expect_identical(colnames(auxdata), .IGBLAST_AUXDATA_COLNAMES)
-        ## human_gl.aux has 2 identical rows for TRAJ13*02 !
+        ## 1 row is repeated in human_gl.aux (the row for TRAJ13*02)
         if (organism != "human")
             expect_identical(anyDuplicated(auxdata[ , "allele_name"]), 0L)
+        expect_true(rows_with_same_key_are_identical(auxdata, "allele_name"))
     }
 })
 
@@ -27,7 +20,7 @@ test_that("load_auxdata()", {
 ### in April 2025. We do our own correction here.
 .load_human_auxdata <- function()
 {
-    auxdata <- load_auxdata("human", "original")
+    auxdata <- load_auxdata("human", which="original")
     fixme <- auxdata[ , "allele_name"] %in% c("IGHJ6*02", "IGHJ6*03")
     auxdata[fixme, "extra_bps"] <- 1L  # (replace 0L with 1L)
     auxdata
@@ -70,7 +63,7 @@ test_that("translate_J_alleles()", {
 
     ## --- for mouse J alleles (from IMGT) ---
 
-    auxdata <- load_auxdata("mouse", "original")
+    auxdata <- load_auxdata("mouse", which="original")
 
     db_name <- "IMGT-202531-1.Mus_musculus.IGH+IGK+IGL"
     J_alleles <- load_germline_db(db_name, region_types="J")
@@ -107,7 +100,7 @@ test_that("J_allele_has_stop_codon()", {
 
     ## --- for rabbit J alleles (from IMGT) ---
 
-    auxdata <- load_auxdata("rabbit", "original")
+    auxdata <- load_auxdata("rabbit", which="original")
 
     db_name <- "IMGT-202531-1.Oryctolagus_cuniculus.IGH+IGK+IGL"
     J_alleles <- load_germline_db(db_name, region_types="J")
@@ -144,7 +137,7 @@ test_that("translate_fwr4()", {
 
     ## --- for mouse J alleles (from IMGT) ---
 
-    auxdata <- load_auxdata("mouse", "original")
+    auxdata <- load_auxdata("mouse", which="original")
 
     db_name <- "IMGT-202531-1.Mus_musculus.IGH+IGK+IGL"
     J_alleles <- load_germline_db(db_name, region_types="J")
@@ -165,7 +158,7 @@ test_that("translate_fwr4()", {
 
     ## --- for rat J alleles (from IMGT) ---
 
-    auxdata <- load_auxdata("rat", "original")
+    auxdata <- load_auxdata("rat", which="original")
 
     db_name <- "IMGT-202531-1.Rattus_norvegicus.IGH+IGK+IGL"
     J_alleles <- load_germline_db(db_name, region_types="J")
@@ -198,7 +191,7 @@ test_that("compute_auxdata()", {
 
     ## Now we're going to check that 'computed_auxdata' agrees with the
     ## auxiliary data included in IgBLAST. More precisely, we're going to
-    ## check that it's a subset of 'load_auxdata("human", "original")'.
+    ## check that it's a subset of 'load_auxdata("human", which="original")'.
 
     ## All the J alleles in _AIRR.human.IGH+IGK+IGL.202410 are annotated
     ## in human_gl.aux so we expect no NAs in 'm' below.
@@ -237,7 +230,7 @@ test_that("compute_auxdata()", {
     ## are annotated in mouse_gl.aux so we expect a few NAs in 'm' below.
     ## We will also skip validation for alleles for which no CDR3 end was
     ## found.
-    orig_auxdata <- load_auxdata("mouse", "original")
+    orig_auxdata <- load_auxdata("mouse", which="original")
     m <- match(names(J_alleles), orig_auxdata[ , "allele_name"])
     keep_idx <- which(!(is.na(computed_auxdata[ , "cdr3_end"]) | is.na(m)))
     current <- S4Vectors:::extract_data_frame_rows(computed_auxdata, keep_idx)
@@ -257,7 +250,7 @@ test_that("compute_auxdata()", {
     ## are annotated in rat_gl.aux so we expect a few NAs in 'm' below.
     ## We will also skip validation for alleles for which no CDR3 end was
     ## found.
-    orig_auxdata <- load_auxdata("rat", "original")
+    orig_auxdata <- load_auxdata("rat", which="original")
     m <- match(names(J_alleles), orig_auxdata[ , "allele_name"])
     keep_idx <- which(!(is.na(computed_auxdata[ , "cdr3_end"]) | is.na(m)))
     current <- S4Vectors:::extract_data_frame_rows(computed_auxdata, keep_idx)

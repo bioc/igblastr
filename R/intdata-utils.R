@@ -35,12 +35,14 @@ get_intdata_path <- function(organism, for.aa=FALSE,
 ### load_intdata()
 ###
 
+### Not the true colnames used in IgBLAST intdata files: ours are all
+### lowercase and we've replaced spaces with underscores.
 ### Note that many columns are redundant:
 ### - columns 'cdr1_start', 'fwr2_start', 'cdr2_start', and 'fwr3_start'
 ###   are redundant with columns 'fwr1_end', 'cdr1_end', 'fwr2_end',
 ###   and 'cdr2_end', respectively;
 ### - columns 'fwr1_start' and 'coding_frame_start' are redundant.
-.IGBLAST_INTDATA_COLCLASSES <- c(
+.IGBLAST_INTDATA_COL2CLASS <- c(
     allele_name="character",
     fwr1_start="integer",
     fwr1_end="integer",
@@ -67,9 +69,7 @@ load_intdata <- function(organism, for.aa=FALSE,
     intdata_path <- get_intdata_path(organism, for.aa=for.aa,
                                      domain_system=domain_system,
                                      which=which)
-    read.table(intdata_path,
-               col.names=names(.IGBLAST_INTDATA_COLCLASSES),
-               colClasses=.IGBLAST_INTDATA_COLCLASSES)
+    read_broken_table(intdata_path, .IGBLAST_INTDATA_COL2CLASS)
 }
 
 
