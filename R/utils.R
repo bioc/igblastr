@@ -169,7 +169,7 @@ align_vectors_by_names <- function(vectors)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### read_jagged_table_as_character_matrix()
+### read_broken_table()
 ###
 
 ### 'x' must be a list of character vectors of variable length.
@@ -201,13 +201,41 @@ align_vectors_by_names <- function(vectors)
 }
 
 ### Returns the table in a character matrix.
-read_jagged_table_as_character_matrix <- function(filepath)
+.read_jagged_table_as_character_matrix <- function(filepath)
 {
     lines <- readLines(filepath)
     lines <- lines[nzchar(lines) & !has_prefix(lines, "#")]
     data <- strsplit(lines, split="[ \t]+")
     data <- .right_pad_with_empty_strings_and_unlist(data)
     matrix(data, nrow=length(lines), byrow=TRUE)
+}
+
+.matrix2df <- function(m, col2class)
+{
+    stopifnot(is.matrix(m),
+              is.character(col2class), !is.null(names(col2class)),
+              ncol(m) == length(col2class))
+    cols <- lapply(setNames(seq_along(col2class), names(col2class)),
+                   function(i) as(m[ , i], col2class[[i]]))
+    as.data.frame(cols, optional=TRUE, fix.empty.names=FALSE)
+}
+
+### Read broken IgBLAST data files.
+### IgBLAST data files (internal and auxiliary) are supposedly "tab-delimited"
+### but they are broken in many ways:
+###   - they use a mix of whitespaces for the field separators;
+###   - each line contains a variable number of fields;
+###   - some lines contain trailing whitespaces.
+### So we cannot simply read them with read.table().
+read_broken_table <- function(filepath, col2class)
+{
+    stopifnot(isSingleNonWhiteString(filepath),
+              is.character(col2class), !is.null(names(col2class)))
+    m <- .read_jagged_table_as_character_matrix(filepath)
+    if (ncol(m) != length(col2class))
+        stop(wmsg("error loading ", filepath, ": unexpected ",
+                  "number of fields"))
+    .matrix2df(m, col2class)
 }
 
 

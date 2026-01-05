@@ -32,25 +32,16 @@ get_igblast_auxiliary_data <- function(...)
 ### load_auxdata()
 ###
 
-.make_auxdata_df_from_matrix <- function(m, filepath)
-{
-    if (ncol(m) != 5L)
-        stop(wmsg("error loading ", filepath, ": unexpected number of fields"))
-    data.frame(
-        allele_name       =           m[ , 1L],
-        coding_frame_start=as.integer(m[ , 2L]),
-        chain_type        =           m[ , 3L],
-        cdr3_end          =as.integer(m[ , 4L]),
-        extra_bps         =as.integer(m[ , 5L])
-    )
-}
+### Not the true colnames used in IgBLAST auxdata files. However, ours are
+### shorter, all lowercase, and contain underscores instead of spaces.
+.IGBLAST_AUXDATA_COL2CLASS <- c(
+    allele_name="character",
+    coding_frame_start="integer",
+    chain_type="character",
+    cdr3_end="integer",
+    extra_bps="integer"
+)
 
-### IgBLAST *.aux files are supposedly "tab-delimited" but they are
-### broken in many ways:
-###   - they use a mix of whitespaces for the field separators;
-###   - each line contains a variable number of fields;
-###   - some lines contain trailing whitespaces.
-### So we cannot simply read them with read.table().
 ### IMPORTANT NOTE: Unlike with the data.frame returned by load_intdata(),
 ### all the positions in the data.frame returned by load_auxdata() (that is,
 ### the positions reported in columns 'coding_frame_start' and 'cdr3_end')
@@ -58,9 +49,8 @@ get_igblast_auxiliary_data <- function(...)
 load_auxdata <- function(organism, which=c("live", "original"))
 {
     which <- match.arg(which)
-    auxdata_path <- get_auxdata_path(organism, which)
-    m <- read_jagged_table_as_character_matrix(auxdata_path)
-    .make_auxdata_df_from_matrix(m, auxdata_path)
+    auxdata_path <- get_auxdata_path(organism, which=which)
+    read_broken_table(auxdata_path, .IGBLAST_AUXDATA_COL2CLASS)
 }
 
 load_igblast_auxiliary_data <- function(...)
@@ -256,8 +246,7 @@ translate_fwr4 <- function(J_alleles, auxdata, max.codons=NA)
 .VALID_J_GROUPS <- paste0("IG", c("H", "K", "L"), "J")
 
 ### Returns a data.frame with the same column names as the data.frame
-### returned by .make_auxdata_df_from_matrix() above, plus
-### the "fwr4_start_motif" column.
+### returned by load_auxdata() above, plus the "fwr4_start_motif" column.
 ### NOTE: We set coding_frame_start/cdr3_end/extra_bps/fwr4_start_motif
 ### to NA for alleles for which the FWR4 start cannot be determined.
 .compute_auxdata_for_J_group <- function(J_alleles, J_group)
