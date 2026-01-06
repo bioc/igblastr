@@ -10,10 +10,16 @@
 
 \description{
   The \code{install_IMGT_germline_db()} function downloads V/D/J
-  germline sequences from the IMGT website for a given organism, and
-  stores them in a local germline database. This local database gets
+  germline gene allele sequences from the IMGT website for a given organism,
+  and stores them in a local germline database. This local database gets
   installed in \pkg{igblastr}'s persistent cache. It can then be used
   later with \code{\link{igblastn}()}.
+
+  CONDITIONS OF USE AND LICENSE: The IMGT data is provided to the academic
+  users and NPO's (Not for Profit Organization(s)) under the CC BY-NC-ND 4.0
+  license. See \url{https://creativecommons.org/licenses/by-nc-nd/4.0/}.
+  Any other use of IMGT material, from the private sector, needs a
+  financial arrangement with CNRS.
 }
 
 \usage{
@@ -33,13 +39,13 @@ install_IMGT_c_region_db(organism, loci, force=FALSE)
 \arguments{
   \item{release}{
     A single string specifying the IMGT/V-QUEST release to get the
-    germline sequences from (or to list the organisms from for
-    \code{list_IMGT_organisms()}).
+    germline gene allele sequences from (or to list the organisms
+    from for \code{list_IMGT_organisms()}).
     Use \code{list_IMGT_releases()} to list all releases.
   }
   \item{organism}{
     A single string specifying the latin name of the organism for which
-    to get the germline sequences.
+    to get the germline gene allele sequences.
 
     Note that \code{install_IMGT_c_region_db()} also accepts the
     common name of the organism (e.g. "human").
@@ -99,14 +105,14 @@ install_IMGT_c_region_db(organism, loci, force=FALSE)
           Use \code{list_IMGT_organisms("<release>")} to get the list
           of organisms included in a given IMGT/V-QUEST release.
           Note that, starting with release 202405-2, IMGT/V-QUEST
-          provides BCR and TCR germline sequences for mouse strain
-          C57BL6J (Mus_musculus_C57BL6J).
+          provides BCR and TCR germline gene allele sequences for mouse
+          strain C57BL6J (Mus_musculus_C57BL6J).
     \item <loci> is a string obtained by concatenating the germline
           loci together separated with the + sign. For example IGH+IGK+IGL
           or TRA+TRB+TRG+TRD.
-          The list of loci depends on whether the germline sequences for
-          BCR or TCR were requested. See \code{tcr.db} argument above for
-          more information.
+          The list of loci depends on whether the germline gene allele
+          sequences for BCR or TCR were requested. See \code{tcr.db} argument
+          above for more information.
           Note that for some IMGT/V-QUEST releases/organisms, only a subset
           of the loci are available. For example, in release 202343-3,
           the only TCR germline loci available for Mus_musculus_C57BL6J
@@ -172,8 +178,8 @@ if (IMGT_is_up()) {
 
   list_IMGT_organisms("202518-3")
 
-  ## Download Mouse BCR germline sequences from IMGT/V-QUEST 202518-3, and
-  ## store them in a cached germline database:
+  ## Download Mouse BCR germline gene allele sequences from IMGT/V-QUEST
+  ## 202518-3, and store them in a cached germline database:
   install_IMGT_germline_db("202518-3", organism="Mus musculus", force=TRUE)
 
   ## List the cached germline databases:
@@ -182,8 +188,8 @@ if (IMGT_is_up()) {
   ## Select newly installed germline db to use with igblastn():
   use_germline_db("IMGT-202518-3.Mus_musculus.IGH+IGK+IGL")
 
-  ## Download Mouse TCR germline sequences from IMGT/V-QUEST 202518-3, and
-  ## store them in a cached germline database:
+  ## Download Mouse TCR germline gene allele sequences from IMGT/V-QUEST
+  ## 202518-3, and store them in a cached germline database:
   install_IMGT_germline_db("202518-3", organism="Mus musculus",
                            tcr.db=TRUE, force=TRUE)
   list_germline_dbs()

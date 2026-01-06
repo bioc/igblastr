@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 9 December 2025"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 5 January 2026"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -136,11 +136,11 @@ we will analyze in this vignette.
 
 Before we can do so, the `igblastn` _standalone executable_ in IgBLAST (and,
 by extension, our `igblastn()` function) needs access to the germline V, D,
-and J gene sequences for humans. Before `igblastn` can use them, these
-germline sequences must first be stored in three separate BLAST databases.
-We will refer to these as the V-region, D-region, and J-region databases,
-respectively. When considered together, we will refer to them as the
-_germline database_.
+and J gene allele sequences for humans. Before `igblastn` can use them, these
+germline gene allele sequences must first be stored in three separate BLAST
+databases. We will refer to these as the V-region, D-region, and J-region
+databases, respectively. When considered together, we will refer to them as
+the _germline database_.
 
 
 ## Built-in germline databases
@@ -209,7 +209,7 @@ See `?list_germline_dbs` for more information.
 
 The `igblastn` _standalone executable_ in IgBLAST can also use constant
 region (C region) sequences to improve the analysis. As with the
-germline V, D, and J gene sequences, the C-region sequences should
+germline V, D, and J gene allele sequences, the C-region sequences should
 typically come from the same organism as the query sequences, and they
 must also be formatted as a BLAST database. We will refer to this database
 as the C-region database.

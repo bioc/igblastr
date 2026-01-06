@@ -51,8 +51,8 @@ rm_germline_db(db_name)
     \code{TRUE} or \code{FALSE}. If set to \code{TRUE}, then
     \code{list_germline_dbs()} returns a named list with one
     list element per germline db. Each list element is an integer
-    matrix that indicates the number of germline sequences per locus
-    and region type.
+    matrix that indicates the number of germline gene allele sequences
+    per locus and region type.
 
     Ignored if \code{names.only} is set to \code{TRUE}.
   }
@@ -118,7 +118,7 @@ rm_germline_db(db_name)
   in a data.frame with one db per row (if \code{names.only} is \code{FALSE},
   which is the default), or in a character vector (if \code{names.only}
   is \code{TRUE}). Columns V, D, J in the data.frame indicate the number
-  of germline sequences for each region in each db.
+  of germline gene allele sequences for each region in each db.
 
   Built-in dbs are prefixed with an underscore (\code{_}).
   Note that the built-in germline dbs starting with \code{_AIRR}
@@ -193,7 +193,7 @@ if (IMGT_is_up()) {
 
   use_germline_db()  # get current selection
 
-  ## Load germline sequences:
+  ## Load germline gene allele sequences:
   load_germline_db(db_name)
   load_germline_db(db_name, region_types="D")
   load_germline_db(db_name, region_types="DJ")

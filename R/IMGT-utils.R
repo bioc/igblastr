@@ -20,6 +20,15 @@ VQUEST_REFERENCE_DIRECTORY <- "IMGT_V-QUEST_reference_directory"
 ### Do not remove the trailing slash.
 .VQUEST_ARCHIVES_URL <- paste0(.VQUEST_DOWNLOAD_ROOT_URL, "archives/")
 
+IMGT_TERMS_OF_USE <- paste0(
+    "CONDITIONS OF USE AND LICENSE: The IMGT data is provided to the ",
+    "academic users and NPO's (Not for Profit Organization(s)) under ",
+    "the CC BY-NC-ND 4.0 license. ",
+    "See https://creativecommons.org/licenses/by-nc-nd/4.0/. ",
+    "Any other use of IMGT material, from the private sector, needs ",
+    "a financial arrangement with CNRS."
+)
+
 get_IMGT_connecttimeout <- function() getOption("IMGT_connecttimeout")
 
 
