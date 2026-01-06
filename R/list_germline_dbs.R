@@ -164,7 +164,14 @@ make_germline_db_path <- function(db_name)
     basename(db_path)
 }
 
-.note_if_selecting_builtin_AIRR_src_db <- function(db_name)
+.how_to_suppress_use_germline_db_msg <- function(db_name)
+{
+    msg1 <- "To suppress this message, use:"
+    msg2 <- c("suppressMessages(use_germline_db(\"", db_name, "\"))")
+    c(wmsg(msg1), "\n    ", wmsg(msg2))
+}
+
+.note_on_selecting_AIRR_src_germline_db <- function(db_name)
 {
     is_src_db <- has_prefix(db_name, "_AIRR.") && has_suffix(db_name, ".src")
     if (!is_src_db)
@@ -178,10 +185,34 @@ make_germline_db_path <- function(db_name)
               "using the allele sequences from the \"Reference Set\" ",
               "datasets for AIRR-seq analysis (see for example ", url, "), ",
               "which are provided by ", ref_db_name, ".")
-    msg3a <- "To suppress this message, use:"
-    msg3b <- c("suppressMessages(use_germline_db(\"", db_name, "\"))")
     message("  ", wmsg(msg1), "\n\n  ", wmsg(msg2), "\n\n  ",
-            wmsg(msg3a), "\n    ", wmsg(msg3b))
+            .how_to_suppress_use_germline_db_msg(db_name))
+}
+
+.note_on_selecting_IMGT_germline_db <- function(db_name)
+{
+    is_imgt_db <- has_prefix(db_name, "IMGT-")
+    if (!is_imgt_db)
+        return()
+    message("  ", wmsg(IMGT_TERMS_OF_USE), "\n\n  ",
+            .how_to_suppress_use_germline_db_msg(db_name))
+}
+
+.select_germline_db <- function(db_name, verbose=FALSE)
+{
+    check_germline_db_name(db_name)
+    if (db_name == .OLD_BUILTIN_AIRR_HUMAN_DB) {
+        .warn_if_old_builtin_AIRR_human_db_exists()
+    } else {
+        .note_on_selecting_AIRR_src_germline_db(db_name)
+        .note_on_selecting_IMGT_germline_db(db_name)
+    }
+
+    db_path <- make_germline_db_path(db_name)
+    make_blastdbs(db_path, verbose=verbose)
+
+    ## Returns 'db_name' invisibly.
+    set_db_in_use("germline", db_name, verbose=verbose)
 }
 
 use_germline_db <- function(db_name=NULL, verbose=FALSE)
@@ -190,19 +221,7 @@ use_germline_db <- function(db_name=NULL, verbose=FALSE)
         stop(wmsg("'verbose' must be TRUE or FALSE"))
     if (is.null(db_name))
         return(.get_germline_db_in_use(verbose=verbose))
-
-    check_germline_db_name(db_name)
-    if (db_name == .OLD_BUILTIN_AIRR_HUMAN_DB) {
-        .warn_if_old_builtin_AIRR_human_db_exists()
-    } else {
-        .note_if_selecting_builtin_AIRR_src_db(db_name)
-    }
-
-    db_path <- make_germline_db_path(db_name)
-    make_blastdbs(db_path, verbose=verbose)
-
-    ## Returns 'db_name' invisibly.
-    set_db_in_use("germline", db_name, verbose=verbose)
+    .select_germline_db(db_name, verbose=verbose)
 }
 
 
