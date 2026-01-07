@@ -83,7 +83,7 @@
 ### the FASTA files available at AIRR-community/OGRDB.
 ### This is a 3-step procedure: (1) combine, (2) edit, (3) compile.
 ### The .combine_and_edit_fasta_files() function below implements
-### steps (1) and (2).
+### steps (1) and (2) only.
 ### Compilation (with makeblastdb) will happen at a latter time.
 .combine_and_edit_fasta_files <- function(fasta_files, destdir,
                                           region_type=c(VDJ_REGION_TYPES, "C"))

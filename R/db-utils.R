@@ -34,6 +34,7 @@ sort_db_names <- function(db_names, decreasing=FALSE)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### get_db_fasta_file()
+### get_original_db_fasta_files()
 ###
 
 ### Note that the returned path is NOT guaranteed to exist.
@@ -42,6 +43,22 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
     stopifnot(isSingleNonWhiteString(db_path))
     region_type <- match.arg(region_type)
     file.path(db_path, paste0(region_type, ".fasta"))
+}
+
+### Unlike with get_db_fasta_file(), the paths returned by
+### get_original_db_fasta_files() are guaranteed to exist.
+get_original_db_fasta_files <-
+    function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
+{
+    stopifnot(isSingleNonWhiteString(db_path), dir.exists(db_path))
+    region_type <- match.arg(region_type)
+    subdir <- paste0(region_type, "_original_fasta")
+    original_fasta_dir <- file.path(db_path, subdir)
+    stopifnot(dir.exists(original_fasta_dir))
+    fasta_files <- list.files(original_fasta_dir, pattern="\\.fasta$",
+                              full.names=TRUE)
+    stopifnot(length(fasta_files) != 0L)
+    fasta_files
 }
 
 
@@ -82,20 +99,17 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
 
 ### Returns a named integer vector with 'loci' as names.
 .tabulate_db_original_fasta_files_by_locus <-
-    function(original_fasta_dir, loci)
+    function(db_path, region_type, loci)
 {
-    stopifnot(isSingleNonWhiteString(original_fasta_dir),
-              dir.exists(original_fasta_dir))
-    fasta_files <- list.files(original_fasta_dir, pattern="\\.fasta$")
-    stopifnot(length(fasta_files) != 0L)
-    found_loci <- substr(fasta_files, 1L, 3L)
+    fasta_files <- get_original_db_fasta_files(db_path, region_type)
+    found_loci <- substr(basename(fasta_files), 1L, 3L)
     stopifnot(all(found_loci %in% loci))
     fasta_files <- setNames(fasta_files[match(loci, found_loci)], loci)
     vapply(fasta_files,
         function(fasta_file) {
             if (is.na(fasta_file))
                 return(0L)
-            length(fasta.seqlengths(file.path(original_fasta_dir, fasta_file)))
+            length(fasta.seqlengths(fasta_file))
         }, integer(1))
 }
 
@@ -106,11 +120,9 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
     stopifnot(isSingleNonWhiteString(db_path))
     stop_if_malformed_loci_vector(loci)
     vdj_counts <- lapply(VDJ_REGION_TYPES,
-        function(region_type) {
-            basename <- paste0(region_type, "_original_fasta")
-            original_fasta_dir <- file.path(db_path, basename)
-            .tabulate_db_original_fasta_files_by_locus(original_fasta_dir, loci)
-        }
+        function(region_type)
+            .tabulate_db_original_fasta_files_by_locus(db_path, region_type,
+                                                       loci)
     )
     ans <- do.call(cbind, vdj_counts)
     stopifnot(all(rowSums(ans) != 0L), all(colSums(ans) != 0L))
@@ -123,8 +135,7 @@ get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
 {
     stopifnot(isSingleNonWhiteString(db_path))
     stop_if_malformed_loci_vector(loci)
-    original_fasta_dir <- file.path(db_path, "C_original_fasta")
-    ans <- .tabulate_db_original_fasta_files_by_locus(original_fasta_dir, loci)
+    ans <- .tabulate_db_original_fasta_files_by_locus(db_path, "C", loci)
     stopifnot(all(ans != 0L))
     ans
 }

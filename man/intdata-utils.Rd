@@ -8,6 +8,8 @@
 \alias{load_intdata}
 \alias{translate_V_alleles}
 \alias{V_allele_has_stop_codon}
+\alias{annotate_heavy_V_alleles}
+\alias{annotate_light_V_alleles}
 
 \title{Access and manipulate IgBLAST internal data}
 
