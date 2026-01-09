@@ -192,7 +192,9 @@ V_allele_has_stop_codon <- function(V_alleles, intdata)
 ### annotate_heavy_V_alleles()
 ### annotate_light_V_alleles()
 ###
-### EXPERIMENTAL!
+### EXPERIMENTAL! (See inst/scripts/annotate_V_alleles.R for how to use
+### these functions and an assessment of the current implementation.)
+###
 
 .load_J_alleles <- function(db_name, loci)
 {
@@ -286,7 +288,8 @@ V_allele_has_stop_codon <- function(V_alleles, intdata)
     if (all(ok))
         return(df0)
     bad_df <- df0[!ok, ]
-    warning("Dropping the following rows (bad locus):", immediate.=TRUE)
+    warning("Dropping the following row(s) (", nrow(bad_df), " artificial ",
+            "receptor(s) with bad locus):", immediate.=TRUE)
     print(bad_df)
     df0[ok, ]
 }
