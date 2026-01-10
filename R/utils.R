@@ -169,6 +169,21 @@ align_vectors_by_names <- function(vectors)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### matrix2df
+###
+
+matrix2df <- function(m, col2class)
+{
+    stopifnot(is.matrix(m),
+              is.character(col2class), !is.null(names(col2class)),
+              ncol(m) == length(col2class))
+    cols <- lapply(setNames(seq_along(col2class), names(col2class)),
+                   function(i) as(m[ , i], col2class[[i]]))
+    as.data.frame(cols, optional=TRUE, fix.empty.names=FALSE)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### read_broken_table()
 ###
 
@@ -210,16 +225,6 @@ align_vectors_by_names <- function(vectors)
     matrix(data, nrow=length(lines), byrow=TRUE)
 }
 
-.matrix2df <- function(m, col2class)
-{
-    stopifnot(is.matrix(m),
-              is.character(col2class), !is.null(names(col2class)),
-              ncol(m) == length(col2class))
-    cols <- lapply(setNames(seq_along(col2class), names(col2class)),
-                   function(i) as(m[ , i], col2class[[i]]))
-    as.data.frame(cols, optional=TRUE, fix.empty.names=FALSE)
-}
-
 ### Read broken IgBLAST data files.
 ### IgBLAST data files (internal and auxiliary) are supposedly "tab-delimited"
 ### but they are broken in many ways:
@@ -235,7 +240,7 @@ read_broken_table <- function(filepath, col2class)
     if (ncol(m) != length(col2class))
         stop(wmsg("error loading ", filepath, ": unexpected ",
                   "number of fields"))
-    .matrix2df(m, col2class)
+    matrix2df(m, col2class)
 }
 
 

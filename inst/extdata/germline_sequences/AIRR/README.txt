@@ -12,3 +12,5 @@ Content
 
 - mouse/: See README.txt in mouse/ subfolder.
 
+- rhesus_monkey/: See README.txt in rhesus_monkey/ subfolder.
+

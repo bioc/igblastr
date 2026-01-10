@@ -7,9 +7,13 @@ test_that("load_auxdata()", {
         expect_true(is.data.frame(auxdata))
         expect_identical(colnames(auxdata), .IGBLAST_AUXDATA_COLNAMES)
         ## 1 row is repeated in human_gl.aux (the row for TRAJ13*02)
-        if (organism != "human")
+        if (organism == "human") {
+            ok <- igblastr:::.rows_with_same_keys_are_identical(auxdata,
+                                                                "allele_name")
+            expect_true(ok)
+        } else {
             expect_identical(anyDuplicated(auxdata[ , "allele_name"]), 0L)
-        expect_true(rows_with_same_key_are_identical(auxdata, "allele_name"))
+        }
     }
 })
 

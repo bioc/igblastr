@@ -11,6 +11,9 @@ following datasets:
 IMPORTANT NOTE: These were the most current versions at the date indicated
 by the name of the parent folder of this folder (202410 i.e. Oct 2024).
 
+The folder also contains the corresponding V gene FWR/CDR annotation files
+for the IMGT domain system (`*.ndm.imgt` files).
+
 FWIW these datasets can be manually downloaded with:
 ```
 curl https://ogrdb.airr-community.org/download_germline_set/Homo%20sapiens/IGH_VDJ/9/ungapped_ex >Homo_sapiens_IGH_VDJ_rev_9_ungapped_ex.fasta
@@ -32,5 +35,33 @@ stopifnot(identical(Kfile_count, 2L))
 
 Jfile_count <- download_germline_sequences_from_OGRDB("Human", set_name="IGLambda_VJ", locus="IGL", release_version="3", extended=TRUE)
 stopifnot(identical(Jfile_count, 2L))
+```
+
+Files `*.ndm.imgt` were obtained programmatically by running the
+following code in the folder on Jan 9, 2026:
+```r
+library(igblastr)
+BASE_URL <- "https://ogrdb.airr-community.org/download_germline_set/"
+ORGANISM <- "Homo%20sapiens"
+tmp_json_file <- tempfile()
+
+url <- paste0(BASE_URL, ORGANISM, "/IGH_VDJ/9/airr_ex")
+download.file(url, tmp_json_file)
+IGHV_ndm_imgt <- makeogrannote(tmp_json_file)
+stopifnot(all(check_V_ndm_data(IGHV_ndm_imgt)))
+write_V_ndm_data(IGHV_ndm_imgt, "IGHV.ndm.imgt")
+
+url <- paste0(BASE_URL, ORGANISM, "/IGKappa_VJ/4/airr_ex")
+download.file(url, tmp_json_file)
+IGKV_ndm_imgt <- makeogrannote(tmp_json_file)
+stopifnot(all(check_V_ndm_data(IGKV_ndm_imgt)))
+write_V_ndm_data(IGKV_ndm_imgt, "IGKV.ndm.imgt")
+
+url <- paste0(BASE_URL, ORGANISM, "/IGLambda_VJ/3/airr_ex")
+download.file(url, tmp_json_file)
+IGLV_ndm_imgt <- makeogrannote(tmp_json_file)
+stopifnot(all(check_V_ndm_data(IGLV_ndm_imgt)))
+write_V_ndm_data(IGLV_ndm_imgt, "IGLV.ndm.imgt")
+}
 ```
 

@@ -29,7 +29,7 @@ get_intdata_path(organism, for.aa=FALSE, domain_system=c("imgt", "kabat"),
 load_intdata(organism, for.aa=FALSE, domain_system=c("imgt", "kabat"),
              which=c("live", "original"))
 
-translate_V_alleles(V_alleles, intdata, region=NULL)
+translate_V_alleles(V_alleles, intdata, V_segment=NULL)
 
 V_allele_has_stop_codon(V_alleles, intdata)
 }
@@ -72,10 +72,10 @@ V_allele_has_stop_codon(V_alleles, intdata)
     A data.frame as returned by
     \code{load_intdata(., for.aa=FALSE, domain_system="imgt")}.
   }
-  \item{region}{
-    The region to translate. This can be set to \code{"fwr1"}, \code{"cdr1"},
-    \code{"fwr2"}, \code{"cdr2"}, or \code{"fwr3"}.
-    By default (i.e. when \code{region} is omitted or set to \code{NULL}),
+  \item{V_segment}{
+    The V gene segment to translate. This can be set to \code{"fwr1"},
+    \code{"cdr1"}, \code{"fwr2"}, \code{"cdr2"}, or \code{"fwr3"}.
+    By default (i.e. when \code{V_segment} is omitted or set to \code{NULL}),
     the entire coding frame in each allele sequence is translated.
   }
 }
@@ -183,13 +183,13 @@ V_alleles  # DNAStringSet object
 V_aa <- translate_V_alleles(V_alleles, human_intdata)
 head(V_aa)
 
-fwr1 <- translate_V_alleles(V_alleles, human_intdata, region="fwr1")
+fwr1 <- translate_V_alleles(V_alleles, human_intdata, V_segment="fwr1")
 head(fwr1)
 
-cdr1 <- translate_V_alleles(V_alleles, human_intdata, region="cdr1")
+cdr1 <- translate_V_alleles(V_alleles, human_intdata, V_segment="cdr1")
 head(cdr1)
 
-fwr2 <- translate_V_alleles(V_alleles, human_intdata, region="fwr2")
+fwr2 <- translate_V_alleles(V_alleles, human_intdata, V_segment="fwr2")
 head(fwr2)
 
 ## No sequence in 'V_aa' should contain the letter "*" which is used

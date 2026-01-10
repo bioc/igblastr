@@ -108,9 +108,7 @@
         return(fasta_lines)  # nucleotide sequences in FASTA format
     }
 
-    load_package_gracefully("jsonlite",
-                            "setting 'format' to \"airr\" or \"airr_ex\"")
-    parsed_json <- jsonlite::fromJSON(content, simplifyDataFrame=FALSE)
+    parsed_json <- fromJSON(content, simplifyDataFrame=FALSE)
     ## Sanity checks.
     stopifnot(is.list(parsed_json),
               length(parsed_json) == 1L,
