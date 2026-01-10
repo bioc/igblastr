@@ -30,7 +30,7 @@ read_OAS_csv_metadata <- function(file)
     stopifnot(substr(line, 1L, 1L) == '"', substr(line, nc, nc) == '"')
     line <- substr(line, 2L, nc-1L)
     line <- gsub('""', '"', line, fixed=TRUE)
-    jsonlite::fromJSON(line)
+    fromJSON(line)
 }
 
 read_OAS_csv <- function(file, skip=1, ...)

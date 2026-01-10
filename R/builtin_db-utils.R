@@ -52,10 +52,9 @@ read_version_file <- function(dirpath)
 .create_missing_builtin_AIRR_human_germline_dbs <- function(human_dir, destdir)
 {
     stopifnot(isSingleNonWhiteString(human_dir), dir.exists(human_dir))
-    human_subdirs <- list.dirs(human_dir, full.names=FALSE, recursive=FALSE)
-    human_subdirs <- setdiff(human_subdirs, "diffs")
-    fasta_stores <- file.path(human_dir,
-                              rep(human_subdirs, each=2L), c("ref", "src"))
+    subdirs <- list.dirs(human_dir, full.names=FALSE, recursive=FALSE)
+    subdirs <- setdiff(subdirs, "diffs")
+    fasta_stores <- file.path(human_dir, rep(subdirs, each=2L), c("ref", "src"))
     for (fasta_store in fasta_stores)
         .create_builtin_AIRR_human_germline_db(fasta_store, destdir,
                                                only.if.missing=TRUE)
@@ -87,10 +86,47 @@ read_version_file <- function(dirpath)
 
 .create_missing_builtin_AIRR_mouse_germline_dbs <- function(mouse_dir, destdir)
 {
+    stopifnot(isSingleNonWhiteString(mouse_dir), dir.exists(mouse_dir))
     fasta_stores <- list.dirs(mouse_dir, recursive=FALSE)
     for (fasta_store in fasta_stores)
         .create_builtin_AIRR_mouse_germline_db(fasta_store, destdir,
                                                only.if.missing=TRUE)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .create_missing_builtin_AIRR_rhesus_monkey_germline_dbs()
+###
+
+.form_builtin_AIRR_rhesus_monkey_germline_db_name <- function(fasta_store)
+{
+    loci_in1string <- paste(IG_LOCI, collapse="+")
+    version <- basename(fasta_store)
+    sprintf("_AIRR.rhesus_monkey.%s.%s", loci_in1string, version)
+}
+
+.create_builtin_AIRR_rhesus_monkey_germline_db <-
+    function(fasta_store, destdir, only.if.missing=FALSE)
+{
+    stopifnot(isSingleNonWhiteString(destdir), dir.exists(destdir),
+              isTRUEorFALSE(only.if.missing))
+    db_name <- .form_builtin_AIRR_rhesus_monkey_germline_db_name(fasta_store)
+    db_path <- file.path(destdir, db_name)
+    if (!(only.if.missing && dir.exists(db_path)))
+        create_germline_db(fasta_store, IG_LOCI, db_path)
+}
+
+.create_missing_builtin_AIRR_rhesus_monkey_germline_dbs <-
+    function(rhesus_monkey_dir, destdir)
+{
+    stopifnot(isSingleNonWhiteString(rhesus_monkey_dir),
+              dir.exists(rhesus_monkey_dir))
+    subdirs <- list.dirs(rhesus_monkey_dir, full.names=FALSE, recursive=FALSE)
+    subdirs <- setdiff(subdirs, "diffs")
+    fasta_stores <- file.path(rhesus_monkey_dir, subdirs)
+    for (fasta_store in fasta_stores)
+        .create_builtin_AIRR_rhesus_monkey_germline_db(fasta_store, destdir,
+                                                       only.if.missing=TRUE)
 }
 
 
@@ -112,6 +148,10 @@ create_missing_builtin_germline_dbs <- function(destdir)
 
     mouse_dir <- file.path(AIRR_germline_seq_dir, "mouse")
     .create_missing_builtin_AIRR_mouse_germline_dbs(mouse_dir, destdir)
+
+    rhesus_monkey_dir <- file.path(AIRR_germline_seq_dir, "rhesus_monkey")
+    .create_missing_builtin_AIRR_rhesus_monkey_germline_dbs(rhesus_monkey_dir,
+                                                            destdir)
 
     ## Any other built-in germline dbs to create?
 }

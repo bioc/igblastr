@@ -4,13 +4,6 @@
 ###
 
 
-### List only the FWR/CDR regions that are fully part of the V region.
-.FWR_CDR_REGIONS <- c(paste0(c("fwr", "cdr"), rep(1:2, each=2)), "fwr3")
-
-.FWR_CDR_START_END_COLNAMES <- paste0(rep(.FWR_CDR_REGIONS, each=2L),
-                                      c("_start", "_end"))
-
-
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### get_intdata_path()
 ###
@@ -42,29 +35,6 @@ get_intdata_path <- function(organism, for.aa=FALSE,
 ### load_intdata()
 ###
 
-### Not the true colnames used in IgBLAST intdata files: ours are all
-### lowercase and we've replaced spaces with underscores.
-### Note that many columns are redundant:
-### - columns 'cdr1_start', 'fwr2_start', 'cdr2_start', and 'fwr3_start'
-###   are redundant with columns 'fwr1_end', 'cdr1_end', 'fwr2_end',
-###   and 'cdr2_end', respectively;
-### - columns 'fwr1_start' and 'coding_frame_start' are redundant.
-.IGBLAST_INTDATA_COL2CLASS <- c(
-    allele_name="character",
-    fwr1_start="integer",
-    fwr1_end="integer",
-    cdr1_start="integer",
-    cdr1_end="integer",
-    fwr2_start="integer",
-    fwr2_end="integer",
-    cdr2_start="integer",
-    cdr2_end="integer",
-    fwr3_start="integer",
-    fwr3_end="integer",
-    chain_type="character",
-    coding_frame_start="integer"
-)
-
 ### IMPORTANT NOTE: The FWR/CDR positions in the returned data.frame are
 ### 1-based while the coding frame start positions are 0-based!
 load_intdata <- function(organism, for.aa=FALSE,
@@ -76,7 +46,7 @@ load_intdata <- function(organism, for.aa=FALSE,
     intdata_path <- get_intdata_path(organism, for.aa=for.aa,
                                      domain_system=domain_system,
                                      which=which)
-    read_broken_table(intdata_path, .IGBLAST_INTDATA_COL2CLASS)
+    read_V_ndm_data(intdata_path)
 }
 
 
@@ -143,35 +113,36 @@ load_intdata <- function(organism, for.aa=FALSE,
     .translate_V_codons(V_alleles, offsets, with.init.codon=TRUE)
 }
 
-### Only needs access to the "<region>_start" and "<region>_end" columns
-### of the 'intdata' data.frame.
+### Only needs access to the "<V_segment>_start" and "<V_segment>_end"
+### columns of the 'intdata' data.frame.
 ### Returns the amino acid sequences in a named character vector that
 ### is parallel to 'V_alleles' and has the allele names on it.
 ### The returned vector will contain an NA for any allele that is
-### not annotated in 'intdata' or for which 'intdata$<region>_start'
-### or 'intdata$<region>_end' has an NA.
-.translate_V_region <- function(V_alleles, intdata, region)
+### not annotated in 'intdata' or for which 'intdata$<V_segment>_start'
+### or 'intdata$<V_segment>_end' has an NA.
+.translate_V_segment <- function(V_alleles, intdata, V_segment)
 {
-    if (!(isSingleNonWhiteString(region) && (region %in% .FWR_CDR_REGIONS))) {
-        in1string <- paste0("\"", .FWR_CDR_REGIONS, "\"", collapse=", ")
-        stop(wmsg("'region' must be one of ", in1string))
+    if (!(isSingleNonWhiteString(V_segment) &&
+          (V_segment %in% V_GENE_SEGMENTS))) {
+        in1string <- paste0("\"", V_GENE_SEGMENTS, "\"", collapse=", ")
+        stop(wmsg("'V_segment' must be one of ", in1string))
     }
-    start_colname <- paste0(region, "_start")
-    end_colname <- paste0(region, "_end")
+    start_colname <- paste0(V_segment, "_start")
+    end_colname <- paste0(V_segment, "_end")
     starts <- .query_intdata(intdata, V_alleles, start_colname)  # 1-based
     ends <- .query_intdata(intdata, V_alleles, end_colname)  # 1-based
     offsets <- starts - 1L
-    with.init.codon <- region == "fwr1"
+    with.init.codon <- V_segment == "fwr1"
     ans <- .translate_V_codons(V_alleles, offsets, with.init.codon)
     ncodons <- (ends - offsets) %/% 3L
     substr(ans, 1L, ncodons)
 }
 
-translate_V_alleles <- function(V_alleles, intdata, region=NULL)
+translate_V_alleles <- function(V_alleles, intdata, V_segment=NULL)
 {
-    if (is.null(region))
+    if (is.null(V_segment))
         return(.translate_V_coding_frame(V_alleles, intdata))
-    .translate_V_region(V_alleles, intdata, region)
+    .translate_V_segment(V_alleles, intdata, V_segment)
 }
 
 ### Only needs access to the "coding_frame_start" column in 'intdata'.
@@ -277,7 +248,7 @@ V_allele_has_stop_codon <- function(V_alleles, intdata)
                                     num_alignments_D=1,
                                     num_alignments_J=1)
     ans_colnames <- c("locus", "v_call", "d_call", "j_call",
-                      .FWR_CDR_START_END_COLNAMES)
+                      V_GENE_DELINEATION_COLNAMES)
     AIRR_df[ , ans_colnames]
 }
 
@@ -299,7 +270,7 @@ V_allele_has_stop_codon <- function(V_alleles, intdata)
     stopifnot(is.data.frame(df0))
     f <- factor(df0[ , "Vpart"], levels=V_names)
     stopifnot(!anyNA(f))
-    X <- setNames(.FWR_CDR_START_END_COLNAMES, .FWR_CDR_START_END_COLNAMES)
+    X <- setNames(V_GENE_DELINEATION_COLNAMES, V_GENE_DELINEATION_COLNAMES)
     intdata <- lapply(X,
         function(colname) {
             tmp <- unique(splitAsList(df0[ , colname], f))

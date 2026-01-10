@@ -1,6 +1,7 @@
 import(methods)
 
-importFrom(utils, download.file, untar, unzip, read.table, browseURL, URLencode)
+importFrom(utils, download.file, untar, unzip, read.table, write.table,
+                  browseURL, URLencode)
 importFrom(stats, setNames)
 importFrom(tools, R_user_dir, file_path_as_absolute, md5sum)
 
@@ -71,6 +72,12 @@ export(
 ###
 
 export(
+    ## makeogrannote.R:
+    makeogrannote,
+    check_V_ndm_data,
+    read_V_ndm_data,
+    write_V_ndm_data,
+
     ## translate_codons.R:
     extract_codons,
     translate_codons,

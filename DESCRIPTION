@@ -31,6 +31,7 @@ VignetteBuilder: knitr
 Collate:
 	utils.R
 	long_to_wide_airr.R
+	makeogrannote.R
 	translate_codons.R
 	file-utils.R
 	loci-utils.R
