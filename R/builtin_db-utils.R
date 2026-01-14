@@ -45,8 +45,11 @@ read_version_file <- function(dirpath)
               isTRUEorFALSE(only.if.missing))
     db_name <- .form_builtin_AIRR_human_germline_db_name(fasta_store)
     db_path <- file.path(destdir, db_name)
-    if (!(only.if.missing && dir.exists(db_path)))
+    if (!(dir.exists(db_path) && only.if.missing))
         create_germline_db(fasta_store, IG_LOCI, db_path)
+    if (basename(fasta_store) == "ref")
+        add_V_ndm_data_to_germline_db(db_path, fasta_store,
+                                      domain_system="imgt")
 }
 
 .create_missing_builtin_AIRR_human_germline_dbs <- function(human_dir, destdir)
@@ -80,7 +83,7 @@ read_version_file <- function(dirpath)
               isTRUEorFALSE(only.if.missing))
     db_name <- .form_builtin_AIRR_mouse_germline_db_name(fasta_store)
     db_path <- file.path(destdir, db_name)
-    if (!(only.if.missing && dir.exists(db_path)))
+    if (!(dir.exists(db_path) && only.if.missing))
         create_germline_db(fasta_store, IG_LOCI, db_path)
 }
 
@@ -112,8 +115,9 @@ read_version_file <- function(dirpath)
               isTRUEorFALSE(only.if.missing))
     db_name <- .form_builtin_AIRR_rhesus_monkey_germline_db_name(fasta_store)
     db_path <- file.path(destdir, db_name)
-    if (!(only.if.missing && dir.exists(db_path)))
+    if (!(dir.exists(db_path) && only.if.missing))
         create_germline_db(fasta_store, IG_LOCI, db_path)
+    add_V_ndm_data_to_germline_db(db_path, fasta_store, domain_system="imgt")
 }
 
 .create_missing_builtin_AIRR_rhesus_monkey_germline_dbs <-

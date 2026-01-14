@@ -98,6 +98,24 @@ makeogrannote <- function(germline_file)
 ### check_V_ndm_data()
 ###
 
+.check_V_ndm_data_col2class <- function(V_ndm_data)
+{
+    if (!is.data.frame(V_ndm_data))
+        stop(wmsg("'V_ndm_data' must be a data.frame"))
+    expected_colnames <- names(.IGBLAST_INTDATA_COL2CLASS)
+    if (!identical(colnames(V_ndm_data), expected_colnames)) {
+        in1string <- paste(expected_colnames, collapse=", ")
+        stop(wmsg("'V_ndm_data' must have the following columns ",
+                  "(in this order): ", in1string))
+    }
+    col2class <- vapply(V_ndm_data, function(x) class(x)[[1L]], character(1))
+    if (!identical(col2class, .IGBLAST_INTDATA_COL2CLASS)) {
+        in1string <- paste0("  ", names(.IGBLAST_INTDATA_COL2CLASS), ": ",
+                            .IGBLAST_INTDATA_COL2CLASS, collapse="\n")
+        stop("'V_ndm_data' must have the following column types:\n", in1string)
+    }
+}
+
 ### Used in tests/testthat/test-auxdata-utils.R!
 .rows_with_same_keys_are_identical <- function(df, key)
 {
@@ -119,24 +137,11 @@ makeogrannote <- function(germline_file)
 ### Does not check the "chain_type" column at the moment.
 check_V_ndm_data <- function(V_ndm_data, allow.dup.entries=FALSE)
 {
-    if (!is.data.frame(V_ndm_data))
-        stop(wmsg("'V_ndm_data' must be a data.frame"))
+    .check_V_ndm_data_col2class(V_ndm_data)
     if (!isTRUEorFALSE(allow.dup.entries))
         stop(wmsg("'allow.dup.entries' must be TRUE or FALSE"))
-    expected_colnames <- names(.IGBLAST_INTDATA_COL2CLASS)
-    if (!identical(colnames(V_ndm_data), expected_colnames)) {
-        in1string <- paste(expected_colnames, collapse=", ")
-        stop(wmsg("'V_ndm_data' must have the following columns ",
-                  "(in this order): ", in1string))
-    }
-    col2classes <- vapply(V_ndm_data, function(x) class(x)[[1L]], character(1))
-    if (!identical(col2classes, .IGBLAST_INTDATA_COL2CLASS)) {
-        in1string <- paste0("  ", names(.IGBLAST_INTDATA_COL2CLASS), ": ",
-                            .IGBLAST_INTDATA_COL2CLASS, collapse="\n")
-        stop("'V_ndm_data' must have the following column types:\n", in1string)
-    }
     if (allow.dup.entries) {
-	## We allow duplicated entries in 'V_ndm_data' as long as they
+        ## We allow duplicated entries in 'V_ndm_data' as long as they
         ## tell the same story.
         if (!.rows_with_same_keys_are_identical(V_ndm_data, "allele_name"))
             stop(wmsg("rows in 'V_ndm_data' with same \"allele_name\" ",
@@ -166,11 +171,50 @@ read_V_ndm_data <- function(filepath)
     read_broken_table(filepath, .IGBLAST_INTDATA_COL2CLASS)
 }
 
-write_V_ndm_data <- function(V_ndm_data, file="")
+write_V_ndm_data <- function(V_ndm_data, file="", check.data=FALSE)
 {
-    colnames <- names(.IGBLAST_INTDATA_COL2CLASS)
-    cat("#", paste(colnames, collapse=", "), "\n", sep="", file=file)
+    if (!isTRUEorFALSE(check.data))
+        stop(wmsg("'check.data' must be TRUE or FALSE"))
+    .check_V_ndm_data_col2class(V_ndm_data)
+    if (check.data) {
+        ok <- check_V_ndm_data(V_ndm_data)
+        if (!all(ok))
+            stop(wmsg("'V_ndm_data' contains invalid rows. ",
+                      "Use 'check_V_ndm_data()' to identify them."))
+    }
+    header <- paste0("#", paste(colnames(V_ndm_data), collapse=", "))
+    cat(header, "\n", sep="", file=file)
     write.table(V_ndm_data, file, append=TRUE, quote=FALSE,
                 sep="\t", row.names=FALSE, col.names=FALSE)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### add_V_ndm_data_to_germline_db()
+###
+
+### Not exported!
+### Works only for IGH+IGK+IGL germline dbs at the moment.
+add_V_ndm_data_to_germline_db <- function(db_path, V_ndm_store,
+                                          domain_system=c("imgt", "kabat"))
+{
+    stopifnot(isSingleNonWhiteString(db_path), dir.exists(db_path),
+              isSingleNonWhiteString(V_ndm_store), dir.exists(V_ndm_store))
+    domain_system <- match.arg(domain_system)
+    destfile <- file.path(db_path, paste0("V.ndm.", domain_system))
+    if (file.exists(destfile))
+        return()
+
+    V_fasta_file <- file.path(db_path, "V.fasta")
+    V_ndm_files <- file.path(V_ndm_store, paste0(IG_LOCI, "V.ndm.imgt"))
+    V_ndm_data <- do.call(rbind, lapply(V_ndm_files, read_V_ndm_data))
+
+    ## Check that 'V_fasta_file' and 'V_ndm_data' match.
+    allele_names1 <- names(fasta.seqlengths(V_fasta_file))
+    allele_names2 <- V_ndm_data[ , "allele_name"]
+    stopifnot(length(allele_names1) == length(allele_names2),
+              setequal(allele_names1, allele_names2))
+
+    write_V_ndm_data(V_ndm_data, destfile)
 }
 

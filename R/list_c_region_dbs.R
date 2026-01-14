@@ -113,12 +113,12 @@ print.c_region_dbs_df <- function(x, ...)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### make_c_region_db_path()
+### c_region_db_path()
 ###
 
 ### Not exported!
 ### Note that the returned path is NOT guaranteed to exist.
-make_c_region_db_path <- function(db_name)
+c_region_db_path <- function(db_name)
 {
     if (!isSingleNonWhiteString(db_name))
         stop(wmsg("'db_name' must be a single (non-empty) string"))
@@ -167,7 +167,7 @@ make_c_region_db_path <- function(db_name)
     if (db_name != "") {
         .check_c_region_db_name(db_name)
         .note_on_selecting_IMGT_c_region_db(db_name)
-        db_path <- make_c_region_db_path(db_name)
+        db_path <- c_region_db_path(db_name)
         make_blastdbs(db_path, verbose=verbose)
     }
 
@@ -194,7 +194,7 @@ use_c_region_db <- function(db_name=NULL, verbose=FALSE)
 load_c_region_db <- function(db_name)
 {
     .check_c_region_db_name(db_name)
-    db_path <- make_c_region_db_path(db_name)
+    db_path <- c_region_db_path(db_name)
     fasta_file <- get_db_fasta_file(db_path, "C")
     readDNAStringSet(fasta_file)
 }
@@ -211,7 +211,7 @@ clean_c_region_blastdbs <- function()
     if (dir.exists(c_region_dbs_home)) {
         all_db_names <- list_c_region_dbs(names.only=TRUE)
         for (db_name in all_db_names) {
-            db_path <- make_c_region_db_path(db_name)
+            db_path <- c_region_db_path(db_name)
             clean_blastdbs(db_path)
         }
     }
@@ -233,7 +233,7 @@ rm_c_region_db <- function(db_name)
     if (db_in_use_path != "" && basename(db_in_use_path) == db_name)
         set_db_in_use("C-region", "")  # cancel current selection
 
-    db_path <- make_c_region_db_path(db_name)
+    db_path <- c_region_db_path(db_name)
     nuke_file(db_path)
 }
 

@@ -170,7 +170,7 @@ V_allele_has_stop_codon <- function(V_alleles, intdata)
 .load_J_alleles <- function(db_name, loci)
 {
     stop_if_malformed_loci_vector(loci)
-    db_path <- make_germline_db_path(db_name)
+    db_path <- germline_db_path(db_name)
     fasta_files <- get_original_db_fasta_files(db_path, "J")
     found_loci <- substr(basename(fasta_files), 1L, 3L)
     stopifnot(all(loci %in% found_loci))

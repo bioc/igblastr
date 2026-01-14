@@ -41,27 +41,13 @@ Files `*.ndm.imgt` were obtained programmatically by running the
 following code in the folder on Jan 9, 2026:
 ```r
 library(igblastr)
-BASE_URL <- "https://ogrdb.airr-community.org/download_germline_set/"
-ORGANISM <- "Homo%20sapiens"
-tmp_json_file <- tempfile()
-
-url <- paste0(BASE_URL, ORGANISM, "/IGH_VDJ/9/airr_ex")
-download.file(url, tmp_json_file)
-IGHV_ndm_imgt <- makeogrannote(tmp_json_file)
-stopifnot(all(check_V_ndm_data(IGHV_ndm_imgt)))
-write_V_ndm_data(IGHV_ndm_imgt, "IGHV.ndm.imgt")
-
-url <- paste0(BASE_URL, ORGANISM, "/IGKappa_VJ/4/airr_ex")
-download.file(url, tmp_json_file)
-IGKV_ndm_imgt <- makeogrannote(tmp_json_file)
-stopifnot(all(check_V_ndm_data(IGKV_ndm_imgt)))
-write_V_ndm_data(IGKV_ndm_imgt, "IGKV.ndm.imgt")
-
-url <- paste0(BASE_URL, ORGANISM, "/IGLambda_VJ/3/airr_ex")
-download.file(url, tmp_json_file)
-IGLV_ndm_imgt <- makeogrannote(tmp_json_file)
-stopifnot(all(check_V_ndm_data(IGLV_ndm_imgt)))
-write_V_ndm_data(IGLV_ndm_imgt, "IGLV.ndm.imgt")
+germline_sets <- c(IGH_VDJ=9, IGKappa_VJ=4, IGLambda_VJ=3)
+igblastr:::download_V_ndm_data_from_OGRDB("Homo sapiens", germline_sets)
+for (group in c("IGHV", "IGKV", "IGLV")) {
+    V_names1 <- names(fasta.seqlengths(paste0(group, ".fasta")))
+    V_names2 <- read_V_ndm_data(paste0(group, ".ndm.imgt"))$allele_name
+    stopifnot(length(V_names1) == length(V_names2),
+              setequal(V_names1, V_names2))
 }
 ```
 
