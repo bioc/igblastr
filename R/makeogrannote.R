@@ -201,20 +201,26 @@ add_V_ndm_data_to_germline_db <- function(db_path, V_ndm_store,
     stopifnot(isSingleNonWhiteString(db_path), dir.exists(db_path),
               isSingleNonWhiteString(V_ndm_store), dir.exists(V_ndm_store))
     domain_system <- match.arg(domain_system)
-    destfile <- file.path(db_path, paste0("V.ndm.", domain_system))
+
+    internal_data_path <- file.path(db_path, "internal_data")
+    destfile <- file.path(internal_data_path, paste0("V.ndm.", domain_system))
     if (file.exists(destfile))
         return()
 
-    V_fasta_file <- file.path(db_path, "V.fasta")
+    ## Prepare 'V_ndm_data'.
     V_ndm_files <- file.path(V_ndm_store, paste0(IG_LOCI, "V.ndm.imgt"))
     V_ndm_data <- do.call(rbind, lapply(V_ndm_files, read_V_ndm_data))
 
-    ## Check that 'V_fasta_file' and 'V_ndm_data' match.
+    ## Check that the set of V alleles annotated in 'V_ndm_data' matches
+    ## the set of V alleles in germline db file 'V.fasta'.
+    V_fasta_file <- file.path(db_path, "V.fasta")
     allele_names1 <- names(fasta.seqlengths(V_fasta_file))
     allele_names2 <- V_ndm_data[ , "allele_name"]
     stopifnot(length(allele_names1) == length(allele_names2),
               setequal(allele_names1, allele_names2))
 
+    if (!dir.exists(internal_data_path))
+        dir.create(internal_data_path)
     write_V_ndm_data(V_ndm_data, destfile)
 }
 

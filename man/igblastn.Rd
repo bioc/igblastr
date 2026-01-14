@@ -359,15 +359,17 @@ stopifnot(identical(AIRR_df, AIRR_df2))
 ## standard tools from the parallel or BiocParallel package. In this
 ## case it's the responsibility of the user to split the input in
 ## smaller batches and combine the results obtained for each batch:
-library(parallel)
-## Split 'query' in 10 batches of 25 sequences each:
-batches <- split(readDNAStringSet(query), rep(1:10, each=25))
-AIRR_df3 <- mclapply(seq_along(batches),
-                     function(i) igblastn(batches[[i]]),
-                     mc.cores=4)
-## Combine the results:
-AIRR_df3 <- do.call(rbind, AIRR_df3)
-stopifnot(identical(AIRR_df, AIRR_df3))
+if (.Platform$OS.type != "windows") {
+  library(parallel)
+  ## Split 'query' in 10 batches of 25 sequences each:
+  batches <- split(readDNAStringSet(query), rep(1:10, each=25))
+  AIRR_df3 <- mclapply(seq_along(batches),
+                       function(i) igblastn(batches[[i]]),
+                       mc.cores=4)
+  ## Combine the results:
+  AIRR_df3 <- do.call(rbind, AIRR_df3)
+  stopifnot(identical(AIRR_df, AIRR_df3))
+}
 
 ## Note that the actual speedup will depend on many factors like
 ## hardware, number and size of the batches, number of cores used,
