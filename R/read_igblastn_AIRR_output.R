@@ -7,15 +7,14 @@
 {
     stopifnot(is.data.frame(AIRR_df),
               is.character(AIRR_df[ , "sequence_id"]),
-              is.character(AIRR_df[ , "sequence"]),
-              is.character(AIRR_df[ , "locus"]))
+              is.character(AIRR_df[ , "sequence"]))
 
     ## AIRR field "sequence_aa" was added in igblast 1.21.0.
     sequence_aa <- AIRR_df$sequence_aa
     if (!is.null(sequence_aa))
-        stopifnot(is.character(sequence_aa))
+        AIRR_df$sequence_aa <- as.character(sequence_aa)
 
-    CHARACTER_COLS <- paste0(c("v", "d", "j"), "_call")
+    CHARACTER_COLS <- c("locus", paste0(c("v", "d", "j"), "_call"))
     for (colname in CHARACTER_COLS)
         AIRR_df[ , colname] <- as.character(AIRR_df[ , colname])
     c_call <- AIRR_df$c_call

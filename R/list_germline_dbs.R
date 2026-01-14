@@ -123,12 +123,12 @@ check_germline_db_name <- function(db_name)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### make_germline_db_path()
+### germline_db_path()
 ###
 
 ### Not exported!
 ### Note that the returned path is NOT guaranteed to exist.
-make_germline_db_path <- function(db_name)
+germline_db_path <- function(db_name)
 {
     if (!isSingleNonWhiteString(db_name))
         stop(wmsg("'db_name' must be a single (non-empty) string"))
@@ -208,7 +208,7 @@ make_germline_db_path <- function(db_name)
         .note_on_selecting_IMGT_germline_db(db_name)
     }
 
-    db_path <- make_germline_db_path(db_name)
+    db_path <- germline_db_path(db_name)
     make_blastdbs(db_path, verbose=verbose)
 
     ## Returns 'db_name' invisibly.
@@ -251,7 +251,7 @@ use_germline_db <- function(db_name=NULL, verbose=FALSE)
 load_germline_db <- function(db_name, region_types=NULL)
 {
     check_germline_db_name(db_name)
-    db_path <- make_germline_db_path(db_name)
+    db_path <- germline_db_path(db_name)
     region_types <- .normarg_region_types(region_types)
     fasta_files <- vapply(region_types,
         function(region_type) get_db_fasta_file(db_path, region_type),
@@ -271,7 +271,7 @@ clean_germline_blastdbs <- function()
     if (dir.exists(germline_dbs_home)) {
         all_db_names <- list_germline_dbs(names.only=TRUE)
         for (db_name in all_db_names) {
-            db_path <- make_germline_db_path(db_name)
+            db_path <- germline_db_path(db_name)
             clean_blastdbs(db_path)
         }
     }
@@ -293,7 +293,7 @@ rm_germline_db <- function(db_name)
     if (db_in_use_path != "" && basename(db_in_use_path) == db_name)
         set_db_in_use("germline", "")  # cancel current selection
 
-    db_path <- make_germline_db_path(db_name)
+    db_path <- germline_db_path(db_name)
     nuke_file(db_path)
 }
 

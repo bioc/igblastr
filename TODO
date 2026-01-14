@@ -69,7 +69,7 @@ Low-priority TODO list
 
 o Older versions of IgBLAST (e.g. version 1.19.0) don't necessarily include
   the same data as the latest version (version 1.22.0). However, we
-  initialize igblastr_cache(LIVE_IGDATA) with the content of
+  always initialize igblastr_cache(LIVE_IGDATA) with the content of
   inst/extdata/igdata_store/ (a.k.a. "the igdata store") regardless of what
   version of IgBLAST is used by igblastr (note that the igdata store contains
   the data included in IgBLAST 1.22.0). This means that, if we use a version

@@ -18,7 +18,7 @@ makeogrannote(germline_file)
 ## Related utilities:
 check_V_ndm_data(V_ndm_data, allow.dup.entries=FALSE)
 read_V_ndm_data(filepath)
-write_V_ndm_data(V_ndm_data, file="")
+write_V_ndm_data(V_ndm_data, file="", check.data=FALSE)
 }
 
 \arguments{
@@ -35,6 +35,9 @@ write_V_ndm_data(V_ndm_data, file="")
     COMING SOON...
   }
   \item{file}{
+    COMING SOON...
+  }
+  \item{check.data}{
     COMING SOON...
   }
 }

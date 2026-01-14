@@ -11,6 +11,9 @@ following datasets:
 IMPORTANT NOTE: These were the most current versions at the date indicated
 by the name of the parent folder of this folder (202309 i.e. Sept 2023).
 
+The folder also contains the corresponding V gene FWR/CDR annotation files
+for the IMGT domain system (`*.ndm.imgt` files).
+
 FWIW these datasets can be manually downloaded with:
 ```
 curl https://ogrdb.airr-community.org/download_germline_set/Homo%20sapiens/IGH_VDJ/7/ungapped_ex >Homo_sapiens_IGH_VDJ_rev_7_ungapped_ex.fasta
@@ -32,5 +35,19 @@ stopifnot(identical(Kfile_count, 2L))
 
 Jfile_count <- download_germline_sequences_from_OGRDB("Human", set_name="IGLambda_VJ", locus="IGL", release_version="1", extended=TRUE)
 stopifnot(identical(Jfile_count, 2L))
+```
+
+Files `*.ndm.imgt` were obtained programmatically by running the
+following code in the folder on Jan 10, 2026:
+```r
+library(igblastr)
+germline_sets <- c(IGH_VDJ=7, IGKappa_VJ=2, IGLambda_VJ=1)
+igblastr:::download_V_ndm_data_from_OGRDB("Homo sapiens", germline_sets)
+for (group in c("IGHV", "IGKV", "IGLV")) {
+    V_names1 <- names(fasta.seqlengths(paste0(group, ".fasta")))
+    V_names2 <- read_V_ndm_data(paste0(group, ".ndm.imgt"))$allele_name
+    stopifnot(length(V_names1) == length(V_names2),
+              setequal(V_names1, V_names2))
+}
 ```
 
