@@ -233,7 +233,7 @@ get_internal_igblast_root <- function()
       "for more information.")
 
 ### Returns absolute path to the IgBLAST installation used by igblastr.
-### In case of an external installation, the path is returned with
+### In case of an "external" installation, the path is returned with
 ### the "obtained_via" attribute on it. See .get_external_igblast_root()
 ### above in this file for more information.
 ### Checks the returned installation only if it's an "external" one.

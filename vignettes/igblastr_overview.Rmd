@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 14 January 2026"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 20 January 2026"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -325,7 +325,7 @@ by locus or chain type.
 plot_gene_dist <- function(AIRR_df, loc) {
     df_v_gene <- AIRR_df |>
         filter(locus == loc) |>
-        mutate(v_gene = sub("\\*[0-9]*", "", v_call)) |> # drop allele info
+        mutate(v_gene = allele2gene(v_call)) |> # drop allele info
         group_by(v_gene) |>
         summarize(n = n(), .groups = "drop") |>
         mutate(frac = n / sum(n))

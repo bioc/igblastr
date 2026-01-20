@@ -22,7 +22,7 @@ o Mismatch/indel summarization:
     with one row per query sequence (i.e. one row per row in the data.frame)
     and 7 columns: fwr1, cdr1, fwr2, cdr2, fwr3, cdr3, fwr4.
     By default the counts are for the mismatches/indels at the nucleotide
-    level. What we counte is the number of nucleotides involved in
+    level. What we count is the number of nucleotides involved in
     mismatches or indels, not the number of events e.g. an insertion
     of 3 nucleotides counts for 3 not for 1.
 

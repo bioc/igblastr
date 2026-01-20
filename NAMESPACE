@@ -72,6 +72,9 @@ export(
 ###
 
 export(
+    ## allele2gene.R:
+    allele2gene,
+
     ## makeogrannote.R:
     makeogrannote,
     check_V_ndm_data,
@@ -97,6 +100,7 @@ export(
     ## intdata-utils.R:
     get_intdata_path,
     load_intdata,
+    V_genes_with_varying_fwrcdr_boundaries,
     translate_V_alleles,
     V_allele_has_stop_codon,
     annotate_heavy_V_alleles,

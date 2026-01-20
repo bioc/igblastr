@@ -8,25 +8,50 @@
 ### get_intdata_path()
 ###
 
-get_intdata_path <- function(organism, for.aa=FALSE,
-                             domain_system=c("imgt", "kabat"),
-                             which=c("live", "original"))
+.get_germline_db_intdata_path <- function(db_name, file_suffix)
 {
-    organism <- normalize_igblast_organism(organism)
-    if (!isTRUEorFALSE(for.aa))
-        stop(wmsg("'for.aa' must be TRUE or FALSE"))
-    domain_system <- match.arg(domain_system)
-    which <- match.arg(which)
+    all_db_names <- list_germline_dbs(names.only=TRUE)
+    if (!(db_name %in% all_db_names))
+        return(NA_character_)
+    intdata_dir <- file.path(germline_db_path(db_name), "internal_data")
+    if (!dir.exists(intdata_dir))
+        stop(wmsg("no internal data found in germline db ", db_name))
+    intdata_filename <- paste0("V", file_suffix)
+    intdata_path <- file.path(intdata_dir, intdata_filename)
+    if (!file.exists(intdata_path))
+        stop(wmsg("internal data file ", intdata_filename, " ",
+                  "not found in germline db ", db_name))
+    intdata_path
+}
+
+.get_igblast_intdata_path <- function(which, organism, file_suffix)
+{
     intdata_dir <- file.path(path_to_igdata(which), "internal_data", organism)
     if (!dir.exists(intdata_dir))
-        stop(wmsg("no internal data found in ",
-                  dirname(intdata_dir), " for ", organism))
-    intdata_filename <- sprintf("%s.%s.%s", organism,
-                                if (for.aa) "pdm" else "ndm", domain_system)
+        stop(wmsg("no internal data found for organism ", organism))
+    intdata_filename <- paste0(organism, file_suffix)
     intdata_path <- file.path(intdata_dir, intdata_filename)
     if (!file.exists(intdata_path))
         stop(wmsg("internal data file ", intdata_filename, " ",
                   "not found in ", intdata_dir))
+    intdata_path
+}
+
+get_intdata_path <- function(organism, for.aa=FALSE,
+                             domain_system=c("imgt", "kabat"),
+                             which=c("live", "original"))
+{
+    if (!isSingleNonWhiteString(organism))
+        stop(wmsg("'organism' must be a single (non-empty) string"))
+    if (!isTRUEorFALSE(for.aa))
+        stop(wmsg("'for.aa' must be TRUE or FALSE"))
+    domain_system <- match.arg(domain_system)
+    which <- match.arg(which)
+
+    file_suffix <- paste0(".", if (for.aa) "pdm" else "ndm", ".", domain_system)
+    intdata_path <- .get_germline_db_intdata_path(organism, file_suffix)
+    if (is.na(intdata_path))
+        intdata_path <- .get_igblast_intdata_path(which, organism, file_suffix)
     intdata_path
 }
 
@@ -51,6 +76,67 @@ load_intdata <- function(organism, for.aa=FALSE,
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### V_genes_with_varying_fwrcdr_boundaries()
+###
+
+.get_intdata_col <- function(intdata, colname)
+{
+    if (!is.data.frame(intdata))
+        stop(wmsg("'intdata' must be a data.frame as returned ",
+                  "by load_intdata()"))
+    if (!isSingleNonWhiteString(colname))
+        stop(wmsg("'colname' must be a single (non-empty) string"))
+    intdata_col <- intdata[[colname]]
+    if (is.null(intdata_col))
+        stop(wmsg("'intdata' has no \"", colname, "\" column. Make sure ",
+                  "that it's a data.frame as returned by load_intdata()."))
+    intdata_col
+}
+
+.extract_gene_names_as_factor <- function(intdata)
+{
+    allele_names <- .get_intdata_col(intdata, "allele_name")
+    gene_names <- allele2gene(allele_names)
+    unique_gene_names <- unique(gene_names)
+    factor(gene_names, levels=unique_gene_names)
+}
+
+.check_V_segment <- function(V_segment)
+{
+    if (!isSingleNonWhiteString(V_segment))
+        stop(wmsg("'V_segment' must be a single (non-empty) string"))
+    if (!(V_segment %in% V_GENE_SEGMENTS)) {
+        in1string <- paste0("\"", V_GENE_SEGMENTS, "\"", collapse=", ")
+        stop(wmsg("'V_segment' must be one of ", in1string))
+    }
+}
+
+.V_genes_with_varying_segment_boundaries <- function(intdata, V_segment)
+{
+    f <- .extract_gene_names_as_factor(intdata)
+    .check_V_segment(V_segment)
+    starts <- .get_intdata_col(intdata, paste0(V_segment, "_start"))
+    ends <- .get_intdata_col(intdata, paste0(V_segment, "_end"))
+    starts_per_gene <- unique(splitAsList(starts, f))
+    ends_per_gene <- unique(splitAsList(ends, f))
+    levels(f)[lengths(starts_per_gene) != 1L | lengths(ends_per_gene) != 1L]
+}
+
+V_genes_with_varying_fwrcdr_boundaries <- function(intdata, V_segment=NULL)
+{
+    if (!is.null(V_segment))
+        return(.V_genes_with_varying_segment_boundaries(intdata, V_segment))
+    found_genes <- lapply(V_GENE_SEGMENTS,
+        function(V_segment)
+            .V_genes_with_varying_segment_boundaries(intdata, V_segment))
+    found_genes <- unique(unlist(found_genes, use.names=FALSE))
+    ## Return the gene names in the same order as they show up in 'intdata'.
+    unique_gene_names <- levels(.extract_gene_names_as_factor(intdata))
+    unique_gene_names[unique_gene_names %in% found_genes]
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### translate_V_alleles()
 ### V_allele_has_stop_codon()
 ###
@@ -63,26 +149,14 @@ load_intdata <- function(organism, for.aa=FALSE,
 ### in 'indata' or when 'indata[[colname]]' reports an NA for the allele.
 .query_intdata <- function(intdata, V_alleles, colname)
 {
-    if (!is.data.frame(intdata))
-        stop(wmsg("'intdata' must be a data.frame as returned ",
-                  "by load_intdata()"))
-    intdata_allele_name <- intdata$allele_name
-    if (is.null(intdata_allele_name))
-        stop(wmsg("'intdata' has no \"allele_name\" column. Make sure ",
-                  "that it's a data.frame as returned by load_intdata() ",
-                  "or compute_intdata()."))
+    allele_names <- .get_intdata_col(intdata, "allele_name")
     if (!is(V_alleles, "DNAStringSet"))
         stop(wmsg("'V_alleles' must be DNAStringSet object"))
     V_names <- names(V_alleles)
     if (is.null(V_names))
         stop(wmsg("'V_alleles' must have names"))
-    if (!isSingleNonWhiteString(colname))
-        stop(wmsg("'colname' must be a single (non-empty) string"))
-    intdata_col <- intdata[[colname]]
-    if (is.null(intdata_col))
-        stop(wmsg("'intdata' has no \"", colname, "\" column. Make sure ",
-                  "that it's a data.frame as returned by load_intdata()."))
-    setNames(intdata_col[match(V_names, intdata_allele_name)], V_names)
+    intdata_col <- .get_intdata_col(intdata, colname)
+    setNames(intdata_col[match(V_names, allele_names)], V_names)
 }
 
 .translate_V_codons <- function(V_alleles, offsets, with.init.codon)
@@ -122,11 +196,7 @@ load_intdata <- function(organism, for.aa=FALSE,
 ### or 'intdata$<V_segment>_end' has an NA.
 .translate_V_segment <- function(V_alleles, intdata, V_segment)
 {
-    if (!(isSingleNonWhiteString(V_segment) &&
-          (V_segment %in% V_GENE_SEGMENTS))) {
-        in1string <- paste0("\"", V_GENE_SEGMENTS, "\"", collapse=", ")
-        stop(wmsg("'V_segment' must be one of ", in1string))
-    }
+    .check_V_segment(V_segment)
     start_colname <- paste0(V_segment, "_start")
     end_colname <- paste0(V_segment, "_end")
     starts <- .query_intdata(intdata, V_alleles, start_colname)  # 1-based
@@ -164,7 +234,8 @@ V_allele_has_stop_codon <- function(V_alleles, intdata)
 ### annotate_light_V_alleles()
 ###
 ### EXPERIMENTAL! (See inst/scripts/annotate_V_alleles.R for how to use
-### these functions and an assessment of the current implementation.)
+### these functions and for an assessment of how well this approach works
+### for annotating V alleles.)
 ###
 
 .load_J_alleles <- function(db_name, loci)

@@ -26,14 +26,16 @@
 }
 
 \usage{
+## Access auxiliary data:
 get_auxdata_path(organism, which=c("live", "original"))
-
 load_auxdata(organism, which=c("live", "original"))
 
+## Manipulate auxiliary data:
 translate_J_alleles(J_alleles, auxdata)
 J_allele_has_stop_codon(J_alleles, auxdata)
 translate_fwr4(J_alleles, auxdata, max.codons=NA)
 
+## Generate auxiliary data:
 compute_auxdata(J_alleles)
 }
 

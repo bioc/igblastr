@@ -35,7 +35,7 @@ normalize_igblast_organism <- function(organism)
         stop(wmsg("'organism' must be a single (non-empty) string"))
     all_organisms <- list_igblast_organisms()
     organism <- tolower(organism)
-    if (!(organism %in% list_igblast_organisms())) {
+    if (!(organism %in% all_organisms)) {
         in1string <- paste0("\"", all_organisms, "\"", collapse=", ")
         stop(wmsg("'organism' must be one of ", in1string))
     }
