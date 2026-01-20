@@ -12,7 +12,7 @@ Content
 
 - constant_regions/: See README.txt in constant_regions/ subfolder.
 
-- germline_sequences/: See README.txt in germline_sequences/ subfolder.
+- germline_sets/: See README.txt in germline_sets/ subfolder.
 
 - igdata_store/: See README.txt in igdata_store/ subfolder.
 

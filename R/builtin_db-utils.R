@@ -144,7 +144,7 @@ create_missing_builtin_germline_dbs <- function(destdir)
     stopifnot(isSingleNonWhiteString(destdir), dir.exists(destdir))
 
     AIRR_germline_seq_dir <- system.file(package="igblastr",
-                                 "extdata", "germline_sequences", "AIRR",
+                                 "extdata", "germline_sets", "AIRR",
                                  mustWork=TRUE)
 
     human_dir <- file.path(AIRR_germline_seq_dir, "human")
