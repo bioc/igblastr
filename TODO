@@ -1,6 +1,8 @@
 High-priority TODO list
 =======================
 
+o Document makeogrannote() and related utilities.
+
 o Investigate BIG inconsistency between local IgBLAST and web IgBLAST:
   https://www.ncbi.nlm.nih.gov/igblast/
 

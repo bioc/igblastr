@@ -132,7 +132,7 @@ rm_germline_db(db_name)
   YYYYMM format) embedded in the db name.
   The AIRR dbs with the \code{.src} suffix contain the \emph{Source Sets}.
   The AIRR dbs without the \code{.src} suffix contain the \emph{Reference Sets}.
-  See \url{https://github.com/HyrienLab/igblastr/tree/devel/inst/extdata/germline_sequences/AIRR/human/202410/README.md}
+  See \url{https://github.com/HyrienLab/igblastr/tree/devel/inst/extdata/germline_sets/AIRR/human/202410/README.md}
   for more information. The AIRR-community/OGRDB maintainers recommend to
   use the \emph{Reference Sets} for AIRR-seq analysis.
   See \url{https://ogrdb.airr-community.org/germline_set/75}
