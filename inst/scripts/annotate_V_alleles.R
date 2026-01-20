@@ -37,14 +37,14 @@ system.time(IGHV_ann <- annotate_heavy_V_alleles(IGHV_alleles, db_name0))
 # 1953.872    4.628  491.682
 
 ## Does 'IGHV_ann' agree with the V-allele annotations shipped with IgBLAST?
-check_ann <- function(ann, intdata, strict=FALSE) {
-    m <- match(ann[ , "allele_name"], intdata[ , "allele_name"])
+check_ann <- function(ann, intdata0, strict=FALSE) {
+    m <- match(ann[ , "allele_name"], intdata0[ , "allele_name"])
     ann1 <- ann[!is.na(m), ]
     perc <- format(100 * nrow(ann1) / nrow(ann), digits=2)
     cat(nrow(ann1), "/", nrow(ann), " (", perc, "%) of the ",
-        "V alleles in 'ann' are already annotated in 'intdata' ",
+        "V alleles in 'ann' are already annotated in 'intdata0' ",
         "(IgBLAST internal data).\n", sep="")
-    ann2 <- intdata[m[!is.na(m)], colnames(ann)]
+    ann2 <- intdata0[m[!is.na(m)], colnames(ann)]
     rownames(ann1) <- rownames(ann2) <- NULL
     if (strict) {
         ok <- identical(ann1, ann2)
@@ -52,22 +52,22 @@ check_ann <- function(ann, intdata, strict=FALSE) {
         ok <- identical(ann1[ , -2L], ann2[ , -2L])
     }
     if (ok) {
-        msg <- "For all of them, 'ann' and 'intdata' are in agreement"
+        msg <- "For all of them, 'ann' and 'intdata0' are in agreement"
         if (!strict) {
             msg <- c(msg, " (modulo the \"fwr1_start\" column in 'ann' ",
                      "which can contain values != 1)")
         }
     } else {
-        msg <- "For some of them, 'ann' and 'intdata' disagree"
+        msg <- "For some of them, 'ann' and 'intdata0' disagree"
     }
     cat(msg, ".\n", sep="")
     ok
 }
 
 ## V-allele annotations shipped with IgBLAST:
-human_intdata <- load_intdata("human")
-check_ann(IGHV_ann, human_intdata, strict=TRUE)  # FALSE!
-stopifnot(check_ann(IGHV_ann, human_intdata))
+human_intdata0 <- load_intdata("human")
+check_ann(IGHV_ann, human_intdata0, strict=TRUE)  # FALSE!
+stopifnot(check_ann(IGHV_ann, human_intdata0))
 
 ##
 ## --- Annotate all human light V alleles ---
@@ -78,14 +78,14 @@ system.time(IGKV_ann <- annotate_light_V_alleles(IGKV_alleles, db_name0, "IGK"))
 #  14.311   0.063   3.934
 
 ## Does 'IGKV_ann' agree with the V-allele annotations shipped with IgBLAST?
-stopifnot(check_ann(IGKV_ann, human_intdata, strict=TRUE))
+stopifnot(check_ann(IGKV_ann, human_intdata0, strict=TRUE))
 
 system.time(IGLV_ann <- annotate_light_V_alleles(IGLV_alleles, db_name0, "IGL"))
 #    user  system elapsed
 #  19.399   0.055   5.179
 
 ## Does 'IGLV_ann' agree with the V-allele annotations shipped with IgBLAST?
-stopifnot(check_ann(IGLV_ann, human_intdata, strict=TRUE))
+stopifnot(check_ann(IGLV_ann, human_intdata0, strict=TRUE))
 
 
 ## --------------------------------------------------------------------------
@@ -119,11 +119,11 @@ system.time(IGLV_ann <- annotate_light_V_alleles(IGLV_alleles, db_name0, "IGL"))
 
 mouse_ann <- rbind(IGHV_ann, IGKV_ann, IGLV_ann)
 ## Compare with V-allele annotations shipped with IgBLAST:
-mouse_intdata <- load_intdata("mouse")
+mouse_intdata0 <- load_intdata("mouse")
 ## Note that only one allele in 'all_V_alleles' is already annotated in
 ## IgBLAST's internal data!
-intersect(names(all_V_alleles), mouse_intdata$allele_name)  # "IGKV20-101-2*01"
-stopifnot(check_ann(mouse_ann, mouse_intdata, strict=TRUE))
+intersect(names(all_V_alleles), mouse_intdata0$allele_name)  # "IGKV20-101-2*01"
+stopifnot(check_ann(mouse_ann, mouse_intdata0, strict=TRUE))
 
 ## --- rat ---
 
@@ -151,8 +151,8 @@ system.time(IGLV_ann <- annotate_light_V_alleles(IGLV_alleles, db_name0, "IGL"))
 
 rat_ann <- rbind(IGHV_ann, IGKV_ann, IGLV_ann)
 ## Compare with V-allele annotations shipped with IgBLAST:
-rat_intdata <- load_intdata("rat")
-stopifnot(check_ann(rat_ann, rat_intdata, strict=TRUE))
+rat_intdata0 <- load_intdata("rat")
+stopifnot(check_ann(rat_ann, rat_intdata0, strict=TRUE))
 
 ## --- rhesus monkey ---
 
@@ -180,8 +180,8 @@ system.time(IGLV_ann <- annotate_light_V_alleles(IGLV_alleles, db_name0, "IGL"))
 
 rhesus_monkey_ann <- rbind(IGHV_ann, IGKV_ann, IGLV_ann)
 ## Compare with V-allele annotations shipped with IgBLAST:
-rhesus_monkey_intdata <- load_intdata("rhesus_monkey")
-stopifnot(check_ann(rhesus_monkey_ann, rhesus_monkey_intdata, strict=TRUE))
+rhesus_monkey_intdata0 <- load_intdata("rhesus_monkey")
+stopifnot(check_ann(rhesus_monkey_ann, rhesus_monkey_intdata0, strict=TRUE))
 
 ## --- rabbit ---
 
@@ -209,8 +209,8 @@ system.time(IGLV_ann <- annotate_light_V_alleles(IGLV_alleles, db_name0, "IGL"))
 
 rabbit_ann <- rbind(IGHV_ann, IGKV_ann, IGLV_ann)
 ## Compare with V-allele annotations shipped with IgBLAST:
-rabbit_intdata <- load_intdata("rabbit")
-stopifnot(check_ann(rabbit_ann, rabbit_intdata, strict=TRUE))
+rabbit_intdata0 <- load_intdata("rabbit")
+stopifnot(check_ann(rabbit_ann, rabbit_intdata0, strict=TRUE))
 
 
 ## --------------------------------------------------------------------------

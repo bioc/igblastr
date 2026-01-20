@@ -66,6 +66,21 @@ load_igblast_auxiliary_data <- function(...)
 ### translate_fwr4()
 ###
 
+.get_auxdata_col <- function(auxdata, colname)
+{
+    if (!is.data.frame(auxdata))
+        stop(wmsg("'auxdata' must be a data.frame as returned ",
+                  "by load_auxdata() or compute_auxdata()"))
+    if (!isSingleNonWhiteString(colname))
+        stop(wmsg("'colname' must be a single (non-empty) string"))
+    auxdata_col <- auxdata[[colname]]
+    if (is.null(auxdata_col))
+        stop(wmsg("'auxdata' has no \"", colname, "\" column. Make sure ",
+                  "that it's a data.frame as returned by load_auxdata() ",
+                  "or compute_auxdata()."))
+    auxdata_col
+}
+
 ### Extracts the specified column from the 'auxdata' data.frame, and
 ### subset/reorder it to keep only the column values that correspond
 ### to the alleles in 'J_alleles'. Returns them in a named vector that
@@ -74,27 +89,14 @@ load_igblast_auxiliary_data <- function(...)
 ### in 'auxdata' or when 'auxdata[[colname]]' reports an NA for the allele.
 .query_auxdata <- function(auxdata, J_alleles, colname)
 {
-    if (!is.data.frame(auxdata))
-        stop(wmsg("'auxdata' must be a data.frame as returned ",
-                  "by load_auxdata() or compute_auxdata()"))
-    auxdata_allele_name <- auxdata$allele_name
-    if (is.null(auxdata_allele_name))
-        stop(wmsg("'auxdata' has no \"allele_name\" column. Make sure ",
-                  "that it's a data.frame as returned by load_auxdata() ",
-                  "or compute_auxdata()."))
+    allele_names <- .get_auxdata_col(auxdata, "allele_name")
     if (!is(J_alleles, "DNAStringSet"))
         stop(wmsg("'J_alleles' must be DNAStringSet object"))
     J_names <- names(J_alleles)
     if (is.null(J_names))
         stop(wmsg("'J_alleles' must have names"))
-    if (!isSingleNonWhiteString(colname))
-        stop(wmsg("'colname' must be a single (non-empty) string"))
-    auxdata_col <- auxdata[[colname]]
-    if (is.null(auxdata_col))
-        stop(wmsg("'auxdata' has no \"", colname, "\" column. Make sure ",
-                  "that it's a data.frame as returned by load_auxdata() ",
-                  "or compute_auxdata()."))
-    setNames(auxdata_col[match(J_names, auxdata_allele_name)], J_names)
+    auxdata_col <- .get_auxdata_col(auxdata, colname)
+    setNames(auxdata_col[match(J_names, allele_names)], J_names)
 }
 
 ### Translates the coding frame contained in the J allele sequence.
