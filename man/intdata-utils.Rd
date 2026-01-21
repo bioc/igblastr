@@ -158,6 +158,9 @@ V_allele_has_stop_codon(V_alleles, intdata)
     \item \code{\link{update_live_igdata}} for more information about "live"
           and "original" IgBLAST data.
 
+    \item \code{\link{list_igblast_organisms}} to list the organisms
+          supported by IgBLAST.
+
     \item \code{\link{list_germline_dbs}} to list the cached germline dbs.
 
     \item \link[Biostrings]{DNAStringSet} objects in the \pkg{Biostrings}

@@ -5,7 +5,7 @@
 \alias{read_V_ndm_data}
 \alias{write_V_ndm_data}
 
-\title{Extract V gene FWR/CDR annotations from OGRDB JSON file}
+\title{Extract V gene FWR/CDR annotation from OGRDB JSON file}
 
 \description{
   The \code{makeogrannote} function is a reimplementation in R

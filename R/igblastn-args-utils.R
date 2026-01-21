@@ -61,6 +61,7 @@
     file.path(db_path, region_type)
 }
 
+### Can return a NULL.
 .normarg_c_region_db <- function(c_region_db)
 {
     if (is.null(c_region_db))
@@ -129,8 +130,7 @@
 .make_obtain_valid_seqids_Rcode <- function(region_db_path)
 {
     stopifnot(isSingleNonWhiteString(region_db_path))
-    db_path <- dirname(region_db_path)
-    db_name <- basename(db_path)
+    db_name <- basename(dirname(region_db_path))
     region_type <- basename(region_db_path)
     code <- sprintf("load_germline_db(\"%s\", region_types=\"%s\")",
                     db_name, region_type)
@@ -155,6 +155,7 @@
     }
 }
 
+### Can return a NULL.
 .normarg_seqidlist <- function(seqidlist, region_db_path,
                                region_type=VDJ_REGION_TYPES)
 {
@@ -181,15 +182,104 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .normarg_custom_internal_data()
+###
+
+.check_user_supplied_custom_internal_data <-
+    function(custom_internal_data, germline_db_V)
+{
+    if (!file.exists(custom_internal_data))
+        stop(wmsg("custom FWR/CDR annotation file '",
+                  custom_internal_data, "' does not exist"))
+    intdata <- try(read_V_ndm_data(custom_internal_data), silent=TRUE)
+    if (inherits(intdata, "try-error"))
+        stop(wmsg("custom FWR/CDR annotation file '",
+                  custom_internal_data, "' cannot be loaded"))
+    if (!all(check_V_ndm_data(intdata, allow.dup.entries=TRUE)))
+        warning(wmsg("some V alleles in custom FWR/CDR annotation file '",
+                     custom_internal_data, "' are not properly annotated"),
+                immediate.=TRUE)
+
+    ## We only perform this last check if the FASTA file
+    ## associated with 'germline_db_V' is guaranteed to exist and
+    ## be in sync with the V-region db itself, which is only the case
+    ## if 'germline_db_V' points to an **internally** managed region db.
+    if (.region_db_is_internal(germline_db_V)) {
+        V_fasta_file <- paste0(germline_db_V, ".fasta")
+        V_names <- names(readDNAStringSet(V_fasta_file))
+        if (!all(V_names %in% intdata[ , "allele_name"])) {
+            ## Note that 'basename(dirname(germline_db_V))' is not absolutely
+            ## guaranteed to be the same as the name of the selected germline
+            ## db so don't use use_germline_db() here.
+            db_name <- basename(dirname(germline_db_V))
+            warning(wmsg("not all V alleles in germline db ", db_name, " are ",
+                         "annotated in custom FWR/CDR annotation file '",
+                         custom_internal_data, "'"),
+                    immediate.=TRUE)
+        }
+    }
+}
+
+.get_auto_custom_internal_data <- function(domain_system)
+{
+    db_name <- use_germline_db()  # cannot be ""
+    intdata_dir <- file.path(germline_db_path(db_name), "internal_data")
+    if (!dir.exists(intdata_dir))
+        return(NULL)
+    intdata_filename <- paste0("V.ndm.", domain_system)
+    intdata_path <- file.path(intdata_dir, intdata_filename)
+    if (!file.exists(intdata_path)) {
+        warning(wmsg("internal data file ", intdata_filename, " ",
+                     "not found in germline db ", db_name, " --> ",
+                     "using IgBLAST internal data from NCBI instead"),
+                immediate.=TRUE)
+        return(NULL)
+    }
+    intdata_path
+}
+
+### Can return a NULL.
+.normarg_custom_internal_data <- function(custom_internal_data="auto",
+                                          germline_db_V, domain_system)
+{
+    if (is.null(custom_internal_data))
+        return(NULL)
+    if (!isSingleNonWhiteString(custom_internal_data))
+        stop(wmsg("'custom_internal_data' must be \"auto\", or a single ",
+                  "string that is the path to a file containing custom ",
+                  "FWR/CDR annotation, or NULL"))
+    if (custom_internal_data != "auto") {
+        .check_user_supplied_custom_internal_data(custom_internal_data,
+                                                  germline_db_V)
+        return(file_path_as_absolute(custom_internal_data))
+    }
+    .get_auto_custom_internal_data(domain_system)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .normarg_organism()
 ###
 
-.normarg_organism <- function(organism="auto", ok_to_infer_organism)
+### Is it really true that "any specified organism will be ignored" if
+### the -custom_internal_data parameter is supplied, as they claim here?
+### https://ncbi.github.io/igblast/cook/How-to-set-up.html (see Procedure
+### to use custom FWR/CDR annotation). But then how is igblastn supposed to
+### find the auxiliary data?
+.normarg_organism <- function(organism="auto", ok_to_infer_organism,
+                              custom_internal_data)
 {
     if (!isSingleNonWhiteString(organism))
         stop(wmsg("'organism' must be a single (non-empty) string"))
-    if (organism != "auto")
+    if (organism != "auto") {
+        #if (!is.null(custom_internal_data))
+        #    warning(wmsg("the specified 'organism' (", organism, ") is ",
+        #                 "ignored when 'custom_internal_data' is specified"),
+        #            immediate.=TRUE)
         return(normalize_igblast_organism(organism))
+    }
+    #if (!is.null(custom_internal_data))
+    #    return(NULL)
     if (!ok_to_infer_organism)
         stop(wmsg("'organism' must be specified when 'germline_db_V', ",
                   "'germline_db_D', and 'germline_db_J' are supplied"))
@@ -209,6 +299,7 @@
 ### .normarg_auxiliary_data()
 ###
 
+### Can return a NULL.
 .normarg_auxiliary_data <- function(auxiliary_data="auto", organism)
 {
     if (is.null(auxiliary_data))
@@ -354,7 +445,8 @@ make_igblastn_command_line_args <-
              germline_db_D="auto", germline_db_D_seqidlist=NULL,
              germline_db_J="auto", germline_db_J_seqidlist=NULL,
              organism="auto", c_region_db="auto",
-             auxiliary_data="auto", ig_seqtype="auto",
+             custom_internal_data="auto", auxiliary_data="auto",
+             domain_system=c("imgt", "kabat"), ig_seqtype="auto",
              ...,
              out=NULL)
 {
@@ -378,8 +470,13 @@ make_igblastn_command_line_args <-
     germline_db_J <- .normarg_germline_db_X(germline_db_J, "J")
     germline_db_J_seqidlist <- .normarg_seqidlist(germline_db_J_seqidlist,
                                                   germline_db_J, "J")
-    organism <- .normarg_organism(organism, ok_to_infer_organism)
     c_region_db <- .normarg_c_region_db(c_region_db)
+    domain_system <- match.arg(domain_system)
+    custom_internal_data <- .normarg_custom_internal_data(custom_internal_data,
+                                                          germline_db_V,
+                                                          domain_system)
+    organism <- .normarg_organism(organism, ok_to_infer_organism,
+                                  custom_internal_data)
     auxiliary_data <- .normarg_auxiliary_data(auxiliary_data, organism)
     ig_seqtype <- .normarg_ig_seqtype(ig_seqtype)
 
@@ -392,7 +489,9 @@ make_igblastn_command_line_args <-
                      germline_db_J_seqidlist=germline_db_J_seqidlist,
                      organism=organism,
                      c_region_db=c_region_db,
+                     custom_internal_data=custom_internal_data,
                      auxiliary_data=auxiliary_data,
+                     domain_system=domain_system,
                      ig_seqtype=ig_seqtype)
 
     xargs <- .extra_args_as_named_character(...)

@@ -200,11 +200,13 @@ igblastn <- function(query, outfmt="AIRR",
                      germline_db_D="auto", germline_db_D_seqidlist=NULL,
                      germline_db_J="auto", germline_db_J_seqidlist=NULL,
                      organism="auto", c_region_db="auto",
-                     auxiliary_data="auto", ig_seqtype="auto",
+                     custom_internal_data="auto", auxiliary_data="auto",
+                     domain_system=c("imgt", "kabat"), ig_seqtype="auto",
                      ...,
                      out=NULL, parse.out=TRUE,
                      show.in.browser=FALSE, show.command.only=FALSE)
 {
+    domain_system <- match.arg(domain_system)
     if (!isTRUEorFALSE(parse.out))
         stop(wmsg("'parse.out' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(show.in.browser))
@@ -228,7 +230,9 @@ igblastn <- function(query, outfmt="AIRR",
                           germline_db_J_seqidlist=germline_db_J_seqidlist,
                           organism=organism,
                           c_region_db=c_region_db,
+                          custom_internal_data=custom_internal_data,
                           auxiliary_data=auxiliary_data,
+                          domain_system=domain_system,
                           ig_seqtype=ig_seqtype,
                           ...,
                           out=out)
