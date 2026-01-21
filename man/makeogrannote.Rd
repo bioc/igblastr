@@ -52,7 +52,8 @@ write_V_ndm_data(V_ndm_data, file="", check.data=FALSE)
 
 \seealso{
   \itemize{
-    \item \link{intdata_utils} to access and manipulate IgBLAST internal data.
+    \item \link{intdata_utils} to access and manipulate IgBLAST
+          \emph{internal data}.
 
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This

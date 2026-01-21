@@ -75,7 +75,7 @@ has_igblast()
   in IgBLAST.
 
   \code{list_igblast_organisms()} returns a character vector that
-  lists the organisms for which IgBLAST provides internal data.
+  lists the organisms for which IgBLAST provides \emph{internal data}.
   Note that this is obtained by simply listing the content of the
   \code{internal_data} directory located in the IgBLAST installation.
 
@@ -96,6 +96,9 @@ has_igblast()
 
     \item \link{IGBLAST_ROOT} to set the \emph{external} IgBLAST installation
           to be used by the \pkg{igblastr} package in a persistent manner.
+
+    \item \link{intdata_utils} to access and manipulate IgBLAST
+          \emph{internal data}.
 
     \item IgBLAST is described at
           \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.

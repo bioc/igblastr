@@ -65,12 +65,13 @@ get_germline_dbs_home <- function(init.path=FALSE)
 
 ### 'long.listing' is ignored when 'names.only' is TRUE.
 ### Returns a germline_dbs_df object (data.frame extension) by default.
-list_germline_dbs <- function(builtin.only=FALSE,
+list_germline_dbs <- function(builtin.only=FALSE, with.intdata.only=FALSE,
                               names.only=FALSE, long.listing=FALSE)
 {
     germline_dbs_home <- get_germline_dbs_home(TRUE)  # guaranteed to exist
     ans <- list_dbs(germline_dbs_home, what="germline",
                     builtin.only=builtin.only,
+                    with.intdata.only=with.intdata.only,
                     names.only=names.only, long.listing=long.listing)
     if (is.data.frame(ans))
         class(ans) <- c("germline_dbs_df", class(ans))
