@@ -178,13 +178,15 @@ get_original_db_fasta_files <-
 
 ### 'long.listing' is ignored when 'names.only' is TRUE.
 list_dbs <- function(dbs_home, what=c("germline", "C-region"),
-                     builtin.only=FALSE,
+                     builtin.only=FALSE, with.intdata.only=FALSE,
                      names.only=FALSE, long.listing=FALSE)
 {
     stopifnot(isSingleNonWhiteString(dbs_home), dir.exists(dbs_home))
     what <- match.arg(what)
     if (!isTRUEorFALSE(builtin.only))
         stop(wmsg("'builtin.only' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(with.intdata.only))
+        stop(wmsg("'with.intdata.only' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(names.only))
         stop(wmsg("'names.only' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(long.listing))
@@ -196,13 +198,24 @@ list_dbs <- function(dbs_home, what=c("germline", "C-region"),
     if (builtin.only)
         db_names <- db_names[has_prefix(db_names, "_")]
     db_names <- sort_db_names(db_names)
+    if (what == "germline") {
+        intdata_dirs <- file.path(dbs_home, db_names, "internal_data")
+        intdata <- dir.exists(intdata_dirs)  # logical vector
+        if (with.intdata.only) {
+            db_names <- db_names[intdata]
+            intdata <- intdata[intdata]  # keep only TRUEs
+        }
+    }
     if (names.only)
         return(db_names)
     if (!long.listing) {
         region_types <- if (what == "germline") VDJ_REGION_TYPES else "C"
         basic_stats <- .tabulate_dbs_by_region_type(dbs_home, db_names,
                                                     region_types)
-        return(data.frame(db_name=db_names, basic_stats))
+        ans <- data.frame(db_name=db_names, basic_stats)
+        if (what == "germline")
+            ans <- cbind(ans, intdata=intdata)
+        return(ans)
     }
     if (what == "germline") {
         .make_long_listing_for_germline_dbs(dbs_home, db_names)

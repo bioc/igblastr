@@ -12,7 +12,7 @@
 
 \description{
   A small set of low-level utility functions to update and manage
-  IgBLAST auxiliary and internal data.
+  IgBLAST \emph{auxiliary data} and \emph{internal data}.
 }
 
 \usage{
@@ -87,10 +87,11 @@ reset_live_igdata(subdirs=c("all", "internal_data", "optional_file"))
 
 \seealso{
   \itemize{
-    \item \link{intdata_utils} to access and manipulate IgBLAST internal data.
+    \item \link{intdata_utils} to access and manipulate IgBLAST
+          \emph{internal data}.
 
     \item \link{auxdata_utils} to access, manipulate, and generate IgBLAST
-          auxiliary data.
+          \emph{auxiliary data}.
 
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This

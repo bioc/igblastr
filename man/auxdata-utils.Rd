@@ -22,7 +22,7 @@
   and is typically included in a standard IgBLAST installation.
 
   The \pkg{igblastr} package provides a small set of utilities to access,
-  manipulate, and generate IgBLAST auxiliary data.
+  manipulate, and generate IgBLAST \emph{auxiliary data}.
 }
 
 \usage{
@@ -85,11 +85,11 @@ compute_auxdata(J_alleles)
 
 \value{
   \code{get_auxdata_path()} returns a single string containing
-  the path to the auxiliary data included in the IgBLAST installation used
-  by \pkg{igblastr}, for the specified organism. Not necessarily suitable
+  the path to the \emph{auxiliary data} included in the IgBLAST installation
+  used by \pkg{igblastr}, for the specified organism. Not necessarily suitable
   to use with \code{\link{igblastn}()} (see WARNING below).
 
-  \code{load_auxdata()} returns the auxiliary data in a data.frame
+  \code{load_auxdata()} returns the \emph{auxiliary data} in a data.frame
   with 1 row per germline J allele sequence and the following columns:
   \enumerate{
     \item \code{allele_name}: allele name;
@@ -117,14 +117,14 @@ compute_auxdata(J_alleles)
   for any allele that is not annotated in \code{auxdata} or for which
   \code{auxdata$cdr3_end} has an \code{NA}.
 
-  \code{compute_auxdata()} returns the computed auxiliary data in a
-  data.frame with 1 row per supplied germline J allele sequence and
+  \code{compute_auxdata()} returns the computed \emph{auxiliary data}
+  in a data.frame with 1 row per supplied germline J allele sequence and
   the same columns as the data.frame returned by \code{load_auxdata()}.
 }
 
 \section{WARNING}{
   According to \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html}
-  the auxiliary data included in IgBLAST is specific to a particular
+  the \emph{auxiliary data} included in IgBLAST is specific to a particular
   NCBI or IMGT germline db. Unfortunately this means that this data is
   NOT guaranteed to be compatible with the germline db that you will
   use with \code{\link{igblastn}()}. See documentation of the
@@ -134,13 +134,14 @@ compute_auxdata(J_alleles)
 
 \seealso{
   \itemize{
-    \item \link{intdata_utils} to access and manipulate IgBLAST internal data.
+    \item \link{intdata_utils} to access and manipulate IgBLAST
+          \emph{internal data}.
 
     \item \code{\link{update_live_igdata}} for more information about "live"
           and "original" IgBLAST data.
 
     \item \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html}
-          for important information about the IgBLAST auxiliary data.
+          for important information about IgBLAST \emph{auxiliary data}.
 
     \item \link[Biostrings]{DNAStringSet} objects in the \pkg{Biostrings}
           package.

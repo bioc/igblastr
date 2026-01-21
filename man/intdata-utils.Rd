@@ -20,7 +20,7 @@
   and is typically included in a standard IgBLAST installation.
 
   The \pkg{igblastr} package provides a small set of utilities to access
-  and manipulate IgBLAST internal data.
+  and manipulate IgBLAST \emph{internal data}.
 }
 
 \usage{
@@ -43,8 +43,14 @@ V_allele_has_stop_codon(V_alleles, intdata)
 
     Alternatively, this can be the name of a cached germline db. Use
     \code{\link{list_germline_dbs}()} to list the cached germline dbs.
-    Note that only some germline dbs include their own internal data (only
-    the built-in AIRR dbs for human and rhesus monkey at the moment).
+    Note that:
+    \itemize{
+      \item This works only for germline dbs that include their own
+            \emph{internal data}.
+      \item At the moment, only the built-in AIRR germline dbs for human
+            and rhesus monkey include their own \emph{internal data} (this
+            data is provided by AIRR-community/OGRDB).
+    }
   }
   \item{for.aa}{
     By default, the data.frame returned by \code{load_intdata()} contains
@@ -105,12 +111,12 @@ V_allele_has_stop_codon(V_alleles, intdata)
 
 \value{
   \code{get_intdata_path()} returns a single string containing
-  the path to the internal data included in the IgBLAST installation used
-  by \pkg{igblastr}, for the specified organism.
+  the path to the \emph{internal data} included in the IgBLAST
+  installation used by \pkg{igblastr}, for the specified organism.
 
-  \code{load_intdata()} returns the internal data in a data.frame
+  \code{load_intdata()} returns the \emph{internal data} in a data.frame
   with 1 row per germline V allele sequence and the following columns:
-  \enumerate{
+  \itemize{
     \item \code{allele_name}: allele name;
     \item \code{fwr1_start}, \code{fwr1_end}: FWR1 start/end
           positions (1-based);
@@ -147,7 +153,7 @@ V_allele_has_stop_codon(V_alleles, intdata)
 \seealso{
   \itemize{
     \item \link{auxdata_utils} to access, manipulate, and generate IgBLAST
-          auxiliary data.
+          \emph{auxiliary data}.
 
     \item \code{\link{update_live_igdata}} for more information about "live"
           and "original" IgBLAST data.

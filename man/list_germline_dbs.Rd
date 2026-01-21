@@ -26,7 +26,8 @@
 }
 
 \usage{
-list_germline_dbs(builtin.only=FALSE, names.only=FALSE, long.listing=FALSE)
+list_germline_dbs(builtin.only=FALSE, with.intdata.only=FALSE,
+                  names.only=FALSE, long.listing=FALSE)
 
 use_germline_db(db_name=NULL, verbose=FALSE)
 
@@ -41,6 +42,14 @@ rm_germline_db(db_name)
     germline dbs, including built-in germline dbs. Set \code{builtin.only}
     to \code{TRUE} to return only the list of built-in germline dbs.
     Note that built-in dbs are prefixed with an underscore (\code{_}).
+  }
+  \item{with.intdata.only}{
+    Set \code{with.intdata.only} to \code{TRUE} to return only the list
+    of germline dbs that include their own \emph{internal data}. Note
+    that whether a germline db includes its own \emph{internal data} or
+    not is indicated by the \code{intdata} column.
+    See \code{?\link{intdata_utils}} for more information about IgBLAST
+    \emph{internal data}.
   }
   \item{names.only}{
     By default \code{list_germline_dbs()} returns the list of cached
@@ -122,9 +131,9 @@ rm_germline_db(db_name)
 
   Built-in dbs are prefixed with an underscore (\code{_}).
   Note that the built-in germline dbs starting with \code{_AIRR}
-  are made of the AIRR-community/OGRDB datasets available at
+  are made of the AIRR-community/OGRDB germline sets available at
   \url{https://ogrdb.airr-community.org/germline_sets/Homo\%20sapiens}
-  for human and
+  for human and at
   \url{https://ogrdb.airr-community.org/germline_sets/Mus\%20musculus}.
   for mouse.
   Each AIRR db is populated with the latest germline datasets that were
@@ -163,6 +172,9 @@ rm_germline_db(db_name)
     \item \code{\link{use_c_region_db}} to select the cached C-region db
           to use with \code{igblastn()}.
 
+    \item \link{intdata_utils} to access and manipulate IgBLAST
+          \emph{internal data}.
+
     \item \link[Biostrings]{DNAStringSet} objects in the \pkg{Biostrings}
           package.
 
@@ -178,8 +190,13 @@ if (!has_igblast()) install_igblast()
 list_germline_dbs(builtin.only=TRUE)
 list_germline_dbs(builtin.only=TRUE, names.only=TRUE)  # db names only
 
+## Get list of germline dbs that include their own internal data:
+list_germline_dbs(with.intdata.only=TRUE)
+list_germline_dbs(with.intdata.only=TRUE, names.only=TRUE)
+
 ## Long listing:
 list_germline_dbs(long.listing=TRUE)
+list_germline_dbs(with.intdata.only=TRUE, long.listing=TRUE)
 
 if (IMGT_is_up()) {
   ## Install Mouse germline db from IMGT:
