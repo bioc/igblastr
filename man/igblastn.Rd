@@ -18,7 +18,8 @@ igblastn(query, outfmt="AIRR",
          germline_db_D="auto", germline_db_D_seqidlist=NULL,
          germline_db_J="auto", germline_db_J_seqidlist=NULL,
          organism="auto", c_region_db="auto",
-         auxiliary_data="auto", ig_seqtype="auto",
+         custom_internal_data="auto", auxiliary_data="auto",
+         domain_system=c("imgt", "kabat"), ig_seqtype="auto",
          ...,
          out=NULL, parse.out=TRUE,
          show.in.browser=FALSE, show.command.only=FALSE)
@@ -61,7 +62,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
 
     Note that, by default (i.e. when \code{germline_db_V} is omitted or set
     to \code{"auto"}), \code{igblastn()} uses the V-region db that belongs
-    to the cached germline db currently selected.
+    to the cached germline db that is currently selected.
 
     See \code{?\link{use_germline_db}} for how to select the cached
     germline db to use with \code{igblastn()}.
@@ -93,7 +94,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
 
     Note that, by default (i.e. when \code{organism} is omitted or set
     to \code{"auto"}), \code{igblastn()} infers the organism from the
-    name of the cached germline db currently selected.
+    name of the cached germline db that is currently selected.
 
     See \code{?\link{use_germline_db}} for how to select the cached
     germline db to use with \code{igblastn()}.
@@ -103,10 +104,33 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
 
     Note that, by default (i.e. when \code{c_region_db} is omitted or
     set to \code{"auto"}), \code{igblastn()} uses the cached C-region db
-    currently selected.
+    that is currently selected.
 
     See \code{?\link{use_c_region_db}} for how to select the cached
     C-region db to use with \code{igblastn()}.
+  }
+  \item{custom_internal_data}{
+    \code{"auto"} (the default), or the path to a file containing custom
+    FWR/CDR annotation, or \code{NULL}.
+
+    Note that, by default (i.e. when \code{custom_internal_data} is omitted
+    or set to \code{"auto"}), \code{igblastn()} will use:
+    \itemize{
+        \item the \emph{internal data} included in the cached germline
+              db that is currently selected, if it has any;
+        \item the organism-specific IgBLAST \emph{internal data} from NCBI
+              if the cached germline db that is currently selected does not
+              include its own \emph{internal data}.
+    }
+    Use \code{\link{list_germline_dbs}(with.intdata.only=TRUE)} to list
+    the cached germline dbs that include their own \emph{internal data}.
+
+    See \code{?\link{use_germline_db}} for how to select the cached
+    germline db to use with \code{igblastn()}.
+
+    Finally, when \code{custom_internal_data} is set to \code{NULL},
+    \code{igblastn()} always uses the organism-specific IgBLAST
+    \emph{internal data} from NCBI.
   }
   \item{auxiliary_data}{
     \code{"auto"} (the default), or the path to a file containing the
@@ -136,6 +160,9 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
               will be filled with \code{NA}s.
       }
   }
+  \item{domain_system}{
+    Set to \code{"imgt"} or \code{"kabat"}.
+  }
   \item{ig_seqtype}{
     Set to \code{"Ig"} or \code{"TCR"} depending on whether the query
     sequences are BCR/Ig or TCR sequences.
@@ -143,7 +170,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     Note that, by default (i.e. when \code{ig_seqtype} is omitted or
     set to \code{"auto"}), the value of \code{ig_seqtype} is inferred
     from the germline loci that appear in the name of the cached
-    germline db currently selected (this name can be obtained with
+    germline db that is currently selected (this name can be obtained with
     \code{\link{use_germline_db}}). If these are BCR/Ig germline loci
     (i.e. IGH, IGK, IGL), then the inferred value will be \code{"Ig"}.
     If they are TCR germline loci (TRA, TRB, TRG, TRD), then it will
