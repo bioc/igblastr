@@ -72,18 +72,24 @@ export(
 ###
 
 export(
+    ## translate_codons.R:
+    extract_codons,
+    translate_codons,
+
     ## allele2gene.R:
     allele2gene,
+
+    ## compute_intdata.R:
+    compute_intdata,
+
+    ## compute_auxata.R:
+    compute_auxdata,
 
     ## makeogrannote.R:
     makeogrannote,
     check_V_ndm_data,
     read_V_ndm_data,
     write_V_ndm_data,
-
-    ## translate_codons.R:
-    extract_codons,
-    translate_codons,
 
     ## get_igblast_root.R:
     get_igblast_root, set_igblast_root,
@@ -112,7 +118,6 @@ export(
     translate_J_alleles,
     J_allele_has_stop_codon,
     translate_fwr4,
-    compute_auxdata,
 
     ## install_igblast.R:
     install_igblast,

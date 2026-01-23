@@ -9,7 +9,6 @@
 \alias{translate_J_alleles}
 \alias{J_allele_has_stop_codon}
 \alias{translate_fwr4}
-\alias{compute_auxdata}
 
 \alias{get_igblast_auxiliary_data}
 \alias{load_igblast_auxiliary_data}
@@ -34,9 +33,6 @@ load_auxdata(organism, which=c("live", "original"))
 translate_J_alleles(J_alleles, auxdata)
 J_allele_has_stop_codon(J_alleles, auxdata)
 translate_fwr4(J_alleles, auxdata, max.codons=NA)
-
-## Generate auxiliary data:
-compute_auxdata(J_alleles)
 }
 
 \arguments{
@@ -63,7 +59,7 @@ compute_auxdata(J_alleles)
   }
   \item{auxdata}{
     A data.frame as returned by \code{load_auxdata()} or
-    \code{compute_auxdata()}.
+    \code{\link{compute_auxdata}()}.
   }
   \item{max.codons}{
     The maximum number of FWR4 codons to translate. By default (i.e. when
@@ -116,10 +112,6 @@ compute_auxdata(J_alleles)
   acid sequence per supplied allele. The vector contains an \code{NA}
   for any allele that is not annotated in \code{auxdata} or for which
   \code{auxdata$cdr3_end} has an \code{NA}.
-
-  \code{compute_auxdata()} returns the computed \emph{auxiliary data}
-  in a data.frame with 1 row per supplied germline J allele sequence and
-  the same columns as the data.frame returned by \code{load_auxdata()}.
 }
 
 \section{WARNING}{
@@ -134,6 +126,9 @@ compute_auxdata(J_alleles)
 
 \seealso{
   \itemize{
+    \item \code{\link{compute_auxdata}} to annotate a set of germline J
+          gene allele sequences.
+
     \item \link{intdata_utils} to access and manipulate IgBLAST
           \emph{internal data}.
 
@@ -220,7 +215,7 @@ J_aa[has_stop_codon]              # indeed!
 
 ## The FWR4 region is expected to start with the following amino acid
 ## motifs (X represents any amino acid):
-##   - "WGXG" on the heay chain
+##   - "WGXG" on the heavy chain
 ##   - "FGXG" on the light chain
 
 ## Let's use translate_fwr4() to extract and translate the first 4
@@ -239,14 +234,7 @@ fwr4_head[!has_motif]
 ## 4. Compute auxiliary data for a set of J allele sequences
 ## ---------------------------------------------------------------------
 
-## compute_auxdata() searches for the "WGXG" and "FGXG" motifs in the
-## supplied allele sequences to determine the start of their FWR4 region.
-## From there it can easily infer the 'cdr3_end', 'coding_frame_start',
-## and 'extra_bps' columns.
-## It will emit a warning if the start of the FWR4 region (and therefore
-## the CDR3 end) could not be found for some alleles, or if a stop
-## codon was found in some alleles.
-
+## See '?compute_auxdata' for the details of what compute_auxdata() does.
 computed_auxdata <- compute_auxdata(J_alleles)
 head(computed_auxdata)
 
