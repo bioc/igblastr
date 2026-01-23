@@ -100,8 +100,8 @@ bad_alleles <- c("IGHJ6*02", "IGHJ6*03")
 subset(human_auxdata0, allele_name \%in\% bad_alleles)
 
 ## We manually correct this:
-bad_rowidx <- match(bad_alleles, human_auxdata0[ , "allele_name"])
-human_auxdata0[bad_rowidx, "extra_bps"] <- 1L
+fixme <- human_auxdata0[ , "allele_name"] \%in\% bad_alleles
+human_auxdata0[fixme, "extra_bps"] <- 1L  # replace 0L with 1L
 
 ## Now the data in 'computed_auxdata' matches exactly the corresponding
 ## data in 'human_auxdata0':

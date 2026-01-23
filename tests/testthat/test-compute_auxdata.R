@@ -17,7 +17,7 @@ test_that("compute_auxdata()", {
 
     ## All the J alleles in _AIRR.human.IGH+IGK+IGL.202410 are annotated
     ## in human_gl.aux so we expect no NAs in 'm' below.
-    orig_auxdata <- .load_human_auxdata()
+    orig_auxdata <- load_and_fix_human_auxdata()
     m <- match(names(J_alleles), orig_auxdata[ , "allele_name"])
     expect_false(anyNA(m))
     orig_auxdata <- S4Vectors:::extract_data_frame_rows(orig_auxdata, m)
@@ -32,7 +32,7 @@ test_that("compute_auxdata()", {
 
     ## Not all the J alleles in IMGT-202531-1.Homo_sapiens.IGH+IGK+IGL
     ## are annotated in human_gl.aux so we expect a few NAs in 'm' below.
-    orig_auxdata <- .load_human_auxdata()
+    orig_auxdata <- load_and_fix_human_auxdata()
     m <- match(names(J_alleles), orig_auxdata[ , "allele_name"])
     keep_idx <- which(!is.na(m))
     current <- S4Vectors:::extract_data_frame_rows(computed_auxdata, keep_idx)
