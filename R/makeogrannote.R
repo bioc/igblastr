@@ -67,8 +67,20 @@ stopifnot(all(V_GENE_DELINEATION_COLNAMES %in%
               "for allele ", allele_name))
 }
 
-### A reimplementation in R of Python script makeogrannote.py included in
-### IgBLAST.
+### An R reimplementation of Python script makeogrannote.py included in
+### IgBLAST. But with the important difference that we don't adjust the
+### FR1/CDR1/FR2/CDR2/FR3 boundaries found in the JSON file by subtracting
+### the number of gaps that precede them in the corresponding gapped V allele
+### sequence, like they do in makeogrannote.py. The reason we don't do this
+### is because this adjustment is meant to transform boundaries that are
+### relative to the **gapped** V allele sequences into boundaries relative
+### to the **ungapped** sequences, which is not necessary because the
+### boundaries found in the JSON file are relative to the **ungapped** V
+### allele sequences. At least that's how they seem to be in 2026.
+### Note that the makeogrannote.py script is from 2022 when OGRDB was still
+### in its infancy, so maybe the early JSON files that they generated at the
+### time had the FR1/CDR1/FR2/CDR2/FR3 boundaries relative to the **gapped**
+### V allele sequences? Is this the reason why makeogrannote.py adjusts them?
 ### Returns a data.frame with 1 row per V allele in JSON file 'germline_file'
 ### and the same columns as the data.frame returned by load_intdata() (see
 ### R/intdata-utils.R).

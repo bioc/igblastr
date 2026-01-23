@@ -35,6 +35,32 @@ test_that("make_igblastn_command_line_args()", {
     expect_identical(cmd_args$ig_seqtype, "Ig")
     expect_true(attr(cmd_args$out, "safe_to_remove"))
 
+    ## Error: 'organism' must be specified
+    expect_error(make_igblastn_command_line_args("path/to/query",
+                     germline_db_V=germline_db_V,
+                     germline_db_D=germline_db_D,
+                     germline_db_J=germline_db_J),
+                 regexp="organism.*must be specified")
+    ## Error: 'ig_seqtype' must be specified
+    expect_error(make_igblastn_command_line_args("path/to/query",
+                     germline_db_V=germline_db_V,
+                     germline_db_D=germline_db_D,
+                     germline_db_J=germline_db_J,
+                     organism="rabbit"),
+                 regexp="ig_seqtype.*must be specified")
+
+    cmd_args <- make_igblastn_command_line_args("path/to/query",
+                     germline_db_V=germline_db_V,
+                     germline_db_D=germline_db_D,
+                     germline_db_J=germline_db_J,
+                     organism="rabbit",
+                     ig_seqtype="tcr")
+    expect_true(is.list(cmd_args))
+    expect_true(all(lengths(cmd_args) == 1L))
+    opt_argnames <- "auxiliary_data"
+    expected_argnames <- append(CORE_ARGNAMES, opt_argnames, organism_idx)
+    expect_identical(names(cmd_args), expected_argnames)
+
     ## --- selecting _AIRR.human.IGH+IGK+IGL.202410 ---
 
     ## For these tests we're not specifying any of the 'germline_db_[VDJ]'
