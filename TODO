@@ -1,6 +1,8 @@
 High-priority TODO list
 =======================
 
+o Implement, test, and document compute_auxdata().
+
 o Document makeogrannote() and related utilities.
 
 o Investigate BIG inconsistency between local IgBLAST and web IgBLAST:

@@ -52,6 +52,9 @@ write_V_ndm_data(V_ndm_data, file="", check.data=FALSE)
 
 \seealso{
   \itemize{
+    \item \code{\link{compute_intdata}} to annotate a set of germline V
+          gene allele sequences.
+
     \item \link{intdata_utils} to access and manipulate IgBLAST
           \emph{internal data}.
 

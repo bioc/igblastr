@@ -1,5 +1,5 @@
 ### =========================================================================
-### Access, manipulate, and generate IgBLAST internal data
+### Access and manipulate IgBLAST internal data
 ### -------------------------------------------------------------------------
 ###
 

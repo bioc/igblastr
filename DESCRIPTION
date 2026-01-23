@@ -30,10 +30,12 @@ Suggests: GenomicAlignments, parallel, testthat, knitr, rmarkdown,
 VignetteBuilder: knitr
 Collate:
 	utils.R
-	allele2gene.R
 	long_to_wide_airr.R
-	makeogrannote.R
 	translate_codons.R
+	allele2gene.R
+	compute_intdata.R
+	compute_auxdata.R
+	makeogrannote.R
 	file-utils.R
 	loci-utils.R
 	db-utils.R
