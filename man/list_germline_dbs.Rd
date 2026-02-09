@@ -47,7 +47,7 @@ rm_germline_db(db_name)
     Set \code{with.intdata.only} to \code{TRUE} to return only the list
     of germline dbs that include their own \emph{internal data}. Note
     that whether a germline db includes its own \emph{internal data} or
-    not is indicated by the \code{intdata} column.
+    not is reported in the \code{intdata} column.
     See \code{?\link{intdata_utils}} for more information about IgBLAST
     \emph{internal data}.
   }

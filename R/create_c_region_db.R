@@ -15,7 +15,7 @@
     stopifnot(isSingleNonWhiteString(fasta_dir), dir.exists(fasta_dir),
               isSingleNonWhiteString(loci_prefix))
     pattern <- paste0("^", loci_prefix, ".C\\.fasta$")
-    fasta_files <- list.files(fasta_dir, pattern=pattern)
+    fasta_files <- list_fasta_files(fasta_dir, pattern, full.names=FALSE)
     stopifnot(length(fasta_files) != 0L)
     fasta_files
 }

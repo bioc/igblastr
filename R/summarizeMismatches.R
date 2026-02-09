@@ -409,7 +409,7 @@ tabulate_insertions <- function(AIRR_df)
     ## TODO: Try to load GenomicAlignments namespace and fail graciously
     ## if the package is not installed.
     ROI_ranges <- .extract_ROI_ranges(AIRR_df)
-    region_types <- c(VDJ_REGION_TYPES, "C")
+    region_types <- VDJC_REGION_TYPES
     all_counts <- lapply(setNames(region_types, region_types),
         function(region_type) {
             .tabulate_insertions_for_region_type(AIRR_df, region_type,
@@ -423,7 +423,7 @@ tabulate_deletions <- function(AIRR_df)
     ## TODO: Try to load GenomicAlignments namespace and fail graciously
     ## if the package is not installed.
     ROI_ranges <- .extract_ROI_ranges(AIRR_df, with.junctions=TRUE)
-    region_types <- c(VDJ_REGION_TYPES, "C")
+    region_types <- VDJC_REGION_TYPES
     all_counts <- lapply(setNames(region_types, region_types),
         function(region_type) {
             .tabulate_deletions_for_region_type(AIRR_df, region_type,

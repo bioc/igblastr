@@ -1,6 +1,6 @@
-\name{compute_intdata}
+\name{compute_imgt_intdata}
 
-\alias{compute_intdata}
+\alias{compute_imgt_intdata}
 
 \title{Compute IgBLAST internal data}
 
@@ -17,13 +17,16 @@
 }
 
 \usage{
-compute_intdata(V_alleles)
+compute_imgt_intdata(gapped_V_alleles, as.IRangesList=FALSE)
 }
 
 \arguments{
-  \item{V_alleles}{
+  \item{gapped_V_alleles}{
     A \link[Biostrings]{DNAStringSet} object containing germline V
     gene allele \emph{gapped} sequences.
+  }
+  \item{as.IRangesList}{
+    COMING SOON...
   }
 }
 

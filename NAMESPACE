@@ -79,17 +79,17 @@ export(
     ## allele2gene.R:
     allele2gene,
 
-    ## compute_intdata.R:
-    compute_intdata,
-
-    ## compute_auxata.R:
-    compute_auxdata,
-
     ## makeogrannote.R:
     makeogrannote,
     check_V_ndm_data,
     read_V_ndm_data,
     write_V_ndm_data,
+
+    ## compute_imgt_intdata.R:
+    compute_imgt_intdata,
+
+    ## compute_auxata.R:
+    compute_auxdata,
 
     ## get_igblast_root.R:
     get_igblast_root, set_igblast_root,

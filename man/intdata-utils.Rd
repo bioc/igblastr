@@ -41,16 +41,12 @@ V_allele_has_stop_codon(V_alleles, intdata)
     A single string containing the name of an organism as
     returned by \code{\link{list_igblast_organisms}()}.
 
-    Alternatively, this can be the name of a cached germline db. Use
-    \code{\link{list_germline_dbs}()} to list the cached germline dbs.
-    Note that:
-    \itemize{
-      \item This works only for germline dbs that include their own
-            \emph{internal data}.
-      \item At the moment, only the built-in AIRR germline dbs for human
-            and rhesus monkey include their own \emph{internal data} (this
-            data is provided by AIRR-community/OGRDB).
-    }
+    Alternatively, this can be the name of a cached germline db.
+    Note that this works only for germline dbs that include their
+    own \emph{internal data}. You can use:
+    \preformatted{    list_germline_dbs(with.intdata.only=TRUE)}
+    to list them.
+    See \code{?\link{list_germline_dbs}} for more information.
   }
   \item{for.aa}{
     By default, the data.frame returned by \code{load_intdata()} contains
@@ -152,7 +148,7 @@ V_allele_has_stop_codon(V_alleles, intdata)
 
 \seealso{
   \itemize{
-    \item \code{\link{compute_intdata}} to annotate a set of germline V
+    \item \code{\link{compute_imgt_intdata}} to annotate a set of germline V
           gene allele sequences.
 
     \item \link{auxdata_utils} to access, manipulate, and generate IgBLAST

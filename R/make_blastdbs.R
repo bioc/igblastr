@@ -136,7 +136,7 @@ clean_blastdbs <- function(db_path, pattern="\\.fasta$")
     if (!dir.exists(db_path))
         stop(wmsg("directory ", db_path, " not found"))
 
-    fasta_files <- list.files(db_path, pattern=pattern)
+    fasta_files <- list_fasta_files(db_path, pattern, full.names=FALSE)
     for (f in fasta_files)
         .clean_blastdb_files(db_path, f)
     remove_hidden_files(db_path)
@@ -152,7 +152,7 @@ clean_blastdbs <- function(db_path, pattern="\\.fasta$")
 ### file needs compilation and FALSE otherwise.
 .get_fasta_files_statuses <- function(db_path, pattern="\\.fasta$")
 {
-    fasta_files <- list.files(db_path, pattern=pattern)
+    fasta_files <- list_fasta_files(db_path, pattern, full.names=FALSE)
     vapply(fasta_files,
         function(f) .fasta_file_needs_compilation(db_path, f),
         logical(1), USE.NAMES=TRUE)

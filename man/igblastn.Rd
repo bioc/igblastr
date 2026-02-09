@@ -110,11 +110,12 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     C-region db to use with \code{igblastn()}.
   }
   \item{custom_internal_data}{
-    \code{"auto"} (the default), or the path to a file containing custom
-    FWR/CDR annotation, or \code{NULL}.
+    \code{"auto"} (the default), or a data.frame containing custom FWR/CDR
+    annotation, or the path to a file containing custom FWR/CDR annotation,
+    or \code{NULL}.
 
-    Note that, by default (i.e. when \code{custom_internal_data} is omitted
-    or set to \code{"auto"}), \code{igblastn()} will use:
+    By default (i.e. when \code{custom_internal_data} is omitted or set to
+    \code{"auto"}), \code{igblastn()} will use:
     \itemize{
         \item the \emph{internal data} included in the cached germline
               db that is currently selected, if it has any;
@@ -128,7 +129,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     See \code{?\link{use_germline_db}} for how to select the cached
     germline db to use with \code{igblastn()}.
 
-    Finally, when \code{custom_internal_data} is set to \code{NULL},
+    Note that when \code{custom_internal_data} is set to \code{NULL},
     \code{igblastn()} always uses the organism-specific IgBLAST
     \emph{internal data} from NCBI.
   }
