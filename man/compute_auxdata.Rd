@@ -56,7 +56,7 @@ compute_auxdata(J_alleles)
     \item \code{\link{load_auxdata}} to access and manipulate IgBLAST
           \emph{auxiliary data}.
 
-    \item \code{\link{compute_intdata}} to annotate a set of germline V
+    \item \code{\link{compute_imgt_intdata}} to annotate a set of germline V
           gene allele sequences.
 
     \item \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html}

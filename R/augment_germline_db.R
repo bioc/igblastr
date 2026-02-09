@@ -68,13 +68,13 @@
     allele_names
 }
 
-.check_novel_allele_names <- function(db_fasta, db_name, novel_alleles)
+.check_novel_allele_names <- function(db_fasta_file, db_name, novel_alleles)
 {
-    stopifnot(isSingleNonWhiteString(db_fasta),
+    stopifnot(isSingleNonWhiteString(db_fasta_file),
               isSingleNonWhiteString(db_name),
               isSingleNonWhiteString(novel_alleles))
     in_what1 <- paste0("germline db ", db_name)
-    allele_names1 <- .extract_allele_names(db_fasta, in_what1)
+    allele_names1 <- .extract_allele_names(db_fasta_file, in_what1)
     in_what2 <- "'novel_alleles'"
     allele_names2 <- .extract_allele_names(novel_alleles, in_what2)
     clashing_names <- intersect(allele_names1, allele_names2)
@@ -91,12 +91,12 @@
 ###
 
 .augment_region_db_success_message <- function(destdir, region_type,
-                                               db_fasta, novel_fasta)
+                                               db_fasta_file, novel_fasta)
 {
-    num_db_alleles <- length(fasta.seqlengths(db_fasta))
+    num_db_alleles <- length(fasta.seqlengths(db_fasta_file))
     num_novel_alleles <- length(fasta.seqlengths(novel_fasta))
-    fasta_file <- get_db_fasta_file(destdir, region_type=region_type)
-    total_alleles <- length(fasta.seqlengths(fasta_file))
+    augmented_fasta_file <- get_db_fasta_file(destdir, region_type=region_type)
+    total_alleles <- length(fasta.seqlengths(augmented_fasta_file))
     stopifnot(num_db_alleles + num_novel_alleles == total_alleles)
 
     destdir <- paste0(sub("/*$", "", destdir), "/")
@@ -121,11 +121,11 @@
     check_germline_db_name(db_name)
     db_path <- germline_db_path(db_name)
     region_type <- match.arg(region_type)
-    db_fasta <- get_db_fasta_file(db_path, region_type=region_type)
+    db_fasta_file <- get_db_fasta_file(db_path, region_type=region_type)
 
     novel_fasta <- .novel_alleles_as_temp_edited_fasta(novel_alleles)
     on.exit(unlink(novel_fasta))
-    .check_novel_allele_names(db_fasta, db_name, novel_fasta)
+    .check_novel_allele_names(db_fasta_file, db_name, novel_fasta)
 
     if (!isSingleNonWhiteString(destdir))
         stop(wmsg("'destdir' must be a single (non-empty) string"))
@@ -137,7 +137,7 @@
     ## Prepare 'fasta_files'. Note that the names we put on 'fasta_files'
     ## will be used by create_region_db() to rename the FASTA files when
     ## they get copied to the <destdir>/<region_type>_original_fasta/ folder.
-    fasta_files <- c(db_fasta, novel_fasta)
+    fasta_files <- c(db_fasta_file, novel_fasta)
     db_fasta_destfile <- paste0("db--", db_name, "--", region_type, ".fasta")
     names(fasta_files) <- c(db_fasta_destfile, "novel_alleles.fasta")
 
@@ -149,7 +149,7 @@
 
     ## Success!
     .augment_region_db_success_message(destdir, region_type,
-                                       db_fasta, novel_fasta)
+                                       db_fasta_file, novel_fasta)
 }
 
 ### 'novel_alleles' must be the path to a FASTA file or a named

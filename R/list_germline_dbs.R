@@ -254,10 +254,10 @@ load_germline_db <- function(db_name, region_types=NULL)
     check_germline_db_name(db_name)
     db_path <- germline_db_path(db_name)
     region_types <- .normarg_region_types(region_types)
-    fasta_files <- vapply(region_types,
+    db_fasta_files <- vapply(region_types,
         function(region_type) get_db_fasta_file(db_path, region_type),
         character(1), USE.NAMES=FALSE)
-    readDNAStringSet(fasta_files)
+    readDNAStringSet(db_fasta_files)
 }
 
 

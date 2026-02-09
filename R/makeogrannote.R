@@ -202,6 +202,37 @@ write_V_ndm_data <- function(V_ndm_data, file="", check.data=FALSE)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### write_V_ndm_data_to_germline_db()
+###
+
+### Not exported!
+write_V_ndm_data_to_germline_db <- function(V_ndm_data, destfile)
+{
+    .check_V_ndm_data_col2class(V_ndm_data)
+    stopifnot(isSingleNonWhiteString(destfile))
+    internal_data_path <- dirname(destfile)
+
+    ## Check that the set of V alleles annotated in 'V_ndm_data' is the
+    ## same as the set of V alleles in germline db file V.fasta.
+    db_path <- dirname(internal_data_path)
+    db_V_fasta_file <- get_db_fasta_file(db_path, "V")
+    allele_names1 <- names(fasta.seqlengths(db_V_fasta_file))
+    allele_names2 <- V_ndm_data[ , "allele_name"]
+    stopifnot(length(allele_names1) == length(allele_names2),
+              setequal(allele_names1, allele_names2))
+
+    ## Reorder the rows in the 'V_ndm_data' data.frame to make it
+    ## parallel to 'db_V_fasta_file'.
+    m <- match(allele_names1, allele_names2)
+    V_ndm_data <- S4Vectors:::extract_data_frame_rows(V_ndm_data, m)
+
+    if (!dir.exists(internal_data_path))
+        dir.create(internal_data_path)
+    write_V_ndm_data(V_ndm_data, destfile)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### add_V_ndm_data_to_germline_db()
 ###
 
@@ -223,16 +254,6 @@ add_V_ndm_data_to_germline_db <- function(db_path, V_ndm_store,
     V_ndm_files <- file.path(V_ndm_store, paste0(IG_LOCI, "V.ndm.imgt"))
     V_ndm_data <- do.call(rbind, lapply(V_ndm_files, read_V_ndm_data))
 
-    ## Check that the set of V alleles annotated in 'V_ndm_data' matches
-    ## the set of V alleles in germline db file 'V.fasta'.
-    V_fasta_file <- file.path(db_path, "V.fasta")
-    allele_names1 <- names(fasta.seqlengths(V_fasta_file))
-    allele_names2 <- V_ndm_data[ , "allele_name"]
-    stopifnot(length(allele_names1) == length(allele_names2),
-              setequal(allele_names1, allele_names2))
-
-    if (!dir.exists(internal_data_path))
-        dir.create(internal_data_path)
-    write_V_ndm_data(V_ndm_data, destfile)
+    write_V_ndm_data_to_germline_db(V_ndm_data, destfile)
 }
 

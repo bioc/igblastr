@@ -245,6 +245,31 @@ read_broken_table <- function(filepath, col2class)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### count_bin_hits()
+###
+
+### The "bins" are the adjacent integer intervals implicitly defined by
+### integer vector 'bin_widths'. The values in 'bin_widths' must be
+### non-negative integers that specify the "length" of each interval.
+### Note that what we call the "length" (or "width") of an integer interval
+### is simply the number of (integer) values in it. All the intervals are
+### considered **adjacent** intervals, with the first interval starting on 1.
+### So for example, setting 'bin_widths' to 'c(10L, 6L)' is defining the
+### following 2 bins: the 1st bin is interval [1, 10], and the 2nd bin is
+### interval [11, 16].
+### Returns an integer vector parallel to 'bin_widths' where each element
+### is the number of values in 'x' that fall in the corresponding bin.
+### NAs in 'x' are ignored, as are values in 'x' that don't fall in any bin.
+count_bin_hits <- function(x, bin_widths)
+{
+    stopifnot(is.integer(x), is.integer(bin_widths),
+              !anyNA(bin_widths), all(bin_widths >= 0L))
+    bin <- findInterval(x, c(0L, cumsum(bin_widths)), left.open=TRUE)
+    setNames(tabulate(bin, nbins=length(bin_widths)), names(bin_widths))
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### scrape_html_dir_index()
 ###
 

@@ -242,10 +242,10 @@ V_allele_has_stop_codon <- function(V_alleles, intdata)
 {
     stop_if_malformed_loci_vector(loci)
     db_path <- germline_db_path(db_name)
-    fasta_files <- get_original_db_fasta_files(db_path, "J")
-    found_loci <- substr(basename(fasta_files), 1L, 3L)
-    stopifnot(all(loci %in% found_loci))
-    fasta_files <- fasta_files[found_loci %in% loci]
+    original_fasta_files <- list_db_original_fasta_files(db_path, "J")
+    original_loci <- substr(basename(original_fasta_files), 1L, 3L)
+    stopifnot(all(loci %in% original_loci))
+    fasta_files <- original_fasta_files[original_loci %in% loci]
 
     ## Combine and edit FASTA files (see .combine_and_edit_fasta_files()
     ## in file create_region_db.R).

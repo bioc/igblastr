@@ -7,58 +7,36 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### sort_db_names()
-###
-
-### The sorting is guaranteed to be the same everywhere. In particular it's
-### guaranteed to put the db names prefixed with an underscore first.
-sort_db_names <- function(db_names, decreasing=FALSE)
-{
-    stopifnot(is.character(db_names))
-    ok <- has_prefix(db_names, "_")
-    ## We set LC_COLLATE to C so:
-    ## 1. sort() gives the same output whatever the platform or country;
-    ## 2. sort() will behave the same way when called in the context
-    ##    of 'R CMD build' or 'R CMD check' (both set 'R CMD check'
-    ##    LC_COLLATE to C when building the vignette or running the tests)
-    ##    vs when called in the context of an interactive session;
-    ## 3. sort() is about 4x faster vs when LC_COLLATE is set to en_US.UTF-8.
-    prev_locale <- Sys.getlocale("LC_COLLATE")
-    Sys.setlocale("LC_COLLATE", "C")
-    on.exit(Sys.setlocale("LC_COLLATE", prev_locale))
-    ans1 <- sort(db_names[ok], decreasing=decreasing)
-    ans2 <- sort(db_names[!ok], decreasing=decreasing)
-    c(ans1, ans2)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### get_db_fasta_file()
-### get_original_db_fasta_files()
+### get_db_original_fasta_dir()
+### list_db_original_fasta_files()
 ###
 
 ### Note that the returned path is NOT guaranteed to exist.
-get_db_fasta_file <- function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
+get_db_fasta_file <- function(db_path, region_type=VDJC_REGION_TYPES)
 {
-    stopifnot(isSingleNonWhiteString(db_path))
+    stopifnot(isSingleNonWhiteString(db_path), dir.exists(db_path))
     region_type <- match.arg(region_type)
     file.path(db_path, paste0(region_type, ".fasta"))
 }
 
-### Unlike with get_db_fasta_file(), the paths returned by
-### get_original_db_fasta_files() are guaranteed to exist.
-get_original_db_fasta_files <-
-    function(db_path, region_type=c(VDJ_REGION_TYPES, "C"))
+### Note that the returned path is NOT guaranteed to exist.
+get_db_original_fasta_dir <- function(db_path, region_type=VDJC_REGION_TYPES)
 {
     stopifnot(isSingleNonWhiteString(db_path), dir.exists(db_path))
     region_type <- match.arg(region_type)
-    subdir <- paste0(region_type, "_original_fasta")
-    original_fasta_dir <- file.path(db_path, subdir)
+    file.path(db_path, paste0(region_type, "_original_fasta"))
+}
+
+list_db_original_fasta_files <- function(db_path, region_type=VDJC_REGION_TYPES)
+{
+    region_type <- match.arg(region_type)
+    original_fasta_dir <-
+        get_db_original_fasta_dir(db_path, region_type=region_type)
     stopifnot(dir.exists(original_fasta_dir))
-    fasta_files <- list.files(original_fasta_dir, pattern="\\.fasta$",
-                              full.names=TRUE)
-    stopifnot(length(fasta_files) != 0L)
-    fasta_files
+    original_fasta_files <- list_fasta_files(original_fasta_dir)
+    stopifnot(length(original_fasta_files) != 0L)
+    original_fasta_files
 }
 
 
@@ -71,8 +49,8 @@ get_original_db_fasta_files <-
 {
     vapply(region_types,
         function(region_type) {
-            fasta_file <- get_db_fasta_file(db_path, region_type)
-            length(fasta.seqlengths(fasta_file))
+            db_fasta_file <- get_db_fasta_file(db_path, region_type)
+            length(fasta.seqlengths(db_fasta_file))
         }, integer(1))
 }
 
@@ -101,11 +79,11 @@ get_original_db_fasta_files <-
 .tabulate_db_original_fasta_files_by_locus <-
     function(db_path, region_type, loci)
 {
-    fasta_files <- get_original_db_fasta_files(db_path, region_type)
-    found_loci <- substr(basename(fasta_files), 1L, 3L)
-    stopifnot(all(found_loci %in% loci))
-    fasta_files <- setNames(fasta_files[match(loci, found_loci)], loci)
-    vapply(fasta_files,
+    original_fasta_files <- list_db_original_fasta_files(db_path, region_type)
+    original_loci <- substr(basename(original_fasta_files), 1L, 3L)
+    stopifnot(all(original_loci %in% loci))
+    fasta_files <- original_fasta_files[match(loci, original_loci)]
+    vapply(setNames(fasta_files, loci),
         function(fasta_file) {
             if (is.na(fasta_file))
                 return(0L)
@@ -144,6 +122,27 @@ get_original_db_fasta_files <-
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### list_dbs()
 ###
+
+### The sorting is guaranteed to be the same everywhere. In particular it's
+### guaranteed to put the db names prefixed with an underscore first.
+.sort_db_names <- function(db_names, decreasing=FALSE)
+{
+    stopifnot(is.character(db_names))
+    ok <- has_prefix(db_names, "_")
+    ## We set LC_COLLATE to C so:
+    ## 1. sort() gives the same output whatever the platform or country;
+    ## 2. sort() will behave the same way when called in the context
+    ##    of 'R CMD build' or 'R CMD check' (both set 'R CMD check'
+    ##    LC_COLLATE to C when building the vignette or running the tests)
+    ##    vs when called in the context of an interactive session;
+    ## 3. sort() is about 4x faster vs when LC_COLLATE is set to en_US.UTF-8.
+    prev_locale <- Sys.getlocale("LC_COLLATE")
+    Sys.setlocale("LC_COLLATE", "C")
+    on.exit(Sys.setlocale("LC_COLLATE", prev_locale))
+    ans1 <- sort(db_names[ok], decreasing=decreasing)
+    ans2 <- sort(db_names[!ok], decreasing=decreasing)
+    c(ans1, ans2)
+}
 
 .extract_loci_from_db_name <- function(db_name)
 {
@@ -191,13 +190,10 @@ list_dbs <- function(dbs_home, what=c("germline", "C-region"),
         stop(wmsg("'names.only' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(long.listing))
         stop(wmsg("'long.listing' must be TRUE or FALSE"))
-    ## Excluding the 'USING' file for backward compatibility with early
-    ## versions of igblastr. See NOTE preceding '.DB_IN_USE_cache' below
-    ## in this file for more information.
-    db_names <- setdiff(list.files(dbs_home), "USING")
+    db_names <- list.dirs(dbs_home, full.names=FALSE, recursive=FALSE)
     if (builtin.only)
         db_names <- db_names[has_prefix(db_names, "_")]
-    db_names <- sort_db_names(db_names)
+    db_names <- .sort_db_names(db_names)
     if (what == "germline") {
         intdata_dirs <- file.path(dbs_home, db_names, "internal_data")
         intdata <- dir.exists(intdata_dirs)  # logical vector

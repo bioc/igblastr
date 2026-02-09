@@ -6,9 +6,12 @@
 ###
 
 
-.get_original_fasta_dir <- function(destdir, region_type)
+.check_input_fasta_files <- function(fasta_files)
 {
-    file.path(destdir, paste0(region_type, "_original_fasta"))
+    if (!is.character(fasta_files) || length(fasta_files) == 0L)
+        stop(wmsg("'fasta_files' must be a non-empty character vector"))
+    if (anyNA(fasta_files) || anyDuplicated(fasta_files))
+        stop(wmsg("'fasta_files' cannot contain NAs or duplicates"))
 }
 
 .get_final_fasta_path <- function(destdir, region_type)
@@ -86,10 +89,9 @@
 ### steps (1) and (2) only.
 ### Compilation (with makeblastdb) will happen at a latter time.
 .combine_and_edit_fasta_files <- function(fasta_files, destdir,
-                                          region_type=c(VDJ_REGION_TYPES, "C"))
+                                          region_type=VDJC_REGION_TYPES)
 {
-    if (!is.character(fasta_files) || anyNA(fasta_files))
-        stop(wmsg("'fasta_files' must be a character vector with no NAs"))
+    .check_input_fasta_files(fasta_files)
     if (!isSingleNonWhiteString(destdir))
         stop(wmsg("'destdir' must be a single (non-empty) string"))
     if (!dir.exists(destdir))
@@ -121,7 +123,7 @@
 
 .region_db_already_exists <- function(destdir, region_type)
 {
-    original_fasta_dir <- .get_original_fasta_dir(destdir, region_type)
+    original_fasta_dir <- get_db_original_fasta_dir(destdir, region_type)
     final_fasta <- .get_final_fasta_path(destdir, region_type)
     file.exists(original_fasta_dir) || file.exists(final_fasta)
 }
@@ -139,7 +141,7 @@
 {
     pattern <- paste0("^", region_type, "\\.fasta$")
     clean_blastdbs(destdir, pattern)
-    original_fasta_dir <- .get_original_fasta_dir(destdir, region_type)
+    original_fasta_dir <- get_db_original_fasta_dir(destdir, region_type)
     final_fasta <- .get_final_fasta_path(destdir, region_type)
     nuke_file(original_fasta_dir)
     nuke_file(final_fasta)
@@ -158,13 +160,10 @@
 ###         .combine_and_edit_fasta_files() on the files in V_original_fasta/,
 ###         with allele names disambiguated if needed.
 create_region_db <- function(fasta_files, destdir,
-                             region_type=c(VDJ_REGION_TYPES, "C"),
+                             region_type=VDJC_REGION_TYPES,
                              overwrite=FALSE)
 {
-    if (!is.character(fasta_files) || length(fasta_files) == 0L)
-        stop(wmsg("'fasta_files' must be a non-empty character vector"))
-    if (anyNA(fasta_files) || anyDuplicated(fasta_files))
-        stop(wmsg("'fasta_files' cannot contain NAs or duplicates"))
+    .check_input_fasta_files(fasta_files)
     if (!isSingleNonWhiteString(destdir))
         stop(wmsg("'destdir' must be a single (non-empty) string"))
     if (!dir.exists(destdir))
@@ -180,7 +179,7 @@ create_region_db <- function(fasta_files, destdir,
     }
 
     ## Create "original fasta" subdir and copy fasta files to it.
-    original_fasta_dir <- .get_original_fasta_dir(destdir, region_type)
+    original_fasta_dir <- get_db_original_fasta_dir(destdir, region_type)
     stopifnot(dir.create(original_fasta_dir))
     destfiles <- names(fasta_files)
     if (is.null(destfiles)) {
@@ -191,8 +190,8 @@ create_region_db <- function(fasta_files, destdir,
     }
 
     ## Combine and edit the original fasta files.
-    original_files <- list.files(original_fasta_dir, full.names=TRUE)
-    .combine_and_edit_fasta_files(original_files, destdir,
+    original_fasta_files <- list_fasta_files(original_fasta_dir)
+    .combine_and_edit_fasta_files(original_fasta_files, destdir,
                                   region_type=region_type)
 }
 

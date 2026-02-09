@@ -200,6 +200,23 @@ concatenate_files <- function(files, out=stdout(), n=50000L)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### list_fasta_files()
+###
+
+### Returns the full names by default! (unlike list.files())
+list_fasta_files <- function(path, pattern="\\.fasta$", full.names=TRUE,
+                             recursive=FALSE)
+{
+    stopifnot(isSingleNonWhiteString(path), dir.exists(path),
+              isSingleNonWhiteString(pattern),
+              isTRUEorFALSE(full.names),
+              isTRUEorFALSE(recursive))
+    list.files(path, pattern=pattern, full.names=full.names,
+               recursive=recursive)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### fasta_files_as_one_uncompressed_file()
 ###
 

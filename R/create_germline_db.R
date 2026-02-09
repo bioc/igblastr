@@ -15,7 +15,7 @@
     stopifnot(isSingleNonWhiteString(fasta_dir), dir.exists(fasta_dir),
               isSingleNonWhiteString(loci_prefix))
     pattern <- paste0("^", loci_prefix, ".[VDJ]\\.fasta$")
-    fasta_files <- list.files(fasta_dir, pattern=pattern)
+    fasta_files <- list_fasta_files(fasta_dir, pattern, full.names=FALSE)
     stopifnot(length(fasta_files) != 0L)
     fasta_files
 }
@@ -74,14 +74,15 @@ list_loci_in_germline_fasta_dir <-
 ### .collect_fasta_files()
 ###
 
-.list_fasta_files <- function(fasta_dir, region_type=VDJ_REGION_TYPES)
+.list_fasta_files_for_region_type <- function(fasta_dir,
+                                              region_type=VDJ_REGION_TYPES)
 {
     region_type <- match.arg(region_type)
     pattern <- paste0(region_type, "\\.fasta$")
-    files <- list.files(fasta_dir, pattern=pattern)
-    if (length(files) == 0L)
+    fasta_files <- list_fasta_files(fasta_dir, pattern, full.names=FALSE)
+    if (length(fasta_files) == 0L)
         stop(wmsg("Anomaly: no ", region_type, " files found in ", fasta_dir))
-    files
+    fasta_files
 }
 
 .collect_fasta_files <- function(fasta_dir, region_type, loci)
@@ -96,7 +97,7 @@ list_loci_in_germline_fasta_dir <-
         stop(wmsg("no fasta files found for region ", region_type, " for ",
                   "the selected loci"))
     wanted_files <- paste0(wanted_loci, region_type, ".fasta")
-    found_files <- .list_fasta_files(fasta_dir, region_type=region_type)
+    found_files <- .list_fasta_files_for_region_type(fasta_dir, region_type)
     fasta_files <- intersect(wanted_files, found_files)
     if (length(fasta_files) == 0L)
         stop(wmsg("no fasta files found for region ", region_type, " for ",

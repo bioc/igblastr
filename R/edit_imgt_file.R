@@ -102,51 +102,14 @@ edit_imgt_file <- function(infasta, outfasta, errfile=NULL, Perl_script=NULL,
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### redit_imgt_file()
 ###
-### An R implementetion of edit_imgt_file.pl
+### An R implementation of edit_imgt_file.pl
 ###
-
-### edit_imgt_file.pl does some funky business with IG allele names
-### for Mus spretus.
-.extract_allele_names_from_imgt_headers  <- function(headers, in_what)
-{
-    if (any(is_white_str(headers)))
-        stop(wmsg("some headers in ", in_what, " are empty"))
-
-    header_parts <- CharacterList(strsplit(headers, "|", fixed=TRUE))
-
-    ## Extract 2nd field. Note that this extraction method could also get
-    ## the 1st field if a header has no pipe or if it has only one pipe
-    ## with nothing after it.
-    allele_names <- tails(heads(header_parts, n=2L), n=1L)
-    stopifnot(all(lengths(allele_names) == 1L))
-    allele_names <- trimws2(as.character(allele_names))
-    if (!all(nchar(allele_names) >= 2L))
-        stop(wmsg("some allele names in ", in_what, " are ",
-                  "less than 2-character long"))
-
-    ## Implement funky business with Mus spretus: append _Mus_spretus suffix
-    ## to IG allele names if species reported in 3rd field is Mus spretus.
-    funky_idx <- which(substr(allele_names, 1L, 2L) == "IG" &
-                       lengths(header_parts) >= 3L)
-    if (length(funky_idx) != 0L) {
-        ## Extract 3rd field.
-        species <- tails(heads(header_parts[funky_idx], n=3L), n=1L)
-        stopifnot(all(lengths(species) == 1L))
-        idx <- grep("Mus\\s+spretus", as.character(species))
-        if (length(idx) != 0L) {
-            funky_idx <- funky_idx[idx]
-            allele_names[funky_idx] <-
-                paste0(allele_names[funky_idx], "_Mus_spretus")
-        }
-    }
-
-    allele_names
-}
 
 .edit_imgt_BStringSet_object <- function(dna, in_what)
 {
     stopifnot(is(dna, "BStringSet"))
-    names(dna) <- .extract_allele_names_from_imgt_headers(names(dna), in_what)
+    what <- paste0("some of the header lines in ", in_what)
+    names(dna) <- clean_imgt_fasta_header_lines(names(dna), what)
     midx <- vmatchPattern(".", dna, fixed=TRUE)
     at <- unname(as(midx, "CompressedIRangesList"))
     replaceAt(dna, at, value="")
@@ -197,8 +160,7 @@ redit_imgt_file <- function(infasta, outfasta)
 ### Returns number of failures.
 validate_redit_imgt_file <- function(dirpath=".", recursive=FALSE)
 {
-    fasta_files <- list.files(dirpath, pattern="\\.fasta$",
-                              full.names=TRUE, recursive=recursive)
+    fasta_files <- list_fasta_files(dirpath, recursive=recursive)
     failures <- 0L
     for (i in seq_along(fasta_files)) {
         fasta_file <- fasta_files[[i]]

@@ -33,12 +33,12 @@ Collate:
 	long_to_wide_airr.R
 	translate_codons.R
 	allele2gene.R
-	compute_intdata.R
-	compute_auxdata.R
-	makeogrannote.R
 	file-utils.R
 	loci-utils.R
 	db-utils.R
+	makeogrannote.R
+	compute_imgt_intdata.R
+	compute_auxdata.R
 	LATIN_NAMES.R
 	IMGT-utils.R
 	IMGT-c_region-utils.R

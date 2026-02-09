@@ -152,46 +152,67 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
     cmd  # returns the command in a character vector
 }
 
-.parse_warnings_or_errors <- function(lines, pattern)
+.parse_errors_or_warnings <- function(stderr_lines, pattern)
 {
-    stopifnot(is.character(lines), isSingleNonWhiteString(pattern))
-    keep_idx <- grep(pattern, lines, ignore.case=TRUE)
-    msgs <- trimws2(lines[keep_idx])
+    stopifnot(is.character(stderr_lines), isSingleNonWhiteString(pattern))
+    keep_idx <- grep(pattern, stderr_lines, ignore.case=TRUE)
+    msgs <- trimws2(stderr_lines[keep_idx])
     msgs[nzchar(msgs)]
 }
 
-.parse_and_issue_warnings <- function(stderr_file)
+.stop_on_igblastn_exe_errors <- function(err_msgs, crash=FALSE)
 {
-    warn_msgs <- .parse_warnings_or_errors(readLines(stderr_file), "warning:")
-    for (msg in warn_msgs)
-        warning(wmsg(msg))
+    header <- "The 'igblastn' executable returned the following error"
+    if (length(err_msgs) > 1L)
+        header <- c(header, "s")
+    if (crash)
+        header <- c(header, " (most likely indicating a crash)")
+    header <- c(header, ":")
+    err_msgs <- vapply(err_msgs, wmsg, character(1), margin=4, USE.NAMES=FALSE)
+    stop(wmsg(header), paste0("\n    ", err_msgs))
 }
 
-.stop_on_igblastn_exe_error <- function(stderr_file)
+.handle_errors_or_warnings <- function(stderr_file, status, out_is_empty)
 {
-    err_msgs <- .parse_warnings_or_errors(readLines(stderr_file), "error:")
-    if (length(err_msgs) == 0L)  # could this ever happen?
-        stop(wmsg("'igblastn' returned an unknown error"))
-    err_msgs <- vapply(err_msgs, wmsg, character(1), USE.NAMES=FALSE)
-    stop(paste(err_msgs, collapse="\n  "))
+    stopifnot(isSingleNonWhiteString(stderr_file),
+              isSingleInteger(status),
+              is.logical(out_is_empty), length(out_is_empty) == 1L)
+    stderr_lines <- readLines(stderr_file)
+    if (length(stderr_lines) == 0L && status == 0L)
+        return()
+    ## When the 'igblastn' executable crashes, we typically get a 0 status
+    ## and an empty out file.
+    if (status == 0L && isTRUE(out_is_empty))
+        .stop_on_igblastn_exe_errors(stderr_lines, crash=TRUE)
+    warn_msgs <- .parse_errors_or_warnings(stderr_lines, "warning:")
+    for (msg in warn_msgs)
+        warning(wmsg(msg))
+    if (status != 0L) {
+        err_msgs <- .parse_errors_or_warnings(stderr_lines, "error:")
+        if (length(err_msgs) == 0L)  # could this ever happen?
+            stop(wmsg("'igblastn' returned an unknown error"))
+        .stop_on_igblastn_exe_errors(err_msgs)
+    }
 }
 
 ### The function calls setwd() before invoking the 'igblastn' executable so
 ### make sure that any file path passed thru 'exe_args' (e.g. the '-out' file
 ### path) is an **absolute** path.
-.run_igblastn_exe <- function(igblast_root, exe_args)
+.run_igblastn_exe <- function(igblast_root, cmd_args)
 {
-    stopifnot(is.character(exe_args))
     igblastn_exe <- get_igblast_exe("igblastn", igblast_root=igblast_root)
+    exe_args <- make_exe_args(cmd_args)
+    stderr_file <- tempfile("igblastn_stderr_", fileext=".txt")
+
     oldwd <- getwd()
     setwd(igblastr_cache(LIVE_IGDATA))
     on.exit(setwd(oldwd))
-
-    stderr_file <- tempfile("igblastn_stderr_", fileext=".txt")
     status <- system2e(igblastn_exe, args=exe_args, stderr=stderr_file)
-    .parse_and_issue_warnings(stderr_file)
-    if (status != 0)
-        .stop_on_igblastn_exe_error(stderr_file)
+
+    out_is_empty <- NA
+    if (file.exists(cmd_args$out))
+        out_is_empty <- file.size(cmd_args$out) == 0
+    .handle_errors_or_warnings(stderr_file, status, out_is_empty)
     unlink(stderr_file)
 }
 
@@ -246,17 +267,16 @@ igblastn <- function(query, outfmt="AIRR",
         on.exit(unlink(files_to_remove_on_exit))
     }
 
-    ## Put arguments in command line format.
-    exe_args <- make_exe_args(cmd_args)
-
     if (show.command.only) {
+        ## Put arguments in command line format.
+        exe_args <- make_exe_args(cmd_args)
         ans <- .show_igblastn_command(igblast_root, exe_args,
                                       show.in.browser=show.in.browser)
         return(invisible(ans))
     }
 
     ## Run the 'igblastn' standalone executable included in IgBLAST.
-    .run_igblastn_exe(igblast_root, exe_args)
+    .run_igblastn_exe(igblast_root, cmd_args)
 
     if (outfmt_nb == 19L) {
         if (show.in.browser || parse.out)

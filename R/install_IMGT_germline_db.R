@@ -187,6 +187,10 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     db_path <- file.path(germline_dbs_home, db_name)
     create_germline_db(fasta_store, loci, db_path, force=force)
 
+    ## Add internal data to germline db (only for IG dbs for now).
+    if (!tcr.db)
+        add_V_ndm_data_to_IMGT_germline_db(db_path)
+
     ## Success!
     message("Germline db ", db_name, " successfully installed.")
     message("Call use_germline_db(\"", db_name, "\") to select it")

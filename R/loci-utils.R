@@ -12,6 +12,7 @@
 
 VDJ_REGION_TYPES <- c("V", "D", "J")
 .VJ_REGION_TYPES <- VDJ_REGION_TYPES[-2L]
+VDJC_REGION_TYPES <- c(VDJ_REGION_TYPES, "C")
 
 ### Group names are formed by concatenating a locus name (e.g. IGH or TRB)
 ### and a region type (e.g. V).

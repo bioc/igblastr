@@ -195,8 +195,8 @@ load_c_region_db <- function(db_name)
 {
     .check_c_region_db_name(db_name)
     db_path <- c_region_db_path(db_name)
-    fasta_file <- get_db_fasta_file(db_path, "C")
-    readDNAStringSet(fasta_file)
+    db_fasta_file <- get_db_fasta_file(db_path, "C")
+    readDNAStringSet(db_fasta_file)
 }
 
 

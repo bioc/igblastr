@@ -185,38 +185,38 @@
 ### .normarg_custom_internal_data()
 ###
 
-.check_user_supplied_custom_internal_data <-
-    function(custom_internal_data, germline_db_V)
+.load_user_supplied_internal_data <- function(custom_internal_data)
 {
     if (!file.exists(custom_internal_data))
         stop(wmsg("custom FWR/CDR annotation file '",
                   custom_internal_data, "' does not exist"))
-    intdata <- try(read_V_ndm_data(custom_internal_data), silent=TRUE)
-    if (inherits(intdata, "try-error"))
-        stop(wmsg("custom FWR/CDR annotation file '",
-                  custom_internal_data, "' cannot be loaded"))
-    if (!all(check_V_ndm_data(intdata, allow.dup.entries=TRUE)))
-        warning(wmsg("some V alleles in custom FWR/CDR annotation file '",
-                     custom_internal_data, "' are not properly annotated"),
-                immediate.=TRUE)
+    if (dir.exists(custom_internal_data))
+        stop(wmsg("'", custom_internal_data, "' is a directory, not a file"))
+    read_V_ndm_data(custom_internal_data)
+}
 
-    ## We only perform this last check if the FASTA file
-    ## associated with 'germline_db_V' is guaranteed to exist and
-    ## be in sync with the V-region db itself, which is only the case
-    ## if 'germline_db_V' points to an **internally** managed region db.
-    if (.region_db_is_internal(germline_db_V)) {
-        V_fasta_file <- paste0(germline_db_V, ".fasta")
-        V_names <- names(readDNAStringSet(V_fasta_file))
-        if (!all(V_names %in% intdata[ , "allele_name"])) {
-            ## Note that 'basename(dirname(germline_db_V))' is not absolutely
-            ## guaranteed to be the same as the name of the selected germline
-            ## db so don't use use_germline_db() here.
-            db_name <- basename(dirname(germline_db_V))
-            warning(wmsg("not all V alleles in germline db ", db_name, " are ",
-                         "annotated in custom FWR/CDR annotation file '",
-                         custom_internal_data, "'"),
-                    immediate.=TRUE)
-        }
+.check_user_supplied_internal_data <- function(intdata, germline_db_V, what)
+{
+    if (!all(check_V_ndm_data(intdata, allow.dup.entries=TRUE)))
+        warning(wmsg("some V alleles in ", what, " are ",
+                     "not properly annotated"),
+                immediate.=TRUE)
+    ## We will only perform the check below if the FASTA file associated
+    ## with 'germline_db_V' is guaranteed to exist and be in sync with
+    ## the V-region db itself, which is only the case if 'germline_db_V'
+    ## points to an **internally** managed region db.
+    if (.region_db_is_internal(germline_db_V))
+        return()
+    V_fasta_file <- paste0(germline_db_V, ".fasta")
+    V_names <- names(readDNAStringSet(V_fasta_file))
+    if (!all(V_names %in% intdata[ , "allele_name"])) {
+        ## Note that 'basename(dirname(germline_db_V))' is not guaranteed
+        ## to be the same as the name of the selected germline db so don't
+        ## use use_germline_db() here.
+        db_name <- basename(dirname(germline_db_V))
+        warning(wmsg("not all V alleles in germline db ", db_name, " are ",
+                     "annotated in ", what),
+                immediate.=TRUE)
     }
 }
 
@@ -226,7 +226,7 @@
     ## sense to try and use the internal data included in the cached germline
     ## db that is currently selected. Note that use_germline_db() is not even
     ## guaranteed to work because there's no guarantee that the user has
-    ## selected a germline db yet.
+    ## already selected a germline db yet.
     if (num_auto_germline_dbs == 0L)
         return(NULL)
     db_name <- use_germline_db()  # cannot be ""
@@ -252,13 +252,23 @@
 {
     if (is.null(custom_internal_data))
         return(NULL)
+    if (is.data.frame(custom_internal_data)) {
+        what <- c("the '", custom_internal_data, "' data.frame")
+        .check_user_supplied_internal_data(custom_internal_data, germline_db_V,
+                                           what)
+        path <- tempfile()
+        attr(path, "safe_to_remove") <- TRUE
+        write_V_ndm_data(custom_internal_data, path)
+        return(path)
+    }
     if (!isSingleNonWhiteString(custom_internal_data))
-        stop(wmsg("'custom_internal_data' must be \"auto\", or a single ",
-                  "string that is the path to a file containing custom ",
-                  "FWR/CDR annotation, or NULL"))
+        stop(wmsg("'custom_internal_data' must be \"auto\", or a data.frame ",
+                  "containing custom FWR/CDR annotation, or the path to a ",
+                  "file containing custom FWR/CDR annotation, or NULL"))
     if (custom_internal_data != "auto") {
-        .check_user_supplied_custom_internal_data(custom_internal_data,
-                                                  germline_db_V)
+        what <- c("custom FWR/CDR annotation file '", custom_internal_data, "'")
+        intdata <- .load_user_supplied_internal_data(custom_internal_data)
+        .check_user_supplied_internal_data(intdata, germline_db_V, what)
         return(file_path_as_absolute(custom_internal_data))
     }
     .get_auto_custom_internal_data(num_auto_germline_dbs, domain_system)
