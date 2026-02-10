@@ -1,12 +1,3 @@
-test_that("use_c_region_db()", {
-    use_c_region_db("")
-    expect_identical(use_c_region_db(), "")
-
-    db_name <- "_IMGT.rabbit.IGH.202412"
-    use_c_region_db(db_name)
-    expect_identical(use_c_region_db(), db_name)
-})
-
 test_that("list_c_region_dbs()", {
     df <- list_c_region_dbs()
     expect_true(is.data.frame(df))

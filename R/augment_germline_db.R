@@ -119,7 +119,7 @@
                                novel_alleles, destdir=".", overwrite=FALSE)
 {
     check_germline_db_name(db_name)
-    db_path <- germline_db_path(db_name)
+    db_path <- get_germline_db_path(db_name)
     region_type <- match.arg(region_type)
     db_fasta_file <- get_db_fasta_file(db_path, region_type=region_type)
 

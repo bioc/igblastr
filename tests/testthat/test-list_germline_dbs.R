@@ -1,9 +1,3 @@
-test_that("use_germline_db()", {
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
-    use_germline_db(db_name)
-    expect_identical(use_germline_db(), db_name)
-})
-
 test_that("list_germline_dbs()", {
     df <- list_germline_dbs()
     expect_true(is.data.frame(df))

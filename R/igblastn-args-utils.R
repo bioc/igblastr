@@ -57,7 +57,7 @@
     if (germline_db_X != "auto")
         return(.normalize_bdb_path(germline_db_X, region_type))
     db_name <- use_germline_db()  # cannot be ""
-    db_path <- germline_db_path(db_name)
+    db_path <- get_germline_db_path(db_name)
     file.path(db_path, region_type)
 }
 
@@ -75,7 +75,7 @@
     db_name <- use_c_region_db()  # can be ""
     if (db_name == "")
         return(NULL)
-    db_path <- c_region_db_path(db_name)
+    db_path <- get_c_region_db_path(db_name)
     file.path(db_path, "C")
 }
 
@@ -230,7 +230,7 @@
     if (num_auto_germline_dbs == 0L)
         return(NULL)
     db_name <- use_germline_db()  # cannot be ""
-    intdata_dir <- file.path(germline_db_path(db_name), "internal_data")
+    intdata_dir <- file.path(get_germline_db_path(db_name), "internal_data")
     if (!dir.exists(intdata_dir))
         return(NULL)
     intdata_filename <- paste0("V.ndm.", domain_system)

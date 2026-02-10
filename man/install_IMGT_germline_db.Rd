@@ -152,6 +152,8 @@ install_IMGT_c_region_db(organism, loci, force=FALSE)
           \emph{standalone executable} included in IgBLAST from R. This
           is the main function in the \pkg{igblastr} package.
 
+    \item \code{\link{list_germline_dbs}} to list the cached germline dbs.
+
     \item \code{\link{use_germline_db}} to select the cached germline db
           to use with \code{igblastn()}.
 
