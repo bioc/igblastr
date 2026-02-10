@@ -2,37 +2,21 @@
 
 \alias{list_germline_dbs}
 \alias{print.germline_dbs_df}
-\alias{use_germline_db}
-\alias{load_germline_db}
 \alias{rm_germline_db}
 
-\title{List cached germline dbs and select one to use with igblastn()}
+\title{List cached germline dbs}
 
 \description{
-  A small set of utilities for basic manipulation of \emph{cached
-  germline dbs}:
-  \itemize{
-    \item \code{list_germline_dbs()}: List all the \emph{cached germline dbs},
-          that is, all the germline databases currently installed in
-          \pkg{igblastr}'s persistent cache.
-    \item \code{use_germline_db()}: Select the cached germline db to use with
-          \code{\link{igblastn}()}. This choice will be remembered for the
-          duration of the current R session but can be changed anytime.
-    \item \code{load_germline_db()}: Load the nucleotide sequences of the
-          gene regions stored in a cached germline db.
-    \item \code{rm_germline_db()}: Remove a germline db from \pkg{igblastr}'s
-          persistent cache.
-  }
+  List the \emph{cached germline dbs}, that is, the germline databases
+  currently installed in \pkg{igblastr}'s persistent cache.
 }
 
 \usage{
+## List the cached germline dbs:
 list_germline_dbs(builtin.only=FALSE, with.intdata.only=FALSE,
                   names.only=FALSE, long.listing=FALSE)
 
-use_germline_db(db_name=NULL, verbose=FALSE)
-
-load_germline_db(db_name, region_types=NULL)
-
+## Remove a germline db from igblastr's persistent cache:
 rm_germline_db(db_name)
 }
 
@@ -54,7 +38,8 @@ rm_germline_db(db_name)
   \item{names.only}{
     By default \code{list_germline_dbs()} returns the list of cached
     germline dbs in a data.frame with one db per row. Set \code{names.only}
-    to \code{TRUE} to return only the db names in a character vector.
+    to \code{TRUE} to return the db names only, in which case they are
+    returned in a character vector.
   }
   \item{long.listing}{
     \code{TRUE} or \code{FALSE}. If set to \code{TRUE}, then
@@ -66,60 +51,61 @@ rm_germline_db(db_name)
     Ignored if \code{names.only} is set to \code{TRUE}.
   }
   \item{db_name}{
-    For \code{use_germline_db()}:
-
-    \code{NULL} or a single string specifying the name of the
-    cached germline db to use. Use \code{list_germline_dbs()} to
-    list all the cached germline dbs.
-
-    If set to \code{NULL} (the default), then
-    \code{use_germline_db()} returns the name of the cached
-    germline db that is currently in use, if any. Otherwise it
-    raises an error.
-
-    For \code{load_germline_db()}:
-
-    A single string specifying the name of the cached germline db
-    from which to load the V, D, and/or J regions. Use
-    \code{list_germline_dbs()} to list all the cached germline dbs.
-
-    For \code{rm_germline_db()}:
-
     A single string specifying the name of the germline db to remove
     from the cache. This cannot be a built-in db.
-  }
-  \item{verbose}{
-    If set to \code{TRUE}, then \code{use_germline_db()} will display
-    some information about its internal operations.
-  }
-  \item{region_types}{
-    The types of regions (V, D, and/or J) to load from the database.
-    Specified as a single string (e.g. \code{"DJ"}) or as a character
-    vector of single-letter elements (e.g. \code{c("D", "J")}).
-    By default (i.e. when \code{region_types} is \code{NULL}), all the
-    regions are returned.
   }
 }
 
 \details{
-  The \pkg{igblastr} package provides utility functions to perform basic
-  manipulation of the cached germline databases and cached C-region databases
-  to use with \code{\link{igblastn}()}.
+  \subsection{Cached germline dbs and C-region dbs}{
+    The \pkg{igblastr} package provides utility functions to manage the
+    \emph{cached germline dbs} and \emph{cached C-region dbs} to use with
+    \code{\link{igblastn}()}.
 
-  Terminology:
-  \itemize{
-    \item A \emph{cached germline db} contains the nucleotide sequences of
-          the V, D, and J gene regions for a given organism.
-    \item A \emph{cached C-region db} contains the nucleotide sequences of
-          the C regions (i.e. constant gene regions) for a given organism.
+    Terminology used across \pkg{igblastr} documentation:
+    \itemize{
+      \item A \emph{cached germline db} contains the nucleotide sequences of
+            the germline V, D, and J gene alleles for a given organism.
+      \item A \emph{cached C-region db} contains the nucleotide sequences of
+            the constant gene regions for a given organism.
+    }
+
+    This man page documents utilities that manage cached germline dbs.
+
+    See \code{?\link{list_c_region_dbs}} for utilities that manage
+    cached C-region dbs.
   }
+  \subsection{Built-in cached dbs}{
+    The \pkg{igblastr} package comes with preinstalled cached germline and
+    C-region dbs that are called \emph{built-in dbs}.
 
-  This man page documents the basic utilities to operate on the cached
-  germline dbs: \code{list_germline_dbs()}, \code{use_germline_db()},
-  \code{load_germline_db()}, and \code{rm_germline_db()}.
+    Built-in dbs have their name prefixed with an underscore (\code{_}).
 
-  The basic utilities to operate on the cached C-region dbs are documented
-  in the man page for \code{\link{list_c_region_dbs}}.
+    Note that additional dbs can easily be installed with functions
+    like \code{\link{install_IMGT_germline_db}}.
+  }
+  \subsection{AIRR-community/OGRDB built-in cached dbs}{
+    Note that the built-in germline dbs starting with \code{_AIRR}
+    are made of the AIRR-community/OGRDB germline sets available at
+    \url{https://ogrdb.airr-community.org/germline_sets/Homo\%20sapiens}
+    for human and at
+    \url{https://ogrdb.airr-community.org/germline_sets/Mus\%20musculus}.
+    for mouse.
+
+    Each AIRR db is populated with the latest germline datasets that were
+    available at AIRR-community/OGRDB at the time indicated by the date (in
+    YYYYMM format) embedded in the db name.
+
+    The AIRR dbs with the \code{.src} suffix contain the \emph{Source Sets}.
+    The AIRR dbs without the \code{.src} suffix contain the \emph{Reference
+    Sets}.
+    See \url{https://github.com/HyrienLab/igblastr/tree/devel/inst/extdata/germline_sets/AIRR/human/202410/README.md}
+    for more information.
+
+    The AIRR-community/OGRDB maintainers recommend to use the \emph{Reference
+    Sets} for AIRR-seq analysis.
+    See \url{https://ogrdb.airr-community.org/germline_set/75}
+  }
 }
 
 \value{
@@ -128,34 +114,6 @@ rm_germline_db(db_name)
   which is the default), or in a character vector (if \code{names.only}
   is \code{TRUE}). Columns V, D, J in the data.frame indicate the number
   of germline gene allele sequences for each region in each db.
-
-  Built-in dbs are prefixed with an underscore (\code{_}).
-  Note that the built-in germline dbs starting with \code{_AIRR}
-  are made of the AIRR-community/OGRDB germline sets available at
-  \url{https://ogrdb.airr-community.org/germline_sets/Homo\%20sapiens}
-  for human and at
-  \url{https://ogrdb.airr-community.org/germline_sets/Mus\%20musculus}.
-  for mouse.
-  Each AIRR db is populated with the latest germline datasets that were
-  available at AIRR-community/OGRDB at the time indicated by the date (in
-  YYYYMM format) embedded in the db name.
-  The AIRR dbs with the \code{.src} suffix contain the \emph{Source Sets}.
-  The AIRR dbs without the \code{.src} suffix contain the \emph{Reference Sets}.
-  See \url{https://github.com/HyrienLab/igblastr/tree/devel/inst/extdata/germline_sets/AIRR/human/202410/README.md}
-  for more information. The AIRR-community/OGRDB maintainers recommend to
-  use the \emph{Reference Sets} for AIRR-seq analysis.
-  See \url{https://ogrdb.airr-community.org/germline_set/75}
-
-  When called with no argument, \code{use_germline_db()} returns a single
-  string containing the name of the cached germline db currently used by
-  \code{\link{igblastn}()} if any, or it raises an error if no germline db
-  has been selected yet.
-
-  When called with the \code{db_name} argument, \code{use_germline_db(db_name)}
-  returns \code{db_name} invisibly.
-
-  \code{load_germline_db()} returns the nucleotide sequences from the
-  specified germline db in a named \link[Biostrings]{DNAStringSet} object.
 
   \code{rm_germline_db()} does not return anything (invisible \code{NULL}).
 }
@@ -166,17 +124,14 @@ rm_germline_db(db_name)
           \emph{standalone executable} included in IgBLAST from R. This
           is the main function in the \pkg{igblastr} package.
 
+    \item \code{\link{use_germline_db}} to select the cached germline db
+          to use with \code{igblastn()}.
+
     \item \code{\link{install_IMGT_germline_db}} to install a germline db
           from IMGT.
 
-    \item \code{\link{use_c_region_db}} to select the cached C-region db
-          to use with \code{igblastn()}.
-
     \item \link{intdata_utils} to access and manipulate IgBLAST
           \emph{internal data}.
-
-    \item \link[Biostrings]{DNAStringSet} objects in the \pkg{Biostrings}
-          package.
 
     \item IgBLAST is described at
           \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.
@@ -209,11 +164,6 @@ if (IMGT_is_up()) {
   use_germline_db(db_name)  # select germline db to use
 
   use_germline_db()  # get current selection
-
-  ## Load germline gene allele sequences:
-  load_germline_db(db_name)
-  load_germline_db(db_name, region_types="D")
-  load_germline_db(db_name, region_types="DJ")
 }
 }
 

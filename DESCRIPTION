@@ -58,7 +58,9 @@ Collate:
 	create_c_region_db.R
 	builtin_db-utils.R
 	list_germline_dbs.R
+	use_germline_db.R
 	list_c_region_dbs.R
+	use_c_region_db.R
 	install_IMGT_germline_db.R
 	install_AIRR_germline_db.R
 	augment_germline_db.R

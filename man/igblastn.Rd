@@ -172,7 +172,7 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     set to \code{"auto"}), the value of \code{ig_seqtype} is inferred
     from the germline loci that appear in the name of the cached
     germline db that is currently selected (this name can be obtained with
-    \code{\link{use_germline_db}}). If these are BCR/Ig germline loci
+    \code{\link{use_germline_db}()}). If these are BCR/Ig germline loci
     (i.e. IGH, IGK, IGL), then the inferred value will be \code{"Ig"}.
     If they are TCR germline loci (TRA, TRB, TRG, TRD), then it will
     be \code{"TCR"}.

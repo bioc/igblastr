@@ -124,15 +124,19 @@ export(
 
     ## list_germline_dbs.R:
     list_germline_dbs,
+    rm_germline_db,
+
+    ## use_germline_db.R:
     use_germline_db,
     load_germline_db,
-    rm_germline_db,
 
     ## list_c_region_dbs.R:
     list_c_region_dbs,
+    rm_c_region_db,
+
+    ## use_c_region_db.R:
     use_c_region_db,
     load_c_region_db,
-    rm_c_region_db,
 
     ## install_IMGT_germline_db.R:
     IMGT_is_up,
