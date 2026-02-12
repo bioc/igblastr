@@ -44,3 +44,12 @@ Content
     writeXStringSet(heavy_sequences, "heavy_sequences.fasta")
     writeXStringSet(light_sequences, "light_sequences.fasta")
 
+- case_for_computed_intdata.fasta: The 53 sequences (out of 8,437) from
+  1279067_1_Paired_sequences.fasta.gz for which using the "internal data"
+  included in _AIRR.human.IGH+IGK+IGL.202410 or
+  IMGT-202518-3.Homo_sapiens.IGH+IGK+IGL actually makes a
+  difference compared to using the "internal data" shipped with IgBLAST.
+  The fields in the AIRR-formatted data.frame where we see some differences
+  are: sequence_aa, fwr2, fwr2_aa, cdr2, cdr2_aa, fwr3, fwr2_end, cdr2_start,
+  cdr2_end, fwr3_start.
+

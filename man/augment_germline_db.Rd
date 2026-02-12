@@ -16,9 +16,14 @@
 }
 
 \usage{
-augment_germline_db_V(db_name, novel_alleles, destdir=".", overwrite=FALSE)
-augment_germline_db_D(db_name, novel_alleles, destdir=".", overwrite=FALSE)
-augment_germline_db_J(db_name, novel_alleles, destdir=".", overwrite=FALSE)
+augment_germline_db_V(db_name, novel_alleles,
+                      destdir=".", overwrite=FALSE, verbose=FALSE)
+
+augment_germline_db_D(db_name, novel_alleles,
+                      destdir=".", overwrite=FALSE, verbose=FALSE)
+
+augment_germline_db_J(db_name, novel_alleles,
+                      destdir=".", overwrite=FALSE, verbose=FALSE)
 }
 
 \arguments{
@@ -48,6 +53,10 @@ augment_germline_db_J(db_name, novel_alleles, destdir=".", overwrite=FALSE)
   \item{overwrite}{
     If the "destination directory" already contains a V-, D-, or J-region db,
     should it be overwritten?
+  }
+  \item{verbose}{
+    Set to \code{TRUE} to have the function display some details about its
+    internal operations.
   }
 }
 
@@ -100,14 +109,14 @@ readDNAStringSet(my_novel_V_alleles)
 
 ## Create a new V germline database that combines the V alleles
 ## from _AIRR.human.IGH+IGK+IGL.202410 with our novel V alleles:
-myVdb_path <- file.path(tempdir(), "myVdb")
+my_Vdb_path <- file.path(tempdir(), "myVdb")
 augment_germline_db_V("_AIRR.human.IGH+IGK+IGL.202410",
                       my_novel_V_alleles,
-                      destdir=myVdb_path)
+                      destdir=my_Vdb_path)
 
 ## To use this new augmented V germline database with igblastn(),
 ## supply its path via the 'germline_db_V' argument:
-AIRR_df2 <- igblastn(query, germline_db_V=myVdb_path)
+AIRR_df2 <- igblastn(query, germline_db_V=my_Vdb_path)
 
 ## ---------------------------------------------------------------------
 ## A QUICK COMPARISON BETWEEN 'AIRR_df' AND 'AIRR_df2'

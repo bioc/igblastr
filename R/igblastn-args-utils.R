@@ -189,7 +189,7 @@
 {
     if (!file.exists(custom_internal_data))
         stop(wmsg("custom FWR/CDR annotation file '",
-                  custom_internal_data, "' does not exist"))
+                  custom_internal_data, "' not found"))
     if (dir.exists(custom_internal_data))
         stop(wmsg("'", custom_internal_data, "' is a directory, not a file"))
     read_V_ndm_data(custom_internal_data)
@@ -197,25 +197,24 @@
 
 .check_user_supplied_internal_data <- function(intdata, germline_db_V, what)
 {
-    if (!all(check_V_ndm_data(intdata, allow.dup.entries=TRUE)))
-        warning(wmsg("some V alleles in ", what, " are ",
-                     "not properly annotated"),
-                immediate.=TRUE)
+    check_V_ndm_data_col2class(intdata, what=what)
     ## We will only perform the check below if the FASTA file associated
     ## with 'germline_db_V' is guaranteed to exist and be in sync with
     ## the V-region db itself, which is only the case if 'germline_db_V'
     ## points to an **internally** managed region db.
-    if (.region_db_is_internal(germline_db_V))
+    if (!.region_db_is_internal(germline_db_V))
         return()
     V_fasta_file <- paste0(germline_db_V, ".fasta")
     V_names <- names(readDNAStringSet(V_fasta_file))
-    if (!all(V_names %in% intdata[ , "allele_name"])) {
+    num_missing <- sum(!(V_names %in% intdata[ , "allele_name"]))
+    if (num_missing != 0L) {
         ## Note that 'basename(dirname(germline_db_V))' is not guaranteed
         ## to be the same as the name of the selected germline db so don't
         ## use use_germline_db() here.
         db_name <- basename(dirname(germline_db_V))
-        warning(wmsg("not all V alleles in germline db ", db_name, " are ",
-                     "annotated in ", what),
+        warning(wmsg("Incomplete custom internal data: ", num_missing, " ",
+                     "V allele(s) (out of ", length(V_names), ") in ",
+                     "germline db ", db_name, " are not annotated in ", what),
                 immediate.=TRUE)
     }
 }
@@ -253,7 +252,7 @@
     if (is.null(custom_internal_data))
         return(NULL)
     if (is.data.frame(custom_internal_data)) {
-        what <- c("the '", custom_internal_data, "' data.frame")
+        what <- "the supplied 'custom_internal_data' data.frame"
         .check_user_supplied_internal_data(custom_internal_data, germline_db_V,
                                            what)
         path <- tempfile()

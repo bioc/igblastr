@@ -24,7 +24,7 @@ get_germline_dbs_home <- function(init.path=FALSE)
         if (dir.exists(germline_dbs_home)) {
             create_missing_builtin_germline_dbs(germline_dbs_home)
         } else {
-            create_all_builtin_germline_dbs(germline_dbs_home)
+            reset_germline_dbs()
         }
     }
     germline_dbs_home

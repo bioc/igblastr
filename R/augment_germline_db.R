@@ -116,7 +116,8 @@
 ### 'novel_alleles' must be the path to a FASTA file (possibly
 ### gz-compressed), or a named DNAStringSet object.
 .augment_region_db <- function(db_name, region_type=VDJ_REGION_TYPES,
-                               novel_alleles, destdir=".", overwrite=FALSE)
+                               novel_alleles, destdir=".", overwrite=FALSE,
+                               verbose=FALSE)
 {
     check_germline_db_name(db_name)
     db_path <- get_germline_db_path(db_name)
@@ -131,6 +132,9 @@
         stop(wmsg("'destdir' must be a single (non-empty) string"))
     if (!isTRUEorFALSE(overwrite))
         stop(wmsg("'overwrite' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(verbose))
+        stop(wmsg("'verbose' must be TRUE or FALSE"))
+
     if (!dir.exists(destdir))
         dir.create(destdir)
 
@@ -143,7 +147,7 @@
 
     ## Create the new region db.
     create_region_db(fasta_files, destdir, region_type=region_type,
-                     overwrite=overwrite)
+                     overwrite=overwrite, verbose=verbose)
     pattern <- paste0("^", region_type, "\\.fasta$")
     make_blastdbs(destdir, pattern=pattern, force=TRUE)
 
@@ -155,23 +159,23 @@
 ### 'novel_alleles' must be the path to a FASTA file or a named
 ### DNAStringSet object.
 augment_germline_db_V <- function(db_name, novel_alleles, destdir=".",
-                                  overwrite=FALSE)
+                                  overwrite=FALSE, verbose=FALSE)
 {
     .augment_region_db(db_name, region_type="V", novel_alleles,
-                       destdir=destdir, overwrite=overwrite)
+                       destdir=destdir, overwrite=overwrite, verbose=verbose)
 }
 
 augment_germline_db_D <- function(db_name, novel_alleles, destdir=".",
-                                  overwrite=FALSE)
+                                  overwrite=FALSE, verbose=FALSE)
 {
     .augment_region_db(db_name, region_type="D", novel_alleles,
-                       destdir=destdir, overwrite=overwrite)
+                       destdir=destdir, overwrite=overwrite, verbose=verbose)
 }
 
 augment_germline_db_J <- function(db_name, novel_alleles, destdir=".",
-                                  overwrite=FALSE)
+                                  overwrite=FALSE, verbose=FALSE)
 {
     .augment_region_db(db_name, region_type="J", novel_alleles,
-                       destdir=destdir, overwrite=overwrite)
+                       destdir=destdir, overwrite=overwrite, verbose=verbose)
 }
 

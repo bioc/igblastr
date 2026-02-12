@@ -7,7 +7,7 @@ Description: The igblastr package provides functions to conveniently install
 biocViews: Immunology, Immunogenetics, ImmunoOncology, CellBiology
 URL: https://bioconductor.org/packages/igblastr
 BugReports: https://github.com/HyrienLab/igblastr/issues
-Version: 1.0.11
+Version: 1.0.12
 License: Artistic-2.0
 Encoding: UTF-8
 Authors@R: c(
@@ -31,6 +31,7 @@ VignetteBuilder: knitr
 Collate:
 	utils.R
 	long_to_wide_airr.R
+	read_broken_table.R
 	translate_codons.R
 	allele2gene.R
 	file-utils.R
@@ -56,9 +57,10 @@ Collate:
 	create_region_db.R
 	create_germline_db.R
 	create_c_region_db.R
-	builtin_db-utils.R
+	reset_germline_dbs.R
 	list_germline_dbs.R
 	use_germline_db.R
+	reset_c_region_dbs.R
 	list_c_region_dbs.R
 	use_c_region_db.R
 	install_IMGT_germline_db.R

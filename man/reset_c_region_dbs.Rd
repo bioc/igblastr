@@ -1,0 +1,50 @@
+\name{reset_c_region_dbs}
+
+\alias{reset_c_region_dbs}
+
+\title{Reset the cached C-region dbs}
+
+\description{
+  \code{reset_c_region_dbs()} will reset the cache of C-region dbs to a
+  pristine state by:
+  \enumerate{
+    \item Removing \emph{all} the C-region dbs currently in \pkg{igblastr}'s
+          persistent cache, including the built-in C-region dbs.
+    \item Recreating the predefined set of built-in C-region dbs.
+  }
+  This means that any non built-in C-region db present in the cache WILL
+  BE LOST!
+}
+
+\usage{
+reset_c_region_dbs(verbose=FALSE)
+}
+
+\arguments{
+  \item{verbose}{
+    Set to \code{TRUE} to have \code{reset_c_region_dbs()} display
+    some details about its internal operations.
+  }
+}
+
+\value{
+  Nothing (i.e. an invisible \code{NULL}).
+}
+
+\seealso{
+  \itemize{
+    \item \code{\link{list_c_region_dbs}} to list the cached C-region dbs.
+
+    \item \code{\link{install_IMGT_c_region_db}} to install a C-region db
+          from IMGT.
+  }
+}
+
+\examples{
+## DANGER ZONE!
+\dontrun{
+  reset_c_region_dbs(verbose=TRUE)
+}
+}
+
+\keyword{utilities}

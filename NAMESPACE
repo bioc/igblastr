@@ -122,6 +122,9 @@ export(
     ## install_igblast.R:
     install_igblast,
 
+    ## reset_germline_dbs.R:
+    reset_germline_dbs,
+
     ## list_germline_dbs.R:
     list_germline_dbs,
     rm_germline_db,
@@ -129,6 +132,9 @@ export(
     ## use_germline_db.R:
     use_germline_db,
     load_germline_db,
+
+    ## reset_c_region_dbs.R:
+    reset_c_region_dbs,
 
     ## list_c_region_dbs.R:
     list_c_region_dbs,
