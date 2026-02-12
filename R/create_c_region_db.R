@@ -75,11 +75,20 @@ list_loci_in_c_region_fasta_dir <- function(fasta_dir, loci_prefix)
 ### C_REGION_DBS cache compartment (see R/cache-utils.R for details about
 ### igblastr's cache organization). This subdir or any of its parent
 ### directories don't need to exist yet.
-create_c_region_db <- function(fasta_dir, loci, destdir, force=FALSE)
+create_c_region_db <- function(fasta_dir, loci, destdir,
+                               force=FALSE, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(destdir))
     if (!isTRUEorFALSE(force))
         stop(wmsg("'force' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(verbose))
+        stop(wmsg("'verbose' must be TRUE or FALSE"))
+
+    if (verbose) {
+        what <- c("CREATING ", basename(destdir))
+        message("\n====== START ", wmsg(what), " ======\n")
+    }
+
     if (dir.exists(destdir) && !force)
         .stop_on_existing_c_region_db(destdir)
 
@@ -93,7 +102,10 @@ create_c_region_db <- function(fasta_dir, loci, destdir, force=FALSE)
     tmp_destdir <- tempfile("c_region_db_")
     dir.create(tmp_destdir)
     on.exit(nuke_file(tmp_destdir))
-    create_region_db(fasta_files, tmp_destdir, region_type="C")
+    create_region_db(fasta_files, tmp_destdir, region_type="C", verbose=verbose)
     rename_file(tmp_destdir, destdir, replace=TRUE)
+
+    if (verbose)
+        message("====== DONE ", wmsg(what), " ======\n")
 }
 

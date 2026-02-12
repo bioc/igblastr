@@ -56,17 +56,3 @@ igblastr_cache <- function(which=NULL)
 
 get_internal_igblast_roots <- function() igblastr_cache(IGBLAST_ROOTS)
 
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .reset_igblastr_cache()
-###
-
-.reset_igblastr_cache <- function(which=NULL)
-{
-    path <- igblastr_cache(which)
-    nuke_file(path)
-}
-
-reset_germline_dbs_cache <- function() .reset_igblastr_cache(GERMLINE_DBS)
-reset_c_region_dbs_cache <- function() .reset_igblastr_cache(C_REGION_DBS)
-

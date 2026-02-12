@@ -65,7 +65,7 @@ rm_c_region_db(db_name)
     See \code{?\link{list_germline_dbs}} for utilities that manage
     cached germline dbs.
   }
-  \subsection{Built-in cached dbs}{
+  \subsection{Built-in dbs}{
     The \pkg{igblastr} package comes with preinstalled cached germline and
     C-region dbs that are called \emph{built-in dbs}.
 
@@ -96,6 +96,8 @@ rm_c_region_db(db_name)
 
     \item \code{\link{use_c_region_db}} to select the cached C-region db
           to use with \code{igblastn()}.
+
+    \item \code{\link{reset_c_region_dbs}} to reset the cached C-region dbs.
 
     \item IgBLAST is described at
           \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.

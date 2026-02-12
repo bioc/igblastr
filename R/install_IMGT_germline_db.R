@@ -153,7 +153,7 @@ list_IMGT_organisms <- function(release)
 
 install_IMGT_germline_db <- function(release, organism="Homo sapiens",
                                      tcr.db=FALSE, loci="auto",
-                                     force=FALSE, ...)
+                                     force=FALSE, verbose=FALSE, ...)
 {
     ## Check arguments.
     if (missing(release))
@@ -165,6 +165,8 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     loci_prefix <- extract_loci_prefix(loci)
     if (!isTRUEorFALSE(force))
         stop(wmsg("'force' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(verbose))
+        stop(wmsg("'verbose' must be TRUE or FALSE"))
 
     ## Download IMGT/V-QUEST release to local store if it's not there already.
     local_store <- .path_to_IMGT_local_store(release)
@@ -185,11 +187,17 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     ## Create IMGT germline db.
     germline_dbs_home <- get_germline_dbs_home(TRUE)  # guaranteed to exist
     db_path <- file.path(germline_dbs_home, db_name)
-    create_germline_db(fasta_store, loci, db_path, force=force)
+    create_germline_db(fasta_store, loci, db_path, force=force, verbose=verbose)
 
     ## Add internal data to germline db (only for IG dbs for now).
-    if (!tcr.db)
+    if (!tcr.db) {
+        if (verbose)
+            message(wmsg("Computing and adding the intdata to ", db_name),
+                    " ... ", appendLF=FALSE)
         add_V_ndm_data_to_IMGT_germline_db(db_path)
+        if (verbose)
+            message("ok\n")
+    }
 
     ## Success!
     message("Germline db ", db_name, " successfully installed.")
@@ -210,13 +218,15 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     sprintf("IMGT.%s.%s.%s", organism, paste(loci, collapse="+"), version)
 }
 
-install_IMGT_c_region_db <- function(organism, loci, force=FALSE)
+install_IMGT_c_region_db <- function(organism, loci, force=FALSE, verbose=FALSE)
 {
     organism <- find_organism_shortname(normalize_IMGT_organism(organism))
     loci <- normalize_user_supplied_loci(loci)
     loci_prefix <- extract_loci_prefix(loci)
     if (!isTRUEorFALSE(force))
         stop(wmsg("'force' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(verbose))
+        stop(wmsg("'verbose' must be TRUE or FALSE"))
 
     ## Get path to local FASTA store for IMGT C-region sequences.
     fasta_store <- path_to_IMGT_c_region_fasta_store(organism, loci_prefix)
@@ -235,7 +245,7 @@ install_IMGT_c_region_db <- function(organism, loci, force=FALSE)
     ## Create IMGT C-region db.
     c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist
     db_path <- file.path(c_region_dbs_home, db_name)
-    create_c_region_db(fasta_store, loci, db_path, force=force)
+    create_c_region_db(fasta_store, loci, db_path, force=force, verbose=verbose)
 
     ## Success!
     message("C-region db ", db_name, " successfully installed.")

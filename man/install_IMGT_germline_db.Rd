@@ -24,7 +24,7 @@
 
 \usage{
 install_IMGT_germline_db(release, organism="Homo sapiens", tcr.db=FALSE,
-                         loci="auto", force=FALSE, ...)
+                         loci="auto", force=FALSE, verbose=FALSE, ...)
 
 ## Related utilities:
 list_IMGT_releases(recache=FALSE)
@@ -33,7 +33,7 @@ IMGT_is_up()
 
 ## Can only be used to "subset" a built-in C-region databse (see
 ## advanced example in Examples section below):
-install_IMGT_c_region_db(organism, loci, force=FALSE)
+install_IMGT_c_region_db(organism, loci, force=FALSE, verbose=FALSE)
 }
 
 \arguments{
@@ -74,6 +74,10 @@ install_IMGT_c_region_db(organism, loci, force=FALSE)
   \item{force}{
     Set to \code{TRUE} to reinstall if the requested database is already
     installed.
+  }
+  \item{verbose}{
+    Set to \code{TRUE} to have the function display some details about its
+    internal operations.
   }
   \item{...}{
     Extra arguments to be passed to the internal call to \code{download.file()}.

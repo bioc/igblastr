@@ -129,15 +129,17 @@ list_loci_in_germline_fasta_dir <-
 }
 
 ### Create the three "region dbs": one V-, one D-, and one J-region db.
-.create_VDJ_region_dbs <- function(fasta_dir, loci, destdir)
+.create_VDJ_region_dbs <- function(fasta_dir, loci, destdir, verbose=FALSE)
 {
     if (!isSingleNonWhiteString(fasta_dir))
         stop(wmsg("'fasta_dir' must be a single (non-empty) string"))
     if (!dir.exists(fasta_dir))
         stop(wmsg("directory ", fasta_dir, " not found"))
+    stopifnot(isTRUEorFALSE(verbose))
     for (region_type in VDJ_REGION_TYPES) {
         fasta_files <- .collect_fasta_files(fasta_dir, region_type, loci)
-        create_region_db(fasta_files, destdir, region_type=region_type)
+        create_region_db(fasta_files, destdir, region_type=region_type,
+                         verbose=verbose)
     }
 }
 
@@ -147,11 +149,20 @@ list_loci_in_germline_fasta_dir <-
 ### GERMLINE_DBS cache compartment (see R/cache-utils.R for details about
 ### igblastr's cache organization). This subdir or any of its parent
 ### directories don't need to exist yet.
-create_germline_db <- function(fasta_dir, loci, destdir, force=FALSE)
+create_germline_db <- function(fasta_dir, loci, destdir,
+                               force=FALSE, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(destdir))
     if (!isTRUEorFALSE(force))
         stop(wmsg("'force' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(verbose))
+        stop(wmsg("'verbose' must be TRUE or FALSE"))
+
+    if (verbose) {
+        what <- c("CREATING ", basename(destdir))
+        message("\n====== START ", wmsg(what), " ======\n")
+    }
+
     if (dir.exists(destdir) && !force)
         .stop_on_existing_germline_db(destdir)
 
@@ -163,7 +174,10 @@ create_germline_db <- function(fasta_dir, loci, destdir, force=FALSE)
     tmp_destdir <- tempfile("germline_db_")
     dir.create(tmp_destdir)
     on.exit(nuke_file(tmp_destdir))
-    .create_VDJ_region_dbs(fasta_dir, loci, tmp_destdir)
+    .create_VDJ_region_dbs(fasta_dir, loci, tmp_destdir, verbose=verbose)
     rename_file(tmp_destdir, destdir, replace=TRUE)
+
+    if (verbose)
+        message("====== DONE ", wmsg(what), " ======\n")
 }
 

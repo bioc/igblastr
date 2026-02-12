@@ -107,26 +107,33 @@ makeogrannote <- function(germline_file)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### check_V_ndm_data()
+### check_V_ndm_data_col2class()
 ###
 
-.check_V_ndm_data_col2class <- function(V_ndm_data)
+### Not exported!
+check_V_ndm_data_col2class <- function(V_ndm_data, what="'V_ndm_data'")
 {
     if (!is.data.frame(V_ndm_data))
-        stop(wmsg("'V_ndm_data' must be a data.frame"))
+        stop(wmsg(what, " must be a data.frame"))
     expected_colnames <- names(.IGBLAST_INTDATA_COL2CLASS)
     if (!identical(colnames(V_ndm_data), expected_colnames)) {
         in1string <- paste(expected_colnames, collapse=", ")
-        stop(wmsg("'V_ndm_data' must have the following columns ",
+        stop(wmsg(what, " must have the following columns ",
                   "(in this order): ", in1string))
     }
     col2class <- vapply(V_ndm_data, function(x) class(x)[[1L]], character(1))
     if (!identical(col2class, .IGBLAST_INTDATA_COL2CLASS)) {
-        in1string <- paste0("  ", names(.IGBLAST_INTDATA_COL2CLASS), ": ",
+        in1string <- paste0("    ", names(.IGBLAST_INTDATA_COL2CLASS), " -> ",
                             .IGBLAST_INTDATA_COL2CLASS, collapse="\n")
-        stop("'V_ndm_data' must have the following column types:\n", in1string)
+        stop(wmsg(what, " must have the following column types:"), "\n",
+             in1string)
     }
 }
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### check_V_ndm_data()
+###
 
 ### Used in tests/testthat/test-auxdata-utils.R!
 .rows_with_same_keys_are_identical <- function(df, key)
@@ -149,7 +156,7 @@ makeogrannote <- function(germline_file)
 ### Does not check the "chain_type" column at the moment.
 check_V_ndm_data <- function(V_ndm_data, allow.dup.entries=FALSE)
 {
-    .check_V_ndm_data_col2class(V_ndm_data)
+    check_V_ndm_data_col2class(V_ndm_data)
     if (!isTRUEorFALSE(allow.dup.entries))
         stop(wmsg("'allow.dup.entries' must be TRUE or FALSE"))
     if (allow.dup.entries) {
@@ -187,7 +194,7 @@ write_V_ndm_data <- function(V_ndm_data, file="", check.data=FALSE)
 {
     if (!isTRUEorFALSE(check.data))
         stop(wmsg("'check.data' must be TRUE or FALSE"))
-    .check_V_ndm_data_col2class(V_ndm_data)
+    check_V_ndm_data_col2class(V_ndm_data)
     if (check.data) {
         ok <- check_V_ndm_data(V_ndm_data)
         if (!all(ok))
@@ -208,7 +215,7 @@ write_V_ndm_data <- function(V_ndm_data, file="", check.data=FALSE)
 ### Not exported!
 write_V_ndm_data_to_germline_db <- function(V_ndm_data, destfile)
 {
-    .check_V_ndm_data_col2class(V_ndm_data)
+    check_V_ndm_data_col2class(V_ndm_data)
     stopifnot(isSingleNonWhiteString(destfile))
     internal_data_path <- dirname(destfile)
 

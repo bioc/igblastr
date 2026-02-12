@@ -3,49 +3,42 @@
 ### -------------------------------------------------------------------------
 
 
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### get_c_region_dbs_home()
-###
+.warn_about_out_of_sync_c_region_dbs <- function()
+{
+    msg <- c("Your C-region dbs are out-of-sync with your version of ",
+             "igblastr. Please reset them with 'reset_c_region_dbs()'. ",
+             "Note that this will remove any user-installed C-region db! ",
+             "See '?reset_c_region_dbs' for more information.")
+    warning(wmsg(msg))
+}
 
-### The first built-in IMGT TR C-region dbs were added in Sep 2025 in
-### igblastr 0.99.15 for human and mouse.
-.has_builtin_IMGT_TR_c_region_dbs <- function(c_region_dbs_home)
+### Starting with igblastr 1.0.12/1.1.12, create_region_db() drops repeated
+### alleles ("repeated" here means alleles with identical names **and**
+### identical ungapped sequences). See .drop_repeated_alleles() in
+### R/create_region_db.R for more info.
+### As a consequence, built-in C-region db _IMGT.mouse.IGH.202509 is now
+### expected to contain 55 alleles instead of 56. We use this as the criteria
+### to decide whether the C-region dbs need to be reset or not.
+.warn_if_c_region_dbs_need_reset <- function(c_region_dbs_home)
 {
     stopifnot(isSingleNonWhiteString(c_region_dbs_home),
               dir.exists(c_region_dbs_home))
-    db_path <- list.files(c_region_dbs_home,
-                          pattern="_IMGT\\.human\\.TR",
-                          full.names=TRUE)
-    length(db_path) == 1L && dir.exists(db_path)
+    db_name <- "_IMGT.mouse.IGH.202509"
+    db_path <- file.path(c_region_dbs_home, db_name)
+    ok <- dir.exists(db_path)
+    if (ok) {
+        db_fasta_file <- get_db_fasta_file(db_path, "C")
+        ok <- file.exists(db_fasta_file) &&
+              length(fasta.seqlengths(db_fasta_file)) == 55L
+    }
+    if (!ok)
+        .warn_about_out_of_sync_c_region_dbs()
 }
 
-### Returns whether the built-in C-region dbs need to be (re)created.
-### Creating them is needed if folder 'c_region_dbs_home' does not exist.
-### Recreating them is needed if folder 'c_region_dbs_home' exists but is
-### out-of-sync with the content of igblastr/inst/extdata/constant_regions/.
-.need_to_create_builtin_c_region_dbs <- function(c_region_dbs_home)
-{
-    stopifnot(isSingleNonWhiteString(c_region_dbs_home))
-    if (!dir.exists(c_region_dbs_home))
-        return(TRUE)
-    ## In igblastr <= 0.99.12, the list of built-in C-region dbs is expected
-    ## to be:
-    ##     _IMGT.human.IGH+IGK+IGL.202412
-    ##     _IMGT.mouse.IGH.202412
-    ##     _IMGT.rabbit.IGH.202412
-    ## In igblastr 0.99.13 (Aug 2025), we added:
-    ##     _IMGT.rat.IGH.202508
-    ## In igblastr 0.99.15 (Sep 2025), we replaced _IMGT.mouse.IGH.202412
-    ## with _IMGT.mouse.IGH.202509 and added:
-    ##     _IMGT.rhesus_monkey.IGH.202509
-    ## In igblastr 0.99.16 (Sep 2025), we added:
-    ##     _IMGT.human.TRA+TRB+TRG+TRD.202509
-    ##     _IMGT.mouse.TRA+TRB+TRG+TRD.202509
-    ## So we only check for the presence of the built-in IMGT C-region db
-    ## for rhesus_monkey to decide whether the built-in C-region dbs need to
-    ## be recreated or not.
-    !.has_builtin_IMGT_TR_c_region_dbs(c_region_dbs_home)
-}
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### get_c_region_dbs_home()
+###
 
 ### Not exported!
 ### Returns path to C_REGION_DBS cache compartment (see R/cache-utils.R for
@@ -60,8 +53,8 @@ get_c_region_dbs_home <- function(init.path=FALSE)
 {
     stopifnot(isTRUEorFALSE(init.path))
     c_region_dbs_home <- igblastr_cache(C_REGION_DBS)
-    if (init.path && .need_to_create_builtin_c_region_dbs(c_region_dbs_home))
-        create_all_builtin_c_region_dbs(c_region_dbs_home)
+    if (init.path && !dir.exists(c_region_dbs_home))
+        reset_c_region_dbs()
     c_region_dbs_home
 }
 
@@ -81,6 +74,7 @@ list_c_region_dbs <- function(builtin.only=FALSE,
                     names.only=names.only, long.listing=long.listing)
     if (is.data.frame(ans))
         class(ans) <- c("c_region_dbs_df", class(ans))
+    .warn_if_c_region_dbs_need_reset(c_region_dbs_home)
     ans
 }
 
