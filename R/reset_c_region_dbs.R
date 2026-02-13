@@ -87,6 +87,7 @@ path_to_IMGT_c_region_fasta_store <- function(organism, loci_prefix)
 ### Will nuke any user-installed db!
 reset_c_region_dbs <- function(verbose=FALSE)
 {
+    set_db_in_use("C-region", "")  # cancel current selection
     c_region_dbs_home <- igblastr_cache(C_REGION_DBS)
     .create_all_builtin_c_region_dbs(c_region_dbs_home, verbose=verbose)
 }

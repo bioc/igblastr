@@ -183,6 +183,7 @@ create_missing_builtin_germline_dbs <- function(destdir, verbose=FALSE)
 ### Will nuke any user-installed db!
 reset_germline_dbs <- function(verbose=FALSE)
 {
+    set_db_in_use("germline", "")  # cancel current selection
     germline_dbs_home <- igblastr_cache(GERMLINE_DBS)
     .create_all_builtin_germline_dbs(germline_dbs_home, verbose=verbose)
 }

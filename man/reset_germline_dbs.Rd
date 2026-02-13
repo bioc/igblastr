@@ -14,6 +14,10 @@
   }
   This means that any non built-in germline db present in the cache WILL
   BE LOST!
+
+  Also note that \code{reset_germline_dbs()} will cancel the current
+  selection if any germline db was previously selected with
+  \code{\link{use_germline_db}()}.
 }
 
 \usage{
@@ -34,6 +38,9 @@ reset_germline_dbs(verbose=FALSE)
 \seealso{
   \itemize{
     \item \code{\link{list_germline_dbs}} to list the cached germline dbs.
+
+    \item \code{\link{use_germline_db}} to select the cached germline db
+          to use with \code{igblastn()}.
 
     \item \code{\link{install_IMGT_germline_db}} to install a germline db
           from IMGT.
