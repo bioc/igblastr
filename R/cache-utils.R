@@ -31,20 +31,48 @@ IMGT_LOCAL_STORE <- "IMGT_LOCAL_STORE"
 .IGBLASTR_CACHES <- c(IGBLAST_ROOTS, LIVE_IGDATA,
                       GERMLINE_DBS, C_REGION_DBS, IMGT_LOCAL_STORE)
 
+### Returns **absolute** path to igblastr's persistent cache.
+### Note that the returned path is guaranteed to be a directory but is not
+### guaranteed to be a **writable** directory. If it's not, then bad things
+### will happen downstream.
+.get_cache_path <- function()
+{
+    cache_path <- getOption("igblastr_cache")
+    if (is.null(cache_path)) {
+        cache_path <- R_user_dir("igblastr", "cache")
+    } else {
+        if (!isSingleNonWhiteString(cache_path))
+            stop(wmsg("global option \"igblastr_cache\" must ",
+                      "be set to a single (non-empty) string"))
+    }
+    if (!dir.exists(cache_path)) {
+        ok <- dir.create(cache_path, recursive=TRUE)
+        if (!ok) {
+            msg1 <- c("Failed to create igblastr's persistent cache ",
+                      "at: ", cache_path)
+            msg2 <- c("Please use 'options()' to set global option ",
+                      "\"igblastr_cache\" to the path of a directory ",
+                      "that you are able to create.")
+            stop(wmsg(msg1), "\n  ", wmsg(msg2))
+        }
+    }
+    file_path_as_absolute(cache_path)
+}
+
 ### Returns **absolute** path to the cache compartment specified via 'which'.
 igblastr_cache <- function(which=NULL)
 {
-    path <- getOption("igblastr_cache", R_user_dir("igblastr", "cache"))
+    cache_path <- .get_cache_path()
     if (is.null(which))
-        return(path)
+        return(cache_path)
     stopifnot(isSingleNonWhiteString(which))
     switch(which,
-        IGBLAST_ROOTS   =file.path(path, "igblast_roots"),
-        LIVE_IGDATA     =file.path(path, "live_igdata"),
-        GERMLINE_DBS    =file.path(path, "germline_dbs"),
-        C_REGION_DBS    =file.path(path, "c_region_dbs"),
-        IMGT_LOCAL_STORE=file.path(path, "store", "IMGT-releases"),
-	stop(wmsg("'which' must be one of ",
+        IGBLAST_ROOTS   =file.path(cache_path, "igblast_roots"),
+        LIVE_IGDATA     =file.path(cache_path, "live_igdata"),
+        GERMLINE_DBS    =file.path(cache_path, "germline_dbs"),
+        C_REGION_DBS    =file.path(cache_path, "c_region_dbs"),
+        IMGT_LOCAL_STORE=file.path(cache_path, "store", "IMGT-releases"),
+        stop(wmsg("'which' must be one of ",
                   paste0("\"", .IGBLASTR_CACHES, "\"", collapse=", ")))
     )
 }

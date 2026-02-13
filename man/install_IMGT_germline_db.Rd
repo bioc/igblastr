@@ -24,7 +24,8 @@
 
 \usage{
 install_IMGT_germline_db(release, organism="Homo sapiens", tcr.db=FALSE,
-                         loci="auto", force=FALSE, verbose=FALSE, ...)
+                         loci="auto", without.intdata=FALSE,
+                         force=FALSE, verbose=FALSE, ...)
 
 ## Related utilities:
 list_IMGT_releases(recache=FALSE)
@@ -70,6 +71,25 @@ install_IMGT_c_region_db(organism, loci, force=FALSE, verbose=FALSE)
     The subset of loci can be specified as a character vector with one
     element per locus (e.g. \code{"IGH"} or \code{c("TRA", "TRB")}), or
     as a \code{+}-separated list in a single string (e.g. \code{"TRA+TRB"}).
+  }
+  \item{without.intdata}{
+    By default, after installing the new db, \code{install_IMGT_germline_db()}
+    will also compute and add the \emph{internal data} associated with the
+    V alleles in the db (note that \code{install_IMGT_germline_db()} uses
+    the allele \emph{gapped} sequences for that).
+    You can skip this step by setting \code{without.intdata} to \code{TRUE}.
+
+    The presence of \emph{internal data} in the new db will be indicated
+    in the \code{intdata} column of the data.frame returned by
+    \code{\link{list_germline_dbs}()}.
+
+    If a cached germline db includes its own \emph{internal data}, then
+    \code{\link{igblastn}()} will use it instead of the \emph{internal data}
+    shipped with IgBLAST. See documentation of the \code{custom_internal_data}
+    argument in \code{?\link{igblastn}} for more information.
+
+    Also see \code{?\link{intdata_utils}} for more information about IgBLAST
+    \emph{internal data}.
   }
   \item{force}{
     Set to \code{TRUE} to reinstall if the requested database is already

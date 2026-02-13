@@ -241,7 +241,7 @@ igblastn <- function(query, outfmt="AIRR",
     outfmt_nb <- .extract_outfmt_nb(outfmt)
 
     ## Collect arguments that will be passed to igblastn standalone executable.
-    cmd_args <- make_igblastn_command_line_args(
+    cmd_args <- prepare_igblastn_cmdline_args(
                           query, outfmt=outfmt,
                           germline_db_V=germline_db_V,
                           germline_db_V_seqidlist=germline_db_V_seqidlist,

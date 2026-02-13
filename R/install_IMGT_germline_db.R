@@ -153,6 +153,7 @@ list_IMGT_organisms <- function(release)
 
 install_IMGT_germline_db <- function(release, organism="Homo sapiens",
                                      tcr.db=FALSE, loci="auto",
+                                     without.intdata=FALSE,
                                      force=FALSE, verbose=FALSE, ...)
 {
     ## Check arguments.
@@ -163,6 +164,8 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     loci <- normalize_user_supplied_loci(loci, tcr.db=tcr.db,
                                          stop.if.missing.regions=TRUE)
     loci_prefix <- extract_loci_prefix(loci)
+    if (!isTRUEorFALSE(without.intdata))
+        stop(wmsg("'without.intdata' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(force))
         stop(wmsg("'force' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))
@@ -190,7 +193,7 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     create_germline_db(fasta_store, loci, db_path, force=force, verbose=verbose)
 
     ## Add internal data to germline db (only for IG dbs for now).
-    if (!tcr.db) {
+    if (!(without.intdata || tcr.db)) {
         if (verbose)
             message(wmsg("Computing and adding the intdata to ", db_name),
                     " ... ", appendLF=FALSE)

@@ -49,7 +49,7 @@ Content
   included in _AIRR.human.IGH+IGK+IGL.202410 or
   IMGT-202518-3.Homo_sapiens.IGH+IGK+IGL actually makes a
   difference compared to using the "internal data" shipped with IgBLAST.
-  The fields in the AIRR-formatted data.frame where we see some differences
-  are: sequence_aa, fwr2, fwr2_aa, cdr2, cdr2_aa, fwr3, fwr2_end, cdr2_start,
-  cdr2_end, fwr3_start.
+  The discriminating fields (i.e. the fields where we see differences)
+  in the AIRR-formatted data.frame are: sequence_aa, fwr2, fwr2_aa, cdr2,
+  cdr2_aa, fwr3, fwr2_end, cdr2_start, cdr2_end, fwr3_start.
 

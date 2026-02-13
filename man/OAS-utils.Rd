@@ -24,7 +24,7 @@
 
   Note that OAS has two databases: the "Unpaired Sequences" database
   and the "Paired Sequences" database. Some of the utilities documented
-  in this man page only work on data coming from the latter.
+  in this man page only work for data retrieved from the latter.
 }
 
 \usage{

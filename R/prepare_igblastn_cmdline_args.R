@@ -219,15 +219,8 @@
     }
 }
 
-.get_auto_custom_internal_data <- function(num_auto_germline_dbs, domain_system)
+.get_auto_custom_internal_data <- function(domain_system)
 {
-    ## If the user supplied all 3 germline_db_X arguments, then it makes no
-    ## sense to try and use the internal data included in the cached germline
-    ## db that is currently selected. Note that use_germline_db() is not even
-    ## guaranteed to work because there's no guarantee that the user has
-    ## already selected a germline db yet.
-    if (num_auto_germline_dbs == 0L)
-        return(NULL)
     db_name <- use_germline_db()  # cannot be ""
     intdata_dir <- file.path(get_germline_db_path(db_name), "internal_data")
     if (!dir.exists(intdata_dir))
@@ -270,7 +263,14 @@
         .check_user_supplied_internal_data(intdata, germline_db_V, what)
         return(file_path_as_absolute(custom_internal_data))
     }
-    .get_auto_custom_internal_data(num_auto_germline_dbs, domain_system)
+    ## If the user supplied all 3 germline_db_X arguments, then it makes no
+    ## sense to try and use the internal data included in the cached germline
+    ## db that is currently selected. Note that use_germline_db() is not even
+    ## guaranteed to work because there's no guarantee that the user has
+    ## already selected a germline db yet.
+    if (num_auto_germline_dbs == 0L)
+        return(NULL)
+    .get_auto_custom_internal_data(domain_system)
 }
 
 
@@ -295,11 +295,13 @@
         #            immediate.=TRUE)
         return(normalize_igblast_organism(organism))
     }
-    #if (!is.null(custom_internal_data))
-    #    return(NULL)
+    if (!is.null(custom_internal_data))
+        return(NULL)
     if (num_auto_germline_dbs == 0L)
         stop(wmsg("'organism' must be specified when 'germline_db_V', ",
-                  "'germline_db_D', and 'germline_db_J' are supplied"))
+                  "'germline_db_D', and 'germline_db_J' are supplied (unless you ",
+                  "also supply your own internal data thru the 'custom_internal_data' ",
+                  "argument)"))
     germline_db_name <- use_germline_db()  # cannot be ""
     organism <- infer_organism_shortname_from_db_name(germline_db_name)
     if (is.na(organism))
@@ -317,7 +319,8 @@
 ###
 
 ### Can return a NULL.
-.normarg_auxiliary_data <- function(auxiliary_data="auto", organism)
+.normarg_auxiliary_data <- function(auxiliary_data="auto",
+                                    organism, num_auto_germline_dbs)
 {
     if (is.null(auxiliary_data))
         return(NULL)
@@ -326,9 +329,42 @@
                   "that is the path to a file containing the coding frame ",
                   "start positions for the sequences in the J-region db",
                   "or NULL"))
-    if (auxiliary_data == "auto")
-        return(get_auxdata_path(organism))
-    file_path_as_absolute(auxiliary_data)
+    if (auxiliary_data != "auto")
+        return(file_path_as_absolute(auxiliary_data))
+    if (is.null(organism)) {
+        ## The only way that the normalized 'organism' is NULL is if the
+        ## normalized 'custom_internal_data' is **not** NULL. And the only
+        ## way this can happen is if either:
+        ## - the user supplied their own internal data thru 'custom_internal_data';
+        ## - or they didn't supply all 3 germline_db_X arguments and the selected
+        ##   germline db includes internal data.
+        msg1 <- c("Failed to automatically figure out what auxiliary data ",
+                  "to use!")
+        msg3 <- c("Please supply the path to the auxiliary data to use thru ",
+                  "the 'auxiliary_data' argument, or set 'auxiliary_data' ",
+                  "to NULL if you don't want to use any auxiliary data ",
+                  "(not recommended).")
+        msg4 <- c("Note that you can use 'get_auxdata_path()' to obtain ",
+                  "the path to the auxiliary data shipped with IgBLAST ",
+                  "for a given organism.")
+        msg5 <- c("See '?get_auxdata_path' for more information.")
+        if (num_auto_germline_dbs == 0L) {
+            stop(wmsg(msg1), "\n\n  ",
+                 wmsg(msg3), "\n  ", wmsg(msg4), "\n  ", wmsg(msg5))
+        }
+        germline_db_name <- use_germline_db()  # cannot be ""
+        organism <- infer_organism_shortname_from_db_name(germline_db_name)
+        if (is.na(organism)) {
+            msg2 <- c("The germline db in use (", germline_db_name, ") ",
+                      "does not seem to correspond to an organism for ",
+                      "which IgBLAST provides auxiliary data ",
+                      "(use 'list_igblast_organisms()' to get the list of ",
+                      "organisms that IgBLAST supports out of the box).")
+            stop(wmsg(msg1), "\n\n  ", wmsg(msg2), "\n  ",
+                 wmsg(msg3), "\n  ", wmsg(msg4), "\n  ", wmsg(msg5))
+        }
+    }
+    get_auxdata_path(organism)
 }
 
 
@@ -449,7 +485,7 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### make_igblastn_command_line_args()
+### prepare_igblastn_cmdline_args()
 ###
 
 ### Returns the arguments in a named list of single strings where the names
@@ -459,7 +495,7 @@
 ### because we sometimes need to put attributes on some of the strings
 ### e.g. sometimes we need to put the "safe_to_remove" attribute on
 ### the 'germline_db_[VDJ]_seqidlist' arguments.
-make_igblastn_command_line_args <-
+prepare_igblastn_cmdline_args <-
     function(query, outfmt="AIRR",
              germline_db_V="auto", germline_db_V_seqidlist=NULL,
              germline_db_D="auto", germline_db_D_seqidlist=NULL,
@@ -498,7 +534,8 @@ make_igblastn_command_line_args <-
                                                           domain_system)
     organism <- .normarg_organism(organism, num_auto_germline_dbs,
                                   custom_internal_data)
-    auxiliary_data <- .normarg_auxiliary_data(auxiliary_data, organism)
+    auxiliary_data <- .normarg_auxiliary_data(auxiliary_data,
+                                              organism, num_auto_germline_dbs)
     ig_seqtype <- .normarg_ig_seqtype(ig_seqtype, num_auto_germline_dbs)
 
     cmd_args <- list(query=query, outfmt=outfmt,
@@ -529,7 +566,7 @@ make_igblastn_command_line_args <-
 ###
 
 ### 'cmd_args' must be a named list of single strings character as
-### returned by make_igblastn_command_line_args() above.
+### returned by prepare_igblastn_cmdline_args() above.
 ### Returns an **unnamed** character vector parallel to 'cmd_args'.
 make_exe_args <- function(cmd_args)
 {
