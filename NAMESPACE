@@ -73,6 +73,7 @@ export(
 
 export(
     ## translate_codons.R:
+    remove_gaps,
     extract_codons,
     translate_codons,
 

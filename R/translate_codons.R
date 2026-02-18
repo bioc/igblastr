@@ -44,22 +44,45 @@
     offset
 }
 
+### Note that we also accept a BStringSet or BString object so we
+### can use remove_gaps() in the context of redit_imgt_file().
+### See R/edit_imgt_file.R for more information.
+### Names and metadata columns are propagated.
+remove_gaps <- function(dna)
+{
+    if (is(dna, "DNAStringSet") || is(dna, "BStringSet")) {
+        midx <- vmatchPattern(".", dna, fixed=TRUE)
+        at <- unname(as(midx, "CompressedIRangesList"))
+    } else if (is(dna, "DNAString") || is(dna, "BString")) {
+        v <- matchPattern(".", dna, fixed=TRUE)
+        at <- as(v, "IRanges")
+    } else {
+        stop(wmsg("'dna' must be a DNAStringSet, or DNAString, ",
+                  "or BStringSet, or BString object"))
+    }
+    replaceAt(dna, at, value="")
+}
+
+### Ignores the gaps in the input sequence(s) if any.
 extract_codons <- function(dna, offset=0)
 {
     if (is(dna, "DNAStringSet")) {
+        dna <- remove_gaps(dna)
         dna_nchar <- nchar(dna)  # same as width(dna)
         offset <- .normarg_offset2(offset, dna_nchar)
     } else if (is(dna, "DNAString")) {
+        dna <- remove_gaps(dna)
         dna_nchar <- nchar(dna)  # same as length(dna)
         offset <- .normarg_offset1(offset, dna_nchar)
     } else {
-        stop(wmsg("'dna' must be DNAStringSet or DNAString object"))
+        stop(wmsg("'dna' must be a DNAStringSet or DNAString object"))
     }
     width <- dna_nchar - offset
     width <- width - width %% 3L
     subseq(dna, start=offset+1L, width=width)
 }
 
+### Ignores the gaps in the input sequence(s) if any.
 translate_codons <- function(dna, offset=0, with.init.codon=FALSE)
 {
     if (!isTRUEorFALSE(with.init.codon))
