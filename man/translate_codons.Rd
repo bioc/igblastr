@@ -2,6 +2,7 @@
 
 \alias{translate_codons}
 \alias{extract_codons}
+\alias{remove_gaps}
 
 \title{Extract and translate codons from a set of DNA sequences}
 
@@ -15,12 +16,18 @@ translate_codons(dna, offset=0, with.init.codon=FALSE)
 
 ## Used internally by translate_codons():
 extract_codons(dna, offset=0)
+remove_gaps(dna)
 }
 
 \arguments{
   \item{dna}{
     A \link[Biostrings]{DNAStringSet} (or \link[Biostrings]{DNAString})
     object containing the codons to translate.
+
+    Note that if the sequences in \code{dna} contain gaps (represented
+    by the \code{.} letter) then \code{translate_codons()} and
+    \code{extract_codons()} will remove them (by calling
+    \code{remove_gaps()} internally) before doing anything else.
   }
   \item{offset}{
     The number of nucleotides that precede the first codon to translate.
@@ -34,19 +41,33 @@ extract_codons(dna, offset=0)
     which case \code{translate_codons()} assumes that the first codon
     to translate in each DNA sequence is \emph{not} the initiation codon.
 
-    See the \code{no.init.codon} argument in
+    See documentation of the \code{no.init.codon} argument in
     \code{?\link[Biostrings]{translate}} in the \pkg{Biostrings} package
     for more information.
   }
 }
 
 \value{
-  \code{translate_codons()} returns an \link[Biostrings]{AAStringSet}
-  object with one amino acid sequence per input sequence.
+  \code{translate_codons()} returns:
+  \itemize{
+    \item An \link[Biostrings]{AAStringSet} object with one amino acid
+          sequence per input sequence if a \link[Biostrings]{DNAStringSet}
+          object was supplied.
+    \item An \link[Biostrings]{AAString} object if a
+          \link[Biostrings]{DNAString} object was supplied.
+  }
 
-  \code{extract_codons()} returns a \link[Biostrings]{DNAStringSet}
-  object with one sequence per input sequence. The output sequences
-  are obtained by trimming the original sequences as follow:
+  \code{extract_codons()} returns:
+  \itemize{
+    \item A \link[Biostrings]{DNAStringSet} object with one sequence per
+          input sequence if a \link[Biostrings]{DNAStringSet} object was
+          supplied.
+    \item A \link[Biostrings]{DNAString} object if a
+          \link[Biostrings]{DNAString} object was supplied.
+  }
+  The sequences returned by \code{extract_codons()} are obtained by
+  (1) removing all gaps (i.e. all \code{.} letters) from the input sequences,
+  and (2) trimming the gap-free sequences as follow:
   \itemize{
     \item On their 5' end, sequences are trimmed by the amount of
           nucleotides specified in \code{offset}.
@@ -55,6 +76,9 @@ extract_codons(dna, offset=0)
           sequence a multiple of 3. Note that this will always be 0, 1,
           or 2 nucleotides.
   }
+
+  \code{remove_gaps()} returns the gap-free versions of the input sequences
+  in an object of the same type as the input object.
 }
 
 \seealso{
@@ -77,6 +101,14 @@ extract_codons(dna, offset=0)
 ## translate_codons()
 ## ---------------------------------------------------------------------
 
+## Gaps will be ignored:
+dna1 <- DNAStringSet(c(".TTGTCCTTTAT..A", "GAAT.CATTTATC", "CTGTCGTTTATT"))
+translate_codons(dna1)
+
+## Handling of initiation codons (see '?translate' in the Biostrings
+## package for how initiation codons are handled):
+translate_codons(dna1, with.init.codon=TRUE)
+
 ## Load germline V gene allele sequences for human:
 list_germline_dbs()
 db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
@@ -91,29 +123,31 @@ V_aa  # AAStringSet object
 has_stop_codon <- grepl("*", as.character(V_aa), fixed=TRUE)
 V_aa[has_stop_codon]
 
-## Handling of initiation codons (see '?translate' in the Biostrings
-## package for how initiation codons are handled):
-dna2 <- DNAStringSet(c("TTGTCCTTTATA", "GAATCATTTATC", "CTGTCGTTTATT"))
-translate_codons(dna2)
-translate_codons(dna2, with.init.codon=TRUE)
-
 ## ---------------------------------------------------------------------
 ## extract_codons()
 ## ---------------------------------------------------------------------
-dna <- DNAStringSet(c("CCCAAAGGGTTT",
-                      "CCAAAGGGTTT",
-                      "CAAAGGGTTT",
-                      "AAAGGGTTT"))
-extract_codons(dna)
-extract_codons(dna, offset=1)
-extract_codons(dna, offset=2)
-extract_codons(dna, offset=3)
-extract_codons(dna, offset=4)
+extract_codons(dna1)
+extract_codons(dna1, offset=1)
 
-extract_codons(dna, offset=3:0)
-extract_codons(dna, offset=4:1)
-extract_codons(dna, offset=5:2)
-extract_codons(dna, offset=6:3)
+dna2 <- DNAStringSet(c("CCCAAAGGGTTT",
+                       "CCAAAGGGTTT",
+                       "CAAAGGGTTT",
+                       "AAAGGGTTT"))
+extract_codons(dna2)
+extract_codons(dna2, offset=1)
+extract_codons(dna2, offset=2)
+extract_codons(dna2, offset=3)
+extract_codons(dna2, offset=4)
+
+extract_codons(dna2, offset=3:0)
+extract_codons(dna2, offset=4:1)
+extract_codons(dna2, offset=5:2)
+extract_codons(dna2, offset=6:3)
+
+## ---------------------------------------------------------------------
+## remove_gaps()
+## ---------------------------------------------------------------------
+remove_gaps(dna1)
 }
 
 \keyword{utilities}

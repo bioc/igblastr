@@ -200,6 +200,32 @@ concatenate_files <- function(files, out=stdout(), n=50000L)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### display_local_file_in_browser()
+### display_data_frame_in_browser()
+###
+
+display_local_file_in_browser <- function(file)
+{
+    top_html <- tempfile()
+    writeLines("<PRE>", top_html)
+    bottom_html <- tempfile()
+    writeLines("</PRE>", bottom_html)
+    temp_html <- tempfile(fileext=".html")
+    concatenate_files(c(top_html, file, bottom_html), out=temp_html)
+    temp_url <- paste0("file://", temp_html)
+    browseURL(temp_url)
+}
+
+display_data_frame_in_browser <- function(df)
+{
+    temp_html <- tempfile(fileext=".html")
+    print(xtable(df), type="html", file=temp_html)
+    temp_url <- paste0("file://", temp_html)
+    browseURL(temp_url)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### list_fasta_files()
 ###
 
