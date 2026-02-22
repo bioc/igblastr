@@ -190,17 +190,9 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     ## Create IMGT germline db.
     germline_dbs_home <- get_germline_dbs_home(TRUE)  # guaranteed to exist
     db_path <- file.path(germline_dbs_home, db_name)
-    create_germline_db(fasta_store, loci, db_path, force=force, verbose=verbose)
-
-    ## Add internal data to germline db (only for IG dbs for now).
-    if (!(without.intdata || tcr.db)) {
-        if (verbose)
-            message(wmsg("Computing and adding the intdata to ", db_name),
-                    " ... ", appendLF=FALSE)
-        add_V_ndm_data_to_IMGT_germline_db(db_path)
-        if (verbose)
-            message("ok\n")
-    }
+    create_germline_db(fasta_store, loci, db_path,
+                       gapped=TRUE, with.intdata=!without.intdata,
+                       force=force, verbose=verbose)
 
     ## Success!
     message("Germline db ", db_name, " successfully installed.")

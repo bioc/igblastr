@@ -39,7 +39,7 @@ test_that("load_intdata()", {
                                      domain_system=domain_system,
                                      which="original")
             expect_true(is.data.frame(intdata2))
-            expected_colnames <- names(igblastr:::.IGBLAST_INTDATA_COL2CLASS)
+            expected_colnames <- names(igblastr:::IGBLAST_INTDATA_COL2CLASS)
             expect_identical(colnames(intdata2), expected_colnames)
         }
 

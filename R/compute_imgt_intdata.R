@@ -4,12 +4,35 @@
 ###
 
 
-### edit_imgt_file.pl does some funky business with IG allele names
-### for Mus spretus. We mimick it here.
+### Not exported!
+warn_if_allele_sequences_have_no_gaps <- function(ngaps)
+{
+    stopifnot(is.integer(ngaps))
+    bad_idx <- which(ngaps == 0L)
+    if (length(bad_idx) == 0L)
+        return()
+    allele_names <- names(ngaps)
+    stopifnot(!is.null(allele_names))
+    first_bad_allele <- allele_names[[bad_idx[[1L]]]]
+    warning(wmsg(length(bad_idx), "/", length(ngaps), " V allele sequences ",
+                 "have no gaps (e.g. allele ", first_bad_allele, ")"))
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### clean_imgt_fasta_header_lines()
+###
+
+### Not exported!
+### Performs the same FASTA header cleanup as the edit_imgt_file.pl script
+### included in IgBLAST. Note that the latter does some funky business with
+### IG allele names for Mus spretus, so we mimick it here.
 ### Returns the germline gene allele names.
-clean_imgt_fasta_header_lines  <- function(headers, what)
+clean_imgt_fasta_header_lines  <- function(headers, what="some allele names")
 {
     stopifnot(is.character(headers))
+    if (anyNA(headers))
+        stop(wmsg(what, " are NAs"))
     if (any(is_white_str(headers)))
         stop(wmsg(what, " are empty"))
 
@@ -22,8 +45,7 @@ clean_imgt_fasta_header_lines  <- function(headers, what)
     stopifnot(all(lengths(allele_names) == 1L))
     allele_names <- trimws2(as.character(allele_names))
     if (!all(nchar(allele_names) >= 2L))
-        stop(wmsg("the allele names found in ", what, " are ",
-                  "less than 2-character long"))
+        stop(wmsg(what, " are less than 2-character long"))
 
     ## Implement funky business with Mus spretus: append _Mus_spretus suffix
     ## to IG allele names if species reported in 3rd field is Mus spretus.
@@ -44,6 +66,11 @@ clean_imgt_fasta_header_lines  <- function(headers, what)
     allele_names
 }
 
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### compute_imgt_intdata()
+###
+
 ### The IMGT unique numbering provides a standardized delimitation of
 ### the FWR and CDR regions. This standard is based on fixed FWR/CDR lengths
 ### with respect to the germline V gene **gapped** protein sequences.
@@ -51,7 +78,7 @@ clean_imgt_fasta_header_lines  <- function(headers, what)
 ###  https://www.imgt.org/IMGTScientificChart/Numbering/IMGTIGVLsuperfamily.html
 ### and
 ###  https://www.imgt.org/IMGTScientificChart/Numbering/IMGT-Kabat_part1.html
-.IMGT_FWRCDR_FIXED_LENGTHS <- c(
+.IMGT_FWRCDR_MAX_LENGTHS <- c(
     fwr1=26L,
     cdr1=12L,
     fwr2=17L,
@@ -67,6 +94,7 @@ clean_imgt_fasta_header_lines  <- function(headers, what)
     (end(dna_ranges) %% 3L == 0L) & (width(dna_ranges) %% 3L == 0L)
 }
 
+### Not used at the moment.
 ### All the ranges in 'dna_ranges' must align with the underlying coding
 ### frame that starts at position 1. An error will be raised if they don't.
 .from_dna_to_aa_ranges <- function(dna_ranges)
@@ -142,10 +170,10 @@ clean_imgt_fasta_header_lines  <- function(headers, what)
     stopifnot(is(IRL, "CompressedIRangesList"))
     IRL_len <- length(IRL)
     all_ranges <- unlist(IRL, use.names=FALSE)
-    expected_names <- rep.int(names(.IMGT_FWRCDR_FIXED_LENGTHS), IRL_len)
+    expected_names <- rep.int(names(.IMGT_FWRCDR_MAX_LENGTHS), IRL_len)
     stopifnot(identical(expected_names, names(all_ranges)))
 
-    idx0 <- seq_len(IRL_len) * length(.IMGT_FWRCDR_FIXED_LENGTHS)
+    idx0 <- seq_len(IRL_len) * length(.IMGT_FWRCDR_MAX_LENGTHS)
     df <- data.frame(
         allele_name=names(IRL),
         fwr1_start =start(all_ranges)[idx0 - 4L],
@@ -163,14 +191,16 @@ clean_imgt_fasta_header_lines  <- function(headers, what)
 }
 
 ### 'gapped_V_alleles' can be a named DNAStringSet or BStringSet object,
-### or the path to a FASTA file.
+### or the path to a FASTA file. Note that **all** the sequences
+### in 'gapped_V_alleles' are expected to have gaps (compute_imgt_intdata()
+### will issue a warning if that's not the case).
 ### Returns a data.frame with 1 row per sequence in 'J_alleles'.
 compute_imgt_intdata <- function(gapped_V_alleles, as.IRangesList=FALSE)
 {
     if (!isTRUEorFALSE(as.IRangesList))
         stop(wmsg("'as.IRangesList' must be TRUE or FALSE"))
     if (isSingleString(gapped_V_alleles)) {
-        what <- paste0("some of the header lines in ", gapped_V_alleles)
+        what <- paste0("some allele names in ", gapped_V_alleles)
         ## Some IMGT FASTA files (e.g. for Aotus_nancymaae and
         ## Nonhuman_primates) have nucleotide sequences that contain
         ## the letter 'x'. Not sure what that's supposed to represent.
@@ -195,8 +225,18 @@ compute_imgt_intdata <- function(gapped_V_alleles, as.IRangesList=FALSE)
     names(gapped_V_alleles) <- clean_imgt_fasta_header_lines(allele_names, what)
 
     ## IMGT FWR/CDR fixed intervals in nucleotide space.
-    imgt_bins <- PartitioningByWidth(.IMGT_FWRCDR_FIXED_LENGTHS * 3L)
-    midx <- vmatchPattern(".", gapped_V_alleles)
+    imgt_bins <- PartitioningByWidth(.IMGT_FWRCDR_MAX_LENGTHS * 3L)
+    midx <- vmatchPattern(GAP_LETTER, gapped_V_alleles)
+
+    ## Note that lengths() should propagate the names by default but it
+    ## fails to do so on ByPos_MIndex object 'midx' at the moment (Biostrings
+    ## 2.79.4).
+    ## TODO: Fix this in Biostrings. Simplest fix is to define a lengths()
+    ## method for MIndex objects that does 'lengths(endIndex(midx))' and
+    ## add the names to that if 'use.names' is TRUE.
+    ngaps <- setNames(lengths(midx), names(midx))
+    warn_if_allele_sequences_have_no_gaps(ngaps)
+
     all_real_lens <- lapply(midx, .compute_fwrcdr_real_lengths, imgt_bins)
     tmp <- lapply(all_real_lens, PartitioningByWidth)
     IRL <- as(tmp, "CompressedIRangesList")
@@ -214,36 +254,5 @@ compute_imgt_intdata <- function(gapped_V_alleles, as.IRangesList=FALSE)
     if (as.IRangesList)
         return(IRL)
     .IRL_to_data_frame(IRL)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### add_V_ndm_data_to_IMGT_germline_db()
-###
-
-### Not exported!
-add_V_ndm_data_to_IMGT_germline_db <- function(db_path)
-{
-    stopifnot(isSingleNonWhiteString(db_path), dir.exists(db_path))
-    internal_data_path <- file.path(db_path, "internal_data")
-    stopifnot(!dir.exists(internal_data_path))
-
-    original_fasta_files <- list_db_original_fasta_files(db_path, "V")
-    V_filenames <- basename(original_fasta_files)
-    stopifnot(all(substr(V_filenames, 4L, 4L) == "V"))
-
-    ## Compute 'V_ndm_data'.
-    intdata_list <- lapply(unname(original_fasta_files),
-        function(gapped_V_fasta_file) {
-            intdata <- compute_imgt_intdata(gapped_V_fasta_file)
-            locus_short_name <- substr(basename(gapped_V_fasta_file), 3L, 3L)
-            chain_type <- paste0("V", locus_short_name)
-            cbind(intdata, chain_type=chain_type)
-        })
-    intdata <- do.call(rbind, intdata_list)
-    V_ndm_data <- intdata[ , names(.IGBLAST_INTDATA_COL2CLASS)]
-
-    destfile <- file.path(internal_data_path, "V.ndm.imgt")
-    write_V_ndm_data_to_germline_db(V_ndm_data, destfile)
 }
 

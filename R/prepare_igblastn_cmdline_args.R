@@ -212,9 +212,10 @@
         ## to be the same as the name of the selected germline db so don't
         ## use use_germline_db() here.
         db_name <- basename(dirname(germline_db_V))
-        warning(wmsg("Incomplete custom internal data: ", num_missing, " ",
-                     "V allele(s) (out of ", length(V_names), ") in ",
-                     "germline db ", db_name, " are not annotated in ", what),
+        warning(wmsg("Incomplete custom internal data: ",
+                     "only ", num_missing, " V allele(s) ",
+                     "(out of ", length(V_names), ") in germline ",
+                     "db ", db_name, " are not annotated in ", what),
                 immediate.=TRUE)
     }
 }

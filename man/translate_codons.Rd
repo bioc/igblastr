@@ -16,7 +16,7 @@ translate_codons(dna, offset=0, with.init.codon=FALSE)
 
 ## Used internally by translate_codons():
 extract_codons(dna, offset=0)
-remove_gaps(dna)
+remove_gaps(dna, gap_letter=".")
 }
 
 \arguments{
@@ -44,6 +44,11 @@ remove_gaps(dna)
     See documentation of the \code{no.init.codon} argument in
     \code{?\link[Biostrings]{translate}} in the \pkg{Biostrings} package
     for more information.
+  }
+  \item{gap_letter}{
+    The letter or symbol representing gaps. Note that IMGT and
+    AIRR-community/OGRDB typically use dots (\code{"."}) to represent
+    gaps in germline V gene allele sequences.
   }
 }
 

@@ -73,10 +73,10 @@ install_IMGT_c_region_db(organism, loci, force=FALSE, verbose=FALSE)
     as a \code{+}-separated list in a single string (e.g. \code{"TRA+TRB"}).
   }
   \item{without.intdata}{
-    By default, after installing the new db, \code{install_IMGT_germline_db()}
-    will also compute and add the \emph{internal data} associated with the
-    V alleles in the db (note that \code{install_IMGT_germline_db()} uses
-    the allele \emph{gapped} sequences for that).
+    By default, \code{install_IMGT_germline_db()} will also compute and add
+    the \emph{internal data} associated with the V alleles in the db (note
+    that \code{install_IMGT_germline_db()} uses the \emph{gapped} V allele
+    sequences provided by IMGT for that).
     You can skip this step by setting \code{without.intdata} to \code{TRUE}.
 
     The presence of \emph{internal data} in the new db will be indicated

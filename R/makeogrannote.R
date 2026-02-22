@@ -12,7 +12,7 @@
 ### - columns 'fwr1_start' and 'coding_frame_start' are redundant (and
 ###   column 'fwr1_start' is a dumb column anyways because it should always
 ###   be set to 1).
-.IGBLAST_INTDATA_COL2CLASS <- c(
+IGBLAST_INTDATA_COL2CLASS <- c(
     allele_name="character",
     fwr1_start="integer",
     fwr1_end="integer",
@@ -32,7 +32,7 @@ V_GENE_SEGMENTS <- c("fwr1", "cdr1", "fwr2", "cdr2", "fwr3")
 V_GENE_DELINEATION_COLNAMES <- paste0(rep(V_GENE_SEGMENTS, each=2L),
                                       c("_start", "_end"))
 stopifnot(all(V_GENE_DELINEATION_COLNAMES %in%
-              names(.IGBLAST_INTDATA_COL2CLASS)))
+              names(IGBLAST_INTDATA_COL2CLASS)))
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -100,7 +100,7 @@ makeogrannote <- function(germline_file)
               is.null(names(allele_descriptions)))
     data <- lapply(allele_descriptions, .extract_v_gene_delineation)
     data <- unlist(data, use.names=FALSE)
-    col2class <- head(.IGBLAST_INTDATA_COL2CLASS, n=-1L)
+    col2class <- head(IGBLAST_INTDATA_COL2CLASS, n=-1L)
     m <- matrix(data, ncol=length(col2class), byrow=TRUE)
     cbind(matrix2df(m, col2class), coding_frame_start=0L)
 }
@@ -115,16 +115,16 @@ check_V_ndm_data_col2class <- function(V_ndm_data, what="'V_ndm_data'")
 {
     if (!is.data.frame(V_ndm_data))
         stop(wmsg(what, " must be a data.frame"))
-    expected_colnames <- names(.IGBLAST_INTDATA_COL2CLASS)
+    expected_colnames <- names(IGBLAST_INTDATA_COL2CLASS)
     if (!identical(colnames(V_ndm_data), expected_colnames)) {
         in1string <- paste(expected_colnames, collapse=", ")
         stop(wmsg(what, " must have the following columns ",
                   "(in this order): ", in1string))
     }
     col2class <- vapply(V_ndm_data, function(x) class(x)[[1L]], character(1))
-    if (!identical(col2class, .IGBLAST_INTDATA_COL2CLASS)) {
-        in1string <- paste0("    ", names(.IGBLAST_INTDATA_COL2CLASS), " -> ",
-                            .IGBLAST_INTDATA_COL2CLASS, collapse="\n")
+    if (!identical(col2class, IGBLAST_INTDATA_COL2CLASS)) {
+        in1string <- paste0("    ", names(IGBLAST_INTDATA_COL2CLASS), " -> ",
+                            IGBLAST_INTDATA_COL2CLASS, collapse="\n")
         stop(wmsg(what, " must have the following column types:"), "\n",
              in1string)
     }
@@ -134,17 +134,6 @@ check_V_ndm_data_col2class <- function(V_ndm_data, what="'V_ndm_data'")
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### check_V_ndm_data()
 ###
-
-### Used in tests/testthat/test-auxdata-utils.R!
-.rows_with_same_keys_are_identical <- function(df, key)
-{
-    stopifnot(is.data.frame(df), isSingleNonWhiteString(key))
-    keys <- df[ , key]
-    m <- match(keys, keys)
-    df2 <- df[m, ]
-    rownames(df2) <- NULL
-    identical(df, df2)
-}
 
 .check_region_boundaries <- function(V_ndm_data, region, prev_end)
 {
@@ -162,7 +151,7 @@ check_V_ndm_data <- function(V_ndm_data, allow.dup.entries=FALSE)
     if (allow.dup.entries) {
         ## We allow duplicated entries in 'V_ndm_data' as long as they
         ## tell the same story.
-        if (!.rows_with_same_keys_are_identical(V_ndm_data, "allele_name"))
+        if (!rows_with_same_key_are_identical(V_ndm_data, "allele_name"))
             stop(wmsg("rows in 'V_ndm_data' with same \"allele_name\" ",
                       "must be identical"))
     } else {
@@ -187,7 +176,7 @@ check_V_ndm_data <- function(V_ndm_data, allow.dup.entries=FALSE)
 
 read_V_ndm_data <- function(filepath)
 {
-    read_broken_table(filepath, .IGBLAST_INTDATA_COL2CLASS)
+    read_broken_table(filepath, IGBLAST_INTDATA_COL2CLASS)
 }
 
 write_V_ndm_data <- function(V_ndm_data, file="", check.data=FALSE)
@@ -209,11 +198,10 @@ write_V_ndm_data <- function(V_ndm_data, file="", check.data=FALSE)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### write_V_ndm_data_to_germline_db()
+### add_V_ndm_data_to_germline_db()
 ###
 
-### Not exported!
-write_V_ndm_data_to_germline_db <- function(V_ndm_data, destfile)
+.write_V_ndm_data_to_germline_db <- function(V_ndm_data, destfile)
 {
     check_V_ndm_data_col2class(V_ndm_data)
     stopifnot(isSingleNonWhiteString(destfile))
@@ -238,13 +226,7 @@ write_V_ndm_data_to_germline_db <- function(V_ndm_data, destfile)
     write_V_ndm_data(V_ndm_data, destfile)
 }
 
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### add_V_ndm_data_to_germline_db()
-###
-
 ### Not exported!
-### Works only for IGH+IGK+IGL germline dbs at the moment.
 add_V_ndm_data_to_germline_db <- function(db_path, V_ndm_store,
                                           domain_system=c("imgt", "kabat"))
 {
@@ -261,6 +243,6 @@ add_V_ndm_data_to_germline_db <- function(db_path, V_ndm_store,
     V_ndm_files <- file.path(V_ndm_store, paste0(IG_LOCI, "V.ndm.imgt"))
     V_ndm_data <- do.call(rbind, lapply(V_ndm_files, read_V_ndm_data))
 
-    write_V_ndm_data_to_germline_db(V_ndm_data, destfile)
+    .write_V_ndm_data_to_germline_db(V_ndm_data, destfile)
 }
 
