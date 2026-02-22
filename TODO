@@ -1,20 +1,6 @@
 High-priority TODO list
 =======================
 
-o Add "internal data" to IMGT germline dbs for TCR.
-  Right now, we get the following error when trying to do it "manually":
-
-    library(igblastr)
-    db_name <- install_IMGT_germline_db("202551-2", organism="Homo sapiens",
-                                        tcr.db=TRUE, force=TRUE, verbose=TRUE)
-    db_path <- igblastr:::get_germline_db_path(db_name)
-    igblastr:::add_V_ndm_data_to_IMGT_germline_db(db_path)
-    #Error: length(allele_names1) == length(allele_names2) is not TRUE
-
-  Problem is that igblastr:::add_V_ndm_data_to_IMGT_germline_db() is not
-  doing all the cleaning/mangling of the "original" FASTA files that
-  create_region_db() is doing when it creates the V-region db, but it should.
-
 o Add new AIRR built-in germline db for rhesus_monkey using version 2 of
   the macaque germline sets from OGRDB:
     https://ogrdb.airr-community.org/germline_set/94

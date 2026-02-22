@@ -129,18 +129,24 @@ list_loci_in_germline_fasta_dir <-
 }
 
 ### Create the three "region dbs": one V-, one D-, and one J-region db.
-.create_VDJ_region_dbs <- function(fasta_dir, loci, destdir, verbose=FALSE)
+.create_VDJ_region_dbs <- function(fasta_dir, loci, destdir,
+                                   gapped=FALSE, with.intdata=FALSE,
+                                   verbose=FALSE)
 {
     if (!isSingleNonWhiteString(fasta_dir))
         stop(wmsg("'fasta_dir' must be a single (non-empty) string"))
     if (!dir.exists(fasta_dir))
         stop(wmsg("directory ", fasta_dir, " not found"))
+    stopifnot(isTRUEorFALSE(gapped))
+    stopifnot(isTRUEorFALSE(with.intdata))
     stopifnot(isTRUEorFALSE(verbose))
-    for (region_type in VDJ_REGION_TYPES) {
-        fasta_files <- .collect_fasta_files(fasta_dir, region_type, loci)
-        create_region_db(fasta_files, destdir, region_type=region_type,
-                         verbose=verbose)
-    }
+    V_fasta_files <- .collect_fasta_files(fasta_dir, "V", loci)
+    create_region_db(V_fasta_files, destdir, region_type="V",
+                     gapped=gapped, with.intdata=with.intdata, verbose=verbose)
+    D_fasta_files <- .collect_fasta_files(fasta_dir, "D", loci)
+    create_region_db(D_fasta_files, destdir, region_type="D", verbose=verbose)
+    J_fasta_files <- .collect_fasta_files(fasta_dir, "J", loci)
+    create_region_db(J_fasta_files, destdir, region_type="J", verbose=verbose)
 }
 
 ### A "germline db" is made of three "region dbs": one V-, one D-, and one
@@ -149,10 +155,16 @@ list_loci_in_germline_fasta_dir <-
 ### GERMLINE_DBS cache compartment (see R/cache-utils.R for details about
 ### igblastr's cache organization). This subdir or any of its parent
 ### directories don't need to exist yet.
+### See create_region_db() in R/create_region_db.R for the roles of
+### the 'gapped' and 'with.intdata' arguments.
 create_germline_db <- function(fasta_dir, loci, destdir,
+                               gapped=FALSE, with.intdata=FALSE,
                                force=FALSE, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(destdir))
+    if (!isTRUEorFALSE(gapped))
+        stop(wmsg("'gapped' must be TRUE or FALSE"))
+    check_with.intdata(with.intdata, gapped)
     if (!isTRUEorFALSE(force))
         stop(wmsg("'force' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))
@@ -174,7 +186,9 @@ create_germline_db <- function(fasta_dir, loci, destdir,
     tmp_destdir <- tempfile("germline_db_")
     dir.create(tmp_destdir)
     on.exit(nuke_file(tmp_destdir))
-    .create_VDJ_region_dbs(fasta_dir, loci, tmp_destdir, verbose=verbose)
+    .create_VDJ_region_dbs(fasta_dir, loci, tmp_destdir,
+                           gapped=gapped, with.intdata=with.intdata,
+                           verbose=verbose)
     rename_file(tmp_destdir, destdir, replace=TRUE)
 
     if (verbose)

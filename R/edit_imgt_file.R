@@ -102,13 +102,13 @@ edit_imgt_file <- function(infasta, outfasta, errfile=NULL, Perl_script=NULL,
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### redit_imgt_file()
 ###
-### An R implementation of edit_imgt_file.pl
+### An R implementation of the edit_imgt_file.pl script included in IgBLAST.
 ###
 
 .edit_imgt_BStringSet_object <- function(dna, in_what)
 {
     stopifnot(is(dna, "BStringSet"))
-    what <- paste0("some of the header lines in ", in_what)
+    what <- paste0("some allele names in ", in_what)
     names(dna) <- clean_imgt_fasta_header_lines(names(dna), what)
     remove_gaps(dna)
 }

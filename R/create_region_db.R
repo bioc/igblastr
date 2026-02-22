@@ -14,134 +14,95 @@
         stop(wmsg("'fasta_files' cannot contain NAs or duplicates"))
 }
 
+.check_destdir <- function(destdir)
+{
+    if (!isSingleNonWhiteString(destdir))
+        stop(wmsg("'destdir' must be a single (non-empty) string"))
+    if (!dir.exists(destdir))
+        stop(wmsg("'destdir' must be the path to an existing directory"))
+}
+
+.check_gapped <- function(gapped, region_type)
+{
+    if (!isTRUEorFALSE(gapped))
+        stop(wmsg("'gapped' must be TRUE or FALSE"))
+    if (gapped && !identical(region_type, "V"))
+        stop(wmsg("'gapped=TRUE' can only be used when 'region_type' is \"V\""))
+}
+
 .get_final_fasta_path <- function(destdir, region_type)
 {
+    .check_destdir(destdir)
     file.path(destdir, paste0(region_type, ".fasta"))
 }
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .delete_repeated_fasta_records()
+### .load_original_V_alleles_with_loci()
 ###
 
-### In-place replacement!
-### "Repeated" alleles are alleles with identical names **and** identical
-### sequences. Note that:
-### - At this point, the gaps in the allele sequences should have been removed.
-### - We keep alleles with identical sequences but different names.
-### - We also keep alleles with identical names but different sequences.
-###   HOWEVER, we will disambiguate their names later with
-###   .disambiguate_allele_names() (see below).
-.delete_repeated_fasta_records <- function(fasta_file, verbose=FALSE)
+### The names of the supplied files must be of the form <locus>V.fasta
+### where locus is a 3-letter string. Note that we don't care if <locus>
+### is a valid locus or not (see IG_LOCI and TR_LOCI in R/loci-utils.R for
+### the 7 valid loci), as long as it's a 3-letter string, so we don't bother
+### to check.
+.infer_loci_from_filenames <- function(fasta_files)
 {
-    stopifnot(isSingleNonWhiteString(fasta_file), isTRUEorFALSE(verbose))
-    dna <- readDNAStringSet(fasta_file)
-    what <- if (verbose) "FASTA record(s)" else ""
-    from <- if (verbose) basename(fasta_file) else ""
-    dna2 <- drop_repeated_sequences(dna, what=what, from=from)
-    if (length(dna2) != length(dna))
-        writeXStringSet(dna2, fasta_file)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .disambiguate_allele_names()
-###
-
-### Similar to base::make.unique() but mangles with suffixes made of
-### lowercase letters.
-.make_pool_of_suffixes <- function(min_pool_size)
-{
-    max_pool_size <- (length(letters)**8 - 1) / (length(letters) - 1) - 1
-    if (min_pool_size > max_pool_size)
-        stop(wmsg("too many duplicate seq ids"))
-    ans <- character(0)
-    for (i in 1:7) {
-        ans <- c(ans, mkAllStrings(letters, i))
-        if (length(ans) >= min_pool_size)
-            return(ans)
+    .check_input_fasta_files(fasta_files)
+    filenames <- basename(fasta_files)
+    suffix <- substr(filenames, 4L, nchar(filenames))
+    if (!all(suffix == "V.fasta")) {
+        in1string <- paste(filenames, collapse=", ")
+        stop(wmsg("The names of the FASTA files must be of the form ",
+                  "<locus>V.fasta, where <locus> is a 3-letter string. ",
+                  "Got: ", in1string))
     }
-    ## Should never happen because we checked for this condition earlier (see
-    ## above).
-    stop(wmsg("too many duplicate seq ids"))
+    substr(filenames, 1L, 3L)
 }
 
-.make_unique_seqids <- function(seqids)
+.load_original_V_alleles_with_loci <- function(fasta_files)
 {
-    stopifnot(is.character(seqids))
-    if (length(seqids) <= 1L)
-        return(seqids)
-    oo <- order(seqids)
-    seqids2 <- seqids[oo]
-    ir <- IRanges(1L, runLength(Rle(seqids2)))
-    pool_of_suffixes <- .make_pool_of_suffixes(max(width(ir)))
-    suffixes <- extractList(pool_of_suffixes, ir)  # CharacterList
-    suffixes[lengths(suffixes) == 1L] <- ""
-    seqids2 <- paste0(seqids2, unlist(suffixes, use.names=FALSE))
-    ans <- seqids2[S4Vectors:::reverseIntegerInjection(oo, length(oo))]
-    setNames(ans, names(seqids))
-}
-
-### In-place replacement!
-### Does not touch the sequences, only the allele names.
-### Returns the number of alleles.
-.disambiguate_allele_names <- function(fasta_file, verbose=FALSE)
-{
-    stopifnot(isSingleNonWhiteString(fasta_file), isTRUEorFALSE(verbose))
-    fasta_lines <- readLines(fasta_file)
-    header_idx <- grep("^>", fasta_lines)
-    allele_names <- trimws2(sub("^>", "", fasta_lines[header_idx]))
-    if (anyDuplicated(allele_names)) {
-        new_allele_names <- .make_unique_seqids(allele_names)
-        fasta_lines[header_idx] <- paste0(">", new_allele_names)
-        writeLines(fasta_lines, fasta_file)
-        if (verbose) {
-            idx <- which(allele_names != new_allele_names)
-            in1string <- paste0(allele_names[idx], "->", new_allele_names[idx],
-                                collapse=", ")
-            msg <- c("Renamed the ", length(idx), " following ",
-                     "allele(s) in ", basename(fasta_file), ": ", in1string)
-            message("  o ", wmsg(msg, margin=4L), "\n")
+    loci <- .infer_loci_from_filenames(fasta_files)
+    dna <- lapply(seq_along(fasta_files),
+        function(i) {
+            dna <- readDNAStringSet(fasta_files[[i]])
+            mcols(dna)$locus <- loci[[i]]
+            dna
         }
-    }
-    length(allele_names)
+    )
+    do.call(c, dna)
 }
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .combine_and_edit_fasta_files()
-###
-
-### The workhorse behind create_region_db().
+### .clean_and_merge_fasta_files()
 ###
 ### See procedure described at
 ###   https://ncbi.github.io/igblast/cook/How-to-set-up.html
 ### for how to create a germline or C-region db from the FASTA files
 ### available at IMGT.
-### This is a 3-step procedure: (1) combine, (2) edit, (3) compile.
-### The .combine_and_edit_fasta_files() function below only implements
-### steps (1) and (2). Compilation (with makeblastdb) will happen at a
-### latter time.
-### IMPORTANT NOTE: .combine_and_edit_fasta_files() performs an **enhanced**
-### edit step that consists of the 3 following sub-steps:
-###   2a. basic edit as performed by the original edit_imgt_file.pl script;
-###   2b. drop repeated alleles;
-###   2c. disambiguate allele names.
-### Finally note that the same procedure can be applied as-is to the FASTA
-### files provided by AIRR-community/OGRDB.
-### Returns the final number of alleles.
-.combine_and_edit_fasta_files <- function(fasta_files, destdir,
-                                          region_type=VDJC_REGION_TYPES,
-                                          verbose=FALSE)
+### This is a 3-step procedure: (1) combine, (2) clean/edit, (3) compile.
+### The .clean_and_merge_fasta_files() function only performs steps (1)
+### and (2). Compilation (with makeblastdb) will happen at a latter time.
+### Note that .clean_and_merge_fasta_files() calls clean_allele_set() to
+### perform step (2). See clean_allele_set() in R/clean_allele_set.R for
+### more information.
+
+### See create_region_db() below in this file for the roles of
+### the 'gapped' and 'with.intdata' arguments.
+### Returns a DNAStringSet object containing the "clean" alleles
+### that went into the db.
+.clean_and_merge_fasta_files <- function(fasta_files, destdir,
+                                         region_type=VDJC_REGION_TYPES,
+                                         gapped=FALSE, with.intdata=FALSE,
+                                         verbose=FALSE)
 {
     .check_input_fasta_files(fasta_files)
-    if (!isSingleNonWhiteString(destdir))
-        stop(wmsg("'destdir' must be a single (non-empty) string"))
-    if (!dir.exists(destdir))
-        stop(wmsg("'destdir' must be the path to an existing directory"))
     region_type <- match.arg(region_type)
-    if (!isTRUEorFALSE(verbose))
-        stop(wmsg("'verbose' must be TRUE or FALSE"))
+    final_fasta <- .get_final_fasta_path(destdir, region_type)
+    .check_gapped(gapped, region_type)
+    check_with.intdata(with.intdata, gapped)
+    stopifnot(isTRUEorFALSE(verbose))
 
     if (verbose) {
         in1string <- paste(basename(fasta_files), collapse=", ")
@@ -149,27 +110,47 @@
         message("  o ", wmsg(msg, margin=4L), "\n")
     }
 
-    ## (1) Combine FASTA files.
-    combined_fasta <- file.path(destdir, paste0(".", region_type, ".fasta"))
-    concatenate_files(fasta_files, combined_fasta)
+    ## (1) Combine.
+    if (with.intdata) {
+        ## We use .load_original_V_alleles_with_loci() to get the locus info
+        ## (returned as a metadata column on 'dna'). clean_allele_set()
+        ## requires and uses this metadata column when 'with.intdata' is TRUE.
+        dna <- .load_original_V_alleles_with_loci(fasta_files)
+    } else {
+        dna <- readDNAStringSet(fasta_files)
+    }
 
-    ## (2a) Edit combined FASTA file. In igblastr 0.99.17, we switched
-    ##      from edit_imgt_file() to redit_imgt_file() to perform this step.
-    ##      This allowed us to no longer depend on Perl.
-    final_fasta <- .get_final_fasta_path(destdir, region_type)
-    #errfile <- file.path(destdir,
-    #                     paste0(region_type, "_edit_imgt_file_errors.txt"))
-    #edit_imgt_file(combined_fasta, final_fasta, errfile, check.output=TRUE)
-    redit_imgt_file(combined_fasta, final_fasta)
-    unlink(combined_fasta, force=TRUE)
+    ## (2) Clean/edit.
+    dna <- clean_allele_set(dna, gapped=gapped, with.intdata=with.intdata,
+                            verbose=verbose)
 
-    ## (2b) Drop repeated alleles.
-    .delete_repeated_fasta_records(final_fasta, verbose=verbose)
+    writeXStringSet(dna, final_fasta)
+    dna
+}
 
-    ## (2c) Mangle allele names to make them unique if they're not.
-    ##      Because we did (2b), remaining repeated allele names are
-    ##      guaranteed to be associated with distinct DNA sequences.
-    .disambiguate_allele_names(final_fasta, verbose=verbose)
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .add_intdata_to_db()
+###
+
+.add_intdata_to_db <- function(dna, destdir)
+{
+    stopifnot(is(dna, "DNAStringSet"))
+    allele_names <- names(dna)
+    stopifnot(!is.null(allele_names))
+    dna_mcols <- mcols(dna, use.names=FALSE)
+    stopifnot(is(dna_mcols, "DataFrame"),
+              identical(allele_names, dna_mcols[ , "allele_name"]))
+
+    .check_destdir(destdir)
+    internal_data_path <- file.path(destdir, "internal_data")
+    stopifnot(!dir.exists(internal_data_path))
+
+    V_ndm_data <- as.data.frame(dna_mcols[ , names(IGBLAST_INTDATA_COL2CLASS)])
+    check_V_ndm_data_col2class(V_ndm_data)
+    dir.create(internal_data_path)
+    destfile <- file.path(internal_data_path, "V.ndm.imgt")
+    write_V_ndm_data(V_ndm_data, destfile)
 }
 
 
@@ -206,25 +187,32 @@
 ### Creates a "region db" (V-, D-, J-, or C-region) from a collection of
 ### FASTA files (typically obtained from IMGT or AIRR-community/OGRDB) for
 ### a given organism.
-### See .combine_and_edit_fasta_files() above in this file for the workhorse
+### See .clean_and_merge_fasta_files() above in this file for the workhorse
 ### behind create_region_db().
 ### 'destdir' must be the path to a writable directory that already exists!
+### Set 'gapped' to TRUE if the supplied sequences are gapped V allele
+### sequences (note that only V allele sequences are allowed to have gaps).
+### Set 'with.intdata' to TRUE if the supplied sequences are gapped V allele
+### sequences **and** the associated internal data should be computed and
+### added to the db.
 ### The following subdirectory and files will be added to 'destdir':
 ### - V_original_fasta/: subdirectory containing the input FASTA files
 ###       corresponding to the V regions, one FASTA file per region;
-### - V.fasta: the combined and edited FASTA file produced by calling
-###       .combine_and_edit_fasta_files() on the files in V_original_fasta/,
-###       with allele names disambiguated if needed.
+### - V.fasta: FASTA file produced by calling .clean_and_merge_fasta_files()
+###       on the files in V_original_fasta/, with allele names disambiguated
+###       if needed;
+### - internal_data/V.ndm.imgt: internal data associated with the V alleles,
+###       when 'with.intdata' is set to TRUE.
 create_region_db <- function(fasta_files, destdir,
                              region_type=VDJC_REGION_TYPES,
+                             gapped=FALSE, with.intdata=FALSE,
                              overwrite=FALSE, verbose=FALSE)
 {
     .check_input_fasta_files(fasta_files)
-    if (!isSingleNonWhiteString(destdir))
-        stop(wmsg("'destdir' must be a single (non-empty) string"))
-    if (!dir.exists(destdir))
-        stop(wmsg("'destdir' must be the path to an existing directory"))
+    .check_destdir(destdir)
     region_type <- match.arg(region_type)
+    .check_gapped(gapped, region_type)
+    check_with.intdata(with.intdata, gapped)
     if (!isTRUEorFALSE(overwrite))
         stop(wmsg("'overwrite' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))
@@ -250,12 +238,26 @@ create_region_db <- function(fasta_files, destdir,
         stopifnot(all(file.copy(fasta_files, destfiles)))
     }
 
-    ## Combine and edit the original fasta files.
+    ## Clean and merge the original fasta files.
     original_fasta_files <- list_fasta_files(original_fasta_dir)
-    num_alleles <- .combine_and_edit_fasta_files(original_fasta_files, destdir,
-                                                 region_type=region_type,
-                                                 verbose=verbose)
+    dna <- .clean_and_merge_fasta_files(original_fasta_files, destdir,
+                                        region_type=region_type,
+                                        gapped=gapped,
+                                        with.intdata=with.intdata,
+                                        verbose=verbose)
     if (verbose)
-        message("... done (number of alleles in db: ", num_alleles, ").\n")
+        message("... done. (Final number of ", region_type, " alleles ",
+                "in db = ", length(dna), ")\n")
+
+    if (with.intdata) {
+        if (verbose)
+            message(wmsg("Adding the intdata to the db"), " ... ",
+                    appendLF=FALSE)
+        .add_intdata_to_db(dna, destdir)
+        if (verbose)
+            message("ok.\n")
+    }
+
+    dna
 }
 

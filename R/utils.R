@@ -189,31 +189,18 @@ read_version_file <- function(dirpath)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### drop_repeated_sequences()
+### rows_with_same_key_are_identical()
 ###
 
-### "Repeated" sequences in 'x' are sequences with identical names **and**
-### identical content. Note that:
-### - we keep sequences with identical content but different names;
-### - we also keep sequences with identical names but different content.
-drop_repeated_sequences <- function(x, what="", from="")
+### Used in tests/testthat/test-auxdata-utils.R!
+rows_with_same_key_are_identical <- function(df, key)
 {
-    stopifnot(is.character(x) || is(x, "XStringSet"),
-              isSingleString(from))
-    x_names <- names(x)
-    stopifnot(!is.null(x_names))
-    split_by_name <- splitAsList(x, x_names)
-    drop_idx <- which(unsplit(duplicated(split_by_name), x_names))
-    drop_idx_len <- length(drop_idx)
-    if (drop_idx_len == 0L)
-        return(x)  # no-op
-    if (what != "" && from != "") {
-        in1string <- paste(x_names[drop_idx], collapse=", ")
-        msg <- c("Deleted ", drop_idx_len, " repeated ", what, " ",
-                 "(out of ", length(x), ") from ", from, ": ", in1string)
-        message("  o ", wmsg(msg, margin=4L), "\n")
-    }
-    x[-drop_idx]
+    stopifnot(is.data.frame(df), isSingleNonWhiteString(key))
+    keys <- df[ , key]
+    m <- match(keys, keys)
+    df2 <- df[m, ]
+    rownames(df2) <- NULL
+    identical(df, df2)
 }
 
 

@@ -1,6 +1,39 @@
 ### =========================================================================
-### extract_codons() and translate_codons()
+### translate_codons() and related
 ### -------------------------------------------------------------------------
+###
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### remove_gaps()
+###
+
+GAP_LETTER <- "."
+
+### Note that we also accept a BStringSet or BString object so we
+### can use remove_gaps() in the context of redit_imgt_file().
+### See R/edit_imgt_file.R for more information.
+### Names and metadata columns are propagated.
+remove_gaps <- function(dna, gap_letter=".")
+{
+    if (!(isSingleString(gap_letter) && nchar(gap_letter) == 1L))
+        stop(wmsg("'gap_letter' must be a single letter"))
+    if (is(dna, "DNAStringSet") || is(dna, "BStringSet")) {
+        midx <- vmatchPattern(gap_letter, dna, fixed=TRUE)
+        at <- unname(as(midx, "CompressedIRangesList"))
+    } else if (is(dna, "DNAString") || is(dna, "BString")) {
+        v <- matchPattern(gap_letter, dna, fixed=TRUE)
+        at <- as(v, "IRanges")
+    } else {
+        stop(wmsg("'dna' must be a DNAStringSet, or DNAString, ",
+                  "or BStringSet, or BString object"))
+    }
+    replaceAt(dna, at, value="")
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### extract_codons()
 ###
 
 ### Normalize a single offset.
@@ -44,25 +77,6 @@
     offset
 }
 
-### Note that we also accept a BStringSet or BString object so we
-### can use remove_gaps() in the context of redit_imgt_file().
-### See R/edit_imgt_file.R for more information.
-### Names and metadata columns are propagated.
-remove_gaps <- function(dna)
-{
-    if (is(dna, "DNAStringSet") || is(dna, "BStringSet")) {
-        midx <- vmatchPattern(".", dna, fixed=TRUE)
-        at <- unname(as(midx, "CompressedIRangesList"))
-    } else if (is(dna, "DNAString") || is(dna, "BString")) {
-        v <- matchPattern(".", dna, fixed=TRUE)
-        at <- as(v, "IRanges")
-    } else {
-        stop(wmsg("'dna' must be a DNAStringSet, or DNAString, ",
-                  "or BStringSet, or BString object"))
-    }
-    replaceAt(dna, at, value="")
-}
-
 ### Ignores the gaps in the input sequence(s) if any.
 extract_codons <- function(dna, offset=0)
 {
@@ -81,6 +95,11 @@ extract_codons <- function(dna, offset=0)
     width <- width - width %% 3L
     subseq(dna, start=offset+1L, width=width)
 }
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### translate_codons()
+###
 
 ### Ignores the gaps in the input sequence(s) if any.
 translate_codons <- function(dna, offset=0, with.init.codon=FALSE)

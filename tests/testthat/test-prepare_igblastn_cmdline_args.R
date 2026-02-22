@@ -152,10 +152,11 @@ test_that("prepare_igblastn_cmdline_args()", {
     cmd_args <- prepare_igblastn_cmdline_args("path/to/query",
                                               c_region_db=NULL,
                                               auxiliary_data=NULL)
-    expect_identical(names(cmd_args), CORE_ARGNAMES)
+    expected_argnames <- CORE_ARGNAMES
+    expected_argnames[[organism_idx]] <- "custom_internal_data"
+    expect_identical(names(cmd_args), expected_argnames)
     expect_identical(cmd_args$query, "path/to/query")
     expect_identical(cmd_args$outfmt, "AIRR")
-    expect_identical(cmd_args$organism, "mouse")
     expect_identical(cmd_args$domain_system, "imgt")
     expect_identical(cmd_args$ig_seqtype, "TCR")
     expect_true(attr(cmd_args$out, "safe_to_remove"))
@@ -180,17 +181,26 @@ test_that("prepare_igblastn_cmdline_args()", {
                                         without.intdata=TRUE, force=TRUE)
     suppressMessages(use_germline_db(db_name))
 
-    regexp <- "Don't know how to infer 'organism' from germline db name"
-    expect_error(prepare_igblastn_cmdline_args("path/to/query", regexp=regexp))
+    errmsg <- "Don't know how to infer 'organism' from germline db name"
+    expect_error2(prepare_igblastn_cmdline_args("path/to/query"), errmsg)
 
     custom_internal_data <- get_intdata_path("_AIRR.human.IGH+IGK+IGL.202410")
     regexp <- "what auxiliary data to use"
-    expect_error(prepare_igblastn_cmdline_args("path/to/query",
-                         custom_internal_data=custom_internal_data),
-                 regexp=regexp)
-    cmd_args <- prepare_igblastn_cmdline_args("path/to/query",
+    expect_error(
+        suppressWarnings(
+            prepare_igblastn_cmdline_args(
+                    "path/to/query",
+                    custom_internal_data=custom_internal_data)
+        ),
+        regexp=regexp
+    )
+
+    expect_warning(
+        cmd_args <- prepare_igblastn_cmdline_args("path/to/query",
                                  custom_internal_data=custom_internal_data,
-                                 auxiliary_data=NULL)
+                                 auxiliary_data=NULL),
+        regexp="Incomplete custom internal data"
+    )
     expected_argnames <- CORE_ARGNAMES
     expected_argnames[[organism_idx]] <- "custom_internal_data"
     expect_identical(names(cmd_args), expected_argnames)
