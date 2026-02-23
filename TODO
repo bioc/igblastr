@@ -1,6 +1,9 @@
 High-priority TODO list
 =======================
 
+o Like for the 'custom_internal_data' argument, the 'auxiliary_data'
+  argument of igblastn() should accept a data.frame.
+
 o Add new AIRR built-in germline db for rhesus_monkey using version 2 of
   the macaque germline sets from OGRDB:
     https://ogrdb.airr-community.org/germline_set/94

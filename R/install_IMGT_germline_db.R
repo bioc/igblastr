@@ -154,7 +154,7 @@ list_IMGT_organisms <- function(release)
 install_IMGT_germline_db <- function(release, organism="Homo sapiens",
                                      tcr.db=FALSE, loci="auto",
                                      without.intdata=FALSE,
-                                     force=FALSE, verbose=FALSE, ...)
+                                     overwrite=FALSE, verbose=FALSE, ...)
 {
     ## Check arguments.
     if (missing(release))
@@ -166,8 +166,8 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     loci_prefix <- extract_loci_prefix(loci)
     if (!isTRUEorFALSE(without.intdata))
         stop(wmsg("'without.intdata' must be TRUE or FALSE"))
-    if (!isTRUEorFALSE(force))
-        stop(wmsg("'force' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(overwrite))
+        stop(wmsg("'overwrite' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))
         stop(wmsg("'verbose' must be TRUE or FALSE"))
 
@@ -192,7 +192,7 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     db_path <- file.path(germline_dbs_home, db_name)
     create_germline_db(fasta_store, loci, db_path,
                        gapped=TRUE, with.intdata=!without.intdata,
-                       force=force, verbose=verbose)
+                       overwrite=overwrite, verbose=verbose)
 
     ## Success!
     message("Germline db ", db_name, " successfully installed.")
@@ -213,13 +213,14 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     sprintf("IMGT.%s.%s.%s", organism, paste(loci, collapse="+"), version)
 }
 
-install_IMGT_c_region_db <- function(organism, loci, force=FALSE, verbose=FALSE)
+install_IMGT_c_region_db <- function(organism, loci,
+                                     overwrite=FALSE, verbose=FALSE)
 {
     organism <- find_organism_shortname(normalize_IMGT_organism(organism))
     loci <- normalize_user_supplied_loci(loci)
     loci_prefix <- extract_loci_prefix(loci)
-    if (!isTRUEorFALSE(force))
-        stop(wmsg("'force' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(overwrite))
+        stop(wmsg("'overwrite' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))
         stop(wmsg("'verbose' must be TRUE or FALSE"))
 
@@ -240,7 +241,8 @@ install_IMGT_c_region_db <- function(organism, loci, force=FALSE, verbose=FALSE)
     ## Create IMGT C-region db.
     c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist
     db_path <- file.path(c_region_dbs_home, db_name)
-    create_c_region_db(fasta_store, loci, db_path, force=force, verbose=verbose)
+    create_c_region_db(fasta_store, loci, db_path,
+                       overwrite=overwrite, verbose=verbose)
 
     ## Success!
     message("C-region db ", db_name, " successfully installed.")

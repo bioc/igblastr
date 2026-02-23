@@ -10,7 +10,7 @@
 }
 
 \usage{
-install_igblast(release="LATEST", force=FALSE, ...)
+install_igblast(release="LATEST", overwrite=FALSE, ...)
 }
 
 \arguments{
@@ -23,7 +23,7 @@ install_igblast(release="LATEST", force=FALSE, ...)
     Note that old versions have not been tested and are not
     guaranteed to be compatible with the \pkg{igblastr} package.
   }
-  \item{force}{
+  \item{overwrite}{
     Set to \code{TRUE} to reinstall if the specified IgBLAST release version
     is already installed.
   }

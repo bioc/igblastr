@@ -147,7 +147,7 @@ test_that("prepare_igblastn_cmdline_args()", {
     ## --- selecting IMGT-202531-1.Mus_musculus.IGH+IGK+IGL ---
 
     db_name <- install_IMGT_germline_db("202531-1", "Mus musculus",
-                                        tcr.db=TRUE, force=TRUE)
+                                        tcr.db=TRUE, overwrite=TRUE)
     suppressMessages(use_germline_db(db_name))
     cmd_args <- prepare_igblastn_cmdline_args("path/to/query",
                                               c_region_db=NULL,
@@ -164,7 +164,8 @@ test_that("prepare_igblastn_cmdline_args()", {
     ## --- selecting IMGT-202518-3.Sus_scrofa.IGH+IGK+IGL ---
     ## Note that pig is not an IgBLAST organism!
 
-    db_name <- install_IMGT_germline_db("202518-3", "Sus_scrofa", force=TRUE)
+    db_name <- install_IMGT_germline_db("202518-3", "Sus_scrofa",
+                                        overwrite=TRUE)
     suppressMessages(use_germline_db(db_name))
     use_c_region_db("")
 
@@ -178,7 +179,7 @@ test_that("prepare_igblastn_cmdline_args()", {
     expect_identical(names(cmd_args), expected_argnames)
 
     db_name <- install_IMGT_germline_db("202518-3", "Sus_scrofa",
-                                        without.intdata=TRUE, force=TRUE)
+                                        without.intdata=TRUE, overwrite=TRUE)
     suppressMessages(use_germline_db(db_name))
 
     errmsg <- "Don't know how to infer 'organism' from germline db name"

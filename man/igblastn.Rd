@@ -334,7 +334,8 @@ filenames <- paste0(c("heavy", "light"), "_sequences.fasta")
 query <- system.file(package="igblastr", "extdata", "BCR", filenames)
 
 ## Install Human germline db from IMGT:
-db_name <- install_IMGT_germline_db("202518-3", "Homo_sapiens", force=TRUE)
+db_name <- install_IMGT_germline_db("202518-3", "Homo_sapiens",
+                                    overwrite=TRUE)
 
 ## Select germline db to use with igblastn():
 use_germline_db(db_name)
@@ -421,7 +422,7 @@ query <- head(readDNAStringSet(query), n=100)
 
 ## Install Human TCR germline db from IMGT:
 db_name <- install_IMGT_germline_db("202518-3", "Homo_sapiens",
-                                    tcr.db=TRUE, force=TRUE)
+                                    tcr.db=TRUE, overwrite=TRUE)
 
 ## Select germline db to use with igblastn():
 use_germline_db(db_name)
