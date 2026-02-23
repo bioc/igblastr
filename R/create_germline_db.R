@@ -124,7 +124,7 @@ list_loci_in_germline_fasta_dir <-
     msg1 <- c("Germline db ", db_name, " is already installed.")
     msg2 <- c("Use list_germline_dbs() to list the germline databases ",
               "already installed on your machine (see '?list_germline_dbs').")
-    msg3 <- c("Use 'force=TRUE' to reinstall.")
+    msg3 <- c("Use 'overwrite=TRUE' to reinstall.")
     stop(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", wmsg(msg3))
 }
 
@@ -159,14 +159,14 @@ list_loci_in_germline_fasta_dir <-
 ### the 'gapped' and 'with.intdata' arguments.
 create_germline_db <- function(fasta_dir, loci, destdir,
                                gapped=FALSE, with.intdata=FALSE,
-                               force=FALSE, verbose=FALSE)
+                               overwrite=FALSE, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(destdir))
     if (!isTRUEorFALSE(gapped))
         stop(wmsg("'gapped' must be TRUE or FALSE"))
     check_with.intdata(with.intdata, gapped)
-    if (!isTRUEorFALSE(force))
-        stop(wmsg("'force' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(overwrite))
+        stop(wmsg("'overwrite' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))
         stop(wmsg("'verbose' must be TRUE or FALSE"))
 
@@ -175,7 +175,7 @@ create_germline_db <- function(fasta_dir, loci, destdir,
         message("\n====== START ", wmsg(what), " ======\n")
     }
 
-    if (dir.exists(destdir) && !force)
+    if (dir.exists(destdir) && !overwrite)
         .stop_on_existing_germline_db(destdir)
 
     ## We first create the three region dbs in a temporary folder, and, only

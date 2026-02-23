@@ -65,7 +65,7 @@ list_loci_in_c_region_fasta_dir <- function(fasta_dir, loci_prefix)
     msg1 <- c("C-region db ", db_name, " is already installed.")
     msg2 <- c("Use list_c_region_dbs() to list the C-region databases ",
               "already installed on your machine (see '?list_c_region_dbs').")
-    msg3 <- c("Use 'force=TRUE' to reinstall.")
+    msg3 <- c("Use 'overwrite=TRUE' to reinstall.")
     stop(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", wmsg(msg3))
 }
 
@@ -76,11 +76,11 @@ list_loci_in_c_region_fasta_dir <- function(fasta_dir, loci_prefix)
 ### igblastr's cache organization). This subdir or any of its parent
 ### directories don't need to exist yet.
 create_c_region_db <- function(fasta_dir, loci, destdir,
-                               force=FALSE, verbose=FALSE)
+                               overwrite=FALSE, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(destdir))
-    if (!isTRUEorFALSE(force))
-        stop(wmsg("'force' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(overwrite))
+        stop(wmsg("'overwrite' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))
         stop(wmsg("'verbose' must be TRUE or FALSE"))
 
@@ -89,7 +89,7 @@ create_c_region_db <- function(fasta_dir, loci, destdir,
         message("\n====== START ", wmsg(what), " ======\n")
     }
 
-    if (dir.exists(destdir) && !force)
+    if (dir.exists(destdir) && !overwrite)
         .stop_on_existing_c_region_db(destdir)
 
     fasta_files <- .collect_C_fasta_files(fasta_dir, loci)

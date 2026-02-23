@@ -120,7 +120,7 @@
         what <- c("IgBLAST ", release)
     }
     msg <- c(what, " is already installed in ", igblast_root, "/")
-    what_to_do <- " 'force=TRUE' to reinstall."
+    what_to_do <- " 'overwrite=TRUE' to reinstall."
     internal_igblast_root <- get_internal_igblast_root()
     is_already_in_use <- !is.na(internal_igblast_root) &&
                          igblast_root == internal_igblast_root
@@ -164,15 +164,15 @@
 ### is to put a lock on the "internal roots" folder to get
 ### exclusive write access to it for the duration of the
 ### .extract_to_internal_roots() and set_internal_igblast_root() steps.
-install_igblast <- function(release="LATEST", force=FALSE, ...)
+install_igblast <- function(release="LATEST", overwrite=FALSE, ...)
 {
     ftp_dir <- .get_release_ftp_dir(release)
-    if (!isTRUEorFALSE(force))
-        stop(wmsg("'force' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(overwrite))
+        stop(wmsg("'overwrite' must be TRUE or FALSE"))
     OS_arch <- get_OS_arch()
     ncbi_igblast_name <- .get_precompiled_ncbi_igblast_name(ftp_dir, OS_arch)
     proj_igblast_root <- .projected_igblast_root(ncbi_igblast_name)
-    if (dir.exists(proj_igblast_root) && !force)
+    if (dir.exists(proj_igblast_root) && !overwrite)
         .stop_on_existing_igblast_root(release, proj_igblast_root)
 
     downloaded_file <- download_as_tempfile(ftp_dir, ncbi_igblast_name, ...)

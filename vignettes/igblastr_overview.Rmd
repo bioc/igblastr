@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 20 January 2026"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 22 February 2026"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -180,7 +180,7 @@ list_IMGT_organisms("202518-3")
 Next, we install the human germline database from the latest IMGT/V-QUEST
 release:
 ```{r, message=FALSE}
-install_IMGT_germline_db("202518-3", organism="Homo sapiens", force=TRUE)
+install_IMGT_germline_db("202518-3", organism="Homo sapiens", overwrite=TRUE)
 ```
 See `?install_IMGT_germline_db` for more information.
 
@@ -460,7 +460,7 @@ To analyze this dataset with `igblastn()`, we need to install and select
 a human TCR germline database:
 ```{r, message=FALSE}
 db_name <- install_IMGT_germline_db("202518-3", organism="Homo sapiens",
-                                    tcr.db=TRUE, force=TRUE)
+                                    tcr.db=TRUE, overwrite=TRUE)
 use_germline_db(db_name)
 list_germline_dbs()
 ```

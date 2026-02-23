@@ -25,7 +25,7 @@
 \usage{
 install_IMGT_germline_db(release, organism="Homo sapiens", tcr.db=FALSE,
                          loci="auto", without.intdata=FALSE,
-                         force=FALSE, verbose=FALSE, ...)
+                         overwrite=FALSE, verbose=FALSE, ...)
 
 ## Related utilities:
 list_IMGT_releases(recache=FALSE)
@@ -34,7 +34,7 @@ IMGT_is_up()
 
 ## Can only be used to "subset" a built-in C-region databse (see
 ## advanced example in Examples section below):
-install_IMGT_c_region_db(organism, loci, force=FALSE, verbose=FALSE)
+install_IMGT_c_region_db(organism, loci, overwrite=FALSE, verbose=FALSE)
 }
 
 \arguments{
@@ -91,7 +91,7 @@ install_IMGT_c_region_db(organism, loci, force=FALSE, verbose=FALSE)
     Also see \code{?\link{intdata_utils}} for more information about IgBLAST
     \emph{internal data}.
   }
-  \item{force}{
+  \item{overwrite}{
     Set to \code{TRUE} to reinstall if the requested database is already
     installed.
   }
@@ -206,7 +206,8 @@ if (IMGT_is_up()) {
 
   ## Download Mouse BCR germline gene allele sequences from IMGT/V-QUEST
   ## 202518-3, and store them in a cached germline database:
-  install_IMGT_germline_db("202518-3", organism="Mus musculus", force=TRUE)
+  install_IMGT_germline_db("202518-3", organism="Mus musculus",
+                           overwrite=TRUE)
 
   ## List the cached germline databases:
   list_germline_dbs()
@@ -217,7 +218,7 @@ if (IMGT_is_up()) {
   ## Download Mouse TCR germline gene allele sequences from IMGT/V-QUEST
   ## 202518-3, and store them in a cached germline database:
   install_IMGT_germline_db("202518-3", organism="Mus musculus",
-                           tcr.db=TRUE, force=TRUE)
+                           tcr.db=TRUE, overwrite=TRUE)
   list_germline_dbs()
 
   ## -------------------------------------------------------------------
@@ -226,11 +227,11 @@ if (IMGT_is_up()) {
 
   ## Install an IMGT database for a subset of TCR loci:
   install_IMGT_germline_db("202518-3", organism="Homo sapiens",
-                           loci="TRA+TRB", force=TRUE)
+                           loci="TRA+TRB", overwrite=TRUE)
   list_germline_dbs()
 
   ## Install the corresponding C-region database:
-  install_IMGT_c_region_db("human", "TRA+TRB", force=TRUE)
+  install_IMGT_c_region_db("human", "TRA+TRB", overwrite=TRUE)
   list_c_region_dbs()
 
   ## Note that install_IMGT_c_region_db() can only be used to "subset"

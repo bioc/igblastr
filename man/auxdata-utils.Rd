@@ -178,7 +178,7 @@ rabbit_auxdata <- load_auxdata("rabbit")
 ## It turns out that IgBLAST auxiliary data for rabbit matches exactly
 ## the set of rabbit germline J alleles available at IMGT:
 db_name <- install_IMGT_germline_db("202531-1", "Oryctolagus cuniculus",
-                                    force=TRUE)
+                                    overwrite=TRUE)
 J_alleles <- load_germline_db(db_name, region_types="J")
 J_alleles  # DNAStringSet object
 stopifnot(setequal(names(J_alleles), rabbit_auxdata$allele_name))
