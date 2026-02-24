@@ -48,7 +48,7 @@ list_loci_in_c_region_fasta_dir <- function(fasta_dir, loci_prefix)
         stop(wmsg("'fasta_dir' must be a single (non-empty) string"))
     if (!dir.exists(fasta_dir))
         stop(wmsg("directory ", fasta_dir, " not found"))
-    stop_if_malformed_loci_vector(loci)
+    checkarg_loci(loci)
     wanted_files <- file.path(fasta_dir, paste0(loci, "C.fasta"))
     stopifnot(all(file.exists(wanted_files)))
     wanted_files

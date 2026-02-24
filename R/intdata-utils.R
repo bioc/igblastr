@@ -240,7 +240,7 @@ V_allele_has_stop_codon <- function(V_alleles, intdata)
 
 .load_J_alleles <- function(db_name, loci)
 {
-    stop_if_malformed_loci_vector(loci)
+    checkarg_loci(loci)
     db_path <- get_germline_db_path(db_name)
     original_fasta_files <- list_db_original_fasta_files(db_path, "J")
     original_loci <- substr(basename(original_fasta_files), 1L, 3L)

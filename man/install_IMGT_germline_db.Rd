@@ -9,8 +9,8 @@
 \title{Install a germline db from IMGT}
 
 \description{
-  The \code{install_IMGT_germline_db()} function downloads V/D/J
-  germline gene allele sequences from the IMGT website for a given organism,
+  The \code{install_IMGT_germline_db()} function downloads germline
+  V/D/J gene allele sequences from the IMGT website for a given organism,
   and stores them in a local germline database. This local database gets
   installed in \pkg{igblastr}'s persistent cache. It can then be used
   later with \code{\link{igblastn}()}.
@@ -60,14 +60,15 @@ install_IMGT_c_region_db(organism, loci, overwrite=FALSE, verbose=FALSE)
     The TCR germline loci are: TRA, TRB, TRG, TRD.
 
     By default, the V/D/J allele sequences from the BCR germline loci
-    are downloaded. Set \code{tcr.db} to \code{TRUE} to download the
-    V/D/J allele sequences from the TCR germline loci instead.
+    will be downloaded and used to populate the database.
+    Set \code{tcr.db} to \code{TRUE} to download and use the V/D/J allele
+    sequences from the TCR germline loci instead.
   }
   \item{loci}{
     By default, the database to install will be populated with the allele
     sequences from all the BCR or TCR loci.
-    However, if you want to restrict the database to specific loci, you
-    can use the \code{loci} argument to specify these loci.
+    However, if you want to restrict the database to specific loci,
+    you can use the \code{loci} argument to specify these loci.
     The subset of loci can be specified as a character vector with one
     element per locus (e.g. \code{"IGH"} or \code{c("TRA", "TRB")}), or
     as a \code{+}-separated list in a single string (e.g. \code{"TRA+TRB"}).
@@ -96,8 +97,8 @@ install_IMGT_c_region_db(organism, loci, overwrite=FALSE, verbose=FALSE)
     installed.
   }
   \item{verbose}{
-    Set to \code{TRUE} to have the function display some details about its
-    internal operations.
+    Set to \code{TRUE} to have the function display some details about
+    its internal operations.
   }
   \item{...}{
     Extra arguments to be passed to the internal call to \code{download.file()}.
@@ -165,13 +166,16 @@ install_IMGT_c_region_db(organism, loci, overwrite=FALSE, verbose=FALSE)
 }
 
 \note{
-  \code{install_IMGT_germline_db()} generates the local
+  \code{install_IMGT_germline_db()} creates the local
   database by performing the instructions provided at
   \url{https://ncbi.github.io/igblast/cook/How-to-set-up.html}.
 }
 
 \seealso{
   \itemize{
+    \item \code{\link{install_custom_germline_db}} to install a germline db
+          from user-supplied gene allele sequences.
+
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This
           is the main function in the \pkg{igblastr} package.

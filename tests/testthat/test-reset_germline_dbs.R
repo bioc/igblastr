@@ -1,6 +1,6 @@
-test_that(".create_all_builtin_germline_dbs()", {
+test_that(".install_all_builtin_germline_dbs()", {
     destdir <- tempfile("builtin_germline_dbs_")
-    igblastr:::.create_all_builtin_germline_dbs(destdir)
+    igblastr:::.install_all_builtin_germline_dbs(destdir)
     db_list <- igblastr:::list_dbs(destdir, what="germline", long.listing=TRUE)
 
     current <- db_list[["_AIRR.human.IGH+IGK+IGL.202410"]]

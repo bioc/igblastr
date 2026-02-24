@@ -141,7 +141,7 @@ list_IMGT_organisms <- function(release)
 .form_IMGT_germline_db_name <- function(fasta_store, loci)
 {
     stopifnot(isSingleNonWhiteString(fasta_store), dir.exists(fasta_store))
-    stop_if_malformed_loci_vector(loci)
+    checkarg_loci(loci)
     organism_path <- dirname(fasta_store)
     organism <- basename(organism_path)
     refdir <- dirname(organism_path)
@@ -187,19 +187,13 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     ## Compute 'db_name'.
     db_name <- .form_IMGT_germline_db_name(fasta_store, loci)
 
-    ## Create IMGT germline db.
-    germline_dbs_home <- get_germline_dbs_home(TRUE)  # guaranteed to exist
-    db_path <- file.path(germline_dbs_home, db_name)
-    create_germline_db(fasta_store, loci, db_path,
-                       gapped=TRUE, with.intdata=!without.intdata,
-                       overwrite=overwrite, verbose=verbose)
-
-    ## Success!
-    message("Germline db ", db_name, " successfully installed.")
-    message("Call use_germline_db(\"", db_name, "\") to select it")
-    message("as the germline db to use with igblastn().")
-
-    invisible(db_name)
+    ## Create and install germline db.
+    install_dir <- get_germline_dbs_home(TRUE)  # guaranteed to exist
+    if.exists <- if (overwrite) "overwrite" else "error"
+    install_germline_db(install_dir, db_name, fasta_store, loci,
+                        gapped=TRUE, with.intdata=!without.intdata,
+                        if.exists=if.exists, verbose=verbose,
+                        cheer.if.success=TRUE)
 }
 
 

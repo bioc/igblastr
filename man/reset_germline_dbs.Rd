@@ -44,6 +44,9 @@ reset_germline_dbs(verbose=FALSE)
 
     \item \code{\link{install_IMGT_germline_db}} to install a germline db
           from IMGT.
+
+    \item \code{\link{install_custom_germline_db}} to install a germline db
+          from user-supplied gene allele sequences.
   }
 }
 

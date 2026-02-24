@@ -96,7 +96,7 @@ list_db_original_fasta_files <- function(db_path, region_type=VDJC_REGION_TYPES)
 .tabulate_germline_db_by_group <- function(db_path, loci)
 {
     stopifnot(isSingleNonWhiteString(db_path))
-    stop_if_malformed_loci_vector(loci)
+    checkarg_loci(loci)
     vdj_counts <- lapply(VDJ_REGION_TYPES,
         function(region_type)
             .tabulate_db_original_fasta_files_by_locus(db_path, region_type,
@@ -112,7 +112,7 @@ list_db_original_fasta_files <- function(db_path, region_type=VDJC_REGION_TYPES)
 .tabulate_c_region_db_by_locus <- function(db_path, loci)
 {
     stopifnot(isSingleNonWhiteString(db_path))
-    stop_if_malformed_loci_vector(loci)
+    checkarg_loci(loci)
     ans <- .tabulate_db_original_fasta_files_by_locus(db_path, "C", loci)
     stopifnot(all(ans != 0L))
     ans

@@ -74,6 +74,27 @@ list_loci_in_germline_fasta_dir <-
 ### .collect_fasta_files()
 ###
 
+.get_all_region_type_loci <- function(region_type, loci_prefix=c("IG", "TR"))
+{
+    stopifnot(isSingleNonWhiteString(region_type))
+    region_type <- match.arg(region_type, VDJ_REGION_TYPES)
+    stopifnot(isSingleNonWhiteString(loci_prefix))
+    loci_prefix <- match.arg(loci_prefix)
+    if (loci_prefix == "IG") {
+        region_types_2_loci <- IG_REGION_TYPES_2_LOCI
+    } else {
+        region_types_2_loci <- TR_REGION_TYPES_2_LOCI
+    }
+    region_types_2_loci[[region_type]]
+}
+
+.get_loci_for_region_type <- function(region_type, selected_loci)
+{
+    loci_prefix <- extract_loci_prefix(selected_loci)
+    all_loci <- .get_all_region_type_loci(region_type, loci_prefix)
+    intersect(all_loci, selected_loci)
+}
+
 .list_fasta_files_for_region_type <- function(fasta_dir,
                                               region_type=VDJ_REGION_TYPES)
 {
@@ -87,7 +108,7 @@ list_loci_in_germline_fasta_dir <-
 
 .collect_fasta_files <- function(fasta_dir, region_type, loci)
 {
-    wanted_loci <- get_region_type_loci(region_type, loci)
+    wanted_loci <- .get_loci_for_region_type(region_type, loci)
     ## 'loci' should have gone thru .check_loci_for_missing_regions()
     ## so this is not supposed to happen. However it also went thru
     ## .get_effective_loci() which could have removed some loci from
@@ -118,28 +139,16 @@ list_loci_in_germline_fasta_dir <-
 ### create_germline_db()
 ###
 
-.stop_on_existing_germline_db <- function(destdir)
-{
-    db_name <- basename(destdir)
-    msg1 <- c("Germline db ", db_name, " is already installed.")
-    msg2 <- c("Use list_germline_dbs() to list the germline databases ",
-              "already installed on your machine (see '?list_germline_dbs').")
-    msg3 <- c("Use 'overwrite=TRUE' to reinstall.")
-    stop(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", wmsg(msg3))
-}
-
 ### Create the three "region dbs": one V-, one D-, and one J-region db.
-.create_VDJ_region_dbs <- function(fasta_dir, loci, destdir,
+.create_VDJ_region_dbs <- function(destdir, fasta_dir, loci,
                                    gapped=FALSE, with.intdata=FALSE,
                                    verbose=FALSE)
 {
-    if (!isSingleNonWhiteString(fasta_dir))
-        stop(wmsg("'fasta_dir' must be a single (non-empty) string"))
-    if (!dir.exists(fasta_dir))
-        stop(wmsg("directory ", fasta_dir, " not found"))
-    stopifnot(isTRUEorFALSE(gapped))
-    stopifnot(isTRUEorFALSE(with.intdata))
-    stopifnot(isTRUEorFALSE(verbose))
+    stopifnot(isSingleNonWhiteString(destdir), dir.exists(destdir),
+              isSingleNonWhiteString(fasta_dir), dir.exists(fasta_dir),
+              isTRUEorFALSE(gapped),
+              isTRUEorFALSE(with.intdata),
+              isTRUEorFALSE(verbose))
     V_fasta_files <- .collect_fasta_files(fasta_dir, "V", loci)
     create_region_db(V_fasta_files, destdir, region_type="V",
                      gapped=gapped, with.intdata=with.intdata, verbose=verbose)
@@ -157,26 +166,20 @@ list_loci_in_germline_fasta_dir <-
 ### directories don't need to exist yet.
 ### See create_region_db() in R/create_region_db.R for the roles of
 ### the 'gapped' and 'with.intdata' arguments.
-create_germline_db <- function(fasta_dir, loci, destdir,
+create_germline_db <- function(destdir, fasta_dir, loci,
                                gapped=FALSE, with.intdata=FALSE,
                                overwrite=FALSE, verbose=FALSE)
 {
-    stopifnot(isSingleNonWhiteString(destdir))
-    if (!isTRUEorFALSE(gapped))
-        stop(wmsg("'gapped' must be TRUE or FALSE"))
-    check_with.intdata(with.intdata, gapped)
-    if (!isTRUEorFALSE(overwrite))
-        stop(wmsg("'overwrite' must be TRUE or FALSE"))
-    if (!isTRUEorFALSE(verbose))
-        stop(wmsg("'verbose' must be TRUE or FALSE"))
-
-    if (verbose) {
-        what <- c("CREATING ", basename(destdir))
-        message("\n====== START ", wmsg(what), " ======\n")
-    }
+    stopifnot(isSingleNonWhiteString(destdir),
+              isSingleNonWhiteString(fasta_dir), dir.exists(fasta_dir),
+              isTRUEorFALSE(gapped),
+              isTRUEorFALSE(overwrite),
+              isTRUEorFALSE(verbose))
+    checkarg_with.intdata(with.intdata, gapped)
 
     if (dir.exists(destdir) && !overwrite)
-        .stop_on_existing_germline_db(destdir)
+        stop(wmsg(destdir, ": directory already exists. ",
+                  "Use 'overwrite=TRUE' to overwrite it."))
 
     ## We first create the three region dbs in a temporary folder, and, only
     ## if successful, we replace 'destdir' with the temporary folder. Otherwise
@@ -186,12 +189,9 @@ create_germline_db <- function(fasta_dir, loci, destdir,
     tmp_destdir <- tempfile("germline_db_")
     dir.create(tmp_destdir)
     on.exit(nuke_file(tmp_destdir))
-    .create_VDJ_region_dbs(fasta_dir, loci, tmp_destdir,
+    .create_VDJ_region_dbs(tmp_destdir, fasta_dir, loci,
                            gapped=gapped, with.intdata=with.intdata,
                            verbose=verbose)
     rename_file(tmp_destdir, destdir, replace=TRUE)
-
-    if (verbose)
-        message("====== DONE ", wmsg(what), " ======\n")
 }
 
