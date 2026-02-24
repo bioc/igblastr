@@ -6,7 +6,7 @@
 ###
 
 
-check_with.intdata <- function(with.intdata, gapped)
+checkarg_with.intdata <- function(with.intdata, gapped)
 {
     if (!isTRUEorFALSE(with.intdata))
         stop(wmsg("'with.intdata' must be TRUE or FALSE"))
@@ -276,7 +276,7 @@ clean_allele_set <- function(dna, gapped=FALSE, with.intdata=FALSE,
                              verbose=FALSE)
 {
     stopifnot(is(dna, "DNAStringSet"), isTRUEorFALSE(gapped))
-    check_with.intdata(with.intdata, gapped)
+    checkarg_with.intdata(with.intdata, gapped)
     dna_names <- names(dna)
     stopifnot(!is.null(dna_names))
     stopifnot(isTRUEorFALSE(verbose))

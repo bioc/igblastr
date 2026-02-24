@@ -145,6 +145,9 @@ export(
     use_c_region_db,
     load_c_region_db,
 
+    ## install_custom_germline_db.R:
+    install_custom_germline_db,
+
     ## install_IMGT_germline_db.R:
     IMGT_is_up,
     list_IMGT_releases,

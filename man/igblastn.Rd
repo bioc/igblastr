@@ -289,6 +289,9 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     \item \code{\link{install_IMGT_germline_db}} to install a germline db
           from IMGT.
 
+    \item \code{\link{install_custom_germline_db}} to install a germline db
+          from user-supplied gene allele sequences.
+
     \item \code{\link{use_germline_db}} to select the cached germline db
           to use with \code{igblastn()}.
 

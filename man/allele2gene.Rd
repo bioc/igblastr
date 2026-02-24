@@ -40,8 +40,8 @@ allele2gene(allele_names)
 
 \seealso{
   \itemize{
-    \item \code{\link{load_germline_db}} to load the nucleotide sequences of
-          the gene regions stored in a cached germline db.
+    \item \code{\link{load_germline_db}} to load the nucleotide sequences
+          of the gene regions stored in a cached germline db.
 
     \item \code{\link{load_c_region_db}} to load the nucleotide sequences of
           the gene regions stored in a cached C-region db.

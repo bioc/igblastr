@@ -22,7 +22,7 @@ get_germline_dbs_home <- function(init.path=FALSE)
     germline_dbs_home <- igblastr_cache(GERMLINE_DBS)
     if (init.path) {
         if (dir.exists(germline_dbs_home)) {
-            create_missing_builtin_germline_dbs(germline_dbs_home)
+            install_missing_builtin_germline_dbs(germline_dbs_home)
         } else {
             reset_germline_dbs()
         }

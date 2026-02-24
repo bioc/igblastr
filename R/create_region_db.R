@@ -6,7 +6,7 @@
 ###
 
 
-.check_input_fasta_files <- function(fasta_files)
+.checkarg_fasta_files <- function(fasta_files)
 {
     if (!is.character(fasta_files) || length(fasta_files) == 0L)
         stop(wmsg("'fasta_files' must be a non-empty character vector"))
@@ -14,7 +14,7 @@
         stop(wmsg("'fasta_files' cannot contain NAs or duplicates"))
 }
 
-.check_destdir <- function(destdir)
+.checkarg_destdir <- function(destdir)
 {
     if (!isSingleNonWhiteString(destdir))
         stop(wmsg("'destdir' must be a single (non-empty) string"))
@@ -22,7 +22,7 @@
         stop(wmsg("'destdir' must be the path to an existing directory"))
 }
 
-.check_gapped <- function(gapped, region_type)
+.checkarg_gapped <- function(gapped, region_type)
 {
     if (!isTRUEorFALSE(gapped))
         stop(wmsg("'gapped' must be TRUE or FALSE"))
@@ -32,7 +32,7 @@
 
 .get_final_fasta_path <- function(destdir, region_type)
 {
-    .check_destdir(destdir)
+    .checkarg_destdir(destdir)
     file.path(destdir, paste0(region_type, ".fasta"))
 }
 
@@ -48,7 +48,7 @@
 ### to check.
 .infer_loci_from_filenames <- function(fasta_files)
 {
-    .check_input_fasta_files(fasta_files)
+    .checkarg_fasta_files(fasta_files)
     filenames <- basename(fasta_files)
     suffix <- substr(filenames, 4L, nchar(filenames))
     if (!all(suffix == "V.fasta")) {
@@ -97,11 +97,11 @@
                                          gapped=FALSE, with.intdata=FALSE,
                                          verbose=FALSE)
 {
-    .check_input_fasta_files(fasta_files)
+    .checkarg_fasta_files(fasta_files)
     region_type <- match.arg(region_type)
     final_fasta <- .get_final_fasta_path(destdir, region_type)
-    .check_gapped(gapped, region_type)
-    check_with.intdata(with.intdata, gapped)
+    .checkarg_gapped(gapped, region_type)
+    checkarg_with.intdata(with.intdata, gapped)
     stopifnot(isTRUEorFALSE(verbose))
 
     if (verbose) {
@@ -142,7 +142,7 @@
     stopifnot(is(dna_mcols, "DataFrame"),
               identical(allele_names, dna_mcols[ , "allele_name"]))
 
-    .check_destdir(destdir)
+    .checkarg_destdir(destdir)
     internal_data_path <- file.path(destdir, "internal_data")
     stopifnot(!dir.exists(internal_data_path))
 
@@ -167,7 +167,7 @@
 
 .stop_on_existing_region_db <- function(destdir, region_type)
 {
-    msg1 <- c("There already seems to be a ", region_type, "-region ",
+    msg1 <- c("There seems to be already a ", region_type, "-region ",
               "database in ", destdir)
     msg2 <- c("Use 'overwrite=TRUE' to overwrite or choose another ",
               "destination directory.")
@@ -208,11 +208,11 @@ create_region_db <- function(fasta_files, destdir,
                              gapped=FALSE, with.intdata=FALSE,
                              overwrite=FALSE, verbose=FALSE)
 {
-    .check_input_fasta_files(fasta_files)
-    .check_destdir(destdir)
+    .checkarg_fasta_files(fasta_files)
+    .checkarg_destdir(destdir)
     region_type <- match.arg(region_type)
-    .check_gapped(gapped, region_type)
-    check_with.intdata(with.intdata, gapped)
+    .checkarg_gapped(gapped, region_type)
+    checkarg_with.intdata(with.intdata, gapped)
     if (!isTRUEorFALSE(overwrite))
         stop(wmsg("'overwrite' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))

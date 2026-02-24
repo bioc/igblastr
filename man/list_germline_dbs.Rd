@@ -82,7 +82,8 @@ rm_germline_db(db_name)
     Built-in dbs have their name prefixed with an underscore (\code{_}).
 
     Note that additional dbs can easily be installed with functions
-    like \code{\link{install_IMGT_germline_db}}.
+    like \code{\link{install_IMGT_germline_db}} or
+    \code{\link{install_custom_germline_db}}.
   }
   \subsection{AIRR-community/OGRDB built-in cached dbs}{
     Note that the built-in germline dbs starting with \code{_AIRR}
@@ -129,6 +130,9 @@ rm_germline_db(db_name)
 
     \item \code{\link{install_IMGT_germline_db}} to install a germline db
           from IMGT.
+
+    \item \code{\link{install_custom_germline_db}} to install a germline db
+          from user-supplied gene allele sequences.
 
     \item \link{intdata_utils} to access and manipulate IgBLAST
           \emph{internal data}.

@@ -42,10 +42,12 @@ TR_REGION_TYPES_2_LOCI <- .revmap(.TR_LOCI_2_REGION_TYPES)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### stop_if_malformed_loci_vector()
+### checkarg_loci()
 ###
 
-stop_if_malformed_loci_vector <- function(loci)
+### A very shallow check. Doesn't actually check that the supplied loci
+### are valid loci.
+checkarg_loci <- function(loci)
 {
     if (!is.character(loci) || length(loci) == 0L)
         stop(wmsg("'loci' must be a non-empty character vector"))
@@ -62,7 +64,7 @@ stop_if_malformed_loci_vector <- function(loci)
 ### Returns "IG" or "TR".
 extract_loci_prefix <- function(loci)
 {
-    stop_if_malformed_loci_vector(loci)
+    checkarg_loci(loci)
     if (all(loci %in% IG_LOCI))
         return("IG")
     if (all(loci %in% TR_LOCI))
@@ -102,11 +104,11 @@ extract_loci_prefix <- function(loci)
 
 ### If 'loci' is "auto" then 'stop.if.missing.regions' is ignored.
 ### Otherwise 'tcr.db' is ignored.
-### Returns loci in canonical order.
+### Returns the loci in canonical order.
 normalize_user_supplied_loci <- function(loci="auto", tcr.db=FALSE,
                                          stop.if.missing.regions=FALSE)
 {
-    stop_if_malformed_loci_vector(loci)
+    checkarg_loci(loci)
     if (length(loci) == 1L) {
         if (loci == "auto") {
             if (!isTRUEorFALSE(tcr.db))
@@ -142,31 +144,5 @@ map_loci_to_region_types <- function(loci)
         loci2regiontypes <- .TR_LOCI_2_REGION_TYPES
     }
     loci2regiontypes[loci]
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### get_region_type_loci()
-###
-
-.get_all_region_type_loci <- function(region_type, loci_prefix=c("IG", "TR"))
-{
-    stopifnot(isSingleNonWhiteString(region_type))
-    region_type <- match.arg(region_type, VDJ_REGION_TYPES)
-    stopifnot(isSingleNonWhiteString(loci_prefix))
-    loci_prefix <- match.arg(loci_prefix)
-    if (loci_prefix == "IG") {
-        region_types_2_loci <- IG_REGION_TYPES_2_LOCI
-    } else {
-        region_types_2_loci <- TR_REGION_TYPES_2_LOCI
-    }
-    region_types_2_loci[[region_type]]
-}
-
-get_region_type_loci <- function(region_type, selected_loci)
-{
-    loci_prefix <- extract_loci_prefix(selected_loci)
-    all_loci <- .get_all_region_type_loci(region_type, loci_prefix)
-    intersect(all_loci, selected_loci)
 }
 
