@@ -239,6 +239,7 @@
     intdata_filename <- paste0("V.ndm.", domain_system)
     intdata_path <- file.path(intdata_dir, intdata_filename)
     if (!file.exists(intdata_path)) {
+        db_name <- basename(dirname(germline_db_V))
         warning(wmsg("internal data file ", intdata_filename, " ",
                      "not found in germline db ", db_name, " --> ",
                      "using IgBLAST internal data from NCBI instead"),
