@@ -143,10 +143,10 @@ checkarg_with.intdata <- function(with.intdata, gapped)
     allele_names <- names(ngaps)
     stopifnot(!is.null(allele_names))
     first_bad_allele <- allele_names[[bad_idx[[1L]]]]
-    stop(wmsg("Some allele sequences have gaps (", length(bad_idx), " out ",
-              "of ", length(ngaps), " input sequences, e.g. allele ",
-              first_bad_allele, "). Use 'gapped=TRUE' if the input ",
-              "sequences are gapped V allele sequences."))
+    stop(wmsg("Some V allele sequences have gaps (", length(bad_idx), " ",
+              "out of ", length(ngaps), " input V allele sequences, e.g. ",
+              "allele ", first_bad_allele, "). Use 'gapped=TRUE' if the ",
+              "supplied V allele sequences are gapped."))
 }
 
 
@@ -180,7 +180,24 @@ checkarg_with.intdata <- function(with.intdata, gapped)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .make_allele_names_unique()
+### .stop_on_ambiguous_allele_names()
+###
+
+.stop_on_ambiguous_allele_names <- function(allele_names)
+{
+    stopifnot(is.character(allele_names))
+    ambiguous_allele_names <- unique(allele_names[duplicated(allele_names)])
+    in1string <- paste(ambiguous_allele_names, collapse=", ")
+    stop(wmsg("The following allele names are ambiguous: ", in1string),
+         "\n  ",
+         wmsg("Use 'disambiguate.allele.names=TRUE' to disambiguate ",
+              "them. (Also using 'verbose=TRUE' will display the ",
+              "disambiguation details.)"))
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .disambiguate_allele_names()
 ###
 
 ### Similar to base::make.unique() but mangles with suffixes made of
@@ -217,7 +234,7 @@ checkarg_with.intdata <- function(with.intdata, gapped)
     setNames(ans, names(seqids))
 }
 
-.make_allele_names_unique <- function(dna, with.intdata=FALSE, verbose=FALSE)
+.disambiguate_allele_names <- function(dna, with.intdata=FALSE, verbose=FALSE)
 {
     stopifnot(is(dna, "DNAStringSet"))
     allele_names <- names(dna)
@@ -233,8 +250,8 @@ checkarg_with.intdata <- function(with.intdata, gapped)
             idx <- which(allele_names != new_allele_names)
             in1string <- paste0(allele_names[idx], "->", new_allele_names[idx],
                                 collapse=", ")
-            msg <- c("Renamed the ", length(idx), " following ",
-                     "allele(s): ", in1string)
+            msg <- c("Disambiguation: renamed the ", length(idx), " ",
+                     "following allele(s): ", in1string)
             message("  o ", wmsg(msg, margin=4L), "\n")
         }
         names(dna) <- new_allele_names
@@ -272,13 +289,19 @@ checkarg_with.intdata <- function(with.intdata, gapped)
 ### metadata columns.
 ### Note that "repeated" alleles (i.e. alleles with identical **ungapped**
 ### DNA sequences **and** names) are dropped.
+### If, after dropping the "repeated" alleles, the names of the remaining
+### alleles are not unique, then an error will be raised, unless
+### 'disambiguate.allele.names' is set to TRUE, in which case the ambiguous
+### allele names will be disambiguated.
 clean_allele_set <- function(dna, gapped=FALSE, with.intdata=FALSE,
-                             verbose=FALSE)
+                             disambiguate.allele.names=FALSE, verbose=FALSE)
 {
-    stopifnot(is(dna, "DNAStringSet"), isTRUEorFALSE(gapped))
-    checkarg_with.intdata(with.intdata, gapped)
+    stopifnot(is(dna, "DNAStringSet"))
     dna_names <- names(dna)
     stopifnot(!is.null(dna_names))
+    stopifnot(isTRUEorFALSE(gapped))
+    checkarg_with.intdata(with.intdata, gapped)
+    stopifnot(isTRUEorFALSE(disambiguate.allele.names))
     stopifnot(isTRUEorFALSE(verbose))
 
     ## (A1) Clean possibly messy FASTA headers to keep only allele names.
@@ -301,9 +324,17 @@ clean_allele_set <- function(dna, gapped=FALSE, with.intdata=FALSE,
     ## (C) Drop "repeated" alleles.
     dna <- .drop_repeated_alleles(dna, verbose=verbose)
 
-    ## (D) Mangle allele names to make them unique if they're not.
-    ##     Note that, because we did (C), remaining repeated allele names
-    ##     are guaranteed to be associated with distinct DNA sequences.
-    .make_allele_names_unique(dna, with.intdata=with.intdata, verbose=verbose)
+    allele_names <- names(dna)
+    if (anyDuplicated(allele_names)) {
+        ## Note that, because we did (C), allele with repeated names
+        ## are now guaranteed to have distinct DNA sequences.
+        if (!disambiguate.allele.names)
+            .stop_on_ambiguous_allele_names(allele_names)
+        ## (D) Mangle allele names to make them unique if they're not.
+        dna <- .disambiguate_allele_names(dna, with.intdata=with.intdata,
+                                          verbose=verbose)
+    }
+
+    dna
 }
 

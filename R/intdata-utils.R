@@ -248,7 +248,7 @@ V_allele_has_stop_codon <- function(V_alleles, intdata)
     fasta_files <- original_fasta_files[original_loci %in% loci]
 
     ## Combine and clean FASTA files in a way similar to what
-    ## .merge_and_clean_fasta_files() does (see R/create_region_db.R).
+    ## .clean_and_merge_fasta_files() does (see R/create_region_db.R).
     combined_fasta <- tempfile()
     on.exit(unlink(combined_fasta))
     concatenate_files(fasta_files, combined_fasta)

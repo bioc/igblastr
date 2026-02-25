@@ -15,13 +15,14 @@
 \usage{
 install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
                            loci="auto", gapped=FALSE, with.intdata=FALSE,
+                           disambiguate.allele.names=FALSE,
                            overwrite=FALSE, verbose=FALSE)
 }
 
 \arguments{
   \item{db_name}{
     A single string specifying the name of the germline db to install.
-    The string \emph{must} start with cu and cannot contain whitespace
+    The string \emph{must} start with "cus" and cannot contain whitespace
     characters.
   }
   \item{fasta_dir}{
@@ -57,7 +58,7 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
     \preformatted{        IGHV.fasta, IGHD.fasta, IGHJ.fasta,
         IGKV.fasta, IGKJ.fasta,
         IGLV.fasta, IGLJ.fasta}
-    The files that are effectively found will be imported in the database,
+    The files that are effectively present will be imported in the database,
     with a warning if some of them are missing.
 
     If \code{tcr.db} is set to \code{TRUE}, then the V/D/J allele sequences
@@ -67,7 +68,7 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
         TRBV.fasta, TRBD.fasta, TRBJ.fasta,
         TRGV.fasta, TRGJ.fasta,
         TRDV.fasta, TRDD.fasta, TRDJ.fasta}
-    The files that are effectively found will be imported in the database,
+    The files that are effectively present will be imported in the database,
     with a warning if some of them are missing.
   }
   \item{loci}{
@@ -101,6 +102,25 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
     Also see \code{?\link{intdata_utils}} for more information about IgBLAST
     \emph{internal data}.
   }
+  \item{disambiguate.allele.names}{
+    Note that \emph{repeated} alleles (i.e. alleles with identical
+    ungapped DNA sequences \emph{and} names) are dropped. More precisely,
+    only the first allele in each group of \emph{repeated} alleles is kept.
+
+    If, after dropping the \emph{repeated} alleles, the names of the
+    remaining alleles are not unique, then an error will be raised, unless
+    \code{disambiguate.allele.names} is set to \code{TRUE}, in which case
+    the \emph{ambiguous} allele names will be disambiguated by adding a
+    suffix to them.
+
+    Finally, note that we only look at \emph{repeated} alleles or
+    \emph{ambiguous} allele names within the same region type e.g.
+    within the union of IGHV.fasta, IGKV.fasta, and IGLV.fasta (V regions),
+    or within the union of TRBD.fasta and TRDD.fasta (D regions).
+    But we never look at \emph{repeated} alleles or \emph{ambiguous}
+    allele names across IGHV.fasta and IGHJ.fasta, or across TRBV.fasta
+    and TRBD.fasta (these are very very unlikely to occur anyways).
+  }
   \item{overwrite}{
     Set to \code{TRUE} if a germline db with the specified name is
     already installed in \pkg{igblastr}'s persistent cache, in which
@@ -110,9 +130,6 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
     Set to \code{TRUE} to have the function display some details about
     its internal operations.
   }
-}
-
-\details{
 }
 
 \value{
@@ -143,6 +160,9 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
     \item \code{\link{use_germline_db}} to select the cached germline db
           to use with \code{igblastn()}.
 
+    \item \code{\link{load_intdata}} to access and manipulate IgBLAST
+          \emph{internal data}.
+
     \item IgBLAST is described at
           \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.
   }
@@ -150,6 +170,10 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
 
 \examples{
 if (!has_igblast()) install_igblast()
+
+## ---------------------------------------------------------------------
+## A. WITH UNGAPPED GERMLINE V GENE ALLELE SEQUENCES
+## ---------------------------------------------------------------------
 
 ## In this admittedly artificial example, we're going to create and
 ## install a germline db from the gene allele sequences in built-in
@@ -160,7 +184,6 @@ if (!has_igblast()) install_igblast()
 ##   2. Use these FASTA files to create and install a new germline db.
 ##   3. Check that the new db contains the same sequences as the
 ##      original db.
-##   4. Remove the new db.
 
 ## --- 1. Dump _AIRR.human.IGH+IGK+IGL.202410 in 7 FASTA files ---
 
@@ -172,34 +195,138 @@ dump_germline_db <- function(db_name, destdir) {
       if (length(loc_alleles) == 0L)
         next
       fasta_file <- paste0(locus, region_type, ".fasta")
-      writeXStringSet(loc_alleles, file.path(test_fasta_dir, fasta_file))
+      writeXStringSet(loc_alleles, file.path(destdir, fasta_file))
     }
   }
 }
 
-db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
-dir.create(test_fasta_dir <- tempfile())
+db_name0 <- "_AIRR.human.IGH+IGK+IGL.202410"
+dir.create(exA_fasta_dir <- tempfile())
 
-dump_germline_db(db_name, test_fasta_dir)
+dump_germline_db(db_name0, exA_fasta_dir)
 
-list.files(test_fasta_dir)  # 7 FASTA files
+list.files(exA_fasta_dir)  # 7 FASTA files
 
 ## --- 2. Use FASTA files to install new germline db ---
 
-custom_db_name <- "cu.test.human.IGH+IGK+IGL"
-install_custom_germline_db(custom_db_name, test_fasta_dir)
+exA_db_name <- "cus.exA.human.IGH+IGK+IGL"
+install_custom_germline_db(exA_db_name, exA_fasta_dir)
 list_germline_dbs()
 
 ## --- 3. Check that new and original dbs have the same sequences ---
 
 stopifnot(identical(
-    as.character(load_germline_db(db_name)),
-    as.character(load_germline_db(custom_db_name))
+    as.character(load_germline_db(db_name0)),
+    as.character(load_germline_db(exA_db_name))
 ))
 
-## --- 4. Remove the new db ---
+## ---------------------------------------------------------------------
+## B. WITH GAPPED GERMLINE V GENE ALLELE SEQUENCES
+## ---------------------------------------------------------------------
 
-rm_germline_db(custom_db_name)
+## In this example, we're going to download human germline gene allele
+## **gapped** sequences from AIRR-community/OGRDB and use them to create
+## and install a new germline db. More precisely, we're going to:
+##   1. Download the gapped sequences for the following "Reference Sets"
+##      from AIRR-community/OGRDB:
+##        - IGH_VDJ version 9
+##        - IGKappa_VJ version 4
+##        - IGLambda_VJ version 3
+##      Each "Reference Set" corresponds to a BCR germline locus. For each
+##      set, AIRR-community/OGRDB provides a FASTA file containing the
+##      gapped allele sequences for that locus. We'll also split each file
+##      to produce one FASTA file per region type for that locus, so we'll
+##      end up with 7 FASTA files.
+##   2. Use these FASTA files to create and install a new germline db.
+##   3. Check that the new db contains the same sequences
+##      as built-in germline db _AIRR.human.IGH+IGK+IGL.202410.
+
+## --- 1. Download human gapped sequences from AIRR-community/OGRDB ---
+
+download_AIRR_gapped_germline_sets <- function(organism, sets, destdir) {
+  base_url <- "https://ogrdb.airr-community.org/download_germline_set/"
+  for (i in seq_along(germline_sets)) {
+    set <- names(sets)[[i]]
+    version <- sets[[i]]
+    url <- sprintf("\%s\%s/\%s/\%s/gapped_ex", base_url,
+                   organism, set, version)
+    tmpfile <- tempfile()
+    download.file(URLencode(url), tmpfile)
+    alleles <- readDNAStringSet(tmpfile)
+    locus_regions <- strsplit(set, "_")[[1L]]
+    locus <- substr(locus_regions[[1L]], 1L, 3L)
+    region_types <- strsplit(locus_regions[[2L]], "")[[1L]]
+    ## Split the downloaded FASTA file by region type.
+    for (region_type in region_types) {
+      group <- paste0(locus, region_type)
+      reg_alleles <- alleles[grep(group, names(alleles))]
+      fasta_file <- paste0(group, ".fasta")
+      writeXStringSet(reg_alleles, file.path(destdir, fasta_file))
+    }
+  }
+}
+
+dir.create(exB_fasta_dir <- tempfile())
+germline_sets <- c(IGH_VDJ=9, IGKappa_VJ=4, IGLambda_VJ=3)
+
+download_AIRR_gapped_germline_sets("Homo sapiens", germline_sets,
+                                   exB_fasta_dir)
+
+list.files(exB_fasta_dir)  # 7 FASTA files
+
+## Note that the V allele sequences have gaps:
+IGKV_alleles <- readDNAStringSet(file.path(exB_fasta_dir, "IGKV.fasta"))
+as.character(IGKV_alleles[1:3])
+
+## --- 2. Use FASTA files to install new germline db ---
+
+exB_db_name <- "cus.exB.human.IGH+IGK+IGL"
+install_custom_germline_db(exB_db_name, exB_fasta_dir, gapped=TRUE)
+list_germline_dbs()
+
+## --- 3. Check that the new db contains the same sequences ---
+## ---          as _AIRR.human.IGH+IGK+IGL.202410           ---
+
+## The Reference Sets we used to populate the new db (IGH_VDJ version 9,
+## IGKappa_VJ version 4, IGLambda_VJ version 3) are the same that were
+## used to populate built-in germline db _AIRR.human.IGH+IGK+IGL.202410.
+## Let's check that the two dbs contain the same sequences:
+stopifnot(identical(
+    as.character(load_germline_db(db_name0)),
+    as.character(load_germline_db(exB_db_name))
+))
+
+## ---------------------------------------------------------------------
+## C. CREATE AND INSTALL GERMLINE DB WITH COMPUTED "INTERNAL DATA"
+## ---------------------------------------------------------------------
+
+## The gaps that germline gene allele sequence providers like IMGT and
+## AIRR-community/OGRDB inject in the V allele sequences reflect their
+## FWR/CDR boundaries. When the 'with.intdata' argument is set to TRUE,
+## install_custom_germline_db() takes advantage of this to compute and
+## add the "internal data" associated with the V alleles to the new db:
+exC_db_name <- "cus.exC.human.IGH+IGK+IGL"
+install_custom_germline_db(exC_db_name, exB_fasta_dir, gapped=TRUE,
+                           with.intdata=TRUE)
+list_germline_dbs()  # 'intdata' col indicates presence of "internal data"
+
+## Note that the "internal data" in a germline db can be loaded with
+## load_intdata() (see '?load_intdata' for more information):
+intdataC <- load_intdata(exC_db_name)
+head(intdataC)
+
+## Check that the "internal data" in the new db is the same as in
+## _AIRR.human.IGH+IGK+IGL.202410:
+stopifnot(identical(intdataC, load_intdata(db_name0)))
+
+## ---------------------------------------------------------------------
+## Remove the 3 custom dbs
+## ---------------------------------------------------------------------
+
+rm_germline_db(exA_db_name)
+rm_germline_db(exB_db_name)
+rm_germline_db(exC_db_name)
+
 }
 
 \keyword{utilities}

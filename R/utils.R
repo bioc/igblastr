@@ -249,27 +249,56 @@ count_bin_hits <- function(x, bin_widths)
 
     if (!is.null(suffix))
         mat <- mat[has_suffix(mat[ , 1L], suffix), , drop=FALSE]
-    df <- as.data.frame(mat)
+    as.data.frame(mat)
+}
+
+### Use for IMGT-style HTML directory index.
+.IMGT_html_dir_parser <- function(xml, suffix=NULL)
+{
+    stopifnot(inherits(xml, "xml_document"))
+    pre <- html_text(html_elements(xml, "body pre"))
+    stopifnot(length(pre) == 1L)
+    pre <- sub("\\.\\./", "", pre)
+    pre <- strsplit(pre, "\r?\n")[[1L]]
+    pre <- pre[nchar(pre) != 0L]
+    pre <- strsplit(pre, " +")
+    EXPECTED_NCOL <- 4L
+    stopifnot(all(lengths(pre) == EXPECTED_NCOL))
+    mat <- matrix(unlist(pre), ncol=EXPECTED_NCOL, byrow=TRUE)
+    colnames(mat) <- c("Name", "Last modified", "Time last modified", "Size")
+    df <- .make_df_from_matrix_of_tds(mat, suffix=suffix)
+    df[[2L]] <- as.Date(df[[2L]], "%d-%b-%Y")
+    df
+}
+
+### Use for OAS-style HTML directory index.
+.OAS_html_dir_parser <- function(xml, suffix=NULL)
+{
+    stopifnot(inherits(xml, "xml_document"))
+    EXPECTED_NCOL <- 5L
+    all_ths <- html_text(html_elements(xml, "body table tr th"))
+    stopifnot(length(all_ths) != 0L)
+    all_tds <- html_text(html_elements(xml, "body table tr td"))
+    stopifnot(length(all_tds) %% EXPECTED_NCOL == 0L)
+    mat <- matrix(all_tds, ncol=EXPECTED_NCOL, byrow=TRUE)
+    colnames(mat) <- all_ths[seq_len(EXPECTED_NCOL)]
+    df <- .make_df_from_matrix_of_tds(mat, suffix=suffix)
     df[[2L]] <- as.Date(df[[2L]])
     df
 }
 
-### 'css' must be a single string specifying the CSS selector to
-### the table containing the index e.g. "body" or "body section".
 ### Additional curl configuration options can be passed thru the ellipsis
 ### as **named** arguments. See ?httr::httr_options for all available options.
 ### Returns a data.frame with 3 columns: Name, Last modified, Size
-scrape_html_dir_index <- function(url, css="body", suffix=NULL, ...)
+scrape_html_dir_index <- function(url, style=c("IMGT", "OAS"), suffix=NULL,
+                                  ...)
 {
-    stopifnot(isSingleNonWhiteString(url), isSingleNonWhiteString(css))
+    stopifnot(isSingleNonWhiteString(url), isSingleNonWhiteString(style))
+    style <- match.arg(style)
     html <- getUrlContent(url, type="text", encoding="UTF-8", ...)
     xml <- read_html(html)
-    all_ths <- html_text(html_elements(xml, paste0(css, " table tr th")))
-    all_tds <- html_text(html_elements(xml, paste0(css, " table tr td")))
-    EXPECTED_NCOL <- 5L
-    mat <- matrix(all_tds, ncol=EXPECTED_NCOL, byrow=TRUE)
-    colnames(mat) <- all_ths[seq_len(EXPECTED_NCOL)]
-    .make_df_from_matrix_of_tds(mat, suffix=suffix)
+    fun <- if (style == "IMGT") .IMGT_html_dir_parser else .OAS_html_dir_parser
+    fun(xml, suffix=suffix)
 }
 
 

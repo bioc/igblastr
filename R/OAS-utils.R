@@ -110,7 +110,7 @@ list_paired_OAS_studies <- function(as.df=FALSE, recache=FALSE)
         stop(wmsg("'recache' must be TRUE or FALSE"))
     listing <- .OAS_cache[["ALL_PAIRED_STUDIES"]]
     if (is.null(listing) || recache) {
-        listing <- scrape_html_dir_index(.PAIRED_OAS_URL)
+        listing <- scrape_html_dir_index(.PAIRED_OAS_URL, style="OAS")
         .OAS_cache[["ALL_PAIRED_STUDIES"]] <- listing
     }
     if (!as.df)
@@ -141,7 +141,7 @@ list_paired_OAS_units <- function(study, as.df=FALSE, recache=FALSE)
     listing <- .OAS_cache[[study]]
     if (is.null(listing) || recache) {
         url <- .make_OAS_study_csv_url(study)
-        listing <- scrape_html_dir_index(url, suffix=".csv.gz")
+        listing <- scrape_html_dir_index(url, style="OAS", suffix=".csv.gz")
         .OAS_cache[[study]] <- listing
     }
     if (!as.df)

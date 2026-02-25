@@ -42,16 +42,19 @@ test_that("clean_allele_set()", {
     dna0 <- DNAStringSet(c(A1="GG", A2="AAAAACG", A3="T", A4="GG", A5="CTAATA",
                            A6="GG", A7="TTT", A8="GG", A9="TTTTTTTTTT"))
     object <- clean_allele_set(dna0)
+    expect_true(is(object, "DNAStringSet"))
     expect_identical(as.character(object), as.character(dna0))
 
     dna <- dna0
     names(dna) <- paste0("   ", names(dna), "   \t ")
     object <- clean_allele_set(dna)
+    expect_true(is(object, "DNAStringSet"))
     expect_identical(as.character(object), as.character(dna0))
 
     dna <- dna0
     names(dna) <- paste0("\t stuff |", names(dna), "\t   |more|| stuff  ")
     object <- clean_allele_set(dna)
+    expect_true(is(object, "DNAStringSet"))
     expect_identical(as.character(object), as.character(dna0))
 
     dna <- dna0
@@ -67,20 +70,33 @@ test_that("clean_allele_set()", {
     expect_error(clean_allele_set(dna), regexp="less than 2-character long")
 
     ## With "repeated" alleles (i.e. alleles with identical DNA
-    ## sequences **and** names).
+    ## sequences **and** names) but no "ambiguous" alleles (i.e.
+    ## alleles with same name but different sequences).
+    dna <- dna0
+    names(dna)[8L] <- "A6"
+    object <- clean_allele_set(dna)
+    expect_true(is(object, "DNAStringSet"))
+    expect_identical(as.character(object), as.character(dna[-8L]))
+
+    ## With "repeated" alleles (i.e. alleles with identical DNA
+    ## sequences **and** names) AND "ambiguous" alleles (i.e.
+    ## alleles with same name but different sequences).
     dna <- dna0
     names(dna)[c(1:2, 9L)] <- "A1"
     names(dna)[c(3L, 5:6, 8L)] <- "A3"
     expected_names <- c("A1a", "A1b", "A3a", "A4", "A3b", "A3c", "A7", "A1c")
     expected_object <- setNames(dna0[-8L], expected_names)
-    object <- clean_allele_set(dna)
+    errmsg <- "The following allele names are ambiguous: A1, A3"
+    expect_error2(clean_allele_set(dna), errmsg)
+    object <- clean_allele_set(dna, disambiguate.allele.names=TRUE)
     expect_true(is(object, "DNAStringSet"))
     expect_identical(as.character(object), as.character(expected_object))
     expect_true(is.null(mcols(object)))
 
     regexp <- "V allele sequences have no gaps"
     expect_warning(
-        object <- clean_allele_set(dna, gapped=TRUE),
+        object <- clean_allele_set(dna, gapped=TRUE,
+                                   disambiguate.allele.names=TRUE),
         regexp=regexp
     )
     expect_true(is(object, "DNAStringSet"))
@@ -90,7 +106,7 @@ test_that("clean_allele_set()", {
     ## ======== WITH GAPS ========
 
     dna1 <- DNAStringSet(c(A1="AC.G..T", A2="AAA...AACGT", A3="G...G"))
-    errmsg <- "Some allele sequences have gaps"
+    errmsg <- "Some V allele sequences have gaps"
     expect_error2(clean_allele_set(dna1), errmsg)
 
     object <- clean_allele_set(dna1, gapped=TRUE)
@@ -116,7 +132,7 @@ test_that("clean_allele_set()", {
     .check_object_mcols(object)
 
     dna2 <- DNAStringSet(c(A1="ACGT", A2="AAAAACGT", A3="G...G"))
-    errmsg <- "Some allele sequences have gaps"
+    errmsg <- "Some V allele sequences have gaps"
     expect_error2(clean_allele_set(dna2), errmsg)
 
     dna <- dna2
@@ -158,13 +174,15 @@ test_that("clean_allele_set()", {
     .check_object_mcols(object)
 
     ## With "repeated" alleles (i.e. alleles with identical **ungapped** DNA
-    ## sequences **and** names).
+    ## sequences **and** names) AND "ambiguous" alleles (i.e.
+    ## alleles with same name but different **ungapped** sequences).
     dna <- dna3
     names(dna)[c(1:2, 9L)] <- "A1"
     names(dna)[c(3L, 5:6, 8L)] <- "A3"
     expected_names <- c("A1a", "A1b", "A3a", "A4", "A3b", "A3c", "A7", "A1c")
     expected_object <- setNames(dna0[-8L], expected_names)
-    object <- clean_allele_set(dna, gapped=TRUE)
+    object <- clean_allele_set(dna, gapped=TRUE,
+                               disambiguate.allele.names=TRUE)
     expect_true(is(object, "DNAStringSet"))
     expect_identical(as.character(object), as.character(expected_object))
     expect_identical(colnames(mcols(object)), colnames(mcols(dna3)))
@@ -181,7 +199,8 @@ test_that("clean_allele_set()", {
     mcols(dna)$locus <- "TRB"
     names(dna)[c(1:2, 9L)] <- "A1"
     names(dna)[c(3L, 5:6, 8L)] <- "A3"
-    object <- clean_allele_set(dna, gapped=TRUE, with.intdata=TRUE)
+    object <- clean_allele_set(dna, gapped=TRUE, with.intdata=TRUE,
+                               disambiguate.allele.names=TRUE)
     expect_identical(as.character(object), as.character(expected_object))
     .check_object_mcols(object)
 })

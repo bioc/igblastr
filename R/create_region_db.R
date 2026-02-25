@@ -92,16 +92,18 @@
 ### the 'gapped' and 'with.intdata' arguments.
 ### Returns a DNAStringSet object containing the "clean" alleles
 ### that went into the db.
-.clean_and_merge_fasta_files <- function(fasta_files, destdir,
-                                         region_type=VDJC_REGION_TYPES,
-                                         gapped=FALSE, with.intdata=FALSE,
-                                         verbose=FALSE)
+.clean_and_merge_fasta_files <-
+    function(fasta_files, destdir, region_type=VDJC_REGION_TYPES,
+             gapped=FALSE, with.intdata=FALSE,
+             disambiguate.allele.names=FALSE, verbose=FALSE)
 {
     .checkarg_fasta_files(fasta_files)
+    stopifnot(isSingleNonWhiteString(region_type))
     region_type <- match.arg(region_type)
     final_fasta <- .get_final_fasta_path(destdir, region_type)
     .checkarg_gapped(gapped, region_type)
     checkarg_with.intdata(with.intdata, gapped)
+    stopifnot(isTRUEorFALSE(disambiguate.allele.names))
     stopifnot(isTRUEorFALSE(verbose))
 
     if (verbose) {
@@ -122,6 +124,7 @@
 
     ## (2) Clean/edit.
     dna <- clean_allele_set(dna, gapped=gapped, with.intdata=with.intdata,
+                            disambiguate.allele.names=disambiguate.allele.names,
                             verbose=verbose)
 
     writeXStringSet(dna, final_fasta)
@@ -195,6 +198,9 @@
 ### Set 'with.intdata' to TRUE if the supplied sequences are gapped V allele
 ### sequences **and** the associated internal data should be computed and
 ### added to the db.
+### See clean_allele_set() in R/clean_allele_set.R for the role of
+### the 'disambiguate.allele.names' argument.
+###
 ### The following subdirectory and files will be added to 'destdir':
 ### - V_original_fasta/: subdirectory containing the input FASTA files
 ###       corresponding to the V regions, one FASTA file per region;
@@ -206,6 +212,7 @@
 create_region_db <- function(fasta_files, destdir,
                              region_type=VDJC_REGION_TYPES,
                              gapped=FALSE, with.intdata=FALSE,
+                             disambiguate.allele.names=FALSE,
                              overwrite=FALSE, verbose=FALSE)
 {
     .checkarg_fasta_files(fasta_files)
@@ -213,6 +220,8 @@ create_region_db <- function(fasta_files, destdir,
     region_type <- match.arg(region_type)
     .checkarg_gapped(gapped, region_type)
     checkarg_with.intdata(with.intdata, gapped)
+    if (!isTRUEorFALSE(disambiguate.allele.names))
+        stop(wmsg("'disambiguate.allele.names' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(overwrite))
         stop(wmsg("'overwrite' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))
@@ -241,10 +250,10 @@ create_region_db <- function(fasta_files, destdir,
     ## Clean and merge the original fasta files.
     original_fasta_files <- list_fasta_files(original_fasta_dir)
     dna <- .clean_and_merge_fasta_files(original_fasta_files, destdir,
-                                        region_type=region_type,
-                                        gapped=gapped,
-                                        with.intdata=with.intdata,
-                                        verbose=verbose)
+                        region_type=region_type,
+                        gapped=gapped, with.intdata=with.intdata,
+                        disambiguate.allele.names=disambiguate.allele.names,
+                        verbose=verbose)
     if (verbose)
         message("... done. (Final number of ", region_type, " alleles ",
                 "in db = ", length(dna), ")\n")
