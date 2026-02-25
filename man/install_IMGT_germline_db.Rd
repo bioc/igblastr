@@ -34,7 +34,9 @@ IMGT_is_up()
 
 ## Can only be used to "subset" a built-in C-region databse (see
 ## advanced example in Examples section below):
-install_IMGT_c_region_db(organism, loci, overwrite=FALSE, verbose=FALSE)
+install_IMGT_c_region_db(organism, loci,
+                         disambiguate.allele.names=FALSE,
+                         overwrite=FALSE, verbose=FALSE)
 }
 
 \arguments{
@@ -112,6 +114,10 @@ install_IMGT_c_region_db(organism, loci, overwrite=FALSE, verbose=FALSE)
     so it does not persist across sessions).
     Set \code{recache} to \code{TRUE} to force a new download (and
     recaching) of the list of IMGT/V-QUEST releases.
+  }
+  \item{disambiguate.allele.names}{
+    See documentation of the \code{disambiguate.allele.names}
+    in \code{?\link{install_custom_germline_db}}.
   }
 }
 

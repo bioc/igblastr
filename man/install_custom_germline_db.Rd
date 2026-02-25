@@ -326,7 +326,6 @@ stopifnot(identical(intdataC, load_intdata(db_name0)))
 rm_germline_db(exA_db_name)
 rm_germline_db(exB_db_name)
 rm_germline_db(exC_db_name)
-
 }
 
 \keyword{utilities}

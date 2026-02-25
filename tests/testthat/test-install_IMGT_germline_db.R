@@ -33,6 +33,18 @@ test_that("install_IMGT_germline_db()", {
 })
 
 test_that("install_IMGT_c_region_db()", {
+    errmsg <- "The following allele names are ambiguous:"
+    expect_error2(
+        install_IMGT_c_region_db("human", "IGH+IGK", overwrite=TRUE),
+        errmsg
+    )
+    db_name <- install_IMGT_c_region_db("human", "IGH+IGK",
+                                        disambiguate.allele.names=TRUE,
+                                        overwrite=TRUE)
+    expect_identical(db_name, "IMGT.human.IGH+IGK.202412")
+    use_c_region_db(db_name)
+    rm_c_region_db(db_name)
+
     db_name <- install_IMGT_c_region_db("Homo sapiens", "TRB+TRA",
                                         overwrite=TRUE)
     expect_identical(db_name, "IMGT.human.TRA+TRB.202509")
