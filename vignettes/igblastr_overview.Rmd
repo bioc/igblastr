@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 22 February 2026"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 24 February 2026"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -33,7 +33,7 @@ sequence alignment and annotation, with key outputs including germline
 V, D, and J gene assignments; detection of somatic hypermutations
 introduced during affinity maturation; identification and annotation
 of complementarity-determining regions (CDR1–CDR3) and framework
-regions (FR1–FR4); and both nucleotide and protein-level alignments.
+regions (FWR1–FWR4); and both nucleotide and protein-level alignments.
 
 `r Biocpkg("igblastr")` is an R/Bioconductor package that provides functions
 to conveniently install and use a local IgBLAST installation from within R.
@@ -46,14 +46,19 @@ The main function in the package is `igblastn()`, a wrapper to the `igblastn`
 _standalone executable_ included in IgBLAST. In addition to `igblastn()`,
 the package provides:
 
-- A function (`install_igblast()`) for conveniently downloading and
-  installing a pre-compiled IgBLAST from NCBI.
+- A function (`install_igblast()`) to conveniently download and
+  install a pre-compiled IgBLAST from NCBI.
+
+- A set of built-in germline databases from OGRDB, the AIRR Community’s
+  Open Germline Receptor Database.
 
 - Functions to download and install germline databases from the
   IMGT/V-QUEST download site, and to configure them for use with `igblastn()`.
 
-- A set of built-in germline databases from OGRDB, the AIRR Community’s
-  Open Germline Reference Database.
+- The `install_custom_germline_db()` function to install a germline database
+  from user-supplied germline gene allele sequences.
+
+- Functions to compute, access, and manipulate IgBLAST _internal data_.
 
 - A set of built-in constant region (C-region) databases (a.k.a. constant
   region databases) from IMGT/V-QUEST.
@@ -67,9 +72,15 @@ the package provides:
 
 - Etc.
 
-IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>
+Useful links:
 
-IgBLAST web interface: <https://www.ncbi.nlm.nih.gov/igblast/>
+- IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>
+
+- IgBLAST web interface: <https://www.ncbi.nlm.nih.gov/igblast/>
+
+- OGRDB: <https://ogrdb.airr-community.org/>
+
+- IMGT/V-QUEST download site: <https://www.imgt.org/download/V-QUEST/>
 
 Please use <https://github.com/HyrienLab/igblastr/issues> to report bugs,
 provide feedback, request features (etc) about `r Biocpkg("igblastr")`.
@@ -154,18 +165,28 @@ list_germline_dbs(builtin.only=TRUE)
 The last part of the database name indicates the date of the download in
 YYYYMM format.
 
-If our query sequences are from humans or from one of the mouse strains listed
-above, we can already select the appropriate database with `use_germline_db()`
-and skip the subsection below.
+The `intdata` column indicates whether the database includes its own
+_internal data_ (i.e. the FWR/CDR boundaries on the V alleles) or not.
+Note that if a germline database includes its own _internal data_,
+then `igblastn()` will use it (as _custom internal data_) instead
+of the _internal data_ shipped with IgBLAST. See documentation of
+the `custom_internal_data` argument in `?igblastn` for more information.
+
+If our query sequences are from humans, or one of the mouse strains listed
+above, or rhesus monkey, then we can already select the appropriate database
+with `use_germline_db()` and skip the subsection below.
 
 ## Install additional germline databases
 
-AIRR/OGRDB and IMGT/V-QUEST are two providers of germline databases that
-can be used with IgBLAST. If, for any reason, none of the built-in
-AIRR/OGRDB germline databases is suitable (e.g., if your query sequences
-are not from human or mouse), you can use `install_IMGT_germline_db()`
-to install additional germline databases. Below, we show how to install the
-latest human germline database from IMGT/V-QUEST.
+AIRR/OGRDB and IMGT/V-QUEST are two providers of germline databases
+that can be used with IgBLAST. If, for any reason, none of the built-in
+AIRR/OGRDB germline databases is suitable (e.g. your query sequences
+are not from human, mouse, or rhesus monkey), then you can
+use `install_IMGT_germline_db()` to install additional germline
+databases. Below, we show how to install the latest human germline
+database from IMGT/V-QUEST.
+
+### Install germline database from IMGT/V-QUEST
 
 First, we list the most recent IMGT/V-QUEST releases:
 ```{r}
@@ -184,14 +205,28 @@ install_IMGT_germline_db("202518-3", organism="Homo sapiens", overwrite=TRUE)
 ```
 See `?install_IMGT_germline_db` for more information.
 
+Note that the newly installed germline database
+(`IMGT-202518-3.Homo_sapiens.IGH+IGK+IGL`) includes
+its own _internal data_:
+```{r}
+list_germline_dbs()
+```
+
+### Install germline database from user-supplied gene allele sequences
+
+The `r Biocpkg("igblastr")` package provides the `install_custom_germline_db()`
+function to create and install a germline database from a set of
+user-supplied FASTA files containing germline V/D/J gene allele sequences.
+See `?install_custom_germline_db` for more information.
+
+## Select germline database to use with `igblastn()`
+
 Finally, we select the newly installed germline database for use
 with `igblastn()`:
 ```{r}
 use_germline_db("IMGT-202518-3.Homo_sapiens.IGH+IGK+IGL")
 ```
 See `?use_germline_db` for more information.
-
-## Display the full list of cached germline dbs
 
 To see the full list of cached germline dbs:
 ```{r}
@@ -489,7 +524,7 @@ Some future developments include:
   included in IgBLAST for protein-level alignments.
 
 - Add facilities to retrieve germline databases from OGRDB, the AIRR
-  Community’s Open Germline Reference Database.
+  Community’s Open Germline Receptor Database.
 
 
 # Session information

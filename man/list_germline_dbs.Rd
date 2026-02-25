@@ -29,11 +29,16 @@ rm_germline_db(db_name)
   }
   \item{with.intdata.only}{
     Set \code{with.intdata.only} to \code{TRUE} to return only the list
-    of germline dbs that include their own \emph{internal data}. Note
-    that whether a germline db includes its own \emph{internal data} or
-    not is reported in the \code{intdata} column.
-    See \code{?\link{intdata_utils}} for more information about IgBLAST
-    \emph{internal data}.
+    of germline dbs that include their own \emph{internal data} (i.e. the
+    FWR/CDR boundaries on the V alleles). Note that whether a germline
+    db includes its own \emph{internal data} or not is reported in the
+    \code{intdata} column.
+
+    If a cached germline db includes its own \emph{internal data}, then
+    \code{\link{igblastn}()} will use it (as \emph{custom internal data})
+    instead of the \emph{internal data} shipped with IgBLAST.
+    See documentation of the \code{custom_internal_data} argument in
+    \code{?\link{igblastn}} for more information.
   }
   \item{names.only}{
     By default \code{list_germline_dbs()} returns the list of cached

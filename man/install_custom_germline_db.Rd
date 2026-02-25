@@ -7,9 +7,9 @@
 \description{
   The \code{install_custom_germline_db()} function creates a germline
   database from a set of user-supplied FASTA files containing germline
-  V/D/J gene allele sequences, and installs it in \pkg{igblastr}'s
-  persistent cache. The new germline database can then be used later
-  with \code{\link{igblastn}()}.
+  V/D/J gene allele sequences (nucleotides), and installs it in
+  \pkg{igblastr}'s persistent cache. The new germline database can
+  then be used later with \code{\link{igblastn}()}.
 }
 
 \usage{
@@ -88,16 +88,18 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
   \item{with.intdata}{
     If the supplied V allele sequences are \emph{gapped}, you can
     set \code{with.intdata} to \code{TRUE} to have the \emph{internal data}
-    associated with the V alleles computed and added to the new db.
+    (i.e. the FWR/CDR boundaries on the V alleles) computed and added to
+    the new db.
 
     Note that the presence of \emph{internal data} in the new db will be
     indicated in the \code{intdata} column of the data.frame returned by
     \code{\link{list_germline_dbs}()}.
 
     If a cached germline db includes its own \emph{internal data}, then
-    \code{\link{igblastn}()} will use it instead of the \emph{internal data}
-    shipped with IgBLAST. See documentation of the \code{custom_internal_data}
-    argument in \code{?\link{igblastn}} for more information.
+    \code{\link{igblastn}()} will use it (as \emph{custom internal data})
+    instead of the \emph{internal data} shipped with IgBLAST.
+    See documentation of the \code{custom_internal_data} argument in
+    \code{?\link{igblastn}} for more information.
 
     Also see \code{?\link{intdata_utils}} for more information about IgBLAST
     \emph{internal data}.
