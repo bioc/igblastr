@@ -1,3 +1,59 @@
+test_that(".normarg_custom_internal_data()", {
+    normarg_custom_internal_data <- igblastr:::.normarg_custom_internal_data
+
+    ## Note that we only check "auto" mode for now.
+
+    ## With a supplied 'germline_db_V' that looks like the path to
+    ## a V "blast db" that belongs to a cached germline db.
+
+    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"  # includes internal data
+    db_path <- igblastr:::get_germline_db_path(db_name)
+    germline_db_V <- file.path(db_path, "V")
+
+    custom_internal_data <- normarg_custom_internal_data("auto",
+                                    germline_db_V, domain_system="imgt")
+    expected <- file.path(db_path, "internal_data", "V.ndm.imgt")
+    expect_identical(custom_internal_data, expected)
+    expect_true(file.exists(custom_internal_data))
+
+    ## Returns NULL with a warning.
+    regexp <- paste0("internal data file .*\\.kabat not found.*",
+                     "--> using IgBLAST internal data")
+    expect_warning(
+        custom_internal_data <- normarg_custom_internal_data("auto",
+                                        germline_db_V, domain_system="kabat"),
+        regexp=regexp
+    )
+    expect_true(is.null(custom_internal_data))
+
+    db_name <- "_AIRR.human.IGH+IGK+IGL.202410.src"  # no internal data
+    db_path <- igblastr:::get_germline_db_path(db_name)
+    germline_db_V <- file.path(db_path, "V")
+
+    ## Returns NULL with no warning.
+    custom_internal_data <- normarg_custom_internal_data("auto",
+                                    germline_db_V, domain_system="imgt")
+    expect_true(is.null(custom_internal_data))
+    custom_internal_data <- normarg_custom_internal_data("auto",
+                                    germline_db_V, domain_system="kabat")
+    expect_true(is.null(custom_internal_data))
+
+    ## With a supplied 'germline_db_V' that does NOT look like the path to
+    ## a V "blast db" that belongs to a cached germline db.
+
+    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"  # includes internal data
+    db_path <- igblastr:::get_germline_db_path(db_name)
+    germline_db_V <- file.path(db_path, "J")
+    custom_internal_data <- normarg_custom_internal_data("auto",
+                                    germline_db_V, domain_system="imgt")
+    expect_true(is.null(custom_internal_data))
+
+    germline_db_V <- file.path(tempfile(), "V")
+    custom_internal_data <- normarg_custom_internal_data("auto",
+                                    germline_db_V, domain_system="imgt")
+    expect_true(is.null(custom_internal_data))
+})
+
 test_that("prepare_igblastn_cmdline_args()", {
     ## prepare_igblastn_cmdline_args() is not exported.
     prepare_igblastn_cmdline_args <- igblastr:::prepare_igblastn_cmdline_args

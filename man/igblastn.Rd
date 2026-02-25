@@ -114,8 +114,8 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     annotation, or the path to a file containing custom FWR/CDR annotation,
     or \code{NULL}.
 
-    By default (i.e. when \code{custom_internal_data} is omitted or set to
-    \code{"auto"}), \code{igblastn()} will use:
+    By default (i.e. when \code{custom_internal_data} and \code{germline_db_V}
+    are both omitted or set to \code{"auto"}), \code{igblastn()} will use:
     \itemize{
         \item the \emph{internal data} included in the cached germline
               db that is currently selected, if it has any;

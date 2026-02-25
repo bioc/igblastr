@@ -6,6 +6,28 @@
 ###
 
 
+### Whether 'db_path' points a cached germline db or not.
+.germline_db_is_internal <- function(db_path)
+{
+    stopifnot(isSingleNonWhiteString(db_path))
+    if (!dir.exists(db_path))
+        return(FALSE)
+    db_path <- file_path_as_absolute(db_path)
+    dirname(db_path) == get_germline_dbs_home()  # NOT guaranteed to exist
+}
+
+### Whether 'bdb_path' **looks** like the path to an **internally** managed
+### V/D/J "blast db", i.e. to a V/D/J "blast db" that belongs to a cached
+### germline db.
+.region_bdb_is_internal <- function(bdb_path, region_type)
+{
+    stopifnot(isSingleNonWhiteString(bdb_path),
+              isSingleNonWhiteString(region_type))
+    .germline_db_is_internal(dirname(bdb_path)) &&
+        basename(bdb_path) == region_type
+}
+
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .normarg_germline_db_X() and .normarg_c_region_db()
 ###
@@ -111,35 +133,22 @@
     path
 }
 
-.germline_db_is_internal <- function(db_path)
+### Assumes that 'bdb_path' is the path to an **internally** managed
+### V/D/J "blast db", i.e. to a V/D/J "blast db" that belongs to a
+### cached germline db.
+.make_obtain_valid_seqids_Rcode <- function(bdb_path)
 {
-    stopifnot(isSingleNonWhiteString(db_path), dir.exists(db_path))
-    db_path <- file_path_as_absolute(db_path)
-    dirname(db_path) == get_germline_dbs_home()
-}
-
-.region_db_is_internal <- function(region_db_path)
-{
-    stopifnot(isSingleNonWhiteString(region_db_path))
-    .germline_db_is_internal(dirname(region_db_path)) &&
-        basename(region_db_path) %in% VDJ_REGION_TYPES
-}
-
-### Assumes that 'region_db_path' is pointing to an **internally** managed
-### region db.
-.make_obtain_valid_seqids_Rcode <- function(region_db_path)
-{
-    stopifnot(isSingleNonWhiteString(region_db_path))
-    db_name <- basename(dirname(region_db_path))
-    region_type <- basename(region_db_path)
+    stopifnot(isSingleNonWhiteString(bdb_path))
+    db_name <- basename(dirname(bdb_path))
+    region_type <- basename(bdb_path)
     code <- sprintf("load_germline_db(\"%s\", region_types=\"%s\")",
                     db_name, region_type)
     sprintf("names(%s)", code)
 }
 
-.check_user_seqids <- function(user_seqids, region_db_path, region_type)
+.check_user_seqids <- function(user_seqids, bdb_path, region_type)
 {
-    fasta_file <- paste0(region_db_path, ".fasta")
+    fasta_file <- paste0(bdb_path, ".fasta")
     sequences <- readDNAStringSet(fasta_file)
     valid_seqids <- names(sequences)
     invalid_seqids <- setdiff(user_seqids, valid_seqids)
@@ -148,7 +157,7 @@
         in1string <- paste0(invalid_seqids, collapse=", ")
         msg1 <- c("Sequence id(s) not found in ", what, ": ", in1string)
         msg2a <- "Note that you can use:"
-        code <- .make_obtain_valid_seqids_Rcode(region_db_path)
+        code <- .make_obtain_valid_seqids_Rcode(bdb_path)
         msg2b <- "to obtain the list of valid germline sequence ids."
         stop(wmsg(msg1), "\n  ",
              wmsg(msg2a), "\n    ", code, "\n  ", wmsg(msg2b))
@@ -156,8 +165,8 @@
 }
 
 ### Can return a NULL.
-.normarg_seqidlist <- function(seqidlist, region_db_path,
-                               region_type=VDJ_REGION_TYPES)
+.normarg_seqidlist <- function(seqidlist,
+                               bdb_path, region_type=VDJ_REGION_TYPES)
 {
     region_type <- match.arg(region_type)
     if (is.null(seqidlist))
@@ -172,11 +181,11 @@
     }
     user_seqids <- readLines(path)
     ## We only check the user-supplied sequence ids if the FASTA file
-    ## associated with 'region_db_path' is guaranteed to exist and
+    ## associated with 'bdb_path' is guaranteed to exist and
     ## be in sync with the region db itself, which is only the case
-    ## if 'region_db_path' points to an **internally** managed region db.
-    if (.region_db_is_internal(region_db_path))
-        .check_user_seqids(user_seqids, region_db_path, region_type)
+    ## if 'bdb_path' points to an **internally** managed region db.
+    if (.region_bdb_is_internal(bdb_path, region_type))
+        .check_user_seqids(user_seqids, bdb_path, region_type)
     path
 }
 
@@ -202,7 +211,7 @@
     ## with 'germline_db_V' is guaranteed to exist and be in sync with
     ## the V-region db itself, which is only the case if 'germline_db_V'
     ## points to an **internally** managed region db.
-    if (!.region_db_is_internal(germline_db_V))
+    if (!.region_bdb_is_internal(germline_db_V, "V"))
         return()
     V_fasta_file <- paste0(germline_db_V, ".fasta")
     V_names <- names(readDNAStringSet(V_fasta_file))
@@ -220,10 +229,11 @@
     }
 }
 
-.get_auto_custom_internal_data <- function(domain_system)
+.get_auto_custom_internal_data <- function(germline_db_V, domain_system)
 {
-    db_name <- use_germline_db()  # cannot be ""
-    intdata_dir <- file.path(get_germline_db_path(db_name), "internal_data")
+    if (!.region_bdb_is_internal(germline_db_V, "V"))
+        return(NULL)
+    intdata_dir <- file.path(dirname(germline_db_V), "internal_data")
     if (!dir.exists(intdata_dir))
         return(NULL)
     intdata_filename <- paste0("V.ndm.", domain_system)
@@ -238,10 +248,10 @@
     intdata_path
 }
 
+### Has its own tests in tests/testthat/test-prepare_igblastn_cmdline_args.R!
 ### Can return a NULL.
 .normarg_custom_internal_data <- function(custom_internal_data="auto",
-                                          germline_db_V,
-                                          num_auto_germline_dbs, domain_system)
+                                          germline_db_V, domain_system)
 {
     if (is.null(custom_internal_data))
         return(NULL)
@@ -258,20 +268,12 @@
         stop(wmsg("'custom_internal_data' must be \"auto\", or a data.frame ",
                   "containing custom FWR/CDR annotation, or the path to a ",
                   "file containing custom FWR/CDR annotation, or NULL"))
-    if (custom_internal_data != "auto") {
-        what <- c("custom FWR/CDR annotation file '", custom_internal_data, "'")
-        intdata <- .load_user_supplied_internal_data(custom_internal_data)
-        .check_user_supplied_internal_data(intdata, germline_db_V, what)
-        return(file_path_as_absolute(custom_internal_data))
-    }
-    ## If the user supplied all 3 germline_db_X arguments, then it makes no
-    ## sense to try and use the internal data included in the cached germline
-    ## db that is currently selected. Note that use_germline_db() is not even
-    ## guaranteed to work because there's no guarantee that the user has
-    ## already selected a germline db yet.
-    if (num_auto_germline_dbs == 0L)
-        return(NULL)
-    .get_auto_custom_internal_data(domain_system)
+    if (custom_internal_data == "auto")
+        return(.get_auto_custom_internal_data(germline_db_V, domain_system))
+    what <- c("custom FWR/CDR annotation file '", custom_internal_data, "'")
+    intdata <- .load_user_supplied_internal_data(custom_internal_data)
+    .check_user_supplied_internal_data(intdata, germline_db_V, what)
+    file_path_as_absolute(custom_internal_data)
 }
 
 
@@ -531,7 +533,6 @@ prepare_igblastn_cmdline_args <-
     domain_system <- match.arg(domain_system)
     custom_internal_data <- .normarg_custom_internal_data(custom_internal_data,
                                                           germline_db_V,
-                                                          num_auto_germline_dbs,
                                                           domain_system)
     organism <- .normarg_organism(organism, num_auto_germline_dbs,
                                   custom_internal_data)

@@ -56,6 +56,7 @@ path_to_IMGT_c_region_fasta_store <- function(organism, loci_prefix)
 ### reset_c_region_dbs()
 ###
 
+### Has its own tests in tests/testthat/test-reset_c_region_dbs.R!
 ### If 'destdir' exists, it gets destroyed and replaced with a freshly
 ### populated directory. In other words, its final content doesn't depend
 ### on whether it already exists or not.
