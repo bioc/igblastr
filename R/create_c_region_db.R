@@ -76,9 +76,12 @@ list_loci_in_c_region_fasta_dir <- function(fasta_dir, loci_prefix)
 ### igblastr's cache organization). This subdir or any of its parent
 ### directories don't need to exist yet.
 create_c_region_db <- function(fasta_dir, loci, destdir,
+                               disambiguate.allele.names=FALSE,
                                overwrite=FALSE, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(destdir))
+    if (!isTRUEorFALSE(disambiguate.allele.names))
+        stop(wmsg("'disambiguate.allele.names' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(overwrite))
         stop(wmsg("'overwrite' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))
@@ -102,7 +105,9 @@ create_c_region_db <- function(fasta_dir, loci, destdir,
     tmp_destdir <- tempfile("c_region_db_")
     dir.create(tmp_destdir)
     on.exit(nuke_file(tmp_destdir))
-    create_region_db(fasta_files, tmp_destdir, region_type="C", verbose=verbose)
+    create_region_db(fasta_files, tmp_destdir, region_type="C",
+                     disambiguate.allele.names=disambiguate.allele.names,
+                     verbose=verbose)
     rename_file(tmp_destdir, destdir, replace=TRUE)
 
     if (verbose)

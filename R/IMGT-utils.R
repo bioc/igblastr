@@ -41,7 +41,7 @@ get_IMGT_connecttimeout <- function() getOption("IMGT_connecttimeout")
 
 .fetch_latest_IMGT_release <- function()
 {
-    content <- getUrlContent(.VQUEST_RELEASE_FILE_URL,
+    content <- getUrlContent(.VQUEST_RELEASE_FILE_URL, encoding="UTF-8",
                              connecttimeout=get_IMGT_connecttimeout())
     sub("^([^ ]*)(.*)$", "\\1", content)
 }
@@ -62,8 +62,7 @@ get_latest_IMGT_release <- function(recache=FALSE)
 ### and 1 row per .zip file.
 .fetch_list_of_archived_IMGT_zips <- function()
 {
-    scrape_html_dir_index(.VQUEST_ARCHIVES_URL,
-                          css="body section", suffix=".zip",
+    scrape_html_dir_index(.VQUEST_ARCHIVES_URL, style="IMGT", suffix=".zip",
                           connecttimeout=get_IMGT_connecttimeout())
 }
 

@@ -20,7 +20,7 @@
     stop(wmsg(msg1), "\n  ", wmsg(.LIST_GERMLINE_DB_TIP), "\n  ", wmsg(msg3))
 }
 
-.install_custom_germline_db_successed <- function(db_name)
+.install_germline_db_successed <- function(db_name)
 {
     message(wmsg("Germline db ", db_name, " successfully installed ",
                  "in igblastr's persistent cache.", margin=0L))
@@ -32,6 +32,7 @@
 ### Not exported!
 install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
                                 gapped=FALSE, with.intdata=FALSE,
+                                disambiguate.allele.names=FALSE,
                                 if.exists=c("error", "overwrite", "no-op"),
                                 verbose=FALSE, cheer.if.success=FALSE)
 {
@@ -45,6 +46,8 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
     if (!isTRUEorFALSE(gapped))
         stop(wmsg("'gapped' must be TRUE or FALSE"))
     checkarg_with.intdata(with.intdata, gapped)
+    if (!isTRUEorFALSE(disambiguate.allele.names))
+        stop(wmsg("'disambiguate.allele.names' must be TRUE or FALSE"))
     if.exists <- match.arg(if.exists)
     if (!isTRUEorFALSE(verbose))
         stop(wmsg("'verbose' must be TRUE or FALSE"))
@@ -65,13 +68,14 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
 
     create_germline_db(db_path, fasta_dir, loci,
                        gapped=gapped, with.intdata=with.intdata,
+                       disambiguate.allele.names=disambiguate.allele.names,
                        overwrite=TRUE, verbose=verbose)
 
     if (verbose)
         message("====== DONE ", wmsg(what), " ======\n")
 
     if (cheer.if.success)
-        .install_custom_germline_db_successed(db_name)
+        .install_germline_db_successed(db_name)
 
     invisible(db_name)
 }
@@ -85,14 +89,15 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
 install_custom_germline_db <- function(db_name, fasta_dir,
                                        tcr.db=FALSE, loci="auto",
                                        gapped=FALSE, with.intdata=FALSE,
+                                       disambiguate.allele.names=FALSE,
                                        overwrite=FALSE, verbose=FALSE)
 {
     if (!isSingleNonWhiteString(db_name))
         stop(wmsg("'db_name' must be a single (non-empty) string"))
     if (has_whitespace(db_name))
         stop(wmsg("'db_name' cannot contain whitespace characters"))
-    if (!has_prefix(db_name, "cu"))
-        stop(wmsg("'db_name' must start with \"cu\""))
+    if (!has_prefix(db_name, "cus"))
+        stop(wmsg("'db_name' must start with \"cus\""))
 
     loci <- normalize_user_supplied_loci(loci, tcr.db=tcr.db,
                                          stop.if.missing.regions=TRUE)
@@ -105,6 +110,7 @@ install_custom_germline_db <- function(db_name, fasta_dir,
     if.exists <- if (overwrite) "overwrite" else "error"
     install_germline_db(germline_dbs_home, db_name, fasta_dir, loci,
                         gapped=gapped, with.intdata=with.intdata,
+                        disambiguate.allele.names=FALSE,
                         if.exists=if.exists, verbose=verbose)
 }
 
