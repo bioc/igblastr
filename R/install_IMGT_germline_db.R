@@ -208,11 +208,14 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
 }
 
 install_IMGT_c_region_db <- function(organism, loci,
+                                     disambiguate.allele.names=FALSE,
                                      overwrite=FALSE, verbose=FALSE)
 {
     organism <- find_organism_shortname(normalize_IMGT_organism(organism))
     loci <- normalize_user_supplied_loci(loci)
     loci_prefix <- extract_loci_prefix(loci)
+    if (!isTRUEorFALSE(disambiguate.allele.names))
+        stop(wmsg("'disambiguate.allele.names' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(overwrite))
         stop(wmsg("'overwrite' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))
@@ -236,6 +239,7 @@ install_IMGT_c_region_db <- function(organism, loci,
     c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist
     db_path <- file.path(c_region_dbs_home, db_name)
     create_c_region_db(fasta_store, loci, db_path,
+                       disambiguate.allele.names=disambiguate.allele.names,
                        overwrite=overwrite, verbose=verbose)
 
     ## Success!

@@ -188,7 +188,7 @@ checkarg_with.intdata <- function(with.intdata, gapped)
     stopifnot(is.character(allele_names))
     ambiguous_allele_names <- unique(allele_names[duplicated(allele_names)])
     in1string <- paste(ambiguous_allele_names, collapse=", ")
-    stop(wmsg("The following allele names are ambiguous: ", in1string),
+    stop(wmsg("The following allele names are ambiguous: ", in1string, "."),
          "\n  ",
          wmsg("Use 'disambiguate.allele.names=TRUE' to disambiguate ",
               "them. (Also using 'verbose=TRUE' will display the ",
