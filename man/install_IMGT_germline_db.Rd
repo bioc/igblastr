@@ -76,10 +76,10 @@ install_IMGT_c_region_db(organism, loci,
     as a \code{+}-separated list in a single string (e.g. \code{"TRA+TRB"}).
   }
   \item{without.intdata}{
-    By default, \code{install_IMGT_germline_db()} will also compute and add
-    the \emph{internal data} associated with the V alleles in the db (note
-    that \code{install_IMGT_germline_db()} uses the \emph{gapped} V allele
-    sequences provided by IMGT for that).
+    By default, \code{install_IMGT_germline_db()} will also compute and
+    add the \emph{internal data} (i.e. the FWR/CDR boundaries on the V
+    alleles) to the new db. Note that \code{install_IMGT_germline_db()}
+    uses the \emph{gapped} V allele sequences provided by IMGT for that.
     You can skip this step by setting \code{without.intdata} to \code{TRUE}.
 
     The presence of \emph{internal data} in the new db will be indicated
@@ -87,9 +87,10 @@ install_IMGT_c_region_db(organism, loci,
     \code{\link{list_germline_dbs}()}.
 
     If a cached germline db includes its own \emph{internal data}, then
-    \code{\link{igblastn}()} will use it instead of the \emph{internal data}
-    shipped with IgBLAST. See documentation of the \code{custom_internal_data}
-    argument in \code{?\link{igblastn}} for more information.
+    \code{\link{igblastn}()} will use it (as \emph{custom internal data})
+    instead of the \emph{internal data} shipped with IgBLAST.
+    See documentation of the \code{custom_internal_data} argument in
+    \code{?\link{igblastn}} for more information.
 
     Also see \code{?\link{intdata_utils}} for more information about IgBLAST
     \emph{internal data}.
