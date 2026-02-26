@@ -1,15 +1,15 @@
 Package: igblastr
 Title: User-friendly R Wrapper to IgBLAST
 Description: The igblastr package provides functions to conveniently install
-	and use a local IgBLAST installation from within R. It also includes
-	a set of built-in germline databases from OGRDB, the AIRR Community’s
-	Open Germline Reference Database, for various organisms, and provides
-	functions to install germline databases from the IMGT/V-QUEST download
-	site or custom germline databases from user-supplied gene allele
-	sequences. In addition to the allele sequences, most germline
-	databases installed with the package will also include complete and
-	accurate "internal data" for the V alleles in the database that can
-	be used as custom internal data for IgBLAST.
+	and use a local IgBLAST installation from within R. The package also
+	includes a set of built-in IgBLAST-compatible germline databases from
+	OGRDB, the AIRR Community’s Open Germline Receptor Database, for
+	various organisms. It provides functions to create additional
+	IgBLAST-compatible germline databases using reference sequences
+	retrieved from IMGT/V-QUEST or local FASTA files supplied by the user.
+	When possible, the FWR/CDR boundaries on the V alleles (a.k.a "internal
+	data") are computed and stored in the germline database, so can be used
+	as a replacement for the internal data shipped with IgBLAST.
 	IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>.
 	IgBLAST web interface: <https://www.ncbi.nlm.nih.gov/igblast/>.
 	OGRDB: <https://ogrdb.airr-community.org/>
