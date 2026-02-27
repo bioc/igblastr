@@ -160,7 +160,7 @@ download_and_unzip_IMGT_release <- function(release, exdir, ...)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### normalize_IMGT_organism()
-### find_organism_in_IMGT_local_store()
+### find_organism_in_IMGT_store()
 ###
 
 normalize_IMGT_organism <- function(organism)
@@ -170,17 +170,17 @@ normalize_IMGT_organism <- function(organism)
     chartr(" ", "_", organism)
 }
 
-list_organisms_in_IMGT_local_store <- function(local_store)
+list_organisms_in_IMGT_store <- function(IMGT_store)
 {
-    stopifnot(isSingleNonWhiteString(local_store), dir.exists(local_store))
-    refdir <- file.path(local_store, VQUEST_REFERENCE_DIRECTORY)
+    stopifnot(isSingleNonWhiteString(IMGT_store), dir.exists(IMGT_store))
+    refdir <- file.path(IMGT_store, VQUEST_REFERENCE_DIRECTORY)
     if (!dir.exists(refdir))
         stop(wmsg("Anomaly: directory ", refdir, " not found"))
     sort(list.files(refdir))
 }
 
-### 'local_store' must be the path to the local store of a given IMGT release.
-### Returns the path to the subdir of 'local_store' that corresponds to the
+### 'IMGT_store' must be the path to the local store of a given IMGT release.
+### Returns the path to the subdir of 'IMGT_store' that corresponds to the
 ### specified organism. For example, for IMGT release 202449-1 and Homo
 ### sapiens, this path is:
 ###     <igblastr-cache>
@@ -189,18 +189,18 @@ list_organisms_in_IMGT_local_store <- function(local_store)
 ###             └── 202449-1
 ###                 └── IMGT_V-QUEST_reference_directory
 ###                     └──  Homo_sapiens
-find_organism_in_IMGT_local_store <- function(organism, local_store)
+find_organism_in_IMGT_store <- function(organism, IMGT_store)
 {
     stopifnot(isSingleNonWhiteString(organism))
-    all_organisms <- list_organisms_in_IMGT_local_store(local_store)
+    all_organisms <- list_organisms_in_IMGT_store(IMGT_store)
     idx <- match(tolower(organism), tolower(all_organisms))
     if (!is.na(idx)) {
-        refdir <- file.path(local_store, VQUEST_REFERENCE_DIRECTORY)
+        refdir <- file.path(IMGT_store, VQUEST_REFERENCE_DIRECTORY)
         return(file.path(refdir, all_organisms[[idx]]))
     }
     in1string <- paste0("\"", all_organisms, "\"", collapse=", ")
     stop(wmsg(organism, ": organism not found in ",
-              "IMGT/V-QUEST release ", basename(local_store), "."),
+              "IMGT/V-QUEST release ", basename(IMGT_store), "."),
          "\n  ",
          wmsg("Available organisms: ", in1string, "."))
 }

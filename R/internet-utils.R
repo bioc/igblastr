@@ -28,7 +28,7 @@ urlExists <- function(url, ...)
     config <- config(...)
     response <- try(HEAD(url, config, user_agent("igblastr")), silent=TRUE)
     if (inherits(response, "try-error"))
-        stop(wsmg(as.character(response)))
+        stop(wmsg(as.character(response)))
     response$status_code != 404L
 }
 
