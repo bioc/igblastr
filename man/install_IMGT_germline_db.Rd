@@ -1,17 +1,15 @@
 \name{install_IMGT_germline_db}
 
 \alias{install_IMGT_germline_db}
-\alias{list_IMGT_releases}
-\alias{list_IMGT_organisms}
-\alias{IMGT_is_up}
 \alias{install_IMGT_c_region_db}
 
 \title{Install a germline db from IMGT}
 
 \description{
   The \code{install_IMGT_germline_db()} function downloads germline
-  V/D/J gene allele sequences from the IMGT website for a given organism,
-  and stores them in a local germline database. This local database gets
+  V/D/J gene allele sequences from the IMGT/V-QUEST download site for
+  a given IMGT/V-QUEST release and organism, and stores them in a
+  local IgBLAST-compatible germline database. This local database gets
   installed in \pkg{igblastr}'s persistent cache. It can then be used
   later with \code{\link{igblastn}()}.
 
@@ -27,11 +25,6 @@ install_IMGT_germline_db(release, organism="Homo sapiens", tcr.db=FALSE,
                          loci="auto", without.intdata=FALSE,
                          overwrite=FALSE, verbose=FALSE, ...)
 
-## Related utilities:
-list_IMGT_releases(recache=FALSE)
-list_IMGT_organisms(release)
-IMGT_is_up()
-
 ## Can only be used to "subset" a built-in C-region databse (see
 ## advanced example in Examples section below):
 install_IMGT_c_region_db(organism, loci,
@@ -40,31 +33,12 @@ install_IMGT_c_region_db(organism, loci,
 }
 
 \arguments{
-  \item{release}{
-    A single string specifying the IMGT/V-QUEST release to get the
-    germline gene allele sequences from (or to list the organisms
-    from for \code{list_IMGT_organisms()}).
-    Use \code{list_IMGT_releases()} to list all releases.
-  }
-  \item{organism}{
-    A single string specifying the latin name of the organism for which
-    to get the germline gene allele sequences.
-
-    Note that \code{install_IMGT_c_region_db()} also accepts the
-    common name of the organism (e.g. "human").
-  }
-  \item{tcr.db}{
-    Should the database to install be populated with allele sequences
-    from the BCR (B-cell Receptor) or TCR (T-cell Receptor) germline loci?
-
-    The BCR germline loci are: IGH, IGK, IGL.
-
-    The TCR germline loci are: TRA, TRB, TRG, TRD.
-
-    By default, the V/D/J allele sequences from the BCR germline loci
-    will be downloaded and used to populate the database.
-    Set \code{tcr.db} to \code{TRUE} to download and use the V/D/J allele
-    sequences from the TCR germline loci instead.
+  \item{release, organism, tcr.db}{
+    See \code{?\link{download_IMGT_germline_sequences}} for the
+    documentation of these arguments.
+    Note that, in addition to the organism latin name (e.g. "Homo sapiens"),
+    \code{install_IMGT_c_region_db()} also accepts the common name of the
+    organism (e.g. "human").
   }
   \item{loci}{
     By default, the database to install will be populated with the allele
@@ -108,14 +82,6 @@ install_IMGT_c_region_db(organism, loci,
     See \code{?\link[utils]{download.file}} in the \pkg{utils} package for
     more information.
   }
-  \item{recache}{
-    \code{list_IMGT_releases()} uses a caching mechanism so that the
-    list of IMGT/V-QUEST releases gets downloaded only once from the IMGT
-    website during an R session (note that this caching is done in memory
-    so it does not persist across sessions).
-    Set \code{recache} to \code{TRUE} to force a new download (and
-    recaching) of the list of IMGT/V-QUEST releases.
-  }
   \item{disambiguate.allele.names}{
     See documentation of the \code{disambiguate.allele.names}
     in \code{?\link{install_custom_germline_db}}.
@@ -157,17 +123,6 @@ install_IMGT_c_region_db(organism, loci,
   \code{install_IMGT_germline_db()} returns the name to the newly
   installed germline db as an invisible string.
 
-  \code{list_IMGT_releases()} returns the list of IMGT/V-QUEST releases
-  in a character vector. The releases are sorted from newest to oldest
-  (latest release is first).
-
-  \code{list_IMGT_organisms()} returns the list of organisms included
-  in the specified IMGT/V-QUEST release in a character vector.
-
-  \code{IMGT_is_up()} returns \code{TRUE} or \code{FALSE}, indicating
-  whether the IMGT website at \url{https://www.imgt.org} is up and running
-  or down.
-
   \code{install_IMGT_c_region_db()} returns the name to the newly
   installed C-region db as an invisible string.
 }
@@ -182,6 +137,8 @@ install_IMGT_c_region_db(organism, loci,
   \itemize{
     \item \code{\link{install_custom_germline_db}} to install a germline db
           from user-supplied gene allele sequences.
+
+    \item \code{\link{list_IMGT_releases}} to list IMGT/V-QUEST releases.
 
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This

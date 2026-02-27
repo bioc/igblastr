@@ -138,8 +138,8 @@ redit_imgt_file <- function(infasta, outfasta)
 ### validate_redit_imgt_file()
 ###
 ### See validate_redit_imgt_file_on_IMGT_release() in
-### R/install_IMGT_germline_db.R for some extensive validation of
-### redit_imgt_file() that we performed on Sep 9, 2025 on various
+### R/download_IMGT_germline_sequences.R for some extensive validation
+### of redit_imgt_file() that we performed on Sep 9, 2025 on various
 ### IMGT/V-QUEST releases.
 ###
 
