@@ -13,24 +13,16 @@ by the name of the parent folder of this folder (202401 i.e. Jan 2024).
 
 FWIW these datasets can be manually downloaded with:
 ```
-curl https://ogrdb.airr-community.org/download_germline_set/Homo%20sapiens/IGH_VDJ/9/ungapped >Homo_sapiens_IGH_VDJ_rev_8_ungapped.fasta
-curl https://ogrdb.airr-community.org/download_germline_set/Homo%20sapiens/IGKappa_VJ/4/ungapped >Homo_sapiens_IGKappa_VJ_rev_3_ungapped.fasta
-curl https://ogrdb.airr-community.org/download_germline_set/Homo%20sapiens/IGLambda_VJ/3/ungapped >Homo_sapiens_IGLambda_VJ_rev_2_ungapped.fasta
+curl https://ogrdb.airr-community.org/download_germline_set/Homo%20sapiens/IGH_VDJ/8/ungapped >Homo_sapiens_IGH_VDJ_rev_8_ungapped.fasta
+curl https://ogrdb.airr-community.org/download_germline_set/Homo%20sapiens/IGKappa_VJ/3/ungapped >Homo_sapiens_IGKappa_VJ_rev_3_ungapped.fasta
+curl https://ogrdb.airr-community.org/download_germline_set/Homo%20sapiens/IGLambda_VJ/2/ungapped >Homo_sapiens_IGLambda_VJ_rev_2_ungapped.fasta
 ```
 
 However, the FASTA files in this folder were obtained programmatically
 by running the following code in the folder on Nov 17, 2025:
 ```r
 library(igblastr)
-download_germline_sequences_from_OGRDB <- igblastr:::download_germline_sequences_from_OGRDB
-
-Hfile_count <- download_germline_sequences_from_OGRDB("Human", set_name="IGH_VDJ", locus="IGH", release_version="8")
-stopifnot(identical(Hfile_count, 3L))
-
-Kfile_count <- download_germline_sequences_from_OGRDB("Human", set_name="IGKappa_VJ", locus="IGK", release_version="3")
-stopifnot(identical(Kfile_count, 2L))
-
-Jfile_count <- download_germline_sequences_from_OGRDB("Human", set_name="IGLambda_VJ", locus="IGL", release_version="2")
-stopifnot(identical(Jfile_count, 2L))
+germline_sets <- c(IGH_VDJ=8, IGKappa_VJ=3, IGLambda_VJ=2)
+download_OGRDB_germline_sequences("Homo sapiens", germline_sets, gapped=FALSE, source_set=TRUE)
 ```
 
