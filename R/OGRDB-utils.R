@@ -349,6 +349,7 @@ download_OGRDB_germline_set <-
 ### IGHD.fasta, IGHJ.fasta, IGKV.fasta, IGKJ.fasta, IGLV.fasta, and
 ### IGLJ.fasta. The exact subset produced depends on the species/set_name.
 ### Returns the number of files produced.
+### NOTE: Superseded by download_OGRDB_germline_sequences()!
 download_germline_sequences_from_OGRDB <-
     function(species, species_subgroup=NULL, set_name,
              locus=c("IGH", "IGK", "IGL"),
@@ -409,6 +410,8 @@ download_germline_sequences_from_OGRDB <-
 ### sets. See list of Human germline sets here:
 ###   https://ogrdb.airr-community.org/germline_sets/Homo%20sapiens
 ### Returns the number of files produced (should be 7).
+###
+### NOTE: No longer needed! Use download_OGRDB_germline_sequences() instead.
 download_human_germline_sequences_from_OGRDB <-
     function(release_version="published",
              extended=FALSE, destdir=".",
@@ -524,6 +527,8 @@ download_human_germline_sequences_from_OGRDB <-
 ###   download_mouse_germline_sequences_from_OGRDB(set_names)
 ###
 ### --> produces 7 FASTA files (full germline db).
+###
+### NOTE: No longer needed! Use download_OGRDB_germline_sequences() instead.
 download_mouse_germline_sequences_from_OGRDB <-
     function(set_names,
              release_version="published",
@@ -559,46 +564,5 @@ download_mouse_germline_sequences_from_OGRDB <-
                     release_version=release_version, extended=extended,
                     destdir=destdir, paranoid.mode=paranoid.mode)
     file_count
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### download_V_ndm_data_from_OGRDB()
-###
-
-### 'germline_sets' must be a named integer vector where the names are
-### the germline sets to download and the values are their versions.
-### TODO: Use download_OGRDB_germline_set() for the download part!
-download_V_ndm_data_from_OGRDB <-
-    function(organism, germline_sets,
-             json_file=c("auto", "airr_ex", "airr"), check.data=FALSE, ...)
-{
-    stopifnot(isSingleNonWhiteString(organism),
-              is.numeric(germline_sets),
-              isTRUEorFALSE(check.data))
-    sets <- names(germline_sets)
-    if (is.null(sets))
-        stop(wmsg("'germline_sets' must have names on it"))
-    json_file <- match.arg(json_file)
-    if (json_file == "auto") {
-        is_human <- grepl("Homo.sapiens", organism, ignore.case=TRUE)
-        json_file <- ifelse(is_human, "airr_ex", "airr")
-    }
-    base_url <- paste0(.OGRDB_URL, "download_germline_set/")
-    tmp_json_file <- tempfile()
-    for (i in seq_along(germline_sets)) {
-        set <- sets[[i]]  # name of germline set
-        version <- germline_sets[[i]]
-        url <- sprintf("%s%s/%s/%s/%s", base_url, organism, set,
-                                        version, json_file)
-        download.file(URLencode(url), tmp_json_file, ...)
-        V_ndm_data <- makeogrannote(tmp_json_file)
-        ## We infer the locus from the name of the germline set.
-        destfile <- paste0(substr(set, 1L, 3L), "V.ndm.imgt")
-        message("Writing ", destfile, " (", nrow(V_ndm_data), " rows) ... ",
-                appendLF=FALSE)
-        write_V_ndm_data(V_ndm_data, destfile, check.data=check.data)
-        message("ok\n")
-    }
 }
 

@@ -71,7 +71,7 @@
 ### download_OGRDB_germline_sequences()
 ###
 
-.normarg_germline_sets <- function(germline_sets)
+.normalize_OGRDB_germline_sets <- function(germline_sets)
 {
     if (!is.numeric(germline_sets) || length(germline_sets) == 0L)
         stop(wmsg("'germline_sets' must be a non-empty integer vector"))
@@ -92,16 +92,18 @@
     germline_sets
 }
 
-### Try to infer the locus from the name of the germline set.
-### Returns NA if it fails.
-### Vectorized.
-.infer_locus_from_OGRDB_set_name <- function(set_name)
+### Tries to infer the locus embedded in the name of each germline set.
+.infer_loci_from_OGRDB_set_names <- function(set_names)
 {
-    stopifnot(is.character(set_name))
+    stopifnot(is.character(set_names))
     pattern1 <- "IG[HKL]"
-    ok <- grepl(pattern1, set_name)
+    bad_ix <- grep(pattern1, set_names, invert=TRUE)
+    if (length(bad_ix) != 0L) {
+        in1string <- paste0(set_names[bad_ix], collapse=", ")
+        stop(wmsg("cannot guess locus for: ", in1string))
+    }
     pattern2 <- paste0("^.*(", pattern1, ").*$")
-    ifelse(ok, sub(pattern2, "\\1", set_name), NA_character_)
+    sub(pattern2, "\\1", set_names)
 }
 
 ### Produces one FASTA file per "IMGT group".
@@ -157,21 +159,17 @@
 ### Returns the list of FASTA files that were produced in an invisible
 ### character vector that carries the names of the corresponding germline
 ### sets.
+### TODO: Add 'source_set' argument like in download_V_ndm_data_from_OGRDB()
+### below.
 download_OGRDB_germline_sequences <- function(organism="Homo sapiens",
                                               germline_sets, gapped=TRUE,
                                               destdir=".", overwrite=FALSE,
                                               recache=FALSE, ...)
 {
-    germline_sets <- .normarg_germline_sets(germline_sets)
+    organism <- normalize_OGRDB_organism(organism)
+    germline_sets <- .normalize_OGRDB_germline_sets(germline_sets)
     set_names <- names(germline_sets)
-    ## Let's try to infer the loci from the set names.
-    set_loci <- .infer_locus_from_OGRDB_set_name(set_names)
-    bad_ix <- which(is.na(set_loci))
-    if (length(bad_ix) != 0L) {
-        in1string <- paste0(set_names[bad_ix], collapse=", ")
-        stop(wmsg("cannot guess locus for: ", in1string))
-    }
-
+    set_loci <- .infer_loci_from_OGRDB_set_names(set_names)
     if (!isTRUEorFALSE(gapped))
         stop(wmsg("'gapped' must be TRUE or FALSE"))
     if (!isSingleNonWhiteString(destdir))
@@ -183,6 +181,8 @@ download_OGRDB_germline_sequences <- function(organism="Homo sapiens",
     }
     if (!isTRUEorFALSE(overwrite))
         stop(wmsg("'overwrite' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(recache))
+        stop(wmsg("'recache' must be TRUE or FALSE"))
 
     format <- if (gapped) "gapped" else "ungapped"
     tmp_destdir <- tempfile("OGRDB_germline_sequences_")
@@ -213,5 +213,54 @@ download_OGRDB_germline_sequences <- function(organism="Homo sapiens",
     copy_files_to_dir(fasta_files, destdir, overwrite=overwrite)
 
     invisible(filenames)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### download_V_ndm_data_from_OGRDB()
+###
+
+### Not exported!
+download_V_ndm_data_from_OGRDB <- function(organism="Homo sapiens",
+                                           germline_sets, source_set=FALSE,
+                                           check.data=FALSE,
+                                           destdir=".", recache=FALSE, ...)
+{
+    organism <- normalize_OGRDB_organism(organism)
+    germline_sets <- .normalize_OGRDB_germline_sets(germline_sets)
+    set_names <- names(germline_sets)
+    set_loci <- .infer_loci_from_OGRDB_set_names(set_names)
+    if (!isTRUEorFALSE(source_set))
+        stop(wmsg("'source_set' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(check.data))
+        stop(wmsg("'check.data' must be TRUE or FALSE"))
+    if (!isSingleNonWhiteString(destdir))
+        stop(wmsg("'destdir' must be a single (non-empty) string"))
+    if (!dir.exists(destdir)) {
+        if (file.exists(destdir))
+            stop(wmsg(destdir, ": not a directory"))
+        stop(wmsg(destdir, ": no such directory"))
+    }
+    if (!isTRUEorFALSE(recache))
+        stop(wmsg("'recache' must be TRUE or FALSE"))
+
+    for (i in seq_along(germline_sets)) {
+        set_name <- set_names[[i]]
+        set_version <- germline_sets[[i]]
+        set_locus <- set_loci[[i]]
+        ## Download OGRDB germline set to local store if it's not
+        ## already there.
+        local_file <- .download_OGRDB_germline_set_to_OGRDB_store(organism,
+                                      set_name, set_version,
+                                      format="airr", source_set=source_set,
+                                      recache=recache, ...)
+        V_ndm_data <- makeogrannote(local_file)
+        filename <- paste0(set_locus, "V.ndm.imgt")
+        message("Writing ", filename, " (", nrow(V_ndm_data), " rows) ... ",
+                appendLF=FALSE)
+        destfile <- file.path(destdir, filename)
+        write_V_ndm_data(V_ndm_data, destfile, check.data=check.data)
+        message("ok\n")
+    }
 }
 
