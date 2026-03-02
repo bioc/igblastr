@@ -25,16 +25,8 @@ However, the FASTA files in this folder were obtained programmatically
 by running the following code in the folder on Dec 29, 2024:
 ```r
 library(igblastr)
-download_germline_sequences_from_OGRDB <- igblastr:::download_germline_sequences_from_OGRDB
-
-Hfile_count <- download_germline_sequences_from_OGRDB("Human", set_name="IGH_VDJ", locus="IGH", release_version="9", extended=TRUE)
-stopifnot(identical(Hfile_count, 3L))
-
-Kfile_count <- download_germline_sequences_from_OGRDB("Human", set_name="IGKappa_VJ", locus="IGK", release_version="4", extended=TRUE)
-stopifnot(identical(Kfile_count, 2L))
-
-Jfile_count <- download_germline_sequences_from_OGRDB("Human", set_name="IGLambda_VJ", locus="IGL", release_version="3", extended=TRUE)
-stopifnot(identical(Jfile_count, 2L))
+germline_sets <- c(IGH_VDJ=9, IGKappa_VJ=4, IGLambda_VJ=3)
+download_OGRDB_germline_sequences("Homo sapiens", germline_sets, gapped=FALSE)
 ```
 
 Files `*.ndm.imgt` were obtained programmatically by running the

@@ -13,7 +13,7 @@
 
 \usage{
 download_OGRDB_germline_sequences(organism="Homo sapiens", germline_sets,
-                                  gapped=TRUE,
+                                  gapped=TRUE, source_set=FALSE,
                                   destdir=".", overwrite=FALSE,
                                   recache=FALSE, ...)
 }
@@ -64,6 +64,18 @@ download_OGRDB_germline_sequences(organism="Homo sapiens", germline_sets,
     Set \code{gapped} to \code{FALSE} to download the \emph{ungapped}
     V allele sequences instead.
   }
+  \item{source_set}{
+    Whether to download the \emph{Source Sets} instead of the
+    \emph{Reference Sets}. Only applies when \code{organism} is Homo sapiens.
+
+    Note that the AIRR-community/OGRDB maintainers recommend to use the
+    \emph{Reference Sets} for AIRR-seq analysis.
+    See for example \url{https://ogrdb.airr-community.org/germline_set/75}.
+    See also
+    \url{https://wordpress.vdjbase.org/index.php/ogrdb/explanation-of-germline-set-formats/}
+    for a brief explanation of the different germline set formats available
+    from OGRDB.
+  }
   \item{destdir}{
     A single string that is the path to the directory where the FASTA files
     containing the germline sequences should be downloaded.
@@ -102,6 +114,10 @@ download_OGRDB_germline_sequences(organism="Homo sapiens", germline_sets,
           germline sequences from IMGT.
 
     \item The OGRDB website: \url{https://ogrdb.airr-community.org/}.
+
+    \item \url{https://wordpress.vdjbase.org/index.php/ogrdb/explanation-of-germline-set-formats/}
+          for a brief explanation of the different germline set formats
+          available from OGRDB.
   }
 }
 

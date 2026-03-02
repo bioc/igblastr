@@ -159,10 +159,9 @@
 ### Returns the list of FASTA files that were produced in an invisible
 ### character vector that carries the names of the corresponding germline
 ### sets.
-### TODO: Add 'source_set' argument like in download_V_ndm_data_from_OGRDB()
-### below.
 download_OGRDB_germline_sequences <- function(organism="Homo sapiens",
                                               germline_sets, gapped=TRUE,
+                                              source_set=FALSE,
                                               destdir=".", overwrite=FALSE,
                                               recache=FALSE, ...)
 {
@@ -172,6 +171,8 @@ download_OGRDB_germline_sequences <- function(organism="Homo sapiens",
     set_loci <- .infer_loci_from_OGRDB_set_names(set_names)
     if (!isTRUEorFALSE(gapped))
         stop(wmsg("'gapped' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(source_set))
+        stop(wmsg("'source_set' must be TRUE or FALSE"))
     if (!isSingleNonWhiteString(destdir))
         stop(wmsg("'destdir' must be a single (non-empty) string"))
     if (!dir.exists(destdir)) {
@@ -198,7 +199,8 @@ download_OGRDB_germline_sequences <- function(organism="Homo sapiens",
             ## already there.
             local_file <- .download_OGRDB_germline_set_to_OGRDB_store(organism,
                                           set_name, set_version,
-                                          format=format, recache=recache, ...)
+                                          format=format, source_set=source_set,
+                                          recache=recache, ...)
             .split_OGRDB_fasta_file(local_file, set_name, set_locus,
                                     destdir=tmp_destdir)
         }

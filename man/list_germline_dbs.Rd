@@ -108,9 +108,9 @@ rm_germline_db(db_name)
     See \url{https://github.com/HyrienLab/igblastr/tree/devel/inst/extdata/germline_sets/AIRR/human/202410/README.md}
     for more information.
 
-    The AIRR-community/OGRDB maintainers recommend to use the \emph{Reference
-    Sets} for AIRR-seq analysis.
-    See \url{https://ogrdb.airr-community.org/germline_set/75}
+    The AIRR-community/OGRDB maintainers recommend to use the
+    \emph{Reference Sets} for AIRR-seq analysis.
+    See for example \url{https://ogrdb.airr-community.org/germline_set/75}
   }
 }
 
