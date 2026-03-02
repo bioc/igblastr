@@ -165,6 +165,12 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
     \item \code{\link{load_intdata}} to access and manipulate IgBLAST
           \emph{internal data}.
 
+    \item \code{\link{download_IMGT_germline_sequences}} to download
+          germline sequences from IMGT.
+
+    \item \code{\link{download_OGRDB_germline_sequences}} to download
+          germline sequences from OGRDB.
+
     \item IgBLAST is described at
           \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.
   }
@@ -229,50 +235,28 @@ stopifnot(identical(
 ## In this example, we're going to download human germline gene allele
 ## **gapped** sequences from AIRR-community/OGRDB and use them to create
 ## and install a new germline db. More precisely, we're going to:
-##   1. Download the gapped sequences for the following "Reference Sets"
-##      from AIRR-community/OGRDB:
+##   1. Use download_OGRDB_germline_sequences() to download the
+##      gapped sequences for the following "Reference Sets" from
+##      AIRR-community/OGRDB:
 ##        - IGH_VDJ version 9
 ##        - IGKappa_VJ version 4
 ##        - IGLambda_VJ version 3
-##      Each "Reference Set" corresponds to a BCR germline locus. For each
-##      set, AIRR-community/OGRDB provides a FASTA file containing the
-##      gapped allele sequences for that locus. We'll also split each file
-##      to produce one FASTA file per region type for that locus, so we'll
-##      end up with 7 FASTA files.
+##      Each "Reference Set" corresponds to a BCR germline locus. For
+##      each set, download_OGRDB_germline_sequences() will download the
+##      FASTA file provided by AIRR-community/OGRDB that contains the
+##      gapped allele sequences for that locus, and split the file into
+##      one FASTA file per region type.
 ##   2. Use these FASTA files to create and install a new germline db.
 ##   3. Check that the new db contains the same sequences
 ##      as built-in germline db _AIRR.human.IGH+IGK+IGL.202410.
 
 ## --- 1. Download human gapped sequences from AIRR-community/OGRDB ---
 
-download_AIRR_gapped_germline_sets <- function(organism, sets, destdir) {
-  base_url <- "https://ogrdb.airr-community.org/download_germline_set/"
-  for (i in seq_along(germline_sets)) {
-    set <- names(sets)[[i]]
-    version <- sets[[i]]
-    url <- sprintf("\%s\%s/\%s/\%s/gapped_ex", base_url,
-                   organism, set, version)
-    tmpfile <- tempfile()
-    download.file(URLencode(url), tmpfile)
-    alleles <- readDNAStringSet(tmpfile)
-    locus_regions <- strsplit(set, "_")[[1L]]
-    locus <- substr(locus_regions[[1L]], 1L, 3L)
-    region_types <- strsplit(locus_regions[[2L]], "")[[1L]]
-    ## Split the downloaded FASTA file by region type.
-    for (region_type in region_types) {
-      group <- paste0(locus, region_type)
-      reg_alleles <- alleles[grep(group, names(alleles))]
-      fasta_file <- paste0(group, ".fasta")
-      writeXStringSet(reg_alleles, file.path(destdir, fasta_file))
-    }
-  }
-}
-
 dir.create(exB_fasta_dir <- tempfile())
 germline_sets <- c(IGH_VDJ=9, IGKappa_VJ=4, IGLambda_VJ=3)
 
-download_AIRR_gapped_germline_sets("Homo sapiens", germline_sets,
-                                   exB_fasta_dir)
+download_OGRDB_germline_sequences("Homo sapiens", germline_sets,
+                                  destdir=exB_fasta_dir)
 
 list.files(exB_fasta_dir)  # 7 FASTA files
 

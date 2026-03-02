@@ -17,6 +17,15 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### OAS_is_up()
+###
+
+.OAS_URL <- "https://opig.stats.ox.ac.uk/webapps/oas/"
+
+OAS_is_up <- function() websiteIsUp(.OAS_URL, connecttimeout=10)
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### read_OAS_csv_metadata()
 ### read_OAS_csv()
 ### extract_sequences_from_paired_OAS_df()

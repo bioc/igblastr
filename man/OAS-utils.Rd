@@ -14,6 +14,8 @@
 \alias{extract_metadata_from_OAS_units}
 \alias{extract_sequences_from_paired_OAS_units}
 
+\alias{OAS_is_up}
+
 \title{Download and manipulate OAS data}
 
 \description{
@@ -41,6 +43,9 @@ download_paired_OAS_units(study, units=NULL, destdir=".", ...)
 ## Read metadata/data from a batch of downloaded OAS unit files:
 extract_metadata_from_OAS_units(dir=".", pattern="\\\\.csv\\\\.gz$")
 extract_sequences_from_paired_OAS_units(dir=".", pattern="\\\\.csv\\\\.gz$")
+
+## Check OAS website:
+OAS_is_up()
 }
 
 \arguments{
@@ -178,6 +183,10 @@ extract_sequences_from_paired_OAS_units(dir=".", pattern="\\\\.csv\\\\.gz$")
   names are the sequence ids. The sequence ids are obtained by prefixing
   the original sequence ids found in the files with the name of the unit
   followed by \code{_heavy_chain_} or \code{_light_chain_}.
+
+  \code{OAS_is_up()} returns \code{TRUE} or \code{FALSE}, indicating
+  whether the OAS website at \url{https://opig.stats.ox.ac.uk/webapps/oas/}
+  is up and running or down.
 }
 
 \references{
@@ -216,30 +225,32 @@ extract_sequences_from_paired_OAS_units(dir=".", pattern="\\\\.csv\\\\.gz$")
 }
 
 \examples{
-list_paired_OAS_studies()
+if (OAS_is_up()) {
+  list_paired_OAS_studies()
 
-list_paired_OAS_units("Eccles_2020")
+  list_paired_OAS_units("Eccles_2020")
 
-## Import all the pairs of antibody sequences from the Eccles_2020 study:
+  ## Import all the pairs of antibody sequences from the Eccles_2020 study:
 
-download_dir <- tempdir()
-download_paired_OAS_units("Eccles_2020", destdir=download_dir)
+  download_dir <- tempdir()
+  download_paired_OAS_units("Eccles_2020", destdir=download_dir)
 
-metadata <- extract_metadata_from_OAS_units(download_dir)
-metadata  # data.frame with 1 row per unit file
+  metadata <- extract_metadata_from_OAS_units(download_dir)
+  metadata  # data.frame with 1 row per unit file
 
-sequences <- extract_sequences_from_paired_OAS_units(download_dir)
-sequences  # DNAStringSet object
+  sequences <- extract_sequences_from_paired_OAS_units(download_dir)
+  sequences  # DNAStringSet object
 
-## Odd indices correspond to heavy chain sequences and even indices
-## to light chain sequences:
+  ## Odd indices correspond to heavy chain sequences and even indices
+  ## to light chain sequences:
 
-head(names(sequences))
+  head(names(sequences))
 
-sequences[1:2]  # 1st pair
-sequences[3:4]  # 2nd pair
-sequences[5:6]  # 3rd pair
-# etc...
+  sequences[1:2]  # 1st pair
+  sequences[3:4]  # 2nd pair
+  sequences[5:6]  # 3rd pair
+  # etc...
+}
 }
 
 \keyword{utilities}

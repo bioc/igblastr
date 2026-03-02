@@ -23,9 +23,9 @@
 nuke_file <- function(path)
 {
     stopifnot(isSingleNonWhiteString(path))
-    res <- unlink(path, recursive=TRUE, force=TRUE)
+    ret <- unlink(path, recursive=TRUE, force=TRUE)
     ## file.exists() "workaround" does not help. See NOTE above.
-    if (res != 0L || file.exists(path))
+    if (ret != 0L || file.exists(path))
         stop(wmsg("failed to delete '", path, "'"))
 }
 
@@ -159,6 +159,39 @@ rename_file <- function(from, to, replace=FALSE)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### remove_empty_dir()
+###
+
+### remove_empty_dir(path, parents=TRUE) same as 'rmdir --parents <path>'
+### except that it doesn't return an error if 'path' is not empty.
+### Returns the first anscestor that is not empty.
+remove_empty_dir <- function(path, parents=FALSE)
+{
+    stopifnot(isSingleNonWhiteString(path), isTRUEorFALSE(parents))
+    if (!dir.exists(path)) {
+        if (file.exists(path))
+            stop(wmsg(path, ": not a directory"))
+        stop(wmsg(path, ": no such directory"))
+    }
+    if (path == ".")
+        stop(wmsg("'path' cannot be \".\""))
+    empty <- length(list.files(path, all.files=TRUE, no..=TRUE)) == 0L
+    if (empty) {
+        ret <- unlink(path, recursive=TRUE)
+        if (ret != 0L || file.exists(path))
+            stop(wmsg("failed to remove empty directory ", path))
+        path <- dirname(path)
+        if (path != "." && parents)
+            path <- remove_empty_dir(path, parents=TRUE)
+    } else {
+        if (!parents)
+            stop(wmsg(path, ": directory not empty"))
+    }
+    path
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### remove_hidden_files()
 ###
 
@@ -172,6 +205,36 @@ remove_hidden_files <- function(path=".", include.hidden.dirs=FALSE)
     hidden_files <- list.files(path, pattern="^\\.", all.files=TRUE,
                                full.names=TRUE, no..=TRUE)
     unlink(hidden_files, recursive=include.hidden.dirs, force=TRUE)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### copy_files_to_dir()
+###
+
+### The semantic of 'file.copy(files, destdir, overwrite=FALSE)' is not
+### what we want (it simply skips copying the files for which the
+### destination file exists). What we want is a copy everyting or nothing
+### semantic (i.e. atomicity), which is what copy_files_to_dir() achieves.
+copy_files_to_dir <- function(files, destdir, overwrite=FALSE)
+{
+    stopifnot(is.character(files),
+              isSingleNonWhiteString(destdir), dir.exists(destdir),
+              isTRUEorFALSE(overwrite))
+    if (!overwrite) {
+        filenames <- basename(files)
+        destfiles <- file.path(destdir, filenames)
+        already_there <- file.exists(destfiles)
+        if (any(already_there)) {
+            in1string <- paste0(filenames[already_there], collapse=", ")
+            stop(wmsg("The following files are already present in 'destdir': ",
+                      in1string, "."),
+                 "\n  ",
+                 wmsg("Use 'overwrite=TRUE' to replace them."))
+        }
+    }
+    ## Note that file.copy() has its own way of handling 'overwrite=FALSE'.
+    file.copy(files, destdir, overwrite=TRUE)
 }
 
 

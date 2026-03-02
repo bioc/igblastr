@@ -90,7 +90,7 @@ IMGT_is_up()
     caching is in memory so does not persist across sessions.
 
     Set \code{recache} to \code{TRUE} to force a new download (and recaching)
-    of data..
+    of the data.
   }
   \item{...}{
     Extra arguments to be passed to the internal call to \code{download.file()}.
@@ -120,13 +120,16 @@ IMGT_is_up()
     \item \code{\link{install_IMGT_germline_db}} to install a germline db
           from IMGT.
 
+    \item \code{\link{install_custom_germline_db}} to install a germline db
+          from user-supplied gene allele sequences.
+
+    \item \code{\link{download_OGRDB_germline_sequences}} to download
+          germline sequences from OGRDB.
+
     \item The IMGT website: \url{https://www.imgt.org/}.
 
     \item The IMGT/V-QUEST download site:
           \url{https://www.imgt.org/download/V-QUEST/}.
-
-    \item IgBLAST is described at
-          \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.
   }
 }
 

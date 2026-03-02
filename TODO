@@ -140,7 +140,7 @@ o Older versions of IgBLAST (e.g. version 1.19.0) don't necessarily include
       able to fix this.
       Make sure that the fix is applied when installing version 1.22.0 only.
 
-o Migrate code in R/AIRR-utils.R from OGRDB API v1 to OGRDB API v2.
+o Migrate code in R/OGRDB-utils.R from OGRDB API v1 to OGRDB API v2.
   See OGRDB API v2.0.0 Guide here:
   https://github.com/airr-community/ogrdb/blob/master/schema/ogrdb_api_v2_guide.md
 
@@ -197,7 +197,7 @@ o Great resource for how to use AIRR Community Reference germline sets with
   In particular, the author seems to be using an OGRDB REST API version 2:
     https://ogrdb.airr-community.org/api_v2
   but where is this API documented?
-  All the download utilities implemented in igblastr/R/AIRR-utils.R use
+  All the download utilities implemented in igblastr/R/OGRDB-utils.R use
   the OGRDB REST API at
     https://ogrdb.airr-community.org/api
   which is poorly documented and is somewhat confusing (see below).
@@ -222,6 +222,6 @@ o Investigate the following mysteries about the germline sets provided
      and IGLJ) seem to be available.
      See https://ogrdb.airr-community.org/germline_sets/Mus%20musculus
 
-o Implement install_AIRR_germline_db(). Will download the germline sequences
+o Implement install_OGRDB_germline_db(). Will download the germline sequences
   from https://ogrdb.airr-community.org/ (link provided by Kellie).
 

@@ -20,7 +20,7 @@ test_that("load_auxdata()", {
 ### Install germline dbs used in tests below. Note that only the first
 ### installation actually triggers a download from IMGT. All subsequent
 ### installations obtain the data from the IMGT local store (located
-### in 'igblastr_cache(IMGT_LOCAL_STORE)') so are very fast and work offline.
+### in 'igblastr_cache(IMGT_STORE)') so are very fast and work offline.
 install_IMGT_germline_db("202531-1", "Homo sapiens", overwrite=TRUE)
 install_IMGT_germline_db("202531-1", "Mus musculus", overwrite=TRUE)
 install_IMGT_germline_db("202531-1", "Rattus norvegicus", overwrite=TRUE)

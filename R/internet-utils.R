@@ -52,11 +52,30 @@ getUrlContent <- function(url, query=list(), type=NULL, encoding=NULL, ...)
     content(response, type=type, encoding=encoding)
 }
 
-### Note that in case of user interrupt (CTRL+C) we can end up with a
-### partial download and corrupted file! Can we achieve atomic behavior?
+
+### A thin wrapper around utils::download.file() that tries to be more
+### cautious.
+### Returns 'destfile'.
+### NOTE: A major problem with download.file() is that, in case of user
+### interrupt (CTRL+C) or connectivity issue, we can end up with a partial
+### download and corrupted file! Can we achieve atomic behavior?
 ### TODO: Try to make the behavior atomic, under any circumstance.
+download_file <- function(url, destfile, ...)
+{
+    stopifnot(isSingleNonWhiteString(url), isSingleNonWhiteString(destfile))
+    if (!has_internet())
+        stop(wmsg("no internet"))
+    code <- try(suppressWarnings(download.file(url, destfile, ...)),
+                silent=TRUE)
+    if (inherits(code, "try-error") || code != 0L)
+        stop(wmsg("failed to download ", url))
+    destfile
+}
+
+### NOT atomic! (see above NOTE and TODO)
 download_as_tempfile <- function(dir_url, filename, ...)
 {
+    stopifnot(isSingleNonWhiteString(dir_url), isSingleNonWhiteString(filename))
     if (!has_internet())
         stop(wmsg("no internet"))
     url <- paste0(dir_url, filename)
