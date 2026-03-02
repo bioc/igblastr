@@ -3,9 +3,9 @@
 ### -------------------------------------------------------------------------
 
 
-.path_to_IMGT_store <- function(release=NULL)
+.get_path_to_IMGT_store <- function(release=NULL)
 {
-    IMGT_store <- igblastr_cache(IMGT_LOCAL_STORE)
+    IMGT_store <- igblastr_cache(IMGT_STORE)
     if (!is.null(release)) {
         stopifnot(isSingleNonWhiteString(release))
         IMGT_store <- file.path(IMGT_store, release)
@@ -29,7 +29,7 @@
     if (!isSingleNonWhiteString(release))
         stop(wmsg("'release' must be a single (non-empty) string"))
     ## First we try offline validation by checking the IMGT local store.
-    if (dir.exists(.path_to_IMGT_store(release)))
+    if (dir.exists(.get_path_to_IMGT_store(release)))
         return(release)
     ## Off-line validation above failed so we try online validation.
     all_releases <- list_IMGT_releases()
@@ -77,7 +77,7 @@ list_IMGT_organisms <- function(release)
     release <- .validate_IMGT_release(release)
 
     ## Download IMGT/V-QUEST release to local store if it's not there already.
-    IMGT_store <- .path_to_IMGT_store(release)
+    IMGT_store <- .get_path_to_IMGT_store(release)
     if (!dir.exists(IMGT_store))
         download_and_unzip_IMGT_release(release, IMGT_store)
     list_organisms_in_IMGT_store(IMGT_store)
@@ -100,7 +100,7 @@ download_IMGT_release_to_IMGT_store <- function(release, recache=FALSE, ...)
         stop(wmsg("'recache' must be TRUE or FALSE"))
 
     ## Download IMGT/V-QUEST release to local store if it's not already there.
-    IMGT_store <- .path_to_IMGT_store(release)
+    IMGT_store <- .get_path_to_IMGT_store(release)
     if (!dir.exists(IMGT_store) || recache)
         download_and_unzip_IMGT_release(release, IMGT_store, ...)
 
@@ -129,37 +129,6 @@ find_organism_fasta_store_in_IMGT_store <- function(IMGT_store, organism,
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .copy_files_to_dir()
-###
-
-### The semantic of 'file.copy(files, destdir, overwrite=FALSE)' is not
-### what we want (it skips copying files for which the destination file
-### exists). What we want is a copy everyting or nothing semantic (i.e.
-### atomicity), which is what .copy_files_to_dir() achieves.
-### TODO: Move to R/file-utils.R and rename copy_files_to_dir().
-.copy_files_to_dir <- function(files, destdir, overwrite=FALSE)
-{
-    stopifnot(is.character(files),
-              isSingleNonWhiteString(destdir), dir.exists(destdir),
-              isTRUEorFALSE(overwrite))
-    if (!overwrite) {
-        filenames <- basename(files)
-        destfiles <- file.path(destdir, filenames)
-        already_there <- file.exists(destfiles)
-        if (any(already_there)) {
-            in1string <- paste0(filenames[already_there], collapse=", ")
-            stop(wmsg("The following files are already present in 'destdir': ",
-                      in1string, "."),
-                 "\n  ",
-                 wmsg("Use 'overwrite=TRUE' to replace them."))
-        }
-    }
-    ## Note that file.copy() has its own way of handling 'overwrite=FALSE'.
-    file.copy(files, destdir, overwrite=TRUE)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### download_IMGT_germline_sequences()
 ###
 
@@ -176,8 +145,11 @@ download_IMGT_germline_sequences <- function(release, organism="Homo sapiens",
         stop(wmsg("'tcr.db' must be TRUE or FALSE"))
     if (!isSingleNonWhiteString(destdir))
         stop(wmsg("'destdir' must be a single (non-empty) string"))
-    if (!dir.exists(destdir))
-        stop(wmsg("'destdir' must be the path to an existing directory"))
+    if (!dir.exists(destdir)) {
+        if (file.exists(destdir))
+            stop(wmsg(destdir, ": not a directory"))
+        stop(wmsg(destdir, ": no such directory"))
+    }
     if (!isTRUEorFALSE(overwrite))
         stop(wmsg("'overwrite' must be TRUE or FALSE"))
 
@@ -193,7 +165,7 @@ download_IMGT_germline_sequences <- function(release, organism="Homo sapiens",
 
     ## Copy files from local FASTA store to 'destdir'.
     fasta_files <- list_fasta_files(fasta_store)
-    .copy_files_to_dir(fasta_files, destdir, overwrite=overwrite)
+    copy_files_to_dir(fasta_files, destdir, overwrite=overwrite)
 
     invisible(basename(fasta_files))
 }

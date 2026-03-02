@@ -7,29 +7,32 @@
 ### The igblastr cache is divided into various compartments that are
 ### completely independent one from each other. These compartments are:
 ###
-###   compartment       path
-###   ----------------  ------------------------------------
-###   IGBLAST_ROOTS     <igblastr-cache>/igblast_roots
-###   LIVE_IGDATA       <igblastr-cache>/live_igdata
-###   GERMLINE_DBS      <igblastr-cache>/germline_dbs
-###   C_REGION_DBS      <igblastr-cache>/c_region_dbs
-###   IMGT_LOCAL_STORE  <igblastr-cache>/store/IMGT-releases
+###   compartment     path
+###   --------------  ------------------------------------
+###   IGBLAST_ROOTS   <igblastr-cache>/igblast_roots
+###   LIVE_IGDATA     <igblastr-cache>/live_igdata
+###   GERMLINE_DBS    <igblastr-cache>/germline_dbs
+###   C_REGION_DBS    <igblastr-cache>/c_region_dbs
+###   IMGT_STORE      <igblastr-cache>/store/IMGT-releases
+###   OGRDB_STORE     <igblastr-cache>/store/OGRDB
 ###
 ### Always use the igblastr_cache() function implemented in this file to
 ### obtain these paths.
 
-IGBLAST_ROOTS    <- "IGBLAST_ROOTS"
-LIVE_IGDATA      <- "LIVE_IGDATA"
-GERMLINE_DBS     <- "GERMLINE_DBS"
-C_REGION_DBS     <- "C_REGION_DBS"
-IMGT_LOCAL_STORE <- "IMGT_LOCAL_STORE"
+IGBLAST_ROOTS <- "IGBLAST_ROOTS"
+LIVE_IGDATA   <- "LIVE_IGDATA"
+GERMLINE_DBS  <- "GERMLINE_DBS"
+C_REGION_DBS  <- "C_REGION_DBS"
+IMGT_STORE    <- "IMGT_STORE"
+OGRDB_STORE   <- "OGRDB_STORE"
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### igblastr_cache()
 ###
 
 .IGBLASTR_CACHES <- c(IGBLAST_ROOTS, LIVE_IGDATA,
-                      GERMLINE_DBS, C_REGION_DBS, IMGT_LOCAL_STORE)
+                      GERMLINE_DBS, C_REGION_DBS,
+                      IMGT_STORE, OGRDB_STORE)
 
 ### Returns **absolute** path to igblastr's persistent cache.
 ### Note that the returned path is guaranteed to be a directory but is not
@@ -67,11 +70,12 @@ igblastr_cache <- function(which=NULL)
         return(cache_path)
     stopifnot(isSingleNonWhiteString(which))
     switch(which,
-        IGBLAST_ROOTS   =file.path(cache_path, "igblast_roots"),
-        LIVE_IGDATA     =file.path(cache_path, "live_igdata"),
-        GERMLINE_DBS    =file.path(cache_path, "germline_dbs"),
-        C_REGION_DBS    =file.path(cache_path, "c_region_dbs"),
-        IMGT_LOCAL_STORE=file.path(cache_path, "store", "IMGT-releases"),
+        IGBLAST_ROOTS=file.path(cache_path, "igblast_roots"),
+        LIVE_IGDATA  =file.path(cache_path, "live_igdata"),
+        GERMLINE_DBS =file.path(cache_path, "germline_dbs"),
+        C_REGION_DBS =file.path(cache_path, "c_region_dbs"),
+        IMGT_STORE   =file.path(cache_path, "store", "IMGT-releases"),
+        OGRDB_STORE  =file.path(cache_path, "store", "OGRDB"),
         stop(wmsg("'which' must be one of ",
                   paste0("\"", .IGBLASTR_CACHES, "\"", collapse=", ")))
     )
