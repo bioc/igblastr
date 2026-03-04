@@ -29,9 +29,6 @@
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### normalize_OGRDB_organism()
-### infer_OGRDB_species_subgroup()
-### normalize_OGRDB_format()
-### OGRDB_format2fileext()
 ###
 
 ### Organisms available at OGRDB as of February 2026.
@@ -54,6 +51,13 @@ normalize_OGRDB_organism <- function(organism)
     .OGRDB_ORGANISMS[[m]]
 }
 
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .infer_OGRDB_species_subgroup()
+### .OGRDB_format2fileext()
+### .normalize_OGRDB_format()
+###
+
 ### Infer the "Species subgroup" from the organism/set_name combination.
 ### Note that OGRDB only defines the "Species subgroup" for various mouse
 ### strains at the moment. In this case the "Species subgroup" is simply
@@ -62,7 +66,7 @@ normalize_OGRDB_organism <- function(organism)
 ### Returns the empty string ("") if the organism/set_name combination does
 ### not correspond to any subgroup.
 ### Performs various sanity checks that should never fail.
-infer_OGRDB_species_subgroup <- function(organism, set_name)
+.infer_OGRDB_species_subgroup <- function(organism, set_name)
 {
     stopifnot(isSingleNonWhiteString(organism))
     if (!isSingleNonWhiteString(set_name))
@@ -91,7 +95,15 @@ infer_OGRDB_species_subgroup <- function(organism, set_name)
     stop_if_invalid_set_name()
 }
 
-normalize_OGRDB_format <- function(format, organism, source_set=FALSE)
+### Should always be called **before** .normalize_OGRDB_format() below.
+.OGRDB_format2fileext <- function(format)
+{
+    stopifnot(isSingleNonWhiteString(format))
+    switch(format, airr=".json", gapped=, ungapped=".fasta",
+           stop(wmsg("unknown OGRDB format: ", format)))
+}
+
+.normalize_OGRDB_format <- function(format, organism, source_set=FALSE)
 {
     if (!isSingleNonWhiteString(format))
         stop(wmsg("'format' must be a single (non-empty) string"))
@@ -109,13 +121,6 @@ normalize_OGRDB_format <- function(format, organism, source_set=FALSE)
     format
 }
 
-OGRDB_format2fileext <- function(format)
-{
-    stopifnot(isSingleNonWhiteString(format))
-    switch(format, airr=".json", gapped=, ungapped=".fasta",
-           stop(wmsg("unknown OGRDB format: ", format)))
-}
-
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### download_OGRDB_germline_set()
@@ -124,7 +129,7 @@ OGRDB_format2fileext <- function(format)
 .build_OGRDB_germline_set_url <- function(organism, set_name, set_version,
                                           format)
 {
-    subgroup <- infer_OGRDB_species_subgroup(organism, set_name)
+    subgroup <- .infer_OGRDB_species_subgroup(organism, set_name)
     org_url <- .OGRDB_organism_url(organism, for.download=TRUE)
     if (subgroup != "")
         org_url <- paste0(org_url, "/", .encode_OGRDB_URL_component(subgroup))
@@ -172,8 +177,8 @@ download_OGRDB_germline_set <-
     if (!is.integer(set_version))
         set_version <- as.integer(set_version)
     format <- match.arg(format)
-    fileext <- OGRDB_format2fileext(format)
-    format <- normalize_OGRDB_format(format, organism, source_set=source_set)
+    fileext <- .OGRDB_format2fileext(format)
+    format <- .normalize_OGRDB_format(format, organism, source_set=source_set)
     if (!isSingleNonWhiteString(destdir))
         stop(wmsg("'destdir' must be a single (non-empty) string"))
     if (!dir.exists(destdir)) {
@@ -196,6 +201,70 @@ download_OGRDB_germline_set <-
     filename <- paste0(format, fileext)
     download_file(url, file.path(destdir, filename), ...)
     filename
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### download_OGRDB_germline_set_to_OGRDB_store()
+###
+
+.encode_OGRDB_path_component <- function(path_component)
+{
+    stopifnot(isSingleNonWhiteString(path_component))
+    gsub("/", ".slash.", chartr(" ", "_", path_component))
+}
+
+.get_path_to_stored_OGRDB_germline_set <-
+    function(organism, set_name, set_version, format, source_set=FALSE)
+{
+    organism <- normalize_OGRDB_organism(organism)
+    subgroup <- .infer_OGRDB_species_subgroup(organism, set_name)
+    if (!isSingleNumber(set_version))
+        stop(wmsg("'set_version' must be a single number"))
+    if (!is.integer(set_version))
+        set_version <- as.integer(set_version)
+    fileext <- .OGRDB_format2fileext(format)
+    format <- .normalize_OGRDB_format(format, organism, source_set=source_set)
+
+    OGRDB_store <- igblastr_cache(OGRDB_STORE)
+    path <- file.path(OGRDB_store, .encode_OGRDB_path_component(organism))
+    if (subgroup != "")
+        path <- file.path(path, .encode_OGRDB_path_component(subgroup))
+    set_name <- .encode_OGRDB_path_component(set_name)
+    filename <- paste0(format, fileext)
+    file.path(path, set_name, set_version, filename)
+}
+
+### Returns path to downloaded germline set.
+download_OGRDB_germline_set_to_OGRDB_store <-
+    function(organism, set_name, set_version,
+             format=c("airr", "gapped", "ungapped"), source_set=FALSE,
+             recache=FALSE, ...)
+{
+    format <- match.arg(format)
+    local_file <- .get_path_to_stored_OGRDB_germline_set(organism,
+                                            set_name, set_version,
+                                            format, source_set=source_set)
+    if (!isTRUEorFALSE(recache))
+        stop(wmsg("'recache' must be TRUE or FALSE"))
+
+    ## Download OGRDB germline set to local store if it's not already there.
+    if (!file.exists(local_file) || recache) {
+        destdir <- dirname(local_file)
+        if (!dir.exists(destdir)) {
+            dir.create(destdir, recursive=TRUE)
+            ## If the requested germline does not exist, the download below
+            ## will fail and we will end up with an empty 'destdir'.
+            on.exit(remove_empty_dir(destdir, parents=TRUE))
+        }
+        filename <- download_OGRDB_germline_set(organism,
+                                   set_name, set_version,
+                                   format=format, source_set=source_set,
+                                   destdir=destdir, ...)
+        ## Sanity check (should never fail).
+        stopifnot(identical(filename, basename(local_file)))
+    }
+    local_file
 }
 
 

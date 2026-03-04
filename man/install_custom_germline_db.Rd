@@ -185,15 +185,15 @@ if (!has_igblast()) install_igblast()
 
 ## In this admittedly artificial example, we're going to create and
 ## install a germline db from the gene allele sequences in built-in
-## germline db _AIRR.human.IGH+IGK+IGL.202410. More precisely, we're
+## germline db _OGRDB.human.IGH+IGK+IGL.202410. More precisely, we're
 ## going to:
-##   1. Dump built-in germline db _AIRR.human.IGH+IGK+IGL.202410
+##   1. Dump built-in germline db _OGRDB.human.IGH+IGK+IGL.202410
 ##      in 7 FASTA files.
 ##   2. Use these FASTA files to create and install a new germline db.
 ##   3. Check that the new db contains the same sequences as the
 ##      original db.
 
-## --- 1. Dump _AIRR.human.IGH+IGK+IGL.202410 in 7 FASTA files ---
+## --- 1. Dump _OGRDB.human.IGH+IGK+IGL.202410 in 7 FASTA files ---
 
 dump_germline_db <- function(db_name, destdir) {
   for (region_type in c("V", "D", "J")) {
@@ -208,7 +208,7 @@ dump_germline_db <- function(db_name, destdir) {
   }
 }
 
-db_name0 <- "_AIRR.human.IGH+IGK+IGL.202410"
+db_name0 <- "_OGRDB.human.IGH+IGK+IGL.202410"
 dir.create(exA_fasta_dir <- tempfile())
 
 dump_germline_db(db_name0, exA_fasta_dir)
@@ -248,7 +248,7 @@ stopifnot(identical(
 ##      one FASTA file per region type.
 ##   2. Use these FASTA files to create and install a new germline db.
 ##   3. Check that the new db contains the same sequences
-##      as built-in germline db _AIRR.human.IGH+IGK+IGL.202410.
+##      as built-in germline db _OGRDB.human.IGH+IGK+IGL.202410.
 
 ## --- 1. Download human gapped sequences from AIRR-community/OGRDB ---
 
@@ -271,11 +271,11 @@ install_custom_germline_db(exB_db_name, exB_fasta_dir, gapped=TRUE)
 list_germline_dbs()
 
 ## --- 3. Check that the new db contains the same sequences ---
-## ---          as _AIRR.human.IGH+IGK+IGL.202410           ---
+## ---          as _OGRDB.human.IGH+IGK+IGL.202410          ---
 
 ## The Reference Sets we used to populate the new db (IGH_VDJ version 9,
 ## IGKappa_VJ version 4, IGLambda_VJ version 3) are the same that were
-## used to populate built-in germline db _AIRR.human.IGH+IGK+IGL.202410.
+## used to populate built-in germline db _OGRDB.human.IGH+IGK+IGL.202410.
 ## Let's check that the two dbs contain the same sequences:
 stopifnot(identical(
     as.character(load_germline_db(db_name0)),
@@ -302,7 +302,7 @@ intdataC <- load_intdata(exC_db_name)
 head(intdataC)
 
 ## Check that the "internal data" in the new db is the same as in
-## _AIRR.human.IGH+IGK+IGL.202410:
+## _OGRDB.human.IGH+IGK+IGL.202410:
 stopifnot(identical(intdataC, load_intdata(db_name0)))
 
 ## ---------------------------------------------------------------------

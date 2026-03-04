@@ -80,7 +80,7 @@ compute_auxdata(J_alleles)
 ## ---------------------------------------------------------------------
 
 ## Let's load a set of human J allele sequences:
-db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
+db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
 J_alleles <- load_germline_db(db_name, region_types="J")
 J_alleles  # DNAStringSet object
 

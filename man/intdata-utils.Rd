@@ -204,9 +204,9 @@ end_colnames <- grep("_end$", colnames(rabbit_intdata), value=TRUE)
 stopifnot(identical(rabbit_intdata [ , end_colnames],
                     rabbit_intdata2[ , end_colnames] * 3L))
 
-## Get the internal data included in the _AIRR.human.IGH+IGK+IGL.202410
+## Get the internal data included in the _OGRDB.human.IGH+IGK+IGL.202410
 ## germline db (this data is provided by AIRR-community/OGRDB):
-db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
+db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
 human_intdata <- load_intdata(db_name)
 head(human_intdata)
 
@@ -242,7 +242,7 @@ head(V_aa)
 fwr2 <- translate_V_alleles(V_alleles, human_intdata, V_segment="fwr2")
 head(fwr2)
 
-## Surprisingly, 13 V alleles in _AIRR.human.IGH+IGK+IGL.202410 contain
+## Surprisingly, 13 V alleles in _OGRDB.human.IGH+IGK+IGL.202410 contain
 ## the stop codon:
 has_stop_codon <- grepl("*", V_aa, fixed=TRUE)
 table(has_stop_codon)

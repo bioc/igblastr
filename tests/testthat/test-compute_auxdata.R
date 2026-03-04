@@ -4,7 +4,7 @@ test_that("compute_auxdata()", {
 
     ## --- for human J alleles (from AIRR and IMGT) ---
 
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
     J_alleles <- load_germline_db(db_name, region_types="J")
     computed_auxdata <- compute_auxdata(J_alleles)
     expect_true(is.data.frame(computed_auxdata))
@@ -15,7 +15,7 @@ test_that("compute_auxdata()", {
     ## auxiliary data included in IgBLAST. More precisely, we're going to
     ## check that it's a subset of 'load_auxdata("human", which="original")'.
 
-    ## All the J alleles in _AIRR.human.IGH+IGK+IGL.202410 are annotated
+    ## All the J alleles in _OGRDB.human.IGH+IGK+IGL.202410 are annotated
     ## in human_gl.aux so we expect no NAs in 'm' below.
     orig_auxdata <- load_and_fix_human_auxdata()
     m <- match(names(J_alleles), orig_auxdata[ , "allele_name"])

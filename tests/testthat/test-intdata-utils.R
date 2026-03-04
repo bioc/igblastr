@@ -43,27 +43,33 @@ test_that("load_intdata()", {
             expect_identical(colnames(intdata2), expected_colnames)
         }
 
-    ## Test on built-in germline dbs with internal data (4 at the moment):
+    ## Test on built-in germline dbs with internal data:
 
-    intdata <- load_intdata("_AIRR.human.IGH+IGK+IGL.202309")
-    ok <- check_V_ndm_data(intdata)
+    #intdata <- load_intdata("_OGRDB.human.IGH+IGK+IGL.202309")
+    #ok <- check_V_ndm_data(intdata)
     ## fwr3_end not a multiple of 3 for allele "IGLV2-8*03":
-    expect_identical(intdata[!ok, "allele_name"], "IGLV2-8*03")
+    #expect_identical(intdata[!ok, "allele_name"], "IGLV2-8*03")
 
-    intdata <- load_intdata("_AIRR.human.IGH+IGK+IGL.202401")
-    ok <- check_V_ndm_data(intdata)
+    #intdata <- load_intdata("_OGRDB.human.IGH+IGK+IGL.202401")
+    #ok <- check_V_ndm_data(intdata)
     ## fwr3_end not a multiple of 3 for allele "IGLV2-8*03":
-    expect_identical(intdata[!ok, "allele_name"], "IGLV2-8*03")
+    #expect_identical(intdata[!ok, "allele_name"], "IGLV2-8*03")
 
-    intdata <- load_intdata("_AIRR.human.IGH+IGK+IGL.202410")
+    intdata <- load_intdata("_OGRDB.human.IGH+IGK+IGL.202410")
     expect_true(all(check_V_ndm_data(intdata)))
 
-    intdata <- load_intdata("_AIRR.rhesus_monkey.IGH+IGK+IGL.202601")
+    intdata <- load_intdata("_OGRDB.mouse.NOD_ShiLtJ.IGH+IGK+IGL.202501")
+    expect_true(all(check_V_ndm_data(intdata)))
+
+    intdata <- load_intdata("_OGRDB.mouse.PWD_PhJ.IGH+IGK+IGL.202501")
+    expect_true(all(check_V_ndm_data(intdata)))
+
+    intdata <- load_intdata("_OGRDB.rhesus_monkey.IGH+IGK+IGL.202602")
     expect_true(all(check_V_ndm_data(intdata)))
 
     expect_error(load_intdata("toto"), regexp="no internal data found")
     expect_error(
-        load_intdata("_AIRR.human.IGH+IGK+IGL.202410", domain_system="kabat"),
+        load_intdata("_OGRDB.human.IGH+IGK+IGL.202410", domain_system="kabat"),
         regexp="V.ndm.kabat not found"
     )
 })

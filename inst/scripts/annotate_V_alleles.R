@@ -30,8 +30,8 @@ IGLV_alleles <- all_V_alleles[has_prefix(names(all_V_alleles), "IGL")]
 
 ## Functions annotate_heavy_V_alleles()/annotate_light_V_alleles() actually
 ## use igblastn() to analyze/annotate the V alleles. igblastn() will use
-## _AIRR.human.IGH+IGK+IGL.202410 for the annalysis:
-db_name0 <- "_AIRR.human.IGH+IGK+IGL.202410"
+## _OGRDB.human.IGH+IGK+IGL.202410 for the annalysis:
+db_name0 <- "_OGRDB.human.IGH+IGK+IGL.202410"
 system.time(IGHV_ann <- annotate_heavy_V_alleles(IGHV_alleles, db_name0))
 #     user   system  elapsed
 # 1953.872    4.628  491.682
@@ -104,7 +104,7 @@ IGHV_alleles <- all_V_alleles[has_prefix(names(all_V_alleles), "IGH")]
 IGKV_alleles <- all_V_alleles[has_prefix(names(all_V_alleles), "IGK")]
 IGLV_alleles <- all_V_alleles[has_prefix(names(all_V_alleles), "IGL")]
 
-db_name0 <- "_AIRR.mouse.CAST_EiJ.IGH+IGK+IGL.202501"
+db_name0 <- "_OGRDB.mouse.PWD_PhJ.IGH+IGK+IGL.202501"
 system.time(IGHV_ann <- annotate_heavy_V_alleles(IGHV_alleles, db_name0))
 #    user  system elapsed
 # 430.251   0.903 108.513

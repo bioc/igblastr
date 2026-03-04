@@ -3,10 +3,10 @@ test_that(".normarg_custom_internal_data()", {
 
     ## Note that we only check "auto" mode for now.
 
-    ## With a supplied 'germline_db_V' that looks like the path to
-    ## a V "blast db" that belongs to a cached germline db.
+    ## --- With a supplied 'germline_db_V' that looks like the path ---
+    ## --- to a V "blast db" that belongs to a cached germline db.  ---
 
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"  # includes internal data
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"  # includes internal data
     db_path <- igblastr:::get_germline_db_path(db_name)
     germline_db_V <- file.path(db_path, "V")
 
@@ -26,7 +26,9 @@ test_that(".normarg_custom_internal_data()", {
     )
     expect_true(is.null(custom_internal_data))
 
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202410.src"  # no internal data
+    ## No internal data.
+    db_name <- install_IMGT_germline_db("202518-3", "Homo sapiens",
+                                        without.intdata=TRUE, overwrite=TRUE)
     db_path <- igblastr:::get_germline_db_path(db_name)
     germline_db_V <- file.path(db_path, "V")
 
@@ -38,10 +40,10 @@ test_that(".normarg_custom_internal_data()", {
                                     germline_db_V, domain_system="kabat")
     expect_true(is.null(custom_internal_data))
 
-    ## With a supplied 'germline_db_V' that does NOT look like the path to
-    ## a V "blast db" that belongs to a cached germline db.
+    ## --- With a supplied 'germline_db_V' that does NOT look like the  ---
+    ## --- path to a V "blast db" that belongs to a cached germline db. ---
 
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"  # includes internal data
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"  # includes internal data
     db_path <- igblastr:::get_germline_db_path(db_name)
     germline_db_V <- file.path(db_path, "J")
     custom_internal_data <- normarg_custom_internal_data("auto",
@@ -117,13 +119,13 @@ test_that("prepare_igblastn_cmdline_args()", {
     expected_argnames <- append(CORE_ARGNAMES, opt_argnames, organism_idx)
     expect_identical(names(cmd_args), expected_argnames)
 
-    ## --- selecting _AIRR.human.IGH+IGK+IGL.202410 ---
+    ## --- selecting _OGRDB.human.IGH+IGK+IGL.202410 ---
 
     ## For these tests we're not specifying any of the 'germline_db_[VDJ]'
     ## arguments so we need to select a cached germline db. Once we do
     ## this, we don't need to specify 'organism' either.
 
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
     suppressMessages(use_germline_db(db_name))
     cmd_args <- prepare_igblastn_cmdline_args("path/to/query",
                                               c_region_db=NULL,
@@ -241,7 +243,7 @@ test_that("prepare_igblastn_cmdline_args()", {
     errmsg <- "Don't know how to infer 'organism' from germline db name"
     expect_error2(prepare_igblastn_cmdline_args("path/to/query"), errmsg)
 
-    custom_internal_data <- get_intdata_path("_AIRR.human.IGH+IGK+IGL.202410")
+    custom_internal_data <- get_intdata_path("_OGRDB.human.IGH+IGK+IGL.202410")
     regexp <- "what auxiliary data to use"
     expect_error(
         suppressWarnings(

@@ -1,38 +1,9 @@
 ### =========================================================================
-### makeogrannote()
+### makeogrannote() and related
 ### -------------------------------------------------------------------------
-
-
-### Not the true colnames used in IgBLAST intdata files: ours are all
-### lowercase and we've replaced spaces with underscores.
-### Note that many columns are redundant:
-### - columns 'cdr1_start', 'fwr2_start', 'cdr2_start', and 'fwr3_start'
-###   are redundant with columns 'fwr1_end', 'cdr1_end', 'fwr2_end',
-###   and 'cdr2_end', respectively;
-### - columns 'fwr1_start' and 'coding_frame_start' are redundant (and
-###   column 'fwr1_start' is a dumb column anyways because it should always
-###   be set to 1).
-IGBLAST_INTDATA_COL2CLASS <- c(
-    allele_name="character",
-    fwr1_start="integer",
-    fwr1_end="integer",
-    cdr1_start="integer",
-    cdr1_end="integer",
-    fwr2_start="integer",
-    fwr2_end="integer",
-    cdr2_start="integer",
-    cdr2_end="integer",
-    fwr3_start="integer",
-    fwr3_end="integer",
-    chain_type="character",
-    coding_frame_start="integer"
-)
-
-V_GENE_SEGMENTS <- c("fwr1", "cdr1", "fwr2", "cdr2", "fwr3")
-V_GENE_DELINEATION_COLNAMES <- paste0(rep(V_GENE_SEGMENTS, each=2L),
-                                      c("_start", "_end"))
-stopifnot(all(V_GENE_DELINEATION_COLNAMES %in%
-              names(IGBLAST_INTDATA_COL2CLASS)))
+###
+### Only makeogrannote() in this file is exported.
+###
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -107,142 +78,95 @@ makeogrannote <- function(germline_file)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### check_V_ndm_data_col2class()
+### validate_OGRDB_intdata()
 ###
 
-### Not exported!
-check_V_ndm_data_col2class <- function(V_ndm_data, what="'V_ndm_data'")
+### Returns the intdata in a data.frame.
+.infer_intdata_from_OGRDB_gapped_V_sequences <-
+    function(organism, germline_set, source_set=FALSE, recache=FALSE, ...)
 {
-    if (!is.data.frame(V_ndm_data))
-        stop(wmsg(what, " must be a data.frame"))
-    expected_colnames <- names(IGBLAST_INTDATA_COL2CLASS)
-    if (!identical(colnames(V_ndm_data), expected_colnames)) {
-        in1string <- paste(expected_colnames, collapse=", ")
-        stop(wmsg(what, " must have the following columns ",
-                  "(in this order): ", in1string))
+    tmp_dir <- tempfile()
+    dir.create(tmp_dir)
+    on.exit(nuke_file(tmp_dir))
+    download_OGRDB_germline_sequences(organism, germline_set,
+                                      source_set=source_set,
+                                      destdir=tmp_dir,
+                                      recache=recache, ...)
+    V_fasta_file <- list_fasta_files(tmp_dir, pattern="V\\.fasta$")
+    if (length(V_fasta_file) == 0L) {
+        msg <- c(organism, " germline set \"", names(germline_set), "\" ",
+                 "(version ", germline_set, ") does not seem to contain ",
+                 "any V allele")
+        stop(wmsg(msg))
     }
-    col2class <- vapply(V_ndm_data, function(x) class(x)[[1L]], character(1))
-    if (!identical(col2class, IGBLAST_INTDATA_COL2CLASS)) {
-        in1string <- paste0("    ", names(IGBLAST_INTDATA_COL2CLASS), " -> ",
-                            IGBLAST_INTDATA_COL2CLASS, collapse="\n")
-        stop(wmsg(what, " must have the following column types:"), "\n",
-             in1string)
-    }
+    stopifnot(length(V_fasta_file) == 1L)
+
+    intdata <- compute_imgt_intdata(V_fasta_file)
+    locus <- infer_loci_from_OGRDB_set_names(names(germline_set))
+    intdata$chain_type <- paste0("V", substr(locus, 3L, 3L))
+    intdata[ , names(IGBLAST_INTDATA_COL2CLASS)]
 }
 
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### check_V_ndm_data()
-###
-
-.check_region_boundaries <- function(V_ndm_data, region, prev_end)
+### Returns the intdata in a data.frame.
+.extract_intdata_from_OGRDB_json_file <-
+    function(organism, germline_set, source_set=FALSE, recache=FALSE, ...)
 {
-    starts <- V_ndm_data[ , paste0(region, "_start")]
-    ends   <- V_ndm_data[ , paste0(region, "_end")]
-    (starts == prev_end + 1L) & (ends > starts) & (ends %% 3L == 0L)
+    ## Download OGRDB germline set to local store if it's not
+    ## already there.
+    local_file <- download_OGRDB_germline_set_to_OGRDB_store(organism,
+                                 names(germline_set), germline_set,
+                                 format="airr", source_set=source_set,
+                                 recache=recache, ...)
+    makeogrannote(local_file)
 }
 
-### Does not check the "chain_type" column at the moment.
-check_V_ndm_data <- function(V_ndm_data, allow.dup.entries=FALSE)
+### Returns TRUE if the 2 data.frames contain the same intdata (possibly
+### with their rows in different order).
+.compare_intdata <- function(intdata1, intdata2)
 {
-    check_V_ndm_data_col2class(V_ndm_data)
-    if (!isTRUEorFALSE(allow.dup.entries))
-        stop(wmsg("'allow.dup.entries' must be TRUE or FALSE"))
-    if (allow.dup.entries) {
-        ## We allow duplicated entries in 'V_ndm_data' as long as they
-        ## tell the same story.
-        if (!rows_with_same_key_are_identical(V_ndm_data, "allele_name"))
-            stop(wmsg("rows in 'V_ndm_data' with same \"allele_name\" ",
-                      "must be identical"))
-    } else {
-        if (anyDuplicated(V_ndm_data[ , "allele_name"]))
-            stop(wmsg("'V_ndm_data$allele_name' cannot contain duplicates"))
-    }
-
-    fwr1_ok <- .check_region_boundaries(V_ndm_data, "fwr1", 0L)
-    cdr1_ok <- .check_region_boundaries(V_ndm_data, "cdr1", V_ndm_data$fwr1_end)
-    fwr2_ok <- .check_region_boundaries(V_ndm_data, "fwr2", V_ndm_data$cdr1_end)
-    cdr2_ok <- .check_region_boundaries(V_ndm_data, "cdr2", V_ndm_data$fwr2_end)
-    fwr3_ok <- .check_region_boundaries(V_ndm_data, "fwr3", V_ndm_data$cdr2_end)
-    coding_frame_start_ok <- V_ndm_data[ , "coding_frame_start"] == 0L
-    fwr1_ok & cdr1_ok & fwr2_ok & cdr2_ok & fwr3_ok & coding_frame_start_ok
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### read_V_ndm_data()
-### write_V_ndm_data()
-###
-
-read_V_ndm_data <- function(filepath)
-{
-    read_broken_table(filepath, IGBLAST_INTDATA_COL2CLASS)
-}
-
-write_V_ndm_data <- function(V_ndm_data, file="", check.data=FALSE)
-{
-    if (!isTRUEorFALSE(check.data))
-        stop(wmsg("'check.data' must be TRUE or FALSE"))
-    check_V_ndm_data_col2class(V_ndm_data)
-    if (check.data) {
-        ok <- check_V_ndm_data(V_ndm_data)
-        if (!all(ok))
-            stop(wmsg("'V_ndm_data' contains invalid rows. ",
-                      "Use 'check_V_ndm_data()' to identify them."))
-    }
-    header <- paste0("#", paste(colnames(V_ndm_data), collapse=", "))
-    cat(header, "\n", sep="", file=file)
-    write.table(V_ndm_data, file, append=TRUE, quote=FALSE,
-                sep="\t", row.names=FALSE, col.names=FALSE)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### add_V_ndm_data_to_germline_db()
-###
-
-.write_V_ndm_data_to_germline_db <- function(V_ndm_data, destfile)
-{
-    check_V_ndm_data_col2class(V_ndm_data)
-    stopifnot(isSingleNonWhiteString(destfile))
-    internal_data_path <- dirname(destfile)
-
-    ## Check that the set of V alleles annotated in 'V_ndm_data' is the
-    ## same as the set of V alleles in germline db file V.fasta.
-    db_path <- dirname(internal_data_path)
-    db_V_fasta_file <- get_db_fasta_file(db_path, "V")
-    allele_names1 <- names(fasta.seqlengths(db_V_fasta_file))
-    allele_names2 <- V_ndm_data[ , "allele_name"]
-    stopifnot(length(allele_names1) == length(allele_names2),
-              setequal(allele_names1, allele_names2))
-
-    ## Reorder the rows in the 'V_ndm_data' data.frame to make it
-    ## parallel to 'db_V_fasta_file'.
+    if (!identical(dim(intdata1), dim(intdata2)))
+        return(FALSE)
+    allele_names1 <- intdata1[ , "allele_name"]
+    allele_names2 <- intdata2[ , "allele_name"]
+    if (!setequal(allele_names1, allele_names2))
+        return(FALSE)
     m <- match(allele_names1, allele_names2)
-    V_ndm_data <- S4Vectors:::extract_data_frame_rows(V_ndm_data, m)
-
-    if (!dir.exists(internal_data_path))
-        dir.create(internal_data_path)
-    write_V_ndm_data(V_ndm_data, destfile)
+    intdata2 <- S4Vectors:::extract_data_frame_rows(intdata2, m)
+    identical(intdata1, intdata2)
 }
 
 ### Not exported!
-add_V_ndm_data_to_germline_db <- function(db_path, V_ndm_store,
-                                          domain_system=c("imgt", "kabat"))
+### Validates the intdata associated with a given OGRDB germline set by
+### comparing the two methods of acquisition:
+###   1. Infer intdata from the gaps in the V allele sequences.
+###   2. Extract intdata from OGRDB json file.
+### Returns TRUE if the two methods produce exactly the same intdata, or
+### FALSE if they don't.
+validate_OGRDB_intdata <- function(organism, germline_set, source_set=FALSE,
+                                   recache=FALSE, ...)
 {
-    stopifnot(isSingleNonWhiteString(db_path), dir.exists(db_path),
-              isSingleNonWhiteString(V_ndm_store), dir.exists(V_ndm_store))
-    domain_system <- match.arg(domain_system)
+    organism <- normalize_OGRDB_organism(organism)
+    germline_set <- normalize_OGRDB_germline_sets(germline_set)
+    stopifnot(length(germline_set) == 1L)
+    if (!isTRUEorFALSE(source_set))
+        stop(wmsg("'source_set' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(recache))
+        stop(wmsg("'recache' must be TRUE or FALSE"))
 
-    internal_data_path <- file.path(db_path, "internal_data")
-    destfile <- file.path(internal_data_path, paste0("V.ndm.", domain_system))
-    if (file.exists(destfile))
-        return()
+    ## Method 1: Infer intdata from the gaps in the V allele sequences.
+    intdata1 <- .infer_intdata_from_OGRDB_gapped_V_sequences(
+                                      organism, germline_set,
+                                      source_set=source_set,
+                                      recache=recache, ...)
 
-    ## Prepare 'V_ndm_data'.
-    V_ndm_files <- file.path(V_ndm_store, paste0(IG_LOCI, "V.ndm.imgt"))
-    V_ndm_data <- do.call(rbind, lapply(V_ndm_files, read_V_ndm_data))
 
-    .write_V_ndm_data_to_germline_db(V_ndm_data, destfile)
+    ## Method 2: Extract intdata from OGRDB json file.
+    intdata2 <- .extract_intdata_from_OGRDB_json_file(
+                                      organism, germline_set,
+                                      source_set=source_set,
+                                      recache=recache, ...)
+
+    ## Compare.
+    .compare_intdata(intdata1, intdata2)
 }
 

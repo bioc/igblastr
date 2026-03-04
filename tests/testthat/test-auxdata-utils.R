@@ -32,7 +32,7 @@ test_that("translate_J_alleles()", {
 
     auxdata <- load_and_fix_human_auxdata()
 
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
     J_alleles <- load_germline_db(db_name, region_types="J")
     J_aa <- translate_J_alleles(J_alleles, auxdata)
     expect_true(is.character(J_aa))
@@ -75,7 +75,7 @@ test_that("J_allele_has_stop_codon()", {
 
     auxdata <- load_and_fix_human_auxdata()
 
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
     J_alleles <- load_germline_db(db_name, region_types="J")
     has_stop_codon <- J_allele_has_stop_codon(J_alleles, auxdata)
     expect_true(is.logical(has_stop_codon))
@@ -106,7 +106,7 @@ test_that("translate_fwr4()", {
 
     auxdata <- load_and_fix_human_auxdata()
 
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
     J_alleles <- load_germline_db(db_name, region_types="J")
     fwr4_aa <- translate_fwr4(J_alleles, auxdata)
     expect_true(is.character(fwr4_aa))

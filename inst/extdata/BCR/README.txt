@@ -46,7 +46,7 @@ Content
 
 - case_for_computed_intdata.fasta: The 53 sequences (out of 8,437) from
   1279067_1_Paired_sequences.fasta.gz for which using the "internal data"
-  included in _AIRR.human.IGH+IGK+IGL.202410 or
+  included in _OGRDB.human.IGH+IGK+IGL.202410 or
   IMGT-202518-3.Homo_sapiens.IGH+IGK+IGL actually makes a
   difference compared to using the "internal data" shipped with IgBLAST.
   The discriminating fields (i.e. the fields where we see differences)

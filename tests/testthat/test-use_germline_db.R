@@ -1,11 +1,11 @@
 test_that("use_germline_db()", {
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
     use_germline_db(db_name)
     expect_identical(use_germline_db(), db_name)
 })
 
 test_that("load_germline_db()", {
-    db_name <- "_AIRR.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
     object <- load_germline_db(db_name)
     expect_true(is(object, "DNAStringSet"))
     expect_equal(length(object), 396)

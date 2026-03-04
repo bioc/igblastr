@@ -54,7 +54,7 @@ allele2gene(allele_names)
 \examples{
 allele2gene(c("IGHV1-2*04", "IGHV1-2*06", "IGHV5-51*01", "IGHD3-16*03"))
 
-J_alleles <- load_germline_db("_AIRR.human.IGH+IGK+IGL.202410",
+J_alleles <- load_germline_db("_OGRDB.human.IGH+IGK+IGL.202410",
                               region_types="J")
 names(J_alleles)
 allele2gene(names(J_alleles))

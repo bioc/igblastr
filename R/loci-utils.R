@@ -40,6 +40,15 @@ TR_LOCI <- names(.TR_LOCI_2_REGION_TYPES)
 IG_REGION_TYPES_2_LOCI <- .revmap(.IG_LOCI_2_REGION_TYPES)
 TR_REGION_TYPES_2_LOCI <- .revmap(.TR_LOCI_2_REGION_TYPES)
 
+.make_groups <- function(loci2regiontypes)
+{
+    paste0(rep.int(names(loci2regiontypes), lengths(loci2regiontypes)),
+           unlist(loci2regiontypes, use.names=FALSE))
+}
+
+IG_GROUPS <- .make_groups(.IG_LOCI_2_REGION_TYPES)  #  7 IG groups
+TR_GROUPS <- .make_groups(.TR_LOCI_2_REGION_TYPES)  # 10 TR groups
+
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### checkarg_loci()
