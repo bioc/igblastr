@@ -194,7 +194,7 @@ clean_imgt_fasta_header_lines  <- function(headers, what="some allele names")
 ### or the path to a FASTA file. Note that **all** the sequences
 ### in 'gapped_V_alleles' are expected to have gaps (compute_imgt_intdata()
 ### will issue a warning if that's not the case).
-### Returns a data.frame with 1 row per sequence in 'J_alleles'.
+### Returns a data.frame with 1 row per sequence in 'gapped_V_alleles'.
 compute_imgt_intdata <- function(gapped_V_alleles, as.IRangesList=FALSE)
 {
     if (!isTRUEorFALSE(as.IRangesList))

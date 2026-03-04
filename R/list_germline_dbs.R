@@ -32,40 +32,50 @@ get_germline_dbs_home <- function(init.path=FALSE)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### Handle old built-in human AIRR db graciously
+### Handle presence of old built-in AIRR dbs graciously
 ###
 
-OLD_BUILTIN_AIRR_HUMAN_DB <- "_AIRR.human.IGH+IGK+IGL.202501"
-
-.warn_about_old_builtin_AIRR_human_db <- function()
+.warn_about_new_set_of_builtin_dbs <- function()
 {
-    old_db <- OLD_BUILTIN_AIRR_HUMAN_DB
-    new_dbs <- paste0("_AIRR.human.IGH+IGK+IGL.",
-                      c("202309", "202309.src", "202410", "202410.src"))
-    new_db <- new_dbs[[4L]]
-    msg1 <- c("In igblastr 0.99.23, the following built-in germline dbs ",
-              "were added: ", paste(new_dbs, collapse=", "), ".")
-    msg2 <- c("Note that ", new_db, " is exactly the same as ",
-              old_db, ", only the name of the db is different.")
-    msg3 <- c("The new name is the result of a revisited naming ",
-              "scheme for the built-in AIRR germline dbs for human. ",
-              "See the Value section in '?list_germline_dbs' for ",
+    msg1 <- c("The set of built-in germline dbs has changed in this new ",
+              "version of igblastr.")
+    msg2 <- "Here are the changes that happened:"
+    msg3 <- c("1. Some human and mouse dbs have been removed because the ",
+              "annotations provided by OGRDB for the V alleles in these ",
+              "dbs are problematic.")
+    msg4 <- c("2. The db for rhesus monkey was updated to use version 2 ",
+              "of OGRDB germline sets IGH_VDJ, IGK_VJ, and IGL_VJ (released ",
+              "on Feb 5, 2026).")
+    msg5 <- c("3. All the db names are now prefixed with \"_OGRDB.\" instead ",
+              "of \"_AIRR.\". This better reflects the provenance of the ",
+              "data included in the dbs.")
+    msg6 <- c("Note that the old _AIRR.* germline dbs were kept. You can ",
+              "remove them individually with rm_germline_db(). This warning ",
+              "will only go away when all the _AIRR.* dbs are removed.")
+    msg7 <- c("Alternatively, you can call reset_germline_dbs() to remove ",
+              "all the old _AIRR.* germline dbs at once. ",
+              "WARNING: This will also remove any non built-in germline db ",
+              "that you installed with install_IMGT_germline_db() or ",
+              "install_custom_germline_db()! See '?reset_germline_dbs' for ",
               "more information.")
-    msg4 <- c("From now on, please make sure to always use ",
-              "\"", new_db, "\" instead of \"", old_db, "\" in your code.")
-    msg5 <- c("To get rid of this warning, remove germline db ",
-              old_db, " with 'rm_germline_db(\"", old_db, "\")'")
-    warning(wmsg(msg1), "\n\n  ", wmsg(msg2), "\n  ",
-            wmsg(msg3), "\n\n  ", wmsg(msg4), "\n\n  ", wmsg(msg5))
+    old_warning_length <- getOption("warning.length")
+    options(warning.length=1500)
+    on.exit(options(warning.length=old_warning_length))
+    warning(wmsg(msg1),
+            "\n\n  ", wmsg(msg2),
+            "\n    ", wmsg(msg3, margin=7),
+            "\n    ", wmsg(msg4, margin=7),
+            "\n    ", wmsg(msg5, margin=7),
+            "\n\n  ", wmsg(msg6),
+            "\n\n  ", wmsg(msg7))
 }
 
-warn_if_old_builtin_AIRR_human_db_exists <- function()
+warn_if_old_AIRR_dbs_are_present <- function()
 {
     germline_dbs_home <- get_germline_dbs_home()
-    old_db <- OLD_BUILTIN_AIRR_HUMAN_DB
-    db_path <- file.path(germline_dbs_home, old_db)
-    if (dir.exists(db_path))
-        .warn_about_old_builtin_AIRR_human_db()
+    old_AIRR_dbs <- list.files(germline_dbs_home, pattern="^_AIRR\\.")
+    if (length(old_AIRR_dbs) != 0L)
+        .warn_about_new_set_of_builtin_dbs()
 }
 
 
@@ -86,7 +96,7 @@ list_germline_dbs <- function(builtin.only=FALSE, with.intdata.only=FALSE,
     if (is.data.frame(ans))
         class(ans) <- c("germline_dbs_df", class(ans))
     if (!names.only)
-        warn_if_old_builtin_AIRR_human_db_exists()
+        warn_if_old_AIRR_dbs_are_present()
     ans
 }
 
@@ -113,8 +123,8 @@ print.germline_dbs_df <- function(x, ...)
 list_germline_db_names <- function()
 {
     all_db_names <- list_germline_dbs(names.only=TRUE)
-    ## Should never happen because of the built-in AIRR dbs but we keep this
-    ## check anyways just in case we get rid of the built-in AIRR dbs in the
+    ## Should never happen because of the built-in OGRDB dbs but we keep this
+    ## check anyways just in case we get rid of the built-in OGRDB dbs in the
     ## future.
     if (length(all_db_names) == 0L)
         .stop_on_no_installed_germline_db_yet()
@@ -171,7 +181,7 @@ get_germline_db_path <- function(db_name)
 rm_germline_db <- function(db_name)
 {
     check_germline_db_name(db_name)
-    if (has_prefix(db_name, "_") && db_name != OLD_BUILTIN_AIRR_HUMAN_DB)
+    if (has_prefix(db_name, "_") && !has_prefix(db_name, "_AIRR."))
         stop(wmsg("cannot remove a built-in germline db"))
 
     germline_dbs_home <- get_germline_dbs_home(TRUE)  # guaranteed to exist

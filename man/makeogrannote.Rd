@@ -1,9 +1,6 @@
 \name{makeogrannote}
 
 \alias{makeogrannote}
-\alias{check_V_ndm_data}
-\alias{read_V_ndm_data}
-\alias{write_V_ndm_data}
 
 \title{Extract V gene FWR/CDR annotation from OGRDB JSON file}
 
@@ -14,30 +11,10 @@
 
 \usage{
 makeogrannote(germline_file)
-
-## Related utilities:
-check_V_ndm_data(V_ndm_data, allow.dup.entries=FALSE)
-read_V_ndm_data(filepath)
-write_V_ndm_data(V_ndm_data, file="", check.data=FALSE)
 }
 
 \arguments{
   \item{germline_file}{
-    COMING SOON...
-  }
-  \item{V_ndm_data}{
-    COMING SOON...
-  }
-  \item{allow.dup.entries}{
-    COMING SOON...
-  }
-  \item{filepath}{
-    COMING SOON...
-  }
-  \item{file}{
-    COMING SOON...
-  }
-  \item{check.data}{
     COMING SOON...
   }
 }
@@ -52,6 +29,9 @@ write_V_ndm_data(V_ndm_data, file="", check.data=FALSE)
 
 \seealso{
   \itemize{
+    \item \code{\link{write_V_ndm_data}} to write V gene allele
+          FWR/CDR annotations in \emph{IgBLAST internal data format}.
+
     \item \code{\link{compute_imgt_intdata}} to annotate a set of germline V
           gene allele sequences.
 

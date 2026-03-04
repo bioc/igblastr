@@ -36,7 +36,8 @@
 
 .note_on_selecting_AIRR_src_germline_db <- function(db_name)
 {
-    is_src_db <- has_prefix(db_name, "_AIRR.") && has_suffix(db_name, ".src")
+    is_src_db <- (has_prefix(db_name, "_AIRR.") ||
+                  has_prefix(db_name, "_OGRDB.")) && has_suffix(db_name, ".src")
     if (!is_src_db)
         return()
     ref_db_name <- sub("\\.src$", "", db_name)
@@ -64,8 +65,8 @@
 .select_germline_db <- function(db_name, verbose=FALSE)
 {
     check_germline_db_name(db_name)
-    if (db_name == OLD_BUILTIN_AIRR_HUMAN_DB) {
-        warn_if_old_builtin_AIRR_human_db_exists()
+    if (has_prefix(db_name, "_AIRR.")) {
+        warn_if_old_AIRR_dbs_are_present()
     } else {
         .note_on_selecting_AIRR_src_germline_db(db_name)
         .note_on_selecting_IMGT_germline_db(db_name)

@@ -8,5 +8,5 @@ Content
 
 - README.txt: This file.
 
-- AIRR/: See README.txt in AIRR/ subfolder.
+- OGRDB/: See README.txt in OGRDB/ subfolder.
 
