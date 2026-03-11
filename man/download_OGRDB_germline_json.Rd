@@ -14,6 +14,12 @@
   allele FWR/CDR annotations (a.k.a. V gene delineations) from
   an OGRDB JSON file. Note that it's a simple reimplementation in R
   of the Python script \code{makeogrannote.py} included in IgBLAST.
+
+  If you use OGRDB in your research, please cite:
+  \preformatted{  The current landscape of adaptive immune receptor genomic and
+  repertoire data: OGRDB and VDJbase
+  Lees, Peres, Klein, Amos et al., Nucleic Acids Research, November 2025.
+  https://doi.org/10.1093/nar/gkaf1094}
 }
 
 \usage{
@@ -96,12 +102,7 @@ makeogrannote(ogrdb_json_file)
     \item \link{intdata_utils} to access and manipulate IgBLAST
           \emph{internal data}.
 
-    \item The \code{\link{igblastn}} function to run the \code{igblastn}
-          \emph{standalone executable} included in IgBLAST from R. This
-          is the main function in the \pkg{igblastr} package.
-
-    \item IgBLAST is described at
-          \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.
+    \item The OGRDB website: \url{https://ogrdb.airr-community.org/}.
   }
 }
 
