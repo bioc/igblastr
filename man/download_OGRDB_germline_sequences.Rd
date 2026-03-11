@@ -12,7 +12,7 @@
 }
 
 \usage{
-download_OGRDB_germline_sequences(organism="Homo sapiens", germline_sets,
+download_OGRDB_germline_sequences(organism, germline_sets,
                                   gapped=TRUE, source_set=FALSE,
                                   destdir=".", overwrite=FALSE,
                                   recache=FALSE, ...)
@@ -21,14 +21,14 @@ download_OGRDB_germline_sequences(organism="Homo sapiens", germline_sets,
 \arguments{
   \item{organism}{
     A single string specifying the latin name of the organism for which
-    to download the germline sequences.
+    to download the germline sequences, e.g. \code{"Homo sapiens"}.
     See \url{https://ogrdb.airr-community.org/germline_sets} for the
     organisms that are currently available at OGRDB.
   }
   \item{germline_sets}{
     A named integer vector. The names on the vector must be the names of
-    the germline sets to download and the values in the vector must be the
-    versions of the germline sets to download.
+    the germline sets to download and the values in the vector must be
+    their versions.
     Go to \url{https://ogrdb.airr-community.org/germline_sets}, select a
     Species, and click on "Show Germline Sets" to see the list of germline
     sets available for that species and their versions.
@@ -41,9 +41,9 @@ download_OGRDB_germline_sequences(organism="Homo sapiens", germline_sets,
             IGHD, and IGHJ.
       \item Germline set \code{IGLambda_VJ} corresponds to IMGT groups IGLV
             and IGLJ.
-      \item Germline set \code{C57BL/6 IGH} corresponds to IMGT groups IGHV,
+      \item Germline set \code{PWD/PhJ IGH} corresponds to IMGT groups IGHV,
             IGHD, and IGHJ.
-      \item Germline set \code{C57BL/6J IGKV} corresponds to IMGT group IGKV.
+      \item Germline set \code{PWD/PhJ IGKV} corresponds to IMGT group IGKV.
     }
     For reference, the 10 "IMGT groups" for B-cell Receptors are:
     \preformatted{        IGHV, IGHD, IGHJ, IGHC,
@@ -54,9 +54,9 @@ download_OGRDB_germline_sequences(organism="Homo sapiens", germline_sets,
     correspond to distinct IMGT groups.
 
     Here is an example of valid \code{germline_sets} vector for Mus musculus:
-    \preformatted{        germline_sets <- c(`C57BL/6 IGH`=5,
-        `C57BL/6J IGKV`=1, `IGKJ (all strains)`=1
-        `C57BL/6J IGLV`=1, `IGLJ (all strains)`=1)}
+    \preformatted{        germline_sets <- c(`PWD/PhJ IGH`=2,
+        `PWD/PhJ IGKV`=1, `IGKJ (all strains)`=1,
+        `PWD/PhJ IGLV`=1, `IGLJ (all strains)`=1)}
   }
   \item{gapped}{
     By default \code{download_OGRDB_germline_sequences()} will download
@@ -65,8 +65,9 @@ download_OGRDB_germline_sequences(organism="Homo sapiens", germline_sets,
     V allele sequences instead.
   }
   \item{source_set}{
-    Whether to download the \emph{Source Sets} instead of the
-    \emph{Reference Sets}. Only applies when \code{organism} is Homo sapiens.
+    Whether to download the germline sequences from the \emph{Source Sets}
+    instead of the \emph{Reference Sets}. Only applies when \code{organism}
+    is Homo sapiens.
 
     Note that the AIRR-community/OGRDB maintainers recommend to use the
     \emph{Reference Sets} for AIRR-seq analysis.
@@ -112,6 +113,9 @@ download_OGRDB_germline_sequences(organism="Homo sapiens", germline_sets,
 
     \item \code{\link{download_IMGT_germline_sequences}} to download
           germline sequences from IMGT.
+
+    \item \code{\link{download_OGRDB_germline_json}} to download OGRDB JSON
+          files.
 
     \item The OGRDB website: \url{https://ogrdb.airr-community.org/}.
 

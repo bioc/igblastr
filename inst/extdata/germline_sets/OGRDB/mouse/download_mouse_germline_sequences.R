@@ -45,10 +45,27 @@ download_mouse_germline_sequences()
 ###
 ### WARNING: It looks like the following mouse germline sets have inconsistent
 ### internal data:
-###   - "CAST/EiJ IGH"  version 1
-###   - "CAST/EiJ IGLV" version 1
-###   - "LEWES/EiJ IGH" version 1
-###   - "MSM/MsJ IGLV"  version 1
+###
+###   o "CAST/EiJ IGH"  version 1
+###     Alleles with differences:
+###     - IGHV0-NTLL*00: fwr3_end is 285 when inferred from the gaps,
+###                      but is 283 in the JSON file;
+###
+###   o "CAST/EiJ IGLV" version 1
+###     Alleles with differences:
+###     - IGLV0-DUHW*00, IGLV0-EYCQ*00, IGLV0-JEYS*00, IGLV0-RQWY*00,
+###       IGLV0-ZQBR*00: fwr3_end is 273 when inferred from the gaps,
+###                      but is 245 in the JSON file;
+###
+###   o "LEWES/EiJ IGH" version 1
+###     Alleles with differences:
+###     - IGHV0-MJAE*00: fwr3_end is 288 when inferred from the gaps,
+###                      but is 284 in the JSON file;
+###
+###   o "MSM/MsJ IGLV"  version 1
+###     Alleles with differences:
+###     - IGLV0-37NY*00, IGLV0-COOR*00: fwr3_end is 273 when inferred from
+###                      the gaps, but is 245 in the JSON file.
 
 validate_mouse_intdata <- function()
 {
