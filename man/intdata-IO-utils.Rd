@@ -52,7 +52,8 @@ write_V_ndm_data(V_ndm_data, file="", check.data=FALSE)
           gene allele sequences.
 
     \item \code{\link{makeogrannote}} to extract the germline V gene allele
-          FWR/CDR annotations from an OGRDB JSON file.
+          FWR/CDR annotations (a.k.a. V gene delineations) from an
+          OGRDB JSON file.
 
     \item \link{intdata_utils} to access and manipulate IgBLAST
           \emph{internal data}.

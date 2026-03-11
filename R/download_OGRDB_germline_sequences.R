@@ -3,53 +3,6 @@
 ### -------------------------------------------------------------------------
 
 
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### normalize_OGRDB_germline_sets()
-### infer_loci_from_OGRDB_set_names()
-###
-
-### Not exported!
-normalize_OGRDB_germline_sets <- function(germline_sets)
-{
-    if (!is.numeric(germline_sets) || length(germline_sets) == 0L)
-        stop(wmsg("'germline_sets' must be a non-empty integer vector"))
-    set_names <- names(germline_sets)
-    if (is.null(set_names))
-        stop(wmsg("'germline_sets' must have names"))
-    if (anyNA(set_names))
-        stop(wmsg("the names on 'germline_sets' cannot contain NAs"))
-    set_names <- trimws2(set_names)
-    if (any(nchar(set_names) == 0L))
-        stop(wmsg("the names on 'germline_sets' cannot be empty"))
-    if (anyDuplicated(set_names))
-        stop(wmsg("the names on 'germline_sets' cannot contain duplicates"))
-    if (!is.integer(germline_sets))
-        germline_sets <- setNames(as.integer(germline_sets), set_names)
-    if (anyNA(germline_sets))
-        stop(wmsg("'germline_sets' cannot contain NAs"))
-    germline_sets
-}
-
-### Not exported!
-### Tries to infer the locus embedded in the name of each germline set.
-infer_loci_from_OGRDB_set_names <- function(set_names)
-{
-    stopifnot(is.character(set_names))
-    pattern1 <- "IG[HKL]"
-    bad_ix <- grep(pattern1, set_names, invert=TRUE)
-    if (length(bad_ix) != 0L) {
-        in1string <- paste0(set_names[bad_ix], collapse=", ")
-        stop(wmsg("cannot guess locus for: ", in1string))
-    }
-    pattern2 <- paste0("^.*(", pattern1, ").*$")
-    sub(pattern2, "\\1", set_names)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### download_OGRDB_germline_sequences()
-###
-
 ### Produces one FASTA file per "IMGT group".
 ### Returns the names of the FASTA files that got created.
 .split_OGRDB_fasta_file <- function(fasta_file, set_name, set_locus,
@@ -103,16 +56,15 @@ infer_loci_from_OGRDB_set_names <- function(set_names)
 ### Returns the list of FASTA files that were produced in an invisible
 ### character vector that carries the names of the corresponding germline
 ### sets.
-download_OGRDB_germline_sequences <- function(organism="Homo sapiens",
-                                              germline_sets, gapped=TRUE,
-                                              source_set=FALSE,
+download_OGRDB_germline_sequences <- function(organism, germline_sets,
+                                              gapped=TRUE, source_set=FALSE,
                                               destdir=".", overwrite=FALSE,
                                               recache=FALSE, ...)
 {
     organism <- normalize_OGRDB_organism(organism)
     germline_sets <- normalize_OGRDB_germline_sets(germline_sets)
     set_names <- names(germline_sets)
-    set_loci <- infer_loci_from_OGRDB_set_names(set_names)
+    set_loci <- extract_loci_from_OGRDB_set_names(organism, set_names)
     if (!isTRUEorFALSE(gapped))
         stop(wmsg("'gapped' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(source_set))

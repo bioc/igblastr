@@ -239,13 +239,7 @@ create_region_db <- function(fasta_files, destdir,
     ## Create "original fasta" subdir and copy fasta files to it.
     original_fasta_dir <- get_db_original_fasta_dir(destdir, region_type)
     stopifnot(dir.create(original_fasta_dir))
-    destfiles <- names(fasta_files)
-    if (is.null(destfiles)) {
-        stopifnot(all(file.copy(fasta_files, original_fasta_dir)))
-    } else {
-        destfiles <- file.path(original_fasta_dir, destfiles)
-        stopifnot(all(file.copy(fasta_files, destfiles)))
-    }
+    copy_files_to_dir(fasta_files, original_fasta_dir)
 
     ## Clean and merge the original fasta files.
     original_fasta_files <- list_fasta_files(original_fasta_dir)

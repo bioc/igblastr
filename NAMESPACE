@@ -151,7 +151,9 @@ export(
     ## download_OGRDB_germline_sequences.R:
     download_OGRDB_germline_sequences,
 
-    ## makeogrannote.R:
+    ## download_OGRDB_germline_json.R:
+    download_OGRDB_germline_json,
+    same_intdata,
     makeogrannote,
 
     ## install_OGRDB_germline_db.R:

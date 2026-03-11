@@ -212,29 +212,50 @@ remove_hidden_files <- function(path=".", include.hidden.dirs=FALSE)
 ### copy_files_to_dir()
 ###
 
-### The semantic of 'file.copy(files, destdir, overwrite=FALSE)' is not
-### what we want (it simply skips copying the files for which the
-### destination file exists). What we want is a copy everyting or nothing
+.stop_if_destfiles_exist <- function(destfiles)
+{
+    stopifnot(is.character(destfiles))
+    already_there <- file.exists(destfiles)
+    if (any(already_there)) {
+        in1string <- paste0(basename(destfiles)[already_there], collapse=", ")
+        stop(wmsg("The following files (or directories) are already ",
+                  "present in 'destdir': ", in1string, "."),
+             "\n  ",
+             wmsg("Use 'overwrite=TRUE' to replace them."))
+    }
+}
+
+### The semantic of 'file.copy(files, destdir, overwrite=FALSE)' is
+### not what we want (it simply skips copying the files for which the
+### destination file exists). What we want is a "copy everyting or nothing"
 ### semantic (i.e. atomicity), which is what copy_files_to_dir() achieves.
+### If 'files' carries names, then they're used as the filenames of the
+### destination files.
 copy_files_to_dir <- function(files, destdir, overwrite=FALSE)
 {
-    stopifnot(is.character(files),
+    stopifnot(is.character(files), !anyNA(files),
+              all(file.exists(files) & !dir.exists(files)),
               isSingleNonWhiteString(destdir), dir.exists(destdir),
               isTRUEorFALSE(overwrite))
-    if (!overwrite) {
+    filenames <- names(files)
+    if (is.null(filenames)) {
         filenames <- basename(files)
-        destfiles <- file.path(destdir, filenames)
-        already_there <- file.exists(destfiles)
-        if (any(already_there)) {
-            in1string <- paste0(filenames[already_there], collapse=", ")
-            stop(wmsg("The following files are already present in 'destdir': ",
-                      in1string, "."),
-                 "\n  ",
-                 wmsg("Use 'overwrite=TRUE' to replace them."))
+        stopifnot(!anyDuplicated(filenames))
+        if (!overwrite) {
+            destfiles <- file.path(destdir, filenames)
+            .stop_if_destfiles_exist(destfiles)
         }
+        ok <- file.copy(files, destdir, overwrite=TRUE)
+    } else {
+        stopifnot(!anyNA(filenames),
+                  all(nchar(filenames) != 0L),
+                  !anyDuplicated(filenames))
+        destfiles <- file.path(destdir, filenames)
+        if (!overwrite)
+            .stop_if_destfiles_exist(destfiles)
+        ok <- file.copy(files, destfiles, overwrite=TRUE)
     }
-    ## Note that file.copy() has its own way of handling 'overwrite=FALSE'.
-    file.copy(files, destdir, overwrite=TRUE)
+    stopifnot(all(ok))
 }
 
 
