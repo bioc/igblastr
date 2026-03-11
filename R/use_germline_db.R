@@ -34,23 +34,37 @@
     c(wmsg(msg1), "\n    ", wmsg(msg2))
 }
 
-.note_on_selecting_AIRR_src_germline_db <- function(db_name)
+.notes_on_selecting_OGRDB_germline_db <- function(db_name)
 {
-    is_src_db <- (has_prefix(db_name, "_AIRR.") ||
-                  has_prefix(db_name, "_OGRDB.")) && has_suffix(db_name, ".src")
-    if (!is_src_db)
+    is_ogrdb_db <- has_prefix(db_name, "_AIRR.") ||
+                   has_prefix(db_name, "_OGRDB.")
+    if (!is_ogrdb_db)
         return()
-    ref_db_name <- sub("\\.src$", "", db_name)
-    url <- "https://ogrdb.airr-community.org/germline_set/75"
-    msg1 <- c("Use ", db_name, " only if you know what you are doing.")
-    msg2 <- c("Note that the allele sequences in ", db_name, " come from ",
-              "the \"Source Set\" datasets provided by AIRR-community/OGRDB. ",
-              "However, the AIRR-community/OGRDB maintainers recommend ",
-              "using the allele sequences from the \"Reference Set\" ",
-              "datasets for AIRR-seq analysis (see for example ", url, "), ",
-              "which are provided by ", ref_db_name, ".")
-    message("  ", wmsg(msg1), "\n\n  ", wmsg(msg2), "\n\n  ",
-            .how_to_suppress_use_germline_db_msg(db_name))
+    msg1 <- "If you use OGRDB in your research, please cite:"
+    msg2 <- c("The current landscape of adaptive immune receptor ",
+              "genomic and repertoire data: OGRDB and VDJbase")
+    msg3 <- c("Lees, Peres, Klein, Amos et al., Nucleic Acids Research, ",
+              "November 2025.")
+    msg4 <- "https://doi.org/10.1093/nar/gkaf1094"
+    message("  ", wmsg(msg1),
+            "\n\n    ", wmsg(msg2, margin=4),
+            "\n    ", wmsg(msg3, margin=4),
+            "\n    ", wmsg(msg4, margin=4))
+    is_src_db <- has_suffix(db_name, ".src")
+    if (is_src_db) {
+        ref_db_name <- sub("\\.src$", "", db_name)
+        url <- "https://ogrdb.airr-community.org/germline_set/75"
+        msg1 <- c("Use ", db_name, " only if you know what you are doing.")
+        msg2 <- c("Note that the allele sequences in ", db_name, " come ",
+                  "from the \"Source Set\" datasets provided by OGRDB. ",
+                  "However, the AIRR-community/OGRDB maintainers ",
+                  "recommend using the allele sequences from the ",
+                  "\"Reference Set\" datasets for AIRR-seq analysis ",
+                  "(see for example ", url, "), which are provided ",
+                  "by ", ref_db_name, ".")
+        message("\n  ", wmsg(msg1), "\n\n  ", wmsg(msg2))
+    }
+    message("\n  ", .how_to_suppress_use_germline_db_msg(db_name))
 }
 
 .note_on_selecting_IMGT_germline_db <- function(db_name)
@@ -68,7 +82,7 @@
     if (has_prefix(db_name, "_AIRR.")) {
         warn_if_old_AIRR_dbs_are_present()
     } else {
-        .note_on_selecting_AIRR_src_germline_db(db_name)
+        .notes_on_selecting_OGRDB_germline_db(db_name)
         .note_on_selecting_IMGT_germline_db(db_name)
     }
 

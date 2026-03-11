@@ -8,7 +8,14 @@
   The \code{download_OGRDB_germline_sequences()} function downloads
   germline V/D/J gene allele sequences (nucleotides) from OGRDB for
   the specified germline sets.
-  The sequences are downloaded in several FASTA files, one per "IMGT group".
+  The sequences are downloaded in several FASTA files, one per
+  \emph{IMGT group}.
+
+  If you use OGRDB in your research, please cite:
+  \preformatted{  The current landscape of adaptive immune receptor genomic and
+  repertoire data: OGRDB and VDJbase
+  Lees, Peres, Klein, Amos et al., Nucleic Acids Research, November 2025.
+  https://doi.org/10.1093/nar/gkaf1094}
 }
 
 \usage{
@@ -33,25 +40,26 @@ download_OGRDB_germline_sequences(organism, germline_sets,
     Species, and click on "Show Germline Sets" to see the list of germline
     sets available for that species and their versions.
 
-    Note that each OGRDB germline set corresponds to one or more "IMGT groups",
-    where an "IMGT group" is a combination of locus and region type. For
-    example:
+    Note that each OGRDB germline set corresponds to one or more
+    \emph{IMGT groups}, where an \emph{IMGT group} is a combination
+    of locus and region type. For example:
     \itemize{
-      \item Germline set \code{IGH_VDJ} corresponds to IMGT groups IGHV,
-            IGHD, and IGHJ.
-      \item Germline set \code{IGLambda_VJ} corresponds to IMGT groups IGLV
-            and IGLJ.
-      \item Germline set \code{PWD/PhJ IGH} corresponds to IMGT groups IGHV,
-            IGHD, and IGHJ.
-      \item Germline set \code{PWD/PhJ IGKV} corresponds to IMGT group IGKV.
+      \item Germline set \code{IGH_VDJ} corresponds to \emph{IMGT groups}
+            IGHV, IGHD, and IGHJ.
+      \item Germline set \code{IGLambda_VJ} corresponds to \emph{IMGT groups}
+            IGLV and IGLJ.
+      \item Germline set \code{PWD/PhJ IGH} corresponds to \emph{IMGT groups}
+            IGHV, IGHD, and IGHJ.
+      \item Germline set \code{PWD/PhJ IGKV} corresponds to \emph{IMGT group}
+            IGKV.
     }
-    For reference, the 10 "IMGT groups" for B-cell Receptors are:
+    For reference, the 10 \emph{IMGT groups} for B-cell Receptors are:
     \preformatted{        IGHV, IGHD, IGHJ, IGHC,
         IGKV, IGKJ, IGKC,
         IGLV, IGLJ, IGLC}
 
     IMPORTANT: The germline sets in your \code{germline_sets} vector must
-    correspond to distinct IMGT groups.
+    correspond to distinct \emph{IMGT groups}.
 
     Here is an example of valid \code{germline_sets} vector for Mus musculus:
     \preformatted{        germline_sets <- c(`PWD/PhJ IGH`=2,
@@ -141,7 +149,7 @@ download_OGRDB_germline_sequences("Macaca mulatta", germline_sets,
                                   destdir=destdir)
 
 ## List the downloaded files:
-list.files(destdir)  # 7 FASTA files
+list.files(destdir)  # 7 FASTA files (one per IMGT group)
 
 ## Remove temporary directory:
 unlink(destdir, recursive=TRUE)
@@ -163,7 +171,7 @@ download_OGRDB_germline_sequences("Mus musculus", germline_sets,
                                   destdir=destdir)
 
 ## List the downloaded files:
-list.files(destdir)  # 7 FASTA files
+list.files(destdir)  # 7 FASTA files (one per IMGT group)
 
 ## Remove temporary directory:
 unlink(destdir, recursive=TRUE)

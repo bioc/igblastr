@@ -11,7 +11,8 @@
   The \code{download_IMGT_germline_sequences()} function downloads
   germline V/D/J gene allele sequences (nucleotides) from the IMGT/V-QUEST
   download site for a given IMGT/V-QUEST release and organism.
-  The sequences are downloaded in several FASTA files, one per "IMGT group".
+  The sequences are downloaded in several FASTA files, one per
+  \emph{IMGT group}.
 
   CONDITIONS OF USE AND LICENSE: The IMGT data is provided to the academic
   users and NPO's (Not for Profit Organization(s)) under the CC BY-NC-ND 4.0
@@ -66,11 +67,12 @@ IMGT_is_up()
     Note that:
     \itemize{
       \item The names of the downloaded files follow the <IMGT group>.fasta
-            convention, where <IMGT group> is one of the 7 "IG" groups or
-            10 "TR" groups.
+            convention, where <IMGT group> is one of the 7 \emph{IMGT groups}
+	    with the "IG" prefix or one of the 10 \emph{IMGT groups} with
+            the "TR" prefix.
       \item IMGT doesn't always provide germline sequences for
-            all IMGT groups. This means that, depending on the IMGT/V-QUEST
-            release and organism, some FASTA files can be missing.
+            all \emph{IMGT groups}. This means that, depending on the
+            IMGT/V-QUEST release and organism, some FASTA files can be missing.
     }
   }
   \item{destdir}{
