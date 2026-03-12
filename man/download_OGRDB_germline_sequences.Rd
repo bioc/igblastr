@@ -122,8 +122,8 @@ download_OGRDB_germline_sequences(organism, germline_sets,
     \item \code{\link{download_IMGT_germline_sequences}} to download
           germline sequences from IMGT.
 
-    \item \code{\link{download_OGRDB_germline_json}} to download OGRDB JSON
-          files.
+    \item \code{\link{download_OGRDB_germline_json}} to download AIRR-C
+          JSON files from OGRDB.
 
     \item The OGRDB website: \url{https://ogrdb.airr-community.org/}.
 

@@ -68,7 +68,7 @@ clean_imgt_fasta_header_lines  <- function(headers, what="some allele names")
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### compute_imgt_intdata()
+### compute_V_gene_delineations()
 ###
 
 ### The IMGT unique numbering provides a standardized delimitation of
@@ -192,10 +192,10 @@ clean_imgt_fasta_header_lines  <- function(headers, what="some allele names")
 
 ### 'gapped_V_alleles' can be a named DNAStringSet or BStringSet object,
 ### or the path to a FASTA file. Note that **all** the sequences
-### in 'gapped_V_alleles' are expected to have gaps (compute_imgt_intdata()
-### will issue a warning if that's not the case).
+### in 'gapped_V_alleles' are expected to have gaps (the function will
+### issue a warning if that's not the case).
 ### Returns a data.frame with 1 row per sequence in 'gapped_V_alleles'.
-compute_imgt_intdata <- function(gapped_V_alleles, as.IRangesList=FALSE)
+compute_V_gene_delineations <- function(gapped_V_alleles, as.IRangesList=FALSE)
 {
     if (!isTRUEorFALSE(as.IRangesList))
         stop(wmsg("'as.IRangesList' must be TRUE or FALSE"))
@@ -224,8 +224,14 @@ compute_imgt_intdata <- function(gapped_V_alleles, as.IRangesList=FALSE)
 
     names(gapped_V_alleles) <- clean_imgt_fasta_header_lines(allele_names, what)
 
+    ## How many nucleotides sequences are missing on their 3' end
+    ## in order to have a complete FWR3.
+    fwrcdr_max_nucs <- .IMGT_FWRCDR_MAX_LENGTHS * 3L
+    fwr3_trimmed <- sum(fwrcdr_max_nucs) - width(gapped_V_alleles)
+    fwr3_trimmed[fwr3_trimmed < 0L] <- 0L
+
     ## IMGT FWR/CDR fixed intervals in nucleotide space.
-    imgt_bins <- PartitioningByWidth(.IMGT_FWRCDR_MAX_LENGTHS * 3L)
+    imgt_bins <- PartitioningByWidth(fwrcdr_max_nucs)
     midx <- vmatchPattern(GAP_LETTER, gapped_V_alleles)
 
     ## Note that lengths() should propagate the names by default but it
@@ -247,12 +253,19 @@ compute_imgt_intdata <- function(gapped_V_alleles, as.IRangesList=FALSE)
     all_gaps_contained <-
         vapply(all_real_lens, attr, logical(1), "all_gaps_contained")
     coding_frame_start <- 2L - (starting_gap + 2L) %% 3L
-    mcols(IRL) <- DataFrame(coding_frame_start=coding_frame_start,
+    mcols(IRL) <- DataFrame(fwr3_trimmed=fwr3_trimmed,
+                            coding_frame_start=coding_frame_start,
                             starting_gap=starting_gap,
                             all_gaps_in_frame=all_gaps_in_frame,
                             all_gaps_contained=all_gaps_contained)
     if (as.IRangesList)
         return(IRL)
     .IRL_to_data_frame(IRL)
+}
+
+compute_imgt_intdata <- function(...)
+{
+    .Deprecated("compute_V_gene_delineations")
+    compute_V_gene_delineations(...)
 }
 

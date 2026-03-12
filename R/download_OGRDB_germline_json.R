@@ -156,30 +156,10 @@ makeogrannote <- function(ogrdb_json_file)
                      "in JSON file: ", ogrdb_json_file))
         data <- character(0)
     }
-    col2class <- head(IGBLAST_INTDATA_COL2CLASS, n=-1L)
+    col2class <- head(NDM_COL2CLASS, n=-1L)
     m <- matrix(data, ncol=length(col2class), byrow=TRUE)
     df <- matrix2df(m, col2class)
     cbind(df, coding_frame_start=integer(nrow(df)))
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### same_intdata()
-###
-
-### Returns TRUE if the 2 data.frames contain the same intdata (possibly
-### with their rows in different order).
-same_intdata <- function(intdata1, intdata2)
-{
-    if (!identical(dim(intdata1), dim(intdata2)))
-        return(FALSE)
-    allele_names1 <- intdata1[ , "allele_name"]
-    allele_names2 <- intdata2[ , "allele_name"]
-    if (!setequal(allele_names1, allele_names2))
-        return(FALSE)
-    m <- match(allele_names1, allele_names2)
-    intdata2 <- S4Vectors:::extract_data_frame_rows(intdata2, m)
-    identical(intdata1, intdata2)
 }
 
 
@@ -207,10 +187,10 @@ same_intdata <- function(intdata1, intdata2)
     }
     stopifnot(length(V_fasta_file) == 1L)
 
-    intdata <- compute_imgt_intdata(V_fasta_file)
+    intdata <- compute_V_gene_delineations(V_fasta_file)
     locus <- extract_loci_from_OGRDB_set_names(organism, names(germline_set))
     intdata$chain_type <- paste0("V", substr(locus, 3L, 3L))
-    intdata[ , names(IGBLAST_INTDATA_COL2CLASS)]
+    intdata[ , names(NDM_COL2CLASS)]
 }
 
 ### Returns the intdata in a data.frame.
@@ -258,6 +238,6 @@ validate_OGRDB_intdata <- function(organism, germline_set, source_set=FALSE,
                                       recache=recache, ...)
 
     ## Compare.
-    same_intdata(intdata1, intdata2)
+    same_ndm_data(intdata1, intdata2)
 }
 

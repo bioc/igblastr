@@ -201,12 +201,12 @@
                   custom_internal_data, "' not found"))
     if (dir.exists(custom_internal_data))
         stop(wmsg("'", custom_internal_data, "' is a directory, not a file"))
-    read_V_ndm_data(custom_internal_data)
+    read_ndm_data(custom_internal_data)
 }
 
 .check_user_supplied_internal_data <- function(intdata, germline_db_V, what)
 {
-    check_V_ndm_data_col2class(intdata, what=what)
+    check_ndm_data_col2class(intdata, what=what)
     ## We will only perform the check below if the FASTA file associated
     ## with 'germline_db_V' is guaranteed to exist and be in sync with
     ## the V-region db itself, which is only the case if 'germline_db_V'
@@ -262,7 +262,7 @@
                                            what)
         path <- tempfile()
         attr(path, "safe_to_remove") <- TRUE
-        write_V_ndm_data(custom_internal_data, path)
+        write_ndm_data(custom_internal_data, path)
         return(path)
     }
     if (!isSingleNonWhiteString(custom_internal_data))

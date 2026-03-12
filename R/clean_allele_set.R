@@ -90,7 +90,7 @@ checkarg_with.intdata <- function(with.intdata, gapped)
 ### Returns a DNAStringSet object that:
 ### - is parallel to input DNAStringSet object 'dna';
 ### - carries the names and metadata columns of input object 'dna';
-### - also carries the annotations obtained with compute_imgt_intdata()
+### - also carries the annotations obtained with compute_V_gene_delineations()
 ###   in additional metadata columns.
 .annotate_V_alleles <- function(dna)
 {
@@ -102,7 +102,7 @@ checkarg_with.intdata <- function(with.intdata, gapped)
     .check_locus(locus, "the \"locus\" metadata column on 'dna'")
 
     ## Annotate the V alleles based on their gaps.
-    intdata <- compute_imgt_intdata(dna)
+    intdata <- compute_V_gene_delineations(dna)
     stopifnot(identical(names(dna), intdata[ , "allele_name"]))
 
     ## Add "chain_type" column.
@@ -119,7 +119,7 @@ checkarg_with.intdata <- function(with.intdata, gapped)
     stopifnot(is(dna, "DNAStringSet"))
     ## We only care about the annotations found in the Metadata Columns
     ## Of Interest listed in 'MCOI' when comparing the V allele annotations.
-    MCOI <- setdiff(names(IGBLAST_INTDATA_COL2CLASS), "chain_type")
+    MCOI <- setdiff(names(NDM_COL2CLASS), "chain_type")
     ok <- .repeated_vector_elts_have_identical_metadata(dna, MCOI=MCOI)
     if (!ok) {
         msg <- c("V alleles with identical ungapped sequences and names ",
@@ -285,8 +285,8 @@ checkarg_with.intdata <- function(with.intdata, gapped)
 ### Returns a DNAStringSet object that contains the ungapped allele sequences
 ### and carries the metadata columns of input object 'dna', if any.
 ### Furthermore, if 'with.intdata' is TRUE, the returned object will also
-### carry the annotations obtained with compute_imgt_intdata() in additional
-### metadata columns.
+### carry the annotations obtained with compute_V_gene_delineations() in
+### additional metadata columns.
 ### Note that "repeated" alleles (i.e. alleles with identical **ungapped**
 ### DNA sequences **and** names) are dropped.
 ### If, after dropping the "repeated" alleles, the names of the remaining

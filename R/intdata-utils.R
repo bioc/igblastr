@@ -71,7 +71,7 @@ load_intdata <- function(organism, for.aa=FALSE,
     intdata_path <- get_intdata_path(organism, for.aa=for.aa,
                                      domain_system=domain_system,
                                      which=which)
-    read_V_ndm_data(intdata_path)
+    read_ndm_data(intdata_path)
 }
 
 

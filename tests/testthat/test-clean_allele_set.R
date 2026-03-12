@@ -26,7 +26,7 @@ test_that(".drop_repeated_alleles()", {
     expect_true(is(object_mcols, "DataFrame"))
     expected_colnames <- c(
         "locus",
-        setdiff(names(igblastr:::IGBLAST_INTDATA_COL2CLASS), "chain_type"),
+        setdiff(names(igblastr:::NDM_COL2CLASS), "chain_type"),
         "starting_gap", "all_gaps_in_frame", "all_gaps_contained",
         "chain_type"
     )
