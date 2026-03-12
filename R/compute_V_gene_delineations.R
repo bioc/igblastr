@@ -224,14 +224,8 @@ compute_V_gene_delineations <- function(gapped_V_alleles, as.IRangesList=FALSE)
 
     names(gapped_V_alleles) <- clean_imgt_fasta_header_lines(allele_names, what)
 
-    ## How many nucleotides sequences are missing on their 3' end
-    ## in order to have a complete FWR3.
-    fwrcdr_max_nucs <- .IMGT_FWRCDR_MAX_LENGTHS * 3L
-    fwr3_trimmed <- sum(fwrcdr_max_nucs) - width(gapped_V_alleles)
-    fwr3_trimmed[fwr3_trimmed < 0L] <- 0L
-
     ## IMGT FWR/CDR fixed intervals in nucleotide space.
-    imgt_bins <- PartitioningByWidth(fwrcdr_max_nucs)
+    imgt_bins <- PartitioningByWidth(.IMGT_FWRCDR_MAX_LENGTHS * 3L)
     midx <- vmatchPattern(GAP_LETTER, gapped_V_alleles)
 
     ## Note that lengths() should propagate the names by default but it
@@ -242,6 +236,7 @@ compute_V_gene_delineations <- function(gapped_V_alleles, as.IRangesList=FALSE)
     ## add the names to that if 'use.names' is TRUE.
     ngaps <- setNames(lengths(midx), names(midx))
     warn_if_allele_sequences_have_no_gaps(ngaps)
+    seq_len <- width(gapped_V_alleles) - ngaps  # lengths of ungapped sequences
 
     all_real_lens <- lapply(midx, .compute_fwrcdr_real_lengths, imgt_bins)
     tmp <- lapply(all_real_lens, PartitioningByWidth)
@@ -253,7 +248,7 @@ compute_V_gene_delineations <- function(gapped_V_alleles, as.IRangesList=FALSE)
     all_gaps_contained <-
         vapply(all_real_lens, attr, logical(1), "all_gaps_contained")
     coding_frame_start <- 2L - (starting_gap + 2L) %% 3L
-    mcols(IRL) <- DataFrame(fwr3_trimmed=fwr3_trimmed,
+    mcols(IRL) <- DataFrame(seq_len=seq_len,
                             coding_frame_start=coding_frame_start,
                             starting_gap=starting_gap,
                             all_gaps_in_frame=all_gaps_in_frame,

@@ -46,8 +46,8 @@ compute_V_gene_delineations(gapped_V_alleles, as.IRangesList=FALSE)
     \item The data.frame returned by \code{compute_V_gene_delineations()} has
           the following additional columns:
           \enumerate{
-            \item \code{fwr3_trimmed}: how many nucleotides a sequence is
-                  missing on its 3' end in order to have a complete FWR3;
+            \item \code{seq_len}: length of the sequence after removal of
+                  the gaps;
             \item \code{starting_gap}: size (in number of nucleotides) of
                   gap block located at the very beginning of the sequence
                   if any (0 if no such block);
@@ -82,10 +82,10 @@ compute_V_gene_delineations(gapped_V_alleles, as.IRangesList=FALSE)
 
 \examples{
 ## ---------------------------------------------------------------------
-## BASIC USAGE
+## 1. USING HUMAN GERMLINE V GENE ALLELE SEQUENCES FROM OGRDB
 ## ---------------------------------------------------------------------
 ## Visit https://ogrdb.airr-community.org/germline_sets/Homo%20sapiens
-## for the list of germline sets available for human at OGRDB.
+## for the list of human germline sets available at OGRDB.
 
 ## Download OGRDB germline gene allele sequences for human locus IGK
 ## to a temporary directory:
@@ -106,9 +106,6 @@ as.character(IGKV_alleles[1:3])
 IGKV_gene_delinea <- compute_V_gene_delineations(IGKV_alleles)
 head(IGKV_gene_delinea)
 
-## ---------------------------------------------------------------------
-## COMPARE WITH V GENE DELINEATIONS PROVIDED BY AIRR-C JSON FILE
-## ---------------------------------------------------------------------
 ## As a sanity check, we're going to compare 'IGKV_gene_delinea' with
 ## the V gene delineations provided by the corresponding AIRR-C JSON
 ## file from OGRDB.
@@ -133,6 +130,51 @@ IGKV_gene_delinea2 <- IGKV_gene_delinea2[ , shared_colnames]
 ## the same delineation data (possibly with their rows in different
 ## order):
 stopifnot(same_ndm_data(IGKV_gene_delinea, IGKV_gene_delinea2))
+
+## Remove temporary directory:
+unlink(destdir, recursive=TRUE)
+
+## ---------------------------------------------------------------------
+## 2. USING MOUSE GERMLINE V GENE ALLELE SEQUENCES FROM OGRDB
+## ---------------------------------------------------------------------
+## Visit https://ogrdb.airr-community.org/germline_sets/Mus%20musculus
+## for the list of mouse germline sets available at OGRDB.
+
+## Download OGRDB germline V gene allele sequences for locus IGL of
+## mouse strain MSM/MsJ to a temporary directory:
+germline_set <- c(`MSM/MsJ IGLV`=1)
+
+dir.create(destdir <- tempfile())
+download_OGRDB_germline_sequences("Mus musculus", germline_set,
+                                  destdir=destdir)
+
+## List the downloaded files:
+list.files(destdir)  # 1 FASTA file
+
+## Compute the V gene delineations for 'IGKV_alleles':
+IGLV_alleles <- file.path(destdir, "IGLV.fasta")
+IGLV_gene_delinea <- compute_V_gene_delineations(IGLV_alleles)
+IGLV_gene_delinea
+
+## Note that for the first two alleles, the length of the **ungapped**
+## sequence (seq_len) is smaller than the FWR3 end position (fwr3_end):
+IGLV_gene_delinea[ , c("fwr3_end", "seq_len")]
+
+## In other words, the sequences of alleles IGLV0-37NY*00 and
+## IGLV0-COOR*00 end before the end of their FWR3.
+
+## This is reflected in the V gene delineations provided by the
+## corresponding AIRR-C JSON file from OGRDB:
+download_OGRDB_germline_json("Mus musculus", germline_set,
+                             destdir=destdir)
+list.files(destdir)
+ogrdb_json_file <- file.path(destdir, "IGLV.json")
+IGLV_gene_delinea2 <- makeogrannote(ogrdb_json_file)
+IGLV_gene_delinea2
+
+## As you can see, when a V allele sequence ends before the end of
+## its FWR3, the FWR3 end position reported in the AIRR-C JSON file
+## is the position of the last nucleotide in the (ungapped) sequence.
 
 ## Remove temporary directory:
 unlink(destdir, recursive=TRUE)
