@@ -1,20 +1,12 @@
 High-priority TODO list
 =======================
 
+o Document *_ndm_data functions.
+
 o Like for the 'custom_internal_data' argument, the 'auxiliary_data'
   argument of igblastn() should accept a data.frame.
 
-o Add new AIRR built-in germline db for rhesus_monkey using version 2 of
-  the macaque germline sets from OGRDB:
-    https://ogrdb.airr-community.org/germline_set/94
-    https://ogrdb.airr-community.org/germline_set/95
-    https://ogrdb.airr-community.org/germline_set/96
-  See https://wordpress.vdjbase.org/index.php/ogrdb_news/macaque-sets-updated/
-  for what has changed w.r.t. version 1.
-
 o Implement, test, and document compute_auxdata().
-
-o Document makeogrannote() and related utilities.
 
 o Investigate BIG inconsistency between local IgBLAST and web IgBLAST:
   https://www.ncbi.nlm.nih.gov/igblast/

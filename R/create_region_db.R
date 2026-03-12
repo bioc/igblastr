@@ -149,11 +149,11 @@
     internal_data_path <- file.path(destdir, "internal_data")
     stopifnot(!dir.exists(internal_data_path))
 
-    V_ndm_data <- as.data.frame(dna_mcols[ , names(IGBLAST_INTDATA_COL2CLASS)])
-    check_V_ndm_data_col2class(V_ndm_data)
+    ndm_data <- as.data.frame(dna_mcols[ , names(NDM_COL2CLASS)])
+    check_ndm_data_col2class(ndm_data)
     dir.create(internal_data_path)
     destfile <- file.path(internal_data_path, "V.ndm.imgt")
-    write_V_ndm_data(V_ndm_data, destfile)
+    write_ndm_data(ndm_data, destfile)
 }
 
 

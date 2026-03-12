@@ -7,11 +7,11 @@ test_that("load_intdata()", {
                                      which="original")
             ## 13 rows are repeated in original human.ndm.imgt
             ## 24 rows are repeated in original mouse.ndm.imgt
-            ## --> we set 'allow.dup.entries' to TRUE for these two datasets.
-            allow.dup.entries <- (organism %in% c("human", "mouse")) &&
+            ## --> we set 'allow.repeated.rows' to TRUE for these two datasets.
+            allow.repeated.rows <- (organism %in% c("human", "mouse")) &&
                                  (domain_system == "imgt")
-            ok <- check_V_ndm_data(intdata0,
-                                   allow.dup.entries=allow.dup.entries)
+            ok <- validate_ndm_rows(intdata0,
+                                    allow.repeated.rows=allow.repeated.rows)
             if (organism == "human" && domain_system == "imgt") {
                 ## We expect all *_end columns to contain multiples of 3.
                 ## However, in original human.ndm.imgt, fwr3_end is not a
@@ -39,33 +39,33 @@ test_that("load_intdata()", {
                                      domain_system=domain_system,
                                      which="original")
             expect_true(is.data.frame(intdata2))
-            expected_colnames <- names(igblastr:::IGBLAST_INTDATA_COL2CLASS)
+            expected_colnames <- names(igblastr:::NDM_COL2CLASS)
             expect_identical(colnames(intdata2), expected_colnames)
         }
 
     ## Test on built-in germline dbs with internal data:
 
     #intdata <- load_intdata("_OGRDB.human.IGH+IGK+IGL.202309")
-    #ok <- check_V_ndm_data(intdata)
+    #ok <- validate_ndm_rows(intdata)
     ## fwr3_end not a multiple of 3 for allele "IGLV2-8*03":
     #expect_identical(intdata[!ok, "allele_name"], "IGLV2-8*03")
 
     #intdata <- load_intdata("_OGRDB.human.IGH+IGK+IGL.202401")
-    #ok <- check_V_ndm_data(intdata)
+    #ok <- validate_ndm_rows(intdata)
     ## fwr3_end not a multiple of 3 for allele "IGLV2-8*03":
     #expect_identical(intdata[!ok, "allele_name"], "IGLV2-8*03")
 
     intdata <- load_intdata("_OGRDB.human.IGH+IGK+IGL.202410")
-    expect_true(all(check_V_ndm_data(intdata)))
+    expect_true(all(validate_ndm_rows(intdata)))
 
     intdata <- load_intdata("_OGRDB.mouse.NOD_ShiLtJ.IGH+IGK+IGL.202501")
-    expect_true(all(check_V_ndm_data(intdata)))
+    expect_true(all(validate_ndm_rows(intdata)))
 
     intdata <- load_intdata("_OGRDB.mouse.PWD_PhJ.IGH+IGK+IGL.202501")
-    expect_true(all(check_V_ndm_data(intdata)))
+    expect_true(all(validate_ndm_rows(intdata)))
 
     intdata <- load_intdata("_OGRDB.rhesus_monkey.IGH+IGK+IGL.202602")
-    expect_true(all(check_V_ndm_data(intdata)))
+    expect_true(all(validate_ndm_rows(intdata)))
 
     expect_error(load_intdata("toto"), regexp="no internal data found")
     expect_error(

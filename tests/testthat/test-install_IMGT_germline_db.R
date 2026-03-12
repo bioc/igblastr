@@ -3,7 +3,7 @@ test_that("install_IMGT_germline_db()", {
                                         overwrite=TRUE)
     expect_identical(db_name, "IMGT-202531-1.Homo_sapiens.IGH+IGK+IGL")
     intdata <- load_intdata(db_name)
-    igblastr:::check_V_ndm_data_col2class(intdata)
+    igblastr:::check_ndm_data_col2class(intdata)
     use_germline_db(db_name)
     rm_germline_db(db_name)
 
@@ -11,7 +11,7 @@ test_that("install_IMGT_germline_db()", {
                                         tcr.db=TRUE, overwrite=TRUE)
     expect_identical(db_name, "IMGT-202531-1.Homo_sapiens.TRA+TRB+TRG+TRD")
     intdata <- load_intdata(db_name)
-    igblastr:::check_V_ndm_data_col2class(intdata)
+    igblastr:::check_ndm_data_col2class(intdata)
     use_germline_db(db_name)
     rm_germline_db(db_name)
 
@@ -19,7 +19,7 @@ test_that("install_IMGT_germline_db()", {
                                         loci="IGH", overwrite=TRUE)
     expect_identical(db_name, "IMGT-202531-1.Homo_sapiens.IGH")
     intdata <- load_intdata(db_name)
-    igblastr:::check_V_ndm_data_col2class(intdata)
+    igblastr:::check_ndm_data_col2class(intdata)
     use_germline_db(db_name)
     rm_germline_db(db_name)
  
@@ -27,7 +27,7 @@ test_that("install_IMGT_germline_db()", {
                                         loci=c("TRB", "TRA"), overwrite=TRUE)
     expect_identical(db_name, "IMGT-202531-1.Homo_sapiens.TRA+TRB")
     intdata <- load_intdata(db_name)
-    igblastr:::check_V_ndm_data_col2class(intdata)
+    igblastr:::check_ndm_data_col2class(intdata)
     use_germline_db(db_name)
     rm_germline_db(db_name)
 })

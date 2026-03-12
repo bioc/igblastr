@@ -111,23 +111,9 @@ V_allele_has_stop_codon(V_alleles, intdata)
   installation used by \pkg{igblastr}, for the specified organism.
 
   \code{load_intdata()} returns the \emph{internal data} in a data.frame
-  with 1 row per germline V allele sequence and the following columns:
-  \itemize{
-    \item \code{allele_name}: allele name;
-    \item \code{fwr1_start}, \code{fwr1_end}: FWR1 start/end
-          positions (1-based);
-    \item \code{cdr1_start}, \code{cdr1_end}: CDR1 start/end
-          positions (1-based);
-    \item \code{fwr2_start}, \code{fwr2_end}: FWR2 start/end
-          positions (1-based);
-    \item \code{cdr2_start}, \code{cdr2_end}: CDR2 start/end
-          positions (1-based);
-    \item \code{fwr3_start}, \code{fwr3_end}: FWR3 start/end
-          positions (1-based);
-    \item \code{chain_type}: chain type;
-    \item \code{coding_frame_start}: first coding frame start
-          position (0-based).
-  }
+  with 1 row per germline V gene allele sequence and the same columns
+  as the data.frame returned by \code{read_ndm_data()}.
+  See \code{?\link{read_ndm_data}} for more information.
 
   \code{V_genes_with_varying_fwrcdr_boundaries()} returns a character
   vector containing the names of the germline V genes for which the
@@ -148,8 +134,8 @@ V_allele_has_stop_codon(V_alleles, intdata)
 
 \seealso{
   \itemize{
-    \item \code{\link{compute_imgt_intdata}} to annotate a set of germline V
-          gene allele sequences.
+    \item \code{\link{compute_V_gene_delineations}} to annotate a set of
+          germline V gene allele sequences.
 
     \item \link{auxdata_utils} to access, manipulate, and generate IgBLAST
           \emph{auxiliary data}.
