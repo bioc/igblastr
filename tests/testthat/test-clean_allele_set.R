@@ -24,13 +24,9 @@ test_that(".drop_repeated_alleles()", {
 {
     object_mcols <- mcols(object)
     expect_true(is(object_mcols, "DataFrame"))
-    expected_colnames <- c(
-        "locus",
-        setdiff(names(igblastr:::NDM_COL2CLASS),
-               c("chain_type", "coding_frame_start")),
-        "seq_len", "coding_frame_start", "starting_gap",
-        "all_gaps_in_frame", "all_gaps_contained", "chain_type"
-    )
+    expected_colnames <- c("locus",
+                           igblastr:::EXTENDED_V_GENE_DELINEATION_COLNAMES,
+                           "chain_type")
     expect_identical(colnames(object_mcols), expected_colnames)
     expect_identical(object_mcols[ , "allele_name"], names(object))
 }

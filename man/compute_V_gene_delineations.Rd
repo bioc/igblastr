@@ -6,15 +6,11 @@
 \title{Compute V gene delineations}
 
 \description{
-  A utility function to annotate a set of germline V gene allele sequences
-  in a way similar to how they are annotated in IgBLAST \emph{internal data}.
-
-  Note that the annotation produced by the function can be used by IgBLAST
-  as a substitute to the \emph{internal data} shipped with the IgBLAST
-  software (and typically included in a standard IgBLAST installation).
-
-  See \code{?\link{load_intdata}} for more information about IgBLAST
-  \emph{internal data}.
+  A utility function to compute the FWR/CDR boundaries (a.k.a. V gene
+  delineations) for a set of germline V gene allele sequences.
+  Note that the input sequences must be \emph{gapped}, that is, they
+  must contain the so-called "IMGT gaps" whose purpose is to convey
+  the delineation information.
 }
 
 \usage{
@@ -27,12 +23,32 @@ compute_V_gene_delineations(gapped_V_alleles, as.IRangesList=FALSE)
     gene allele \emph{gapped} sequences.
   }
   \item{as.IRangesList}{
-    COMING SOON...
+    Experts only! Set to \code{TRUE} to return the delineations in an
+    \link[IRanges]{IRangesList} object instead of a data.frame. In
+    this case, the returned IRangesList object will have 1 list element
+    per supplied V allele sequence and will carry the following metadata
+    columns (accessible with \code{\link[S4Vectors]{mcols}()}):
+    \code{seq_len}, \code{coding_frame_start}, \code{starting_gap},
+    \code{all_gaps_in_frame}, \code{all_gaps_contained}.
+    See Value section below for what these columns contain.
   }
 }
 
 \details{
-  COMING SOON...
+  See
+  \url{https://www.imgt.org/IMGTScientificChart/Numbering/IMGTIGVLsuperfamily.html}
+  and
+  \url{https://www.imgt.org/IMGTScientificChart/Numbering/IMGT-Kabat_part1.html}
+  for how gaps are used in the context of "IMGT unique numbering for
+  V-DOMAIN and V-LIKE-DOMAIN".
+
+  Note that the annotation returned by \code{compute_V_gene_delineations()}
+  can be used by IgBLAST as a substitute to the \emph{internal data} shipped
+  with the IgBLAST software (and typically included in a standard IgBLAST
+  installation).
+
+  See \code{?\link{load_intdata}} for more information about IgBLAST
+  \emph{internal data}.
 }
 
 \value{
@@ -62,6 +78,10 @@ compute_V_gene_delineations(gapped_V_alleles, as.IRangesList=FALSE)
 
 \seealso{
   \itemize{
+    \item \url{https://www.imgt.org/IMGTScientificChart/Numbering/IMGTIGVLsuperfamily.html}
+          for how the "IMGT unique numbering for V-DOMAIN and V-LIKE-DOMAIN"
+          works.
+
     \item \code{\link{load_intdata}} to access and manipulate IgBLAST
           \emph{internal data}.
 
