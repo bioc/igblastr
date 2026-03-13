@@ -71,6 +71,28 @@ clean_imgt_fasta_header_lines  <- function(headers, what="some allele names")
 ### compute_V_gene_delineations()
 ###
 
+EXTENDED_V_GENE_DELINEATION_COLNAMES <- c(
+    "allele_name",
+    V_GENE_DELINEATION_COLNAMES,
+    "seq_len",
+    "coding_frame_start",
+    "starting_gap",
+    "all_gaps_in_frame",
+    "all_gaps_contained"
+)
+
+### Sanity checks.
+stopifnot(
+    identical(
+        setdiff(names(NDM_COL2CLASS), EXTENDED_V_GENE_DELINEATION_COLNAMES),
+        "chain_type"
+    ),
+    identical(
+        setdiff(EXTENDED_V_GENE_DELINEATION_COLNAMES, names(NDM_COL2CLASS)),
+        c("seq_len", "starting_gap", "all_gaps_in_frame", "all_gaps_contained")
+    )
+)
+
 ### The IMGT unique numbering provides a standardized delimitation of
 ### the FWR and CDR regions. This standard is based on fixed FWR/CDR lengths
 ### with respect to the germline V gene **gapped** protein sequences.
@@ -187,7 +209,9 @@ clean_imgt_fasta_header_lines  <- function(headers, what="some allele names")
         fwr3_start =start(all_ranges)[idx0],
         fwr3_end   =end  (all_ranges)[idx0]
     )
-    cbind(df, mcols(IRL, use.names=FALSE))  # ordinary data.frame
+    df <- cbind(df, mcols(IRL, use.names=FALSE))  # ordinary data.frame
+    stopifnot(identical(colnames(df), EXTENDED_V_GENE_DELINEATION_COLNAMES))
+    df
 }
 
 ### 'gapped_V_alleles' can be a named DNAStringSet or BStringSet object,
