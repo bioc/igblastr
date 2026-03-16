@@ -194,16 +194,6 @@
 ### .normarg_custom_internal_data()
 ###
 
-.load_user_supplied_internal_data <- function(custom_internal_data)
-{
-    if (!file.exists(custom_internal_data))
-        stop(wmsg("custom FWR/CDR annotation file '",
-                  custom_internal_data, "' not found"))
-    if (dir.exists(custom_internal_data))
-        stop(wmsg("'", custom_internal_data, "' is a directory, not a file"))
-    read_ndm_data(custom_internal_data)
-}
-
 .check_user_supplied_internal_data <- function(intdata, germline_db_V, what)
 {
     check_ndm_data_col2class(intdata, what=what)
@@ -218,13 +208,12 @@
     num_missing <- sum(!(V_names %in% intdata[ , "allele_name"]))
     if (num_missing != 0L) {
         ## Note that 'basename(dirname(germline_db_V))' is not guaranteed
-        ## to be the same as the name of the selected germline db so don't
+        ## to be the same as the name of the selected germline db so do NOT
         ## use use_germline_db() here.
         db_name <- basename(dirname(germline_db_V))
-        warning(wmsg("Incomplete custom internal data: ",
-                     "only ", num_missing, " V allele(s) ",
-                     "(out of ", length(V_names), ") in germline ",
-                     "db ", db_name, " are not annotated in ", what),
+        warning(wmsg("Incomplete custom internal data: ", num_missing, " ",
+                     "V allele(s) (out of ", length(V_names), " in ",
+                     "germline db ", db_name, ") are not annotated in ", what),
                 immediate.=TRUE)
     }
 }
@@ -249,6 +238,16 @@
     intdata_path
 }
 
+.load_user_supplied_intdata <- function(custom_internal_data)
+{
+    if (!file.exists(custom_internal_data))
+        stop(wmsg("custom FWR/CDR annotation file '",
+                  custom_internal_data, "' not found"))
+    if (dir.exists(custom_internal_data))
+        stop(wmsg("'", custom_internal_data, "' is a directory, not a file"))
+    read_ndm_data(custom_internal_data)
+}
+
 ### Has its own tests in tests/testthat/test-prepare_igblastn_cmdline_args.R!
 ### Can return a NULL.
 .normarg_custom_internal_data <- function(custom_internal_data="auto",
@@ -271,8 +270,8 @@
                   "file containing custom FWR/CDR annotation, or NULL"))
     if (custom_internal_data == "auto")
         return(.get_auto_custom_internal_data(germline_db_V, domain_system))
+    intdata <- .load_user_supplied_intdata(custom_internal_data)
     what <- c("custom FWR/CDR annotation file '", custom_internal_data, "'")
-    intdata <- .load_user_supplied_internal_data(custom_internal_data)
     .check_user_supplied_internal_data(intdata, germline_db_V, what)
     file_path_as_absolute(custom_internal_data)
 }
@@ -303,9 +302,9 @@
         return(NULL)
     if (num_auto_germline_dbs == 0L)
         stop(wmsg("'organism' must be specified when 'germline_db_V', ",
-                  "'germline_db_D', and 'germline_db_J' are supplied (unless you ",
-                  "also supply your own internal data thru the 'custom_internal_data' ",
-                  "argument)"))
+                  "'germline_db_D', and 'germline_db_J' are supplied ",
+                  "(unless you also supply your own internal data thru ",
+                  "the 'custom_internal_data' argument)"))
     germline_db_name <- use_germline_db()  # cannot be ""
     organism <- infer_organism_shortname_from_db_name(germline_db_name)
     if (is.na(organism))
@@ -322,53 +321,103 @@
 ### .normarg_auxiliary_data()
 ###
 
+.check_user_supplied_auxiliary_data <- function(auxdata, germline_db_J, what)
+{
+    check_auxdata_col2class(auxdata, what=what)
+    ## We will only perform the check below if the FASTA file associated
+    ## with 'germline_db_J' is guaranteed to exist and be in sync with
+    ## the J-region db itself, which is only the case if 'germline_db_J'
+    ## points to an **internally** managed region db.
+    if (!.region_bdb_is_internal(germline_db_J, "J"))
+        return()
+    J_fasta_file <- paste0(germline_db_J, ".fasta")
+    J_names <- names(readDNAStringSet(J_fasta_file))
+    num_missing <- sum(!(J_names %in% auxdata[ , "allele_name"]))
+    if (num_missing != 0L) {
+        ## Note that 'basename(dirname(germline_db_J))' is not guaranteed
+        ## to be the same as the name of the selected germline db so do NOT
+        ## use use_germline_db() here.
+        db_name <- basename(dirname(germline_db_J))
+        warning(wmsg("Incomplete auxiliary data: ", num_missing, " ",
+                     "J allele(s) (out of ", length(J_names), " in ",
+                     "germline db ", db_name, ") are not annotated in ", what),
+                immediate.=TRUE)
+    }
+}
+
+.try_to_infer_organism_for_auxdata <- function(germline_db_V)
+{
+    ## The only way that the normalized 'organism' is NULL is if the
+    ## normalized 'custom_internal_data' is **not** NULL. And the only
+    ## way that this can happen is if either:
+    ## - the user supplied their own internal data thru 'custom_internal_data';
+    ## - or they didn't supply the 'germline_db_V' argument and the selected
+    ##   germline db includes internal data.
+    msg1 <- c("Failed to automatically figure out what auxiliary data ",
+              "to use!")
+    msg3 <- c("Please supply the path to the auxiliary data to use thru ",
+              "the 'auxiliary_data' argument, or set 'auxiliary_data' ",
+              "to NULL if you don't want to use any auxiliary data ",
+              "(not recommended).")
+    msg4 <- c("Note that you can use 'get_auxdata_path()' to obtain ",
+              "the path to the auxiliary data shipped with IgBLAST ",
+              "for a given organism.")
+    msg5 <- c("See '?get_auxdata_path' for more information.")
+    if (!.region_bdb_is_internal(germline_db_V, "V")) {
+        stop(wmsg(msg1), "\n\n  ",
+             wmsg(msg3), "\n  ", wmsg(msg4), "\n  ", wmsg(msg5))
+    }
+    db_name <- basename(dirname(germline_db_V))
+    organism <- infer_organism_shortname_from_db_name(db_name)
+    if (is.na(organism)) {
+        msg2 <- c("The germline db in use (", db_name, ") ",
+                  "does not seem to correspond to an organism for ",
+                  "which IgBLAST provides auxiliary data ",
+                  "(use 'list_igblast_organisms()' to get the list of ",
+                  "organisms that IgBLAST supports out of the box).")
+        stop(wmsg(msg1), "\n\n  ", wmsg(msg2), "\n  ",
+             wmsg(msg3), "\n  ", wmsg(msg4), "\n  ", wmsg(msg5))
+    }
+    organism
+}
+
+.load_user_supplied_auxdata <- function(auxiliary_data)
+{
+    if (!file.exists(auxiliary_data))
+        stop(wmsg("auxiliary data file '", auxiliary_data, "' not found"))
+    if (dir.exists(auxiliary_data))
+        stop(wmsg("'", auxiliary_data, "' is a directory, not a file"))
+    read_auxdata(auxiliary_data)
+}
+
+### Has its own tests in tests/testthat/test-prepare_igblastn_cmdline_args.R!
 ### Can return a NULL.
-.normarg_auxiliary_data <- function(auxiliary_data="auto",
-                                    organism, num_auto_germline_dbs)
+.normarg_auxiliary_data <- function(auxiliary_data="auto", organism,
+                                    germline_db_V, germline_db_J)
 {
     if (is.null(auxiliary_data))
         return(NULL)
-    if (!isSingleNonWhiteString(auxiliary_data))
-        stop(wmsg("'auxiliary_data' must be \"auto\", or a single string ",
-                  "that is the path to a file containing the coding frame ",
-                  "start positions for the sequences in the J-region db",
-                  "or NULL"))
-    if (auxiliary_data != "auto")
-        return(file_path_as_absolute(auxiliary_data))
-    if (is.null(organism)) {
-        ## The only way that the normalized 'organism' is NULL is if the
-        ## normalized 'custom_internal_data' is **not** NULL. And the only
-        ## way this can happen is if either:
-        ## - the user supplied their own internal data thru 'custom_internal_data';
-        ## - or they didn't supply all 3 germline_db_X arguments and the selected
-        ##   germline db includes internal data.
-        msg1 <- c("Failed to automatically figure out what auxiliary data ",
-                  "to use!")
-        msg3 <- c("Please supply the path to the auxiliary data to use thru ",
-                  "the 'auxiliary_data' argument, or set 'auxiliary_data' ",
-                  "to NULL if you don't want to use any auxiliary data ",
-                  "(not recommended).")
-        msg4 <- c("Note that you can use 'get_auxdata_path()' to obtain ",
-                  "the path to the auxiliary data shipped with IgBLAST ",
-                  "for a given organism.")
-        msg5 <- c("See '?get_auxdata_path' for more information.")
-        if (num_auto_germline_dbs == 0L) {
-            stop(wmsg(msg1), "\n\n  ",
-                 wmsg(msg3), "\n  ", wmsg(msg4), "\n  ", wmsg(msg5))
-        }
-        germline_db_name <- use_germline_db()  # cannot be ""
-        organism <- infer_organism_shortname_from_db_name(germline_db_name)
-        if (is.na(organism)) {
-            msg2 <- c("The germline db in use (", germline_db_name, ") ",
-                      "does not seem to correspond to an organism for ",
-                      "which IgBLAST provides auxiliary data ",
-                      "(use 'list_igblast_organisms()' to get the list of ",
-                      "organisms that IgBLAST supports out of the box).")
-            stop(wmsg(msg1), "\n\n  ", wmsg(msg2), "\n  ",
-                 wmsg(msg3), "\n  ", wmsg(msg4), "\n  ", wmsg(msg5))
-        }
+    if (is.data.frame(auxiliary_data)) {
+        what <- "the supplied 'auxiliary_data' data.frame"
+        .check_user_supplied_auxiliary_data(auxiliary_data, germline_db_J, what)
+        path <- tempfile()
+        attr(path, "safe_to_remove") <- TRUE
+        write_auxdata(auxiliary_data, path)
+        return(path)
     }
-    get_auxdata_path(organism)
+    if (!isSingleNonWhiteString(auxiliary_data))
+        stop(wmsg("'auxiliary_data' must be \"auto\", or a data.frame ",
+                  "containing auxiliary data, or the path to a file ",
+                  "containing auxiliary data (.aux file), or NULL"))
+    if (auxiliary_data == "auto") {
+        if (is.null(organism))
+            organism <- .try_to_infer_organism_for_auxdata(germline_db_V)
+        return(get_auxdata_path(organism))
+    }
+    auxdata <- .load_user_supplied_auxdata(auxiliary_data)
+    what <- c("auxiliary data file '", auxiliary_data, "'")
+    .check_user_supplied_auxiliary_data(auxdata, germline_db_J, what)
+    file_path_as_absolute(auxiliary_data)
 }
 
 
@@ -537,8 +586,8 @@ prepare_igblastn_cmdline_args <-
                                                           domain_system)
     organism <- .normarg_organism(organism, num_auto_germline_dbs,
                                   custom_internal_data)
-    auxiliary_data <- .normarg_auxiliary_data(auxiliary_data,
-                                              organism, num_auto_germline_dbs)
+    auxiliary_data <- .normarg_auxiliary_data(auxiliary_data, organism,
+                                              germline_db_V, germline_db_J)
     ig_seqtype <- .normarg_ig_seqtype(ig_seqtype, num_auto_germline_dbs)
 
     cmd_args <- list(query=query, outfmt=outfmt,

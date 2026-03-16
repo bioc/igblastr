@@ -5,7 +5,7 @@
 
 
 ### Not exported!
-### Not the true colnames used in IgBLAST intdata files: ours are all
+### Not the true colnames used in IgBLAST "ndm" files: ours are all
 ### lowercase and we've replaced spaces with underscores.
 ### Note that many columns are redundant:
 ### - columns 'cdr1_start', 'fwr2_start', 'cdr2_start', and 'fwr3_start'
@@ -14,7 +14,7 @@
 ### - columns 'fwr1_start' and 'coding_frame_start' are redundant (and
 ###   column 'fwr1_start' is a dumb column anyways because it should always
 ###   be set to 1).
-NDM_COL2CLASS <- c(
+NDM_DATA_COL2CLASS <- c(
     allele_name="character",
     fwr1_start="integer",
     fwr1_end="integer",
@@ -34,7 +34,7 @@ NDM_COL2CLASS <- c(
 V_GENE_SEGMENTS <- c("fwr1", "cdr1", "fwr2", "cdr2", "fwr3")
 V_GENE_DELINEATION_COLNAMES <- paste0(rep(V_GENE_SEGMENTS, each=2L),
                                       c("_start", "_end"))
-stopifnot(all(V_GENE_DELINEATION_COLNAMES %in% names(NDM_COL2CLASS)))
+stopifnot(all(V_GENE_DELINEATION_COLNAMES %in% names(NDM_DATA_COL2CLASS)))
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -46,16 +46,16 @@ check_ndm_data_col2class <- function(ndm_data, what="'ndm_data'")
 {
     if (!is.data.frame(ndm_data))
         stop(wmsg(what, " must be a data.frame"))
-    expected_colnames <- names(NDM_COL2CLASS)
+    expected_colnames <- names(NDM_DATA_COL2CLASS)
     if (!identical(colnames(ndm_data), expected_colnames)) {
         in1string <- paste(expected_colnames, collapse=", ")
         stop(wmsg(what, " must have the following columns ",
                   "(in this order): ", in1string))
     }
     col2class <- vapply(ndm_data, function(x) class(x)[[1L]], character(1))
-    if (!identical(col2class, NDM_COL2CLASS)) {
-        in1string <- paste0("    ", names(NDM_COL2CLASS), " -> ",
-                            NDM_COL2CLASS, collapse="\n")
+    if (!identical(col2class, NDM_DATA_COL2CLASS)) {
+        in1string <- paste0("    ", names(NDM_DATA_COL2CLASS), " -> ",
+                            NDM_DATA_COL2CLASS, collapse="\n")
         stop(wmsg(what, " must have the following column types:"), "\n",
              in1string)
     }
@@ -107,7 +107,7 @@ validate_ndm_rows <- function(ndm_data, allow.repeated.rows=FALSE)
 
 read_ndm_data <- function(filepath)
 {
-    read_broken_table(filepath, NDM_COL2CLASS)
+    read_broken_table(filepath, NDM_DATA_COL2CLASS)
 }
 
 write_ndm_data <- function(ndm_data, file="", check.data=FALSE)

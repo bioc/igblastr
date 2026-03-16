@@ -46,9 +46,10 @@ compute_auxdata(J_alleles)
 }
 
 \value{
-  Returns the computed \emph{auxiliary data} in a data.frame with 1 row
-  per supplied germline J allele sequence and the same columns as the
-  data.frame returned by \code{\link{load_auxdata}()}.
+  Returns the computed \emph{auxiliary data} in a data.frame with
+  1 row per supplied J allele sequence and the same columns as the
+  data.frame returned by \code{read_auxdata()}.
+  See \code{?\link{read_auxdata}} for more information.
 }
 
 \seealso{

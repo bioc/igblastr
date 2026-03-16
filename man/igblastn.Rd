@@ -134,20 +134,21 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     \emph{internal data} from NCBI.
   }
   \item{auxiliary_data}{
-    \code{"auto"} (the default), or the path to a file containing the
-    coding frame start positions for the sequences in the J-region db,
+    \code{"auto"} (the default), or a data.frame containing auxiliary data,
+    or the path to a file containing auxiliary data (.aux file),
     or \code{NULL}.
 
     Note that, by default (i.e. when \code{auxiliary_data} is omitted or
-    set to \code{"auto"}), \code{igblastn()} uses one of the auxiliary
-    data files included in the IgBLAST installation used by \pkg{igblastr}.
-    More precisely, \code{igblastn()} uses \code{get_auxdata_path()}
-    internally to obtain the path to the organism-specific auxiliary data file.
+    set to \code{"auto"}), \code{igblastn()} will use the organism-specific
+    auxiliary data provided by NCBI and included in the IgBLAST installation
+    used by \pkg{igblastr}. More precisely, \code{igblastn()} will call
+    \code{get_auxdata_path()} internally to obtain the path to the
+    organism-specific auxiliary data file.
 
     IMPORTANT NOTES:
     \itemize{
         \item Supplying \emph{auxiliary data} that is not compatible with
-              the V gene sequences of the selected germline db can cause
+              the J gene sequences of the selected germline db can cause
               \code{igblastn()} to return improper frame status or CDR3
               information (other returned information will still be correct).
               See \code{?\link{get_auxdata_path}} for more information.

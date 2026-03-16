@@ -32,16 +32,6 @@ get_igblast_auxiliary_data <- function(...)
 ### load_auxdata()
 ###
 
-### Not the true colnames used in IgBLAST auxdata files. However, ours are
-### shorter, all lowercase, and contain underscores instead of spaces.
-.IGBLAST_AUXDATA_COL2CLASS <- c(
-    allele_name="character",
-    coding_frame_start="integer",
-    chain_type="character",
-    cdr3_end="integer",
-    extra_bps="integer"
-)
-
 ### IMPORTANT NOTE: Unlike with the data.frame returned by load_intdata(),
 ### all the positions in the data.frame returned by load_auxdata() (that is,
 ### the positions reported in columns 'coding_frame_start' and 'cdr3_end')
@@ -50,7 +40,7 @@ load_auxdata <- function(organism, which=c("live", "original"))
 {
     which <- match.arg(which)
     auxdata_path <- get_auxdata_path(organism, which=which)
-    read_broken_table(auxdata_path, .IGBLAST_AUXDATA_COL2CLASS)
+    read_auxdata(auxdata_path)
 }
 
 load_igblast_auxiliary_data <- function(...)

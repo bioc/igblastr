@@ -56,6 +56,64 @@ test_that(".normarg_custom_internal_data()", {
     expect_true(is.null(custom_internal_data))
 })
 
+test_that(".normarg_auxiliary_data()", {
+    normarg_auxiliary_data <- igblastr:::.normarg_auxiliary_data
+
+    expect_error(normarg_auxiliary_data(2), regexp="must be")
+    expect_true(is.null(normarg_auxiliary_data(NULL)))
+    expect_error(normarg_auxiliary_data(data.frame(aa=1:3)))
+
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
+    db_path <- igblastr:::get_germline_db_path(db_name)
+    germline_db_V <- file.path(db_path, "V")
+    germline_db_J <- file.path(db_path, "J")
+
+    auxdata_path <- get_auxdata_path("human")
+    auxiliary_data <- normarg_auxiliary_data(auxdata_path,
+                                             germline_db_J=germline_db_J)
+    expect_identical(auxiliary_data, auxdata_path)
+
+    auxdata <- load_auxdata("human")
+    auxiliary_data <- normarg_auxiliary_data(auxdata,
+                                             germline_db_J=germline_db_J)
+    expect_identical(read_auxdata(auxiliary_data), auxdata)
+    expect_identical(attr(auxiliary_data, "safe_to_remove"), TRUE)
+
+    expect_error(
+        normarg_auxiliary_data(rev(auxdata)),
+        regexp="must have the following columns"
+    )
+
+    auxdata_path <- get_auxdata_path("mouse")
+    expect_warning(
+        auxiliary_data <- normarg_auxiliary_data(auxdata_path,
+                                                 germline_db_J=germline_db_J),
+        regexp="Incomplete auxiliary data"
+    )
+    expect_identical(auxiliary_data, auxdata_path)
+
+    auxdata <- load_auxdata("mouse")
+    expect_warning(
+        auxiliary_data <- normarg_auxiliary_data(auxdata,
+                                                 germline_db_J=germline_db_J),
+        regexp="Incomplete auxiliary data"
+    )
+    expect_identical(read_auxdata(auxiliary_data), auxdata)
+    expect_identical(attr(auxiliary_data, "safe_to_remove"), TRUE)
+
+    auxiliary_data <- normarg_auxiliary_data("auto", organism="human")
+    expect_identical(auxiliary_data, get_auxdata_path("human"))
+
+    auxiliary_data <- normarg_auxiliary_data("auto", organism=NULL,
+                                             germline_db_V=germline_db_V)
+    expect_identical(auxiliary_data, get_auxdata_path("human"))
+
+    expect_error(
+        normarg_auxiliary_data("auto", organism=NULL, germline_db_V="aaa"),
+        regexp="Failed to automatically figure out"
+    )
+})
+
 test_that("prepare_igblastn_cmdline_args()", {
     ## prepare_igblastn_cmdline_args() is not exported.
     prepare_igblastn_cmdline_args <- igblastr:::prepare_igblastn_cmdline_args

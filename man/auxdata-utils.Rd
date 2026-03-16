@@ -86,15 +86,9 @@ translate_fwr4(J_alleles, auxdata, max.codons=NA)
   to use with \code{\link{igblastn}()} (see WARNING below).
 
   \code{load_auxdata()} returns the \emph{auxiliary data} in a data.frame
-  with 1 row per germline J allele sequence and the following columns:
-  \enumerate{
-    \item \code{allele_name}: allele name;
-    \item \code{coding_frame_start}: first coding frame start
-          position (0-based);
-    \item \code{chain_type}: chain type;
-    \item \code{cdr3_end}: CDR3 end position (0-based);
-    \item \code{extra_bps}: extra base pairs beyond J coding end.
-  }
+  with 1 row per supplied J allele sequence and the same columns as the
+  data.frame returned by \code{read_auxdata()}.
+  See \code{?\link{read_auxdata}} for more information.
 
   \code{translate_J_alleles()} returns a named character vector with 1
   amino acid sequence per supplied allele. The vector contains an \code{NA}

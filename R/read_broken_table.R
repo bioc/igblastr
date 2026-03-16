@@ -12,11 +12,18 @@
 
 matrix2df <- function(m, col2class)
 {
-    stopifnot(is.matrix(m),
+    stopifnot(is.matrix(m), is.character(m),
               is.character(col2class), !is.null(names(col2class)),
               ncol(m) == length(col2class))
     cols <- lapply(setNames(seq_along(col2class), names(col2class)),
-                   function(i) as(m[ , i], col2class[[i]]))
+        function(i) {
+            col <- m[ , i]  # character vector
+            Class <- col2class[[i]]
+            if (Class %in% c("integer", "numeric", "double"))
+                col[col %in% "NA"] <- NA_character_
+            as(col, Class)
+        }
+    )
     as.data.frame(cols, optional=TRUE, fix.empty.names=FALSE)
 }
 

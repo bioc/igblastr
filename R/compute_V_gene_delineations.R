@@ -84,11 +84,13 @@ EXTENDED_V_GENE_DELINEATION_COLNAMES <- c(
 ### Sanity checks.
 stopifnot(
     identical(
-        setdiff(names(NDM_COL2CLASS), EXTENDED_V_GENE_DELINEATION_COLNAMES),
+        setdiff(names(NDM_DATA_COL2CLASS),
+                EXTENDED_V_GENE_DELINEATION_COLNAMES),
         "chain_type"
     ),
     identical(
-        setdiff(EXTENDED_V_GENE_DELINEATION_COLNAMES, names(NDM_COL2CLASS)),
+        setdiff(EXTENDED_V_GENE_DELINEATION_COLNAMES,
+                names(NDM_DATA_COL2CLASS)),
         c("seq_len", "starting_gap", "all_gaps_in_frame", "all_gaps_contained")
     )
 )
