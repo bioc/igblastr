@@ -28,7 +28,7 @@ validate_ndm_rows(ndm_data, allow.repeated.rows=FALSE)
 
 \arguments{
   \item{filepath}{
-    COMING SOON...
+    The path to the "ndm" file to read.
   }
   \item{ndm_data}{
     A data.frame with 1 row per germline V gene allele sequence and the
@@ -36,7 +36,7 @@ validate_ndm_rows(ndm_data, allow.repeated.rows=FALSE)
     See Value section below for the details.
   }
   \item{file}{
-    COMING SOON...
+    The path to the "ndm" file to write.
   }
   \item{check.data}{
     COMING SOON...

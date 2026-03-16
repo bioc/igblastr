@@ -1,4 +1,4 @@
-.IGBLAST_AUXDATA_COLNAMES <- names(igblastr:::.IGBLAST_AUXDATA_COL2CLASS)
+.AUXDATA_COLNAMES <- names(igblastr:::AUXDATA_COL2CLASS)
 
 test_that("compute_auxdata()", {
 
@@ -8,7 +8,7 @@ test_that("compute_auxdata()", {
     J_alleles <- load_germline_db(db_name, region_types="J")
     computed_auxdata <- compute_auxdata(J_alleles)
     expect_true(is.data.frame(computed_auxdata))
-    expect_identical(colnames(computed_auxdata), .IGBLAST_AUXDATA_COLNAMES)
+    expect_identical(colnames(computed_auxdata), .AUXDATA_COLNAMES)
     expect_identical(computed_auxdata[ , "allele_name"], names(J_alleles))
 
     ## Now we're going to check that 'computed_auxdata' agrees with the
@@ -27,7 +27,7 @@ test_that("compute_auxdata()", {
     J_alleles <- load_germline_db(db_name, region_types="J")
     computed_auxdata <- compute_auxdata(J_alleles)
     expect_true(is.data.frame(computed_auxdata))
-    expect_identical(colnames(computed_auxdata), .IGBLAST_AUXDATA_COLNAMES)
+    expect_identical(colnames(computed_auxdata), .AUXDATA_COLNAMES)
     expect_identical(computed_auxdata[ , "allele_name"], names(J_alleles))
 
     ## Not all the J alleles in IMGT-202531-1.Homo_sapiens.IGH+IGK+IGL
@@ -45,7 +45,7 @@ test_that("compute_auxdata()", {
     J_alleles <- load_germline_db(db_name, region_types="J")
     computed_auxdata <- suppressWarnings(compute_auxdata(J_alleles))
     expect_true(is.data.frame(computed_auxdata))
-    expect_identical(colnames(computed_auxdata), .IGBLAST_AUXDATA_COLNAMES)
+    expect_identical(colnames(computed_auxdata), .AUXDATA_COLNAMES)
     expect_identical(computed_auxdata[ , "allele_name"], names(J_alleles))
 
     ## Not all the J alleles in IMGT-202531-1.Mus_musculus.IGH+IGK+IGL
@@ -65,7 +65,7 @@ test_that("compute_auxdata()", {
     J_alleles <- load_germline_db(db_name, region_types="J")
     computed_auxdata <- suppressWarnings(compute_auxdata(J_alleles))
     expect_true(is.data.frame(computed_auxdata))
-    expect_identical(colnames(computed_auxdata), .IGBLAST_AUXDATA_COLNAMES)
+    expect_identical(colnames(computed_auxdata), .AUXDATA_COLNAMES)
     expect_identical(computed_auxdata[ , "allele_name"], names(J_alleles))
 
     ## Not all the J alleles in IMGT-202531-1.Mus_musculus.IGH+IGK+IGL

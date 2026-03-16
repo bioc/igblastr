@@ -91,6 +91,10 @@ export(
     compute_V_gene_delineations,
     compute_imgt_intdata,
 
+    ## auxdata-IO.R:
+    read_auxdata,
+    write_auxdata,
+
     ## compute_auxata.R:
     compute_auxdata,
 

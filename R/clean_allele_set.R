@@ -119,7 +119,7 @@ checkarg_with.intdata <- function(with.intdata, gapped)
     stopifnot(is(dna, "DNAStringSet"))
     ## We only care about the annotations found in the Metadata Columns
     ## Of Interest listed in 'MCOI' when comparing the V allele annotations.
-    MCOI <- setdiff(names(NDM_COL2CLASS), "chain_type")
+    MCOI <- setdiff(names(NDM_DATA_COL2CLASS), "chain_type")
     ok <- .repeated_vector_elts_have_identical_metadata(dna, MCOI=MCOI)
     if (!ok) {
         msg <- c("V alleles with identical ungapped sequences and names ",

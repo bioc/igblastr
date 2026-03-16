@@ -1,11 +1,11 @@
-.IGBLAST_AUXDATA_COLNAMES <- names(igblastr:::.IGBLAST_AUXDATA_COL2CLASS)
+.AUXDATA_COLNAMES <- names(igblastr:::AUXDATA_COL2CLASS)
 
 test_that("load_auxdata()", {
     organisms <- list_igblast_organisms()
     for (organism in organisms) {
         auxdata <- load_auxdata(organism, which="original")
         expect_true(is.data.frame(auxdata))
-        expect_identical(colnames(auxdata), .IGBLAST_AUXDATA_COLNAMES)
+        expect_identical(colnames(auxdata), .AUXDATA_COLNAMES)
         ## 1 row is repeated in human_gl.aux (the row for TRAJ13*02)
         if (organism == "human") {
             ok <- igblastr:::rows_with_same_key_are_identical(auxdata,

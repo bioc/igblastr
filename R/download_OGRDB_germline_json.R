@@ -156,7 +156,7 @@ makeogrannote <- function(ogrdb_json_file)
                      "in JSON file: ", ogrdb_json_file))
         data <- character(0)
     }
-    col2class <- head(NDM_COL2CLASS, n=-1L)
+    col2class <- head(NDM_DATA_COL2CLASS, n=-1L)
     m <- matrix(data, ncol=length(col2class), byrow=TRUE)
     df <- matrix2df(m, col2class)
     cbind(df, coding_frame_start=integer(nrow(df)))
@@ -190,7 +190,7 @@ makeogrannote <- function(ogrdb_json_file)
     intdata <- compute_V_gene_delineations(V_fasta_file)
     locus <- extract_loci_from_OGRDB_set_names(organism, names(germline_set))
     intdata$chain_type <- paste0("V", substr(locus, 3L, 3L))
-    intdata[ , names(NDM_COL2CLASS)]
+    intdata[ , names(NDM_DATA_COL2CLASS)]
 }
 
 ### Returns the intdata in a data.frame.

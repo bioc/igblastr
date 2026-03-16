@@ -1,12 +1,13 @@
 High-priority TODO list
 =======================
 
-o Document *_ndm_data functions.
+o Fill missing documentation:
+  - document *_ndm_data functions
+  - add example to man/auxdata-IO.Rd
 
-o Like for the 'custom_internal_data' argument, the 'auxiliary_data'
-  argument of igblastn() should accept a data.frame.
-
-o Implement, test, and document compute_auxdata().
+o install_custom_germline_db.Rd() must enforce loci-specification (e.g.
+  IGH+IGL) in the name of the custom db. Not having the loci embedded
+  in the name of a germline db breaks list_germline_dbs(long.listing=TRUE).
 
 o Investigate BIG inconsistency between local IgBLAST and web IgBLAST:
   https://www.ncbi.nlm.nih.gov/igblast/

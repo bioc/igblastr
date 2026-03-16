@@ -111,15 +111,15 @@ compute_V_gene_delineations(gapped_V_alleles, as.IRangesList=FALSE)
 ## to a temporary directory:
 germline_set <- c(`IGKappa_VJ`=4)
 
-dir.create(destdir <- tempfile())
+dir.create(tmpdir <- tempfile())
 download_OGRDB_germline_sequences("Homo sapiens", germline_set,
-                                  destdir=destdir)
+                                  destdir=tmpdir)
 
 ## List the downloaded files:
-list.files(destdir)  # 2 FASTA files (one per IMGT group)
+list.files(tmpdir)  # 2 FASTA files (one per IMGT group)
 
 ## The V allele sequences are **gapped**:
-IGKV_alleles <- readDNAStringSet(file.path(destdir, "IGKV.fasta"))
+IGKV_alleles <- readDNAStringSet(file.path(tmpdir, "IGKV.fasta"))
 as.character(IGKV_alleles[1:3])
 
 ## Compute the V gene delineations for 'IGKV_alleles':
@@ -131,11 +131,11 @@ head(IGKV_gene_delinea)
 ## file from OGRDB.
 
 download_OGRDB_germline_json("Homo sapiens", germline_set,
-                             destdir=destdir)
+                             destdir=tmpdir)
 
-list.files(destdir)  # 1 JSON file
+list.files(tmpdir)  # 1 JSON file
 
-ogrdb_json_file <- file.path(destdir, "IGKappa_VJ.json")
+ogrdb_json_file <- file.path(tmpdir, "IGKappa_VJ.json")
 IGKV_gene_delinea2 <- makeogrannote(ogrdb_json_file)
 head(IGKV_gene_delinea2)
 
@@ -152,7 +152,7 @@ IGKV_gene_delinea2 <- IGKV_gene_delinea2[ , shared_colnames]
 stopifnot(same_ndm_data(IGKV_gene_delinea, IGKV_gene_delinea2))
 
 ## Remove temporary directory:
-unlink(destdir, recursive=TRUE)
+unlink(tmpdir, recursive=TRUE)
 
 ## ---------------------------------------------------------------------
 ## 2. USING MOUSE GERMLINE V GENE ALLELE SEQUENCES FROM OGRDB
@@ -164,15 +164,15 @@ unlink(destdir, recursive=TRUE)
 ## mouse strain MSM/MsJ to a temporary directory:
 germline_set <- c(`MSM/MsJ IGLV`=1)
 
-dir.create(destdir <- tempfile())
+dir.create(tmpdir <- tempfile())
 download_OGRDB_germline_sequences("Mus musculus", germline_set,
-                                  destdir=destdir)
+                                  destdir=tmpdir)
 
 ## List the downloaded files:
-list.files(destdir)  # 1 FASTA file
+list.files(tmpdir)  # 1 FASTA file
 
 ## Compute the V gene delineations for 'IGKV_alleles':
-IGLV_alleles <- file.path(destdir, "IGLV.fasta")
+IGLV_alleles <- file.path(tmpdir, "IGLV.fasta")
 IGLV_gene_delinea <- compute_V_gene_delineations(IGLV_alleles)
 IGLV_gene_delinea
 
@@ -186,9 +186,9 @@ IGLV_gene_delinea[ , c("fwr3_end", "seq_len")]
 ## This is reflected in the V gene delineations provided by the
 ## corresponding AIRR-C JSON file from OGRDB:
 download_OGRDB_germline_json("Mus musculus", germline_set,
-                             destdir=destdir)
-list.files(destdir)
-ogrdb_json_file <- file.path(destdir, "IGLV.json")
+                             destdir=tmpdir)
+list.files(tmpdir)
+ogrdb_json_file <- file.path(tmpdir, "IGLV.json")
 IGLV_gene_delinea2 <- makeogrannote(ogrdb_json_file)
 IGLV_gene_delinea2
 
@@ -197,7 +197,7 @@ IGLV_gene_delinea2
 ## is the position of the last nucleotide in the (ungapped) sequence.
 
 ## Remove temporary directory:
-unlink(destdir, recursive=TRUE)
+unlink(tmpdir, recursive=TRUE)
 }
 
 \keyword{utilities}
