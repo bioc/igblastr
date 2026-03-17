@@ -54,7 +54,7 @@ added to Bioconductor >= 3.22 so cannot be installed from the Bioconductor
 if (!require("remotes", quietly=TRUE))
     BiocManager::install("remotes")
 
-BiocManager::install("HyrienLab/igblastr")
+BiocManager::install("HyrienLab/igblastr@RELEASE_3_22")
 ```
 
 #### Load igblastr
