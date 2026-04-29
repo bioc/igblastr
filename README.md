@@ -60,23 +60,43 @@ library(BiocManager)
 Loading **BiocManager** should display a message that indicates the
 version of Bioconductor that you are using.
 
-If you are using Bioconductor >= 3.22, simply install **igblastr** with:
-```r
-BiocManager::install("igblastr")
-```
-This will install the version of **igblastr** that matches your version
-of Bioconductor.
+- If you are using Bioconductor **3.23** (requires R 4.6): Simply download
+  and install **igblastr** from the Bioconductor 3.23 software repository with:
+    ```r
+    BiocManager::install("igblastr")
+    ```
+  This will install the latest version of the package.
 
-If you are using Bioconductor 3.21, then you need to install directly
-from GitHub (usually discouraged). That's because **igblastr** was only
-added to Bioconductor >= 3.22 so cannot be installed from the Bioconductor
-3.21 repositories:
-```r
-if (!require("remotes", quietly=TRUE))
-    BiocManager::install("remotes")
+- If you are using Bioconductor **3.21** (requires R 4.5): You need to install
+  **igblastr** directly from GitHub (usually discouraged). That's because
+  the package was only added to Bioconductor >= 3.22 so cannot be installed
+  from the Bioconductor 3.21 software repository:
+    ```r
+    if (!require("remotes", quietly=TRUE))
+        BiocManager::install("remotes")
+    
+    BiocManager::install("HyrienLab/igblastr@RELEASE_3_23")
+    ```
+  This will install the latest version of the package.
 
-BiocManager::install("HyrienLab/igblastr@RELEASE_3_22")
-```
+- If you are using Bioconductor **3.22** (requires R 4.5): You can either
+  install **igblastr** from the Bioconductor 3.22 software repository with:
+    ```r
+    BiocManager::install("igblastr")
+    ```
+  or directly from GitHub with:
+    ```r
+    if (!require("remotes", quietly=TRUE))
+        BiocManager::install("remotes")
+    
+    BiocManager::install("HyrienLab/igblastr@RELEASE_3_23")
+    ```
+  Note that Bioconductor 3.22 was frozen in April 2026 with the version
+  of **igblastr** included in it being frozen permanently at 1.0.23. So
+  if you want to use the latest version of the package, you can either
+  update your installation to Bioconductor 3.23 (requires R 4.6) and
+  install with `BiocManager::install("igblastr")` (highly recommended),
+  or you can install directly from GitHub (usually discouraged).
 
 #### Load igblastr
 
