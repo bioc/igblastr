@@ -317,7 +317,7 @@ checkarg_with.intdata <- function(with.intdata, gapped)
 
     ## Annotate the J alleles.
     auxdata <- compute_auxdata(allele_set, codon_starts=codon_starts,
-                                           no.warning=TRUE)
+                                           no.warnings=TRUE)
 
     ## Sanity checks.
     stopifnot(identical(auxdata[ , "allele_name"], allele_names))

@@ -280,12 +280,11 @@ create_V_region_db <- function(fasta_files, destdir,
 ### create_J_region_db()
 ###
 
-### Not exported!
 ### Adds the auxdata to the db ONLY if its "coding_frame_start" column
 ### contains no NAs.
 ### Returns TRUE if that's actually the case (and therefore the auxdata
 ### was added), and FALSE otherwise.
-add_computed_auxdata_to_db <- function(auxdata, destdir, verbose=FALSE)
+.add_computed_auxdata_to_db <- function(auxdata, destdir, verbose=FALSE)
 {
     bad_alleles <- J_alleles_with_missing_coding_frame_start(auxdata)
     if (length(bad_alleles) != 0L) {
@@ -313,6 +312,11 @@ add_computed_auxdata_to_db <- function(auxdata, destdir, verbose=FALSE)
     auxdata_dir <- dirname(auxdata_path)
     stopifnot(!dir.exists(auxdata_dir))
     dir.create(auxdata_dir)
+
+    ## write_auxdata() will reject a data.frame with negative values in
+    ## the "cdr3_end" column, so we replace them with NAs.
+    bad_idx <- which(auxdata[ , "cdr3_end"] < 0L)
+    auxdata[bad_idx, "cdr3_end"] <- NA_integer_
     write_auxdata(auxdata, auxdata_path)
 
     if (verbose)
@@ -363,7 +367,7 @@ create_J_region_db <- function(fasta_files, destdir,
         auxdata <- mcols(allele_set, use.names=FALSE)
         stopifnot(identical(allele_names, auxdata[ , "allele_name"]))
         auxdata <- as.data.frame(auxdata)
-        add_computed_auxdata_to_db(auxdata, destdir, verbose=verbose)
+        .add_computed_auxdata_to_db(auxdata, destdir, verbose=verbose)
     }
 
     allele_set

@@ -15,7 +15,7 @@ OGRDB_URL <- "https://ogrdb.airr-community.org/"
 encode_OGRDB_URL_component <- function(component)
 {
     stopifnot(isSingleString(component))
-    gsub("/", "%25252f", URLencode(component))
+    gsub("/", "%25252f", URLencode(component), fixed=TRUE)
 }
 
 .OGRDB_organism_url <- function(organism, for.download=FALSE)
@@ -280,7 +280,7 @@ download_OGRDB_germline_set <-
 .encode_OGRDB_path_component <- function(path_component)
 {
     stopifnot(isSingleNonWhiteString(path_component))
-    gsub("/", ".slash.", chartr(" ", "_", path_component))
+    gsub("/", ".slash.", chartr(" ", "_", path_component), fixed=TRUE)
 }
 
 .get_path_to_stored_OGRDB_germline_set <-

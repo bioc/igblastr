@@ -58,7 +58,7 @@ parse_imgt_fasta_headers <- function(headers)
     if (any(is_white_str(headers)))
         stop(wmsg("some headers are empty"))
     header_parts <- strsplit(headers, "|", fixed=TRUE)
-    data <- right_pad_with_empty_strings_and_unlist(header_parts, width=15L)
+    data <- right_pad_and_unlist(header_parts, padding_string="", width=15L)
     matrix(data, ncol=15L, byrow=TRUE,
            dimnames=list(names(headers), names(.IMGT_FASTA_HEADERS)))
 }

@@ -177,16 +177,33 @@ J_alleles_with_missing_coding_frame_start <- function(auxdata)
     bad_alleles <- J_alleles_with_missing_coding_frame_start(auxdata)
     if (length(bad_alleles) != 0L) {
         in1string <- paste(bad_alleles, collapse=", ")
-        warning(wmsg("the \"coding frame start\" could not be determined ",
-                     "for J allele(s): ", in1string),
+        warning(wmsg("The \"coding frame start\" could not be determined ",
+                     "for J allele(s): ", in1string, "."),
                 "\n  ",
                 wmsg("--> coding_frame_start, cdr3_end, and extra_bps ",
                      "were set to NA for these alleles"))
     }
 }
 
+### Very rare but can happen (we've only seen this for rhesus monkey
+### allele IGHJ0-ZXTW*01 from OGRDB so far).
+warn_if_negative_cdr3_end <- function(auxdata, what)
+{
+    bad_idx <- which(auxdata[ , "cdr3_end"] < 0L)
+    if (length(bad_idx) != 0L) {
+        in1string <- paste(auxdata[bad_idx , "allele_name"], collapse=", ")
+        warning(wmsg("The ", what, " is negative for J allele(s): ",
+                     in1string, "."),
+                "\n  ",
+                wmsg("Note that you won't be able to save the returned ",
+                     "data.frame with write_auxdata() unless you replace ",
+                     "the negative \"cdr3_end\" value(s) with NA(s) or drop ",
+                     "the row(s) with a negative \"cdr3_end\" value."))
+    }
+}
+
 ### Returns a data.frame with 1 row per sequence in 'J_alleles'.
-compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warning=FALSE)
+compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 {
     if (!is(J_alleles, "DNAStringSet"))
         stop(wmsg("'J_alleles' must be DNAStringSet object"))
@@ -202,8 +219,8 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warning=FALSE)
     if (!is.null(codon_starts))
         codon_starts <- .normarg_codon_starts(codon_starts, allele_names)
 
-    if (!isTRUEorFALSE(no.warning))
-        stop(wmsg("'no.warning' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(no.warnings))
+        stop(wmsg("'no.warnings' must be TRUE or FALSE"))
 
     JH_alleles <- J_alleles[allele_groups == "IGHJ"]
     JK_alleles <- J_alleles[allele_groups == "IGKJ"]
@@ -223,8 +240,11 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warning=FALSE)
     ## Add "extra_bps" column.
     ans$extra_bps <- (width(J_alleles) - ans[ , "coding_frame_start"]) %% 3L
 
-    if (!no.warning)
+    if (!no.warnings) {
         .warn_if_missing_coding_frame_starts(ans)
+        what <- "computed CDR3 end position"
+        warn_if_negative_cdr3_end(ans, what)
+    }
 
     ans
 }

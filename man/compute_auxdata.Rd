@@ -17,7 +17,7 @@
 }
 
 \usage{
-compute_auxdata(J_alleles, codon_starts=NULL, no.warning=FALSE)
+compute_auxdata(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 }
 
 \arguments{
@@ -40,10 +40,11 @@ compute_auxdata(J_alleles, codon_starts=NULL, no.warning=FALSE)
     either validate the "coding frame starts" that it could determine,
     or to set the "coding frame starts" that it could not determine.
   }
-  \item{no.warning}{
-    Set to \code{TRUE} to suppress the warning that \code{compute_auxdata()}
-    otherwise issues when the \code{coding_frame_start} column of the
-    returned data.frame contains \code{NA}s.
+  \item{no.warnings}{
+    Set to \code{TRUE} to suppress the warnings that \code{compute_auxdata()}
+    otherwise issues when the returned data.frame has \code{NA}s in its
+    \code{coding_frame_start} column or negative values in its \code{cdr3_end}
+    column.
   }
 }
 

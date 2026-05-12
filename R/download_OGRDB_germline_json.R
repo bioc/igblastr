@@ -139,6 +139,7 @@ download_OGRDB_germline_json <- function(organism, germline_sets,
     setNames(as.character(allele_description[fields]), fields)
 }
 
+### Returns a character matrix with colnames on it.
 .make_matrix_from_allele_data_list <- function(data, colnames, what)
 {
     stopifnot(is.list(data), is.character(colnames))
@@ -163,6 +164,7 @@ download_OGRDB_germline_json <- function(organism, germline_sets,
 ### extract_intdata_from_ogrdb_json()
 ###
 
+### Returns a named character vector.
 .extract_IMGT_v_gene_delineation <-
     function(allele_description, extra_fields=NULL)
 {
@@ -229,7 +231,7 @@ extract_intdata_from_ogrdb_json <- function(json_path, extra_fields=NULL)
     df <- matrix2df(m[ , names(col2class)], col2class)
     df <- cbind(df, coding_frame_start=integer(nrow(df)))
     if (!is.null(extra_fields))
-        df <- cbind(df, m[ , extra_fields])
+        df <- cbind(df, m[ , extra_fields, drop=FALSE])
     df
 }
 
@@ -362,6 +364,8 @@ validate_OGRDB_intdata <- function(organism, germline_set, source_set=FALSE,
 ### first 6 amino acids (AEYFQH) are the last 6 amino acids of the CDR3,
 ### confirming that the 18th nucleotide in the coding sequence is where the
 ### CDR3 ends.
+###
+### Returns a named character vector.
 .extract_j_annotation <-
     function(allele_description, extra_fields=NULL)
 {
@@ -408,8 +412,10 @@ extract_auxdata_from_ogrdb_json <- function(json_path, extra_fields=NULL)
     what <- c("J allele descriptions found in JSON file: ", json_path)
     m <- .make_matrix_from_allele_data_list(data, expected_names, what)
     df <- matrix2df(m[ , names(AUXDATA_COL2CLASS)], AUXDATA_COL2CLASS)
+    what <- "CDR3 end position reported in the JSON file"
+    warn_if_negative_cdr3_end(df, what)
     if (!is.null(extra_fields))
-        df <- cbind(df, m[ , extra_fields])
+        df <- cbind(df, m[ , extra_fields, drop=FALSE])
     df
 }
 
