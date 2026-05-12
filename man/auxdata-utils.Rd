@@ -144,8 +144,6 @@ compute_germline_db_auxdata(db_name, ...)
 \examples{
 if (!has_igblast()) install_igblast()
 
-igblast_info()
-
 ## ---------------------------------------------------------------------
 ## Access IgBLAST auxiliary data for a given organism
 ## ---------------------------------------------------------------------
@@ -166,8 +164,9 @@ head(human_auxdata)
 list_germline_dbs(with.auxdata.only=TRUE)
 
 ## Access the auxiliary data included in germline db
-## _OGRDB.rhesus_monkey.IGH+IGK+IGL.202602 (this data
-## was precomputed with compute_germline_db_auxdata()):
+## _OGRDB.rhesus_monkey.IGH+IGK+IGL.202602 (note that this data was
+## extracted from the AIRR-C JSON files provided by OGRDB for rhesus
+## monkey, see '?extract_auxdata_from_ogrdb_json' for more information):
 db_name <- "_OGRDB.rhesus_monkey.IGH+IGK+IGL.202602"
 
 get_auxdata_path(db_name)
@@ -181,18 +180,16 @@ head(rhesus_monkey_auxdata)
 ## ---------------------------------------------------------------------
 
 ## The auxiliary data included in germline db
-## _OGRDB.rhesus_monkey.IGH+IGK+IGL.202602 was precomputed
-## with compute_germline_db_auxdata(). Let's compute it again:
-rhesus_monkey_auxdata2 <- compute_germline_db_auxdata(db_name)
+## _OGRDB.rhesus_monkey.IGH+IGK+IGL.202602 can be computed
+## with compute_germline_db_auxdata():
+auxdata2 <- compute_germline_db_auxdata(db_name)
+
+## Replace the negative "cdr3_end" value with NA:
+replace_idx <- which(auxdata2[ , "cdr3_end"] < 0L)
+auxdata2[replace_idx, "cdr3_end"] <- NA
 
 ## Sanity check:
-stopifnot(identical(rhesus_monkey_auxdata2, rhesus_monkey_auxdata))
-
-## Note that no auxiliary data was included in germline db
-## _OGRDB.mouse.PWD_PhJ.IGH+IGK+IGL.202410 because it couldn't
-## be properly computed for all the J alleles in the db:
-db_name <- "_OGRDB.mouse.PWD_PhJ.IGH+IGK+IGL.202410"
-compute_germline_db_auxdata(db_name)  # warning!
+stopifnot(identical(auxdata2, rhesus_monkey_auxdata))
 }
 
 \keyword{utilities}

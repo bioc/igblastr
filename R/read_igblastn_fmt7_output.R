@@ -298,7 +298,7 @@ print.alignment_summary <- function(x, ...)
 
     ## Sanitize fields.
     #fields <- chartr(" ", "_", fields)
-    #fields <- gsub("%", "percent", fields)
+    #fields <- gsub("%", "percent", fields, fixed=TRUE)
     #gsub(".", "", fields, fixed=TRUE)
 
     ## Translate fields from effective to user-specified.

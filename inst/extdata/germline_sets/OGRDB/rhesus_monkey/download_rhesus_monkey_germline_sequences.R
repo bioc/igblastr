@@ -35,9 +35,22 @@ make_rhesus_monkey_auxdata <- function(version, germline_sets)
                                 destdir=jsondir, overwrite=TRUE)
     stopifnot(identical(names(filenames), names(germline_sets)))
     for (filename in filenames) {
-        json_path <- file.path(jsondir, filename)
-        auxdata <- extract_auxdata_from_ogrdb_json(json_path)
         locus <- substr(filename, 1L, 3L)
+        json_path <- file.path(jsondir, filename)
+        if (locus == "IGH") {
+            ## cdr3_end is -1 for rhesus monkey allele IGHJ0-ZXTW*01.
+            ## This triggers a warning that we suppress. Also write_auxdata()
+            ## does not allow negative values so we replace it with NA.
+            auxdata <- suppressWarnings(
+                extract_auxdata_from_ogrdb_json(json_path)
+            )
+            bad_idx <- which(auxdata[ , "cdr3_end"] < 0L)
+            bad_alleles <- auxdata[bad_idx, "allele_name"]
+            stopifnot(identical(bad_alleles, "IGHJ0-ZXTW*01"))
+            auxdata[bad_idx, "cdr3_end"] <- NA_integer_
+        } else {
+            auxdata <- extract_auxdata_from_ogrdb_json(json_path)
+        }
         destfile <- file.path(version, paste0(locus, "J_gl.aux"))
         write_auxdata(auxdata, destfile)
     }

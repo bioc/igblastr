@@ -48,15 +48,12 @@ check_auxdata_col2class <- function(auxdata, what="'auxdata'")
 
 read_auxdata <- function(filepath)
 {
-    read_broken_table(filepath, AUXDATA_COL2CLASS)
+    read_igdata(filepath, AUXDATA_COL2CLASS)
 }
 
 write_auxdata <- function(auxdata, file="")
 {
     check_auxdata_col2class(auxdata)
-    header <- paste0("#", paste(colnames(auxdata), collapse=", "))
-    cat(header, "\n", sep="", file=file)
-    write.table(auxdata, file, append=TRUE, quote=FALSE,
-                sep="\t", row.names=FALSE, col.names=FALSE)
+    write_igdata(auxdata, file=file)
 }
 

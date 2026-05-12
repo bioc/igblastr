@@ -107,7 +107,7 @@ validate_ndm_rows <- function(ndm_data, allow.repeated.rows=FALSE)
 
 read_ndm_data <- function(filepath)
 {
-    read_broken_table(filepath, NDM_DATA_COL2CLASS)
+    read_igdata(filepath, NDM_DATA_COL2CLASS)
 }
 
 write_ndm_data <- function(ndm_data, file="", check.data=FALSE)
@@ -121,10 +121,7 @@ write_ndm_data <- function(ndm_data, file="", check.data=FALSE)
             stop(wmsg("'ndm_data' contains invalid rows. ",
                       "Use 'validate_ndm_rows()' to identify them."))
     }
-    header <- paste0("#", paste(colnames(ndm_data), collapse=", "))
-    cat(header, "\n", sep="", file=file)
-    write.table(ndm_data, file, append=TRUE, quote=FALSE,
-                sep="\t", row.names=FALSE, col.names=FALSE)
+    write_igdata(ndm_data, file=file)
 }
 
 

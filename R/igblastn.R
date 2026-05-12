@@ -180,9 +180,18 @@ print.igblastn_raw_output <- function(x, ...) cat(x, sep="\n")
     stderr_lines <- readLines(stderr_file)
     if (length(stderr_lines) == 0L && status == 0L)
         return()
-    ## When the 'igblastn' executable crashes, we typically get a 0 status
-    ## and an empty out file.
-    if (status == 0L && isTRUE(out_is_empty))
+    ## When the 'igblastn' executable crashes, we typically get an empty
+    ## out file. But is an empty out file always indicating a crash? We're
+    ## not sure. So we add a few more conditions before concluding that we
+    ## got a crash:
+    ## - In our experience an empty out file and a 0 status seem to always
+    ##   be associated with a crash.
+    ## - An empty out file, a non-0 status, and a single stderr line
+    ##   (e.g. "Segmentation fault (core dumped)") also seem to always
+    ##   be associated with a crash.
+    crash <- isTRUE(out_is_empty) &&
+             (status == 0L || length(stderr_lines) == 1L)
+    if (crash)
         .stop_on_igblastn_exe_errors(stderr_lines, crash=TRUE)
     warn_msgs <- .parse_errors_or_warnings(stderr_lines, "warning:")
     for (msg in warn_msgs)
