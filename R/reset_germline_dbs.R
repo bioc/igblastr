@@ -13,27 +13,13 @@
     if (verbose)
         message(wmsg("Adding OGRDB auxdata to ", basename(db_path)), " ... ",
                 appendLF=FALSE)
+
     auxdata_list <- lapply(IG_LOCI,
         function(locus) {
             read_auxdata(file.path(fasta_store, paste0(locus, "J_gl.aux")))
         })
     auxdata <- do.call(rbind, auxdata_list)
-
-    ## Check and reorder.
-    check_auxdata_col2class(auxdata)
-    allele_names <- auxdata[ , "allele_name"]
-    stopifnot(!anyDuplicated(allele_names))
-    db_fasta_file <- get_db_fasta_file(db_path, "J")
-    db_J_allele_names <- names(fasta.seqlengths(db_fasta_file))
-    stopifnot(nrow(auxdata) == length(db_J_allele_names),
-              setequal(allele_names, db_J_allele_names))
-    m <- match(db_J_allele_names, allele_names)
-    auxdata <- S4Vectors:::extract_data_frame_rows(auxdata, m)
-
-    auxdata_dir <- dirname(auxdata_path)
-    stopifnot(!dir.exists(auxdata_dir))
-    dir.create(auxdata_dir)
-    write_auxdata(auxdata, auxdata_path)
+    write_auxdata_to_db(auxdata, db_path, check.and.reorder=TRUE)
 
     if (verbose)
         message("ok.")

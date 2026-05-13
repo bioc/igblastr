@@ -89,7 +89,7 @@
 ### compute_auxdata()
 ###
 
-.VALID_J_GROUPS <- paste0("IG", c("H", "K", "L"), "J")
+.VALID_J_GROUPS <- paste0(IG_LOCI, "J")
 
 ### Returns a data.frame with the same column names as the data.frame
 ### returned by load_auxdata() (see file R/auxdata-utils.R), minus

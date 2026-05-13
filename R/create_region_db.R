@@ -59,13 +59,48 @@
     nuke_file(final_fasta)
 }
 
+### A specialized version of copy_files_to_dir() to be used on FASTA files.
+### Has the ability to exclude some user-specified alleles and to
+### remove "repeated" alleles from the copied files. See copy_fasta_file()
+### in R/file-utils.R for the exact meaning of "repeated" alleles. Note
+### that only alleles "repeated" within individual files are detected, not
+### across files.
+### If 'fasta_files' has names on it then they're used to rename the
+### copied files.
+### Returns the paths to the copied files in a character vector.
+.copy_fasta_files_to_original_fasta_dir <-
+    function(fasta_files, original_fasta_dir,
+             excluded_alleles=NULL, drop.repeated.alleles=FALSE)
+{
+    .checkarg_fasta_files(fasta_files)
+    out_filenames <- names(fasta_files)
+    if (is.null(out_filenames))
+        out_filenames <- basename(fasta_files)
+    stopifnot(all(has_suffix(out_filenames, ".fasta")),
+              isSingleNonWhiteString(original_fasta_dir),
+              dir.exists(original_fasta_dir))
+    vapply(seq_along(fasta_files),
+        function(i) {
+            infasta <- fasta_files[[i]]
+            outfasta <- file.path(original_fasta_dir, out_filenames[[i]])
+            copy_fasta_file(infasta, outfasta,
+                            excluded_alleles=excluded_alleles,
+                            drop.repeated.alleles=drop.repeated.alleles)
+            outfasta
+        },
+        character(1)
+    )
+}
+
 ### Creates "original fasta" subdir and copy fasta files to it.
 ### Returns the paths to the copied files.
 .init_region_db <- function(fasta_files, destdir, region_type,
+                            excluded_alleles=NULL,
                             overwrite=FALSE, verbose=FALSE)
 {
     if (verbose)
         message("Creating ", region_type, "-region db ...\n")
+
     .checkarg_fasta_files(fasta_files)
     .checkarg_destdir(destdir)
     if (!isTRUEorFALSE(overwrite))
@@ -77,10 +112,30 @@
             .stop_on_existing_region_db(destdir, region_type)
         .nuke_existing_region_db(destdir, region_type)
     }
+
     original_fasta_dir <- get_db_original_fasta_dir(destdir, region_type)
     stopifnot(!file.exists(original_fasta_dir), dir.create(original_fasta_dir))
-    copy_files_to_dir(fasta_files, original_fasta_dir)
-    original_fasta_files <- list_fasta_files(original_fasta_dir)
+
+    ## We only drop "repeated" alleles for C-region dbs. Note that:
+    ## - This is an **early** drop that gets reflected in the original fasta
+    ##   files that we store in the db.
+    ## - This only drops alleles "repeated" within the individual files
+    ##   in 'fasta_files', not across the files. FWIW the only repetition
+    ##   we've seen so far in C-region FASTA files is allele IGHG1*02 in
+    ##   inst/extdata/constant_regions/IMGT/mouse/IG/14.1/IGHC.fasta, so
+    ##   we're ok for now.
+    ## See .copy_fasta_files_to_original_fasta_dir() above in this file
+    ## for more info.
+    ## The reason why dropping early is better than dropping late (like we
+    ## do in clean_allele_set() and family, see R/clean_allele_set.R) is that
+    ## it allows the counts returned by list_c_region_dbs() to remain
+    ## consistent between the short and long listings.
+    drop.repeated.alleles <- region_type == "C"
+    original_fasta_files <- .copy_fasta_files_to_original_fasta_dir(
+                                  fasta_files, original_fasta_dir,
+                                  excluded_alleles=excluded_alleles,
+                                  drop.repeated.alleles=drop.repeated.alleles)
+
     if (verbose) {
         in1string <- paste(basename(original_fasta_files), collapse=", ")
         msg <- c("Input file(s): ", in1string)
@@ -213,16 +268,8 @@ create_region_db <- function(fasta_files, destdir,
     allele_set_mcols <- mcols(allele_set, use.names=FALSE)
     stopifnot(is(allele_set_mcols, "DataFrame"),
               identical(allele_names, allele_set_mcols[ , "allele_name"]))
-
-    intdata_path <- make_germline_db_intdata_path(destdir, for.aa=FALSE,
-                                                  domain_system="imgt")
-    intdata_dir <- dirname(intdata_path)
-    stopifnot(!dir.exists(intdata_dir))
-
     ndm_data <- as.data.frame(allele_set_mcols[ , names(NDM_DATA_COL2CLASS)])
-    check_ndm_data_col2class(ndm_data)
-    dir.create(intdata_dir)
-    write_ndm_data(ndm_data, intdata_path)
+    write_ndm_data_to_db(ndm_data, destdir)
 }
 
 ### A specialized version of create_region_db() for V alleles.
@@ -302,22 +349,13 @@ create_V_region_db <- function(fasta_files, destdir,
         message(wmsg("Adding the computed auxdata to the db"), " ... ",
                 appendLF=FALSE)
 
-    ## Even though write_auxdata() will call check_auxdata_col2class()
-    ## internally, we prefer to fail **before** creating the 'auxdata_dir'
-    ## folder.
     auxdata <- auxdata[ , names(AUXDATA_COL2CLASS)]
-    check_auxdata_col2class(auxdata)
 
-    auxdata_path <- make_germline_db_auxdata_path(destdir)
-    auxdata_dir <- dirname(auxdata_path)
-    stopifnot(!dir.exists(auxdata_dir))
-    dir.create(auxdata_dir)
-
-    ## write_auxdata() will reject a data.frame with negative values in
-    ## the "cdr3_end" column, so we replace them with NAs.
+    ## write_auxdata_to_db() will reject a data.frame with negative
+    ## values in the "cdr3_end" column, so we replace them with NAs.
     bad_idx <- which(auxdata[ , "cdr3_end"] < 0L)
     auxdata[bad_idx, "cdr3_end"] <- NA_integer_
-    write_auxdata(auxdata, auxdata_path)
+    write_auxdata_to_db(auxdata, destdir)
 
     if (verbose)
         message("ok.\n")
@@ -342,6 +380,7 @@ create_J_region_db <- function(fasta_files, destdir,
 
     ## Create "original fasta" subdir and copy fasta files to it.
     original_fasta_files <- .init_region_db(fasta_files, destdir, "J",
+                                            excluded_alleles=excluded_J_alleles,
                                             overwrite=overwrite,
                                             verbose=verbose)
 
@@ -354,7 +393,6 @@ create_J_region_db <- function(fasta_files, destdir,
 
     ## (2) Clean.
     allele_set <- clean_J_allele_set(allele_set,
-                        excluded_J_alleles=excluded_J_alleles,
                         with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
                         disambiguate.allele.names=disambiguate.allele.names,
                         verbose=verbose)

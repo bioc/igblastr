@@ -9,7 +9,6 @@
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### get_db_fasta_file()
 ### get_db_original_fasta_dir()
-### list_db_original_fasta_files()
 ###
 
 ### Note that the returned path is NOT guaranteed to exist.
@@ -28,17 +27,6 @@ get_db_original_fasta_dir <- function(db_path, region_type=VDJC_REGION_TYPES)
     file.path(db_path, paste0(region_type, "_original_fasta"))
 }
 
-list_db_original_fasta_files <- function(db_path, region_type=VDJC_REGION_TYPES)
-{
-    region_type <- match.arg(region_type)
-    original_fasta_dir <-
-        get_db_original_fasta_dir(db_path, region_type=region_type)
-    stopifnot(dir.exists(original_fasta_dir))
-    original_fasta_files <- list_fasta_files(original_fasta_dir)
-    stopifnot(length(original_fasta_files) != 0L)
-    original_fasta_files
-}
-
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .tabulate_dbs_by_region_type()
@@ -55,13 +43,9 @@ list_db_original_fasta_files <- function(db_path, region_type=VDJC_REGION_TYPES)
 }
 
 ### Returns an integer matrix with 1 row per db and 1 col per region type.
-.tabulate_dbs_by_region_type <- function(dbs_home, db_names, region_types)
+.tabulate_dbs_by_region_type <- function(db_paths, region_types)
 {
-    all_counts <- lapply(db_names,
-        function(db_name) {
-            db_path <- file.path(dbs_home, db_name)
-            .tabulate_db_by_region_type(db_path, region_types)
-        })
+    all_counts <- lapply(db_paths, .tabulate_db_by_region_type, region_types)
     data <- unlist(all_counts, use.names=FALSE)
     if (is.null(data))
         data <- integer(0)
@@ -75,11 +59,23 @@ list_db_original_fasta_files <- function(db_path, region_type=VDJC_REGION_TYPES)
 ### .tabulate_c_region_db_by_locus()
 ###
 
+.list_db_original_fasta_files <- function(db_path,
+                                          region_type=VDJC_REGION_TYPES)
+{
+    region_type <- match.arg(region_type)
+    original_fasta_dir <-
+        get_db_original_fasta_dir(db_path, region_type=region_type)
+    stopifnot(dir.exists(original_fasta_dir))
+    original_fasta_files <- list_fasta_files(original_fasta_dir)
+    stopifnot(length(original_fasta_files) != 0L)
+    original_fasta_files
+}
+
 ### Returns a named integer vector with 'loci' as names.
 .tabulate_db_original_fasta_files_by_locus <-
     function(db_path, region_type, loci)
 {
-    original_fasta_files <- list_db_original_fasta_files(db_path, region_type)
+    original_fasta_files <- .list_db_original_fasta_files(db_path, region_type)
     original_loci <- substr(basename(original_fasta_files), 1L, 3L)
     stopifnot(all(original_loci %in% loci))
     fasta_files <- original_fasta_files[match(loci, original_loci)]
@@ -91,12 +87,42 @@ list_db_original_fasta_files <- function(db_path, region_type=VDJC_REGION_TYPES)
         }, integer(1))
 }
 
-### Returns a 3-column integer matrix with 'loci' as rownames
-### and V/D/J as colnames.
-.tabulate_germline_db_by_group <- function(db_path, loci)
+### No longer used.
+### Replaced by .extract_loci_from_original_fasta_filenames() below.
+.extract_loci_from_db_name <- function(db_name)
+{
+    stopifnot(isSingleNonWhiteString(db_name))
+    loci_in1string <- sub("^[^+]*\\.([IGHKLTRABGD+]+)[^+]*$", "\\1", db_name)
+    if (loci_in1string == "")
+        stop(wmsg("failed to extract loci from db name \"", db_name, "\""))
+    strsplit(loci_in1string, "+", fixed=TRUE)[[1L]]
+}
+
+### A replacement for .extract_loci_from_db_name() that is more robust.
+### Returns a character vector of loci in canonical order.
+.extract_loci_from_original_fasta_filenames <- function(db_path, region_types)
 {
     stopifnot(isSingleNonWhiteString(db_path))
-    checkarg_loci(loci)
+    all_loci <- lapply(region_types,
+        function(region_type) {
+            filepaths <- .list_db_original_fasta_files(db_path, region_type)
+            loci <- substr(basename(filepaths), 1L, 3L)
+            stopifnot(!anyDuplicated(loci))
+            loci
+        })
+    loci <- unique(unlist(all_loci, use.names=FALSE))
+    loci_prefix <- extract_loci_prefix(loci)
+    valid_loci <- if (loci_prefix == "IG") IG_LOCI else TR_LOCI
+    valid_loci[valid_loci %in% loci]  # return loci in canonical order
+}
+
+### Returns a 3-column integer matrix with 'loci' as rownames
+### and V/D/J as colnames.
+.tabulate_germline_db_by_group <- function(db_path)
+{
+    #loci <- .extract_loci_from_db_name(basename(db_path))
+    loci <- .extract_loci_from_original_fasta_filenames(db_path,
+                                                        VDJ_REGION_TYPES)
     vdj_counts <- lapply(VDJ_REGION_TYPES,
         function(region_type)
             .tabulate_db_original_fasta_files_by_locus(db_path, region_type,
@@ -109,10 +135,10 @@ list_db_original_fasta_files <- function(db_path, region_type=VDJC_REGION_TYPES)
 }
 
 ### Returns a named integer vector with 'loci' as names.
-.tabulate_c_region_db_by_locus <- function(db_path, loci)
+.tabulate_c_region_db_by_locus <- function(db_path)
 {
-    stopifnot(isSingleNonWhiteString(db_path))
-    checkarg_loci(loci)
+    #loci <- .extract_loci_from_db_name(basename(db_path))
+    loci <- .extract_loci_from_original_fasta_filenames(db_path, "C")
     ans <- .tabulate_db_original_fasta_files_by_locus(db_path, "C", loci)
     stopifnot(all(ans != 0L))
     ans
@@ -142,37 +168,6 @@ list_db_original_fasta_files <- function(db_path, region_type=VDJC_REGION_TYPES)
     ans1 <- sort(db_names[ok], decreasing=decreasing)
     ans2 <- sort(db_names[!ok], decreasing=decreasing)
     c(ans1, ans2)
-}
-
-.extract_loci_from_db_name <- function(db_name)
-{
-    stopifnot(isSingleNonWhiteString(db_name))
-    loci_in1string <- sub("^[^+]*\\.([IGHKLTRABGD+]+)[^+]*$", "\\1", db_name)
-    if (loci_in1string == "")
-        stop(wmsg("failed to extract loci from db name \"", db_name, "\""))
-    strsplit(loci_in1string, "+", fixed=TRUE)[[1L]]
-}
-
-### Returns a named list with 1 list element per db.
-.make_long_listing_for_germline_dbs <- function(germline_dbs_home, db_names)
-{
-    lapply(setNames(db_names, db_names),
-        function(db_name) {
-            db_path <- file.path(germline_dbs_home, db_name)
-            loci <- .extract_loci_from_db_name(db_name)
-            .tabulate_germline_db_by_group(db_path, loci)
-        })
-}
-
-### Returns a named list with 1 list element per db.
-.make_long_listing_for_c_region_dbs <- function(c_region_dbs_home, db_names)
-{
-    lapply(setNames(db_names, db_names),
-        function(db_name) {
-            db_path <- file.path(c_region_dbs_home, db_name)
-            loci <- .extract_loci_from_db_name(db_name)
-            .tabulate_c_region_db_by_locus(db_path, loci)
-        })
 }
 
 ### 'long.listing' is ignored when 'names.only' is TRUE.
@@ -213,20 +208,18 @@ list_dbs <- function(dbs_home, what=c("germline", "C-region"),
     }
     if (names.only)
         return(db_names)
-    if (!long.listing) {
-        region_types <- if (what == "germline") VDJ_REGION_TYPES else "C"
-        basic_stats <- .tabulate_dbs_by_region_type(dbs_home, db_names,
-                                                    region_types)
-        ans <- data.frame(db_name=db_names, basic_stats)
-        if (what == "germline")
-            ans <- cbind(ans, intdata=intdata, auxdata=auxdata)
-        return(ans)
+    db_paths <- file.path(dbs_home, db_names)
+    if (long.listing) {
+        FUN <- if (what == "germline") .tabulate_germline_db_by_group
+                                  else .tabulate_c_region_db_by_locus
+        return(lapply(setNames(db_paths, basename(db_paths)), FUN))
     }
-    if (what == "germline") {
-        .make_long_listing_for_germline_dbs(dbs_home, db_names)
-    } else {
-        .make_long_listing_for_c_region_dbs(dbs_home, db_names)
-    }
+    region_types <- if (what == "germline") VDJ_REGION_TYPES else "C"
+    basic_stats <- .tabulate_dbs_by_region_type(db_paths, region_types)
+    ans <- data.frame(db_name=db_names, basic_stats)
+    if (what == "germline")
+        ans <- cbind(ans, intdata=intdata, auxdata=auxdata)
+    ans
 }
 
 

@@ -17,5 +17,12 @@ test_that("list_c_region_dbs()", {
     ## One extra column for the asterisk.
     expect_equal(ncol(printed), ncol(df) + 1L)
     expect_identical(trimws(colnames(printed)), c(expected_colnames, ""))
+
+    ## Check consistency of counts reported by short and long listings.
+    df <- list_c_region_dbs()  # short listing
+    all_counts <- list_c_region_dbs(long.listing=TRUE)  # long listing
+    expect_identical(nrow(df), length(all_counts))
+    for (i in seq_along(all_counts))
+        expect_identical(sum(all_counts[[i]]), df[i , "C"])
 })
 

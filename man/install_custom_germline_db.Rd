@@ -163,11 +163,11 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
 
     \item \code{\link{list_germline_dbs}} to list the cached germline dbs.
 
-    \item \code{\link{load_germline_db}} to load the nucleotide sequences
-          of the gene regions stored in a cached germline db.
-
     \item \code{\link{use_germline_db}} to select the cached germline db
           to use with \code{igblastn()}.
+
+    \item \code{\link{load_germline_db}} to load the nucleotide sequences
+          of the gene regions stored in a cached germline db.
 
     \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
 

@@ -12,5 +12,18 @@ test_that("list_germline_dbs()", {
     ## One extra column for the asterisk.
     expect_equal(ncol(printed), ncol(df) + 1L)
     expect_identical(trimws(colnames(printed)), c(expected_colnames, ""))
+
+    ## Check consistency of counts reported by short and long listings.
+    ## FIXME: Note that this will fail if some TCR germline dbs from IMGT
+    ## are installed. See "inconsistent counts" issue in TODO file.
+    install_IMGT_germline_db("202614-2", "Homo sapiens", overwrite=TRUE)
+    df <- list_germline_dbs()  # short listing
+    all_counts <- list_germline_dbs(long.listing=TRUE)  # long listing
+    expect_identical(nrow(df), length(all_counts))
+    for (i in seq_along(all_counts)) {
+        counts <- all_counts[[i]]
+        for (region_type in c("V", "D", "J"))
+            expect_identical(sum(counts[ , region_type]), df[i , region_type])
+    }
 })
 

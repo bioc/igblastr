@@ -64,7 +64,7 @@
 ###   translate to VVFGGGTKLTVL).
 ### TODO: Ask the IMGT folks about this.
 ### In the mean time, we exclude it. This shouldn't make any difference
-### from an IgBLAST operations point of view because it's sequence is
+### from an IgBLAST operations point of view because its sequence is
 ### the same as IGLJ2*01 and IGLJ3*01 which we keep (note for that matter
 ### that we could also exclude IGLJ3*01 and it shouldn't make any difference
 ### either).

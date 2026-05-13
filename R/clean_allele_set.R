@@ -87,8 +87,8 @@ checkarg_with.intdata <- function(with.intdata, gapped)
 ###
 
 ### Has its own tests in tests/testthat/test-clean_allele_set.R!
-### By "repeated" alleles here we mean alleles with identical sequences
-### **and** names. Note that:
+### By "repeated" alleles we mean alleles with identical sequences **and**
+### names. Note that:
 ### - we keep alleles with identical sequences but different names;
 ### - we also keep alleles with identical names but different sequences.
 .drop_repeated_alleles <- function(allele_set, verbose=FALSE)
@@ -207,6 +207,16 @@ checkarg_with.intdata <- function(with.intdata, gapped)
                             verbose=FALSE)
 {
     ## (B) Drop "repeated" alleles.
+    ## TODO: It's too late to drop "repeated" alleles! This dropping should
+    ## happen early in .copy_fasta_files_to_original_fasta_dir() instead.
+    ## See .init_region_db() in R/create_region_db.R.
+    ## The problem with dropping "repeated" alleles this late is that then
+    ## the counts returned by list_germline_dbs() are inconsistent between
+    ## the short and long listings (the former are right, the latter are
+    ## wrong). So what would need to happen is that
+    ## .copy_fasta_files_to_original_fasta_dir() should be able to
+    ## drop alleles that are "repeated" **across** FASTA files, and not
+    ## just within individual files like it does at the moment.
     allele_set <- .drop_repeated_alleles(allele_set, verbose=verbose)
 
     allele_names <- names(allele_set)
@@ -450,7 +460,6 @@ clean_V_allele_set <- function(allele_set, gapped=FALSE, with.intdata=FALSE,
 ###
 
 clean_J_allele_set <- function(allele_set,
-                               excluded_J_alleles=NULL,
                                with.auxdata=FALSE, imgt.fasta=FALSE,
                                disambiguate.allele.names=FALSE, verbose=FALSE)
 {
@@ -463,20 +472,11 @@ clean_J_allele_set <- function(allele_set,
     stopifnot(isTRUEorFALSE(verbose))
 
     ## (A) Clean possibly messy FASTA headers to keep only allele names.
-    names(allele_set) <- names(headers) <- clean_imgt_fasta_headers(headers)
-
-    ## Drop excluded J alleles.
-    if (!is.null(excluded_J_alleles)) {
-        stopifnot(is.character(excluded_J_alleles))
-        drop_idx <- which(names(allele_set) %in% excluded_J_alleles)
-        if (length(drop_idx) != 0L) {
-            allele_set <- allele_set[-drop_idx]
-            headers <- headers[-drop_idx]
-        }
-    }
+    names(allele_set) <- clean_imgt_fasta_headers(headers)
 
     if (with.auxdata) {
         if (imgt.fasta) {
+            names(headers) <- names(allele_set)
             codon_starts <- .extract_codon_starts(headers)
         } else {
             codon_starts <- NULL
