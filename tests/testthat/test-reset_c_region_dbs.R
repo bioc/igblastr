@@ -10,7 +10,7 @@ test_that(".create_all_builtin_c_region_dbs()", {
                      c(TRA=1L, TRB=3L, TRG=7L, TRD=1L))
 
     expect_identical(db_list[["_IMGT.mouse.IGH.202509"]],
-                     c(IGH=56L))
+                     c(IGH=55L))
 
     expect_identical(db_list[["_IMGT.mouse.TRA+TRB+TRG+TRD.202509"]],
                      c(TRA=2L, TRB=2L, TRG=4L, TRD=1L))

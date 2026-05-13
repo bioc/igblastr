@@ -10,8 +10,11 @@
 \description{
   WARNING: Some shortcomings were identified in the design of the
   \code{augment_germline_db_[VDJ]()} functions so they are now deprecated.
-  Please do not use them. They will be replaced with a better alternative
-  in future versions of the package.
+  Please do not use them. If you need to combine germline databases, please
+  use the new \code{\link{combine_germline_dbs}()} function instead.
+
+  If you need to add your own novel gene alleles to an existing germline db,
+  some better alternative will be provided in future versions of the package.
 
   Three functions to add novel V, D, or J gene alleles to a germline db.
 
@@ -71,6 +74,9 @@ augment_germline_db_J(db_name, novel_alleles,
 
 \seealso{
   \itemize{
+    \item \code{\link{combine_germline_dbs}} to combine two existing
+          germline dbs into a new one.
+
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This
           is the main function in the \pkg{igblastr} package.

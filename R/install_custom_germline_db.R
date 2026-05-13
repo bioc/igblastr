@@ -12,7 +12,7 @@
     "currently installed in the cache (see '?list_germline_dbs')."
 )
 
-.stop_on_existing_cached_germline_db <- function(db_name)
+stop_on_existing_cached_germline_db <- function(db_name)
 {
     msg1 <- c("Germline db ", db_name, " is already installed ",
               "in igblastr's persistent cache.")
@@ -86,7 +86,7 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
         if (if.exists == "no-op")
             return()
         if (if.exists == "error")
-            .stop_on_existing_cached_germline_db(db_name)
+            stop_on_existing_cached_germline_db(db_name)
     }
 
     if (verbose) {

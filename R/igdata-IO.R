@@ -224,3 +224,23 @@ write_igdata <- function(df, file="")
                 sep="\t", row.names=FALSE, col.names=FALSE)
 }
 
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### check_and_reorder_igdata_rows()
+###
+
+### Used in write_ndm_data_to_db() and write_auxdata_to_db() to put
+### the rows of the data.frame in the same order as the alleles in the
+### corresponding region db.
+check_and_reorder_igdata_rows <- function(df, db_allele_names)
+{
+    .check_igdata_first_col(df)
+    allele_names <- df[ , "allele_name"]
+    stopifnot(is.character(db_allele_names),
+              !anyDuplicated(allele_names), !anyDuplicated(db_allele_names),
+              nrow(df) == length(db_allele_names),  # not really necessary
+              setequal(allele_names, db_allele_names))
+    m <- match(db_allele_names, allele_names)
+    S4Vectors:::extract_data_frame_rows(df, m)
+}
+

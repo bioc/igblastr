@@ -15,6 +15,7 @@ importFrom(xtable, xtable)
 importFrom(jsonlite, fromJSON)
 import(tibble)
 
+importFrom(BiocGenerics, add_suffix)
 import(S4Vectors)
 import(IRanges)
 importFrom(GenomeInfoDb, list_ftp_dir)
@@ -180,6 +181,9 @@ export(
     ## install_IMGT_germline_db.R:
     install_IMGT_germline_db,
     install_IMGT_c_region_db,
+
+    ## combine_germline_dbs.R:
+    combine_germline_dbs,
 
     ## augment_germline_db.R:
     augment_germline_db_V,
