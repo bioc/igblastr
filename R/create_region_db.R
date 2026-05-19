@@ -12,6 +12,8 @@
         stop(wmsg("'fasta_files' must be a non-empty character vector"))
     if (anyNA(fasta_files) || anyDuplicated(fasta_files))
         stop(wmsg("'fasta_files' cannot contain NAs or duplicates"))
+    if (any(is_white_str(fasta_files)))
+        stop(wmsg("'fasta_files' cannot contain empty or white strings"))
 }
 
 .checkarg_destdir <- function(destdir)
@@ -22,7 +24,7 @@
         stop(wmsg("'destdir' must be the path to an existing directory"))
 }
 
-.get_final_fasta_path <- function(destdir, region_type)
+.get_db_final_fasta_path <- function(destdir, region_type)
 {
     .checkarg_destdir(destdir)
     file.path(destdir, paste0(region_type, ".fasta"))
@@ -30,13 +32,89 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### Helpers for create_region_db() and related
+### .load_allele_set()
+###
+
+.infer_loci_from_filenames <- function(fasta_files, region_type)
+{
+    .checkarg_fasta_files(fasta_files)
+    stopifnot(isSingleNonWhiteString(region_type), nchar(region_type) == 1L)
+    ## If 'fasta_files' has names on it, we use them as the actual file names.
+    filenames <- names(fasta_files)
+    if (is.null(filenames))
+        filenames <- basename(fasta_files)
+    ## The strings in 'filenames' must be of the form <locus>V.fasta
+    ## or <locus>J.fasta where locus is a 3-letter string. Note that we don't
+    ## really care if <locus> is a valid locus or not (see IG_LOCI and TR_LOCI
+    ## in R/loci-utils.R for the 7 valid loci), as long as it's a 3-letter
+    ## string, so we don't bother to check.
+    suffixes <- substr(filenames, 4L, nchar(filenames))
+    expected_suffix <- paste0(region_type, ".fasta")
+    if (!all(suffixes == expected_suffix)) {
+        in1string <- paste(filenames, collapse=", ")
+        stop(wmsg("The names of the FASTA files must be of the form ",
+                  "<locus>", expected_suffix, ", where <locus> is a ",
+                  "3-letter string. Got: ", in1string))
+    }
+    substr(filenames, 1L, 3L)
+}
+
+.load_allele_set <- function(fasta_files, region_type,
+                             excluded_alleles=character(0), verbose=FALSE)
+{
+    .checkarg_fasta_files(fasta_files)
+    stopifnot(is.character(excluded_alleles), isTRUEorFALSE(verbose))
+
+    if (verbose) {
+        in1string <- paste(basename(fasta_files), collapse=", ")
+        msg <- c("Input file(s): ", in1string)
+        message("  o ", wmsg(msg, margin=4L), " ", appendLF=FALSE)
+    }
+
+    loci <- .infer_loci_from_filenames(fasta_files, region_type)
+    allele_sets <- lapply(seq_along(fasta_files),
+        function(i) {
+            allele_set <- readDNAStringSet(fasta_files[[i]])
+            mcols(allele_set)$locus <- loci[[i]]
+            allele_set
+        }
+    )
+    allele_set <- do.call(c, allele_sets)
+    if (length(allele_set) == 0L) {
+        in1string <- paste(basename(fasta_files), collapse=", ")
+        stop(wmsg("no alleles found in FASTA files: ", in1string))
+    }
+
+    if (verbose)
+        message("(", length(allele_set), " alleles)\n")
+
+    if (length(excluded_alleles) != 0L) {
+        allele_names <- clean_imgt_fasta_headers(names(allele_set))
+        excluded_idx <- which(allele_names %in% excluded_alleles)
+        excluded_idx_len <- length(excluded_idx)
+        if (excluded_idx_len != 0L) {
+            if (verbose) {
+                in1string <- paste(allele_names[excluded_idx], collapse=", ")
+                msg <- c("Removed ", excluded_idx_len, " explicitly ",
+                         "excluded allele(s) from initial set of ",
+                         length(allele_set), " alleles: ", in1string, ".")
+                message("  o ", wmsg(msg, margin=4L), "\n")
+            }
+            allele_set <- allele_set[-excluded_idx]
+        }
+    }
+    allele_set
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .init_region_db()
 ###
 
 .region_db_already_exists <- function(destdir, region_type)
 {
     original_fasta_dir <- get_db_original_fasta_dir(destdir, region_type)
-    final_fasta <- .get_final_fasta_path(destdir, region_type)
+    final_fasta <- .get_db_final_fasta_path(destdir, region_type)
     file.exists(original_fasta_dir) || file.exists(final_fasta)
 }
 
@@ -54,23 +132,110 @@
     pattern <- paste0("^", region_type, "\\.fasta$")
     clean_blastdbs(destdir, pattern)
     original_fasta_dir <- get_db_original_fasta_dir(destdir, region_type)
-    final_fasta <- .get_final_fasta_path(destdir, region_type)
+    final_fasta <- .get_db_final_fasta_path(destdir, region_type)
     nuke_file(original_fasta_dir)
     nuke_file(final_fasta)
 }
 
-### A specialized version of copy_files_to_dir() to be used on FASTA files.
-### Has the ability to exclude some user-specified alleles and to
-### remove "repeated" alleles from the copied files. See copy_fasta_file()
-### in R/file-utils.R for the exact meaning of "repeated" alleles. Note
-### that only alleles "repeated" within individual files are detected, not
-### across files.
-### If 'fasta_files' has names on it then they're used to rename the
-### copied files.
-### Returns the paths to the copied files in a character vector.
-.copy_fasta_files_to_original_fasta_dir <-
-    function(fasta_files, original_fasta_dir,
-             excluded_alleles=NULL, drop.repeated.alleles=FALSE)
+.init_region_db <- function(fasta_files, destdir, region_type,
+                            excluded_alleles=character(0),
+                            overwrite=FALSE, verbose=FALSE)
+{
+    if (!isTRUEorFALSE(verbose))
+        stop(wmsg("'verbose' must be TRUE or FALSE"))
+    if (verbose)
+        message("Creating ", region_type, "-region db ...\n")
+
+    .checkarg_fasta_files(fasta_files)
+    .checkarg_destdir(destdir)
+    if (!is.character(excluded_alleles))
+        stop(wmsg("'excluded_alleles' must be a character vector"))
+    if (!isTRUEorFALSE(overwrite))
+        stop(wmsg("'overwrite' must be TRUE or FALSE"))
+    if (.region_db_already_exists(destdir, region_type)) {
+        if (!overwrite)
+            .stop_on_existing_region_db(destdir, region_type)
+        .nuke_existing_region_db(destdir, region_type)
+    }
+
+    .load_allele_set(fasta_files, region_type,
+                     excluded_alleles=excluded_alleles, verbose=verbose)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .write_region_db()
+###
+
+### Write the clean allele set to the final FASTA file.
+.write_db_final_fasta <- function(cleaned_allele_set, destdir, region_type,
+                                  verbose=FALSE)
+{
+    final_fasta <- .get_db_final_fasta_path(destdir, region_type)
+    writeXStringSet(cleaned_allele_set, final_fasta)
+    if (verbose)
+        message("... done. (Final number of ", region_type, " alleles ",
+                "in db = ", length(cleaned_allele_set), ")\n")
+}
+
+### Returns a character vector containing the allele names in the
+### input FASTA file ('infasta').
+.copy_fasta_file <- function(infasta, outfasta, DORsummary)
+{
+    stopifnot(isSingleNonWhiteString(infasta),
+              !dir.exists(infasta), file.exists(infasta),
+              isSingleNonWhiteString(outfasta),
+              !dir.exists(outfasta), !file.exists(outfasta),
+              is.data.frame(DORsummary))
+    headers <- names(fasta.seqlengths(infasta))
+    allele_names <- clean_imgt_fasta_headers(headers)
+
+    ## We use the "Drop Or Rename" summary ('DORsummary') to identify the
+    ## FASTA records to drop.
+    ## There are two reasons for dropping a FASTA record:
+    ##   1. The record is for an allele that belongs to the exclusion list
+    ##      i.e. the allele got excluded early by .init_region_db() based
+    ##      on the list of allele names passed to its 'excluded_alleles'
+    ##      argument (see function .init_region_db() above in this file).
+    ##      This means that the allele didn't make it to the 'allele_set'
+    ##      object (DNAStringSet) returned by .init_region_db(), so is not
+    ##      in 'DORsummary$allele_name' either.
+    ##   2. The record is for an allele that made it to the 'allele_set' object
+    ##      returned by .init_region_db(), but the allele was later marked
+    ##      as "repeated" by clean_allele_set() or clean_[VJ]_allele_set().
+    ##      In this case the allele name is in 'DORsummary$allele_name' but
+    ##      with a corresponding suffix in 'DORsummary$suffix' set to NA.
+    drop_me <- allele_names %notin% DORsummary[ , "allele_name"]
+    stopifnot(identical(allele_names[!drop_me], DORsummary[ , "allele_name"]))
+    drop_me[!drop_me] <- is.na(DORsummary[ , "suffix"])
+
+    drop_idx <- which(drop_me)
+    if (length(drop_idx) == 0L) {
+        stopifnot(file.copy(infasta, outfasta))
+    } else {
+        ## Drop FASTA records. The only reason we use a readLines/writeLines
+        ## approach instead of a readBStringSet/writeBStringSet approach is
+        ## because we want to copy the FASTA records in their original form
+        ## (the readBStringSet/writeBStringSet approach would reformat the
+        ## multi-line sequences into fixed-width lines), so we could use Unix
+        ## command diff to compare the input and output files and see what was
+        ## dropped if we wanted to. The drawback of this is that the
+        ## readLines/writeLines approach is quite inefficient.
+        lines <- readLines(infasta)
+        record_starts <- grep("^>", lines)
+        stopifnot(identical(lines[record_starts], paste0(">", headers)))
+        record_ends <- c(tail(record_starts - 1L, n=-1L), length(lines))
+        record_bounds <- IRanges(record_starts, record_ends)
+        lines <- extractROWS(lines, record_bounds[-drop_idx])
+        writeLines(lines, outfasta)
+    }
+    allele_names
+}
+
+### Returns a character vector containing the allele names in the
+### input FASTA files ('fasta_files').
+.copy_fasta_files_to_db_original_fasta_dir <-
+    function(fasta_files, original_fasta_dir, DORsummary)
 {
     .checkarg_fasta_files(fasta_files)
     out_filenames <- names(fasta_files)
@@ -78,129 +243,59 @@
         out_filenames <- basename(fasta_files)
     stopifnot(all(has_suffix(out_filenames, ".fasta")),
               isSingleNonWhiteString(original_fasta_dir),
-              dir.exists(original_fasta_dir))
-    vapply(seq_along(fasta_files),
+              dir.exists(original_fasta_dir),
+              is.data.frame(DORsummary))
+
+    ## Split 'DORsummary'.
+    locus <- DORsummary[ , "locus"]
+    check_locus(locus, "DORsummary$locus")
+    f <- factor(locus, levels=substr(out_filenames, 1L, 3L))
+    stopifnot(!anyNA(f))
+    DORsummaries <- split(DORsummary, f)
+
+    all_allele_names <- lapply(seq_along(fasta_files),
         function(i) {
             infasta <- fasta_files[[i]]
             outfasta <- file.path(original_fasta_dir, out_filenames[[i]])
-            copy_fasta_file(infasta, outfasta,
-                            excluded_alleles=excluded_alleles,
-                            drop.repeated.alleles=drop.repeated.alleles)
-            outfasta
-        },
-        character(1)
+            .copy_fasta_file(infasta, outfasta, DORsummaries[[i]])
+        }
     )
+    unlist(all_allele_names, use.names=FALSE)
 }
 
-### Creates "original fasta" subdir and copy fasta files to it.
-### Returns the paths to the copied files.
-.init_region_db <- function(fasta_files, destdir, region_type,
-                            excluded_alleles=NULL,
-                            overwrite=FALSE, verbose=FALSE)
+### Create "original fasta" subdir and copy fasta files to it.
+### 'excluded_alleles' used for sanity check only.
+.make_db_original_fasta_dir <-
+    function(fasta_files, destdir, region_type,
+             DORsummary, excluded_alleles=character(0))
 {
-    if (verbose)
-        message("Creating ", region_type, "-region db ...\n")
-
-    .checkarg_fasta_files(fasta_files)
-    .checkarg_destdir(destdir)
-    if (!isTRUEorFALSE(overwrite))
-        stop(wmsg("'overwrite' must be TRUE or FALSE"))
-    if (!isTRUEorFALSE(verbose))
-        stop(wmsg("'verbose' must be TRUE or FALSE"))
-    if (.region_db_already_exists(destdir, region_type)) {
-        if (!overwrite)
-            .stop_on_existing_region_db(destdir, region_type)
-        .nuke_existing_region_db(destdir, region_type)
-    }
-
     original_fasta_dir <- get_db_original_fasta_dir(destdir, region_type)
     stopifnot(!file.exists(original_fasta_dir), dir.create(original_fasta_dir))
-
-    ## We only drop "repeated" alleles for C-region dbs. Note that:
-    ## - This is an **early** drop that gets reflected in the original fasta
-    ##   files that we store in the db.
-    ## - This only drops alleles "repeated" within the individual files
-    ##   in 'fasta_files', not across the files. FWIW the only repetition
-    ##   we've seen so far in C-region FASTA files is allele IGHG1*02 in
-    ##   inst/extdata/constant_regions/IMGT/mouse/IG/14.1/IGHC.fasta, so
-    ##   we're ok for now.
-    ## See .copy_fasta_files_to_original_fasta_dir() above in this file
-    ## for more info.
-    ## The reason why dropping early is better than dropping late (like we
-    ## do in clean_allele_set() and family, see R/clean_allele_set.R) is that
-    ## it allows the counts returned by list_c_region_dbs() to remain
-    ## consistent between the short and long listings.
-    drop.repeated.alleles <- region_type == "C"
-    original_fasta_files <- .copy_fasta_files_to_original_fasta_dir(
-                                  fasta_files, original_fasta_dir,
-                                  excluded_alleles=excluded_alleles,
-                                  drop.repeated.alleles=drop.repeated.alleles)
-
-    if (verbose) {
-        in1string <- paste(basename(original_fasta_files), collapse=", ")
-        msg <- c("Input file(s): ", in1string)
-        message("  o ", wmsg(msg, margin=4L), "\n")
-    }
-    original_fasta_files
+    allele_names <- .copy_fasta_files_to_db_original_fasta_dir(fasta_files,
+                                            original_fasta_dir, DORsummary)
+    ## Sanity checks.
+    DORsummary_allele_name <- DORsummary[ , "allele_name"]
+    stopifnot(all(DORsummary_allele_name %in% allele_names))
+    was_excluded <- allele_names %notin% DORsummary_allele_name
+    stopifnot(identical(allele_names[!was_excluded], DORsummary_allele_name),
+              all(allele_names[was_excluded] %in% excluded_alleles))
 }
 
-### Write the clean allele set to the final FASTA file.
-.dump_clean_allele_set <- function(allele_set, destdir, region_type,
-                                   verbose=FALSE)
+.write_region_db <-
+    function(cleaned_allele_set, destdir, region_type,
+             fasta_files, DORsummary, excluded_alleles=character(0),
+	     verbose=FALSE)
 {
-    final_fasta <- .get_final_fasta_path(destdir, region_type)
-    writeXStringSet(allele_set, final_fasta)
-    if (verbose)
-        message("... done. (Final number of ", region_type, " alleles ",
-                "in db = ", length(allele_set), ")\n")
-}
+    stopifnot(is.data.frame(DORsummary))
+    suffix <- DORsummary[ , "suffix"]
+    expected_allele_names <- add_suffix(DORsummary[ , "allele_name"], suffix)
+    expected_allele_names <- expected_allele_names[!is.na(suffix)]
+    stopifnot(identical(names(cleaned_allele_set), expected_allele_names))
 
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .load_allele_set()
-###
-
-### The names of the supplied files must be of the form <locus>V.fasta
-### or <locus>J.fasta where locus is a 3-letter string. Note that we don't
-### really care if <locus> is a valid locus or not (see IG_LOCI and TR_LOCI
-### in R/loci-utils.R for the 7 valid loci), as long as it's a 3-letter
-### string, so we don't bother to check.
-.infer_loci_from_filenames <- function(fasta_files, region_type)
-{
-    filenames <- basename(fasta_files)
-    suffix <- substr(filenames, 4L, nchar(filenames))
-    expected_suffix <- paste0(region_type, ".fasta")
-    if (!all(suffix == expected_suffix)) {
-        in1string <- paste(filenames, collapse=", ")
-        stop(wmsg("The names of the FASTA files must be of the form ",
-                  "<locus>", expected_suffix, ", where <locus> is a ",
-                  "3-letter string. Got: ", in1string))
-    }
-    substr(filenames, 1L, 3L)
-}
-
-### 'region_type' will only be used if 'with.loci' is TRUE.
-.load_allele_set <- function(fasta_files, with.loci=FALSE, region_type=NA)
-{
-    .checkarg_fasta_files(fasta_files)
-    if (with.loci) {
-        loci <- .infer_loci_from_filenames(fasta_files, region_type)
-        allele_sets <- lapply(seq_along(fasta_files),
-            function(i) {
-                allele_set <- readDNAStringSet(fasta_files[[i]])
-                mcols(allele_set)$locus <- loci[[i]]
-                allele_set
-            }
-        )
-        allele_set <- do.call(c, allele_sets)
-    } else {
-        allele_set <- readDNAStringSet(fasta_files)
-    }
-    if (length(allele_set) == 0L) {
-        in1string <- paste(basename(fasta_files), collapse=", ")
-        stop(wmsg("no alleles found in FASTA files: ", in1string))
-    }
-    allele_set
+    .write_db_final_fasta(cleaned_allele_set, destdir, region_type,
+                          verbose=verbose)
+    .make_db_original_fasta_dir(fasta_files, destdir, region_type,
+                                DORsummary, excluded_alleles=excluded_alleles)
 }
 
 
@@ -231,6 +326,7 @@
 ### - D.fasta: final FASTA file containing the clean allele set.
 create_region_db <- function(fasta_files, destdir,
                              region_type=VDJC_REGION_TYPES,
+                             excluded_alleles=character(0),
                              disambiguate.allele.names=FALSE,
                              overwrite=FALSE, verbose=FALSE)
 {
@@ -238,21 +334,25 @@ create_region_db <- function(fasta_files, destdir,
     if (!isTRUEorFALSE(disambiguate.allele.names))
         stop(wmsg("'disambiguate.allele.names' must be TRUE or FALSE"))
 
-    ## Create "original fasta" subdir and copy fasta files to it.
-    original_fasta_files <- .init_region_db(fasta_files, destdir, region_type,
-                                            overwrite=overwrite,
-                                            verbose=verbose)
-
     ## (1) Load and combine.
-    allele_set <- .load_allele_set(original_fasta_files)
+    allele_set <- .init_region_db(fasta_files, destdir, region_type,
+                                  excluded_alleles=excluded_alleles,
+                                  overwrite=overwrite, verbose=verbose)
 
     ## (2) Clean.
-    allele_set <- clean_allele_set(allele_set,
-                        disambiguate.allele.names=disambiguate.allele.names,
-                        verbose=verbose)
+    cleaned_allele_set <-
+        clean_allele_set(allele_set,
+                         disambiguate.allele.names=disambiguate.allele.names,
+                         verbose=verbose)
 
-    ## Write the clean allele set to the final FASTA file.
-    .dump_clean_allele_set(allele_set, destdir, region_type, verbose=verbose)
+    ## Write the db.
+    DORsummary <-
+        clean_allele_set(allele_set,
+                         disambiguate.allele.names=disambiguate.allele.names,
+                         summary.only=TRUE)
+    .write_region_db(cleaned_allele_set, destdir, region_type,
+		     fasta_files, DORsummary, excluded_alleles=excluded_alleles,
+                     verbose=verbose)
 }
 
 
@@ -260,16 +360,18 @@ create_region_db <- function(fasta_files, destdir,
 ### create_V_region_db()
 ###
 
-.add_intdata_to_db <- function(allele_set, destdir)
+.add_intdata_to_db <- function(cleaned_allele_set, destdir)
 {
-    stopifnot(is(allele_set, "DNAStringSet"))
-    allele_names <- names(allele_set)
+    stopifnot(is(cleaned_allele_set, "DNAStringSet"))
+    allele_names <- names(cleaned_allele_set)
     stopifnot(!is.null(allele_names))
-    allele_set_mcols <- mcols(allele_set, use.names=FALSE)
-    stopifnot(is(allele_set_mcols, "DataFrame"),
-              identical(allele_names, allele_set_mcols[ , "allele_name"]))
-    ndm_data <- as.data.frame(allele_set_mcols[ , names(NDM_DATA_COL2CLASS)])
-    write_ndm_data_to_db(ndm_data, destdir)
+    cleaned_allele_set_mcols <- mcols(cleaned_allele_set, use.names=FALSE)
+    stopifnot(
+        is(cleaned_allele_set_mcols, "DataFrame"),
+        identical(allele_names, cleaned_allele_set_mcols[ , "allele_name"])
+    )
+    ndm_data <- cleaned_allele_set_mcols[ , names(NDM_DATA_COL2CLASS)]
+    write_ndm_data_to_db(as.data.frame(ndm_data), destdir)
 }
 
 ### A specialized version of create_region_db() for V alleles.
@@ -289,37 +391,38 @@ create_V_region_db <- function(fasta_files, destdir,
     if (!isTRUEorFALSE(disambiguate.allele.names))
         stop(wmsg("'disambiguate.allele.names' must be TRUE or FALSE"))
 
-    ## Create "original fasta" subdir and copy fasta files to it.
-    original_fasta_files <- .init_region_db(fasta_files, destdir, "V",
-                                            overwrite=overwrite,
-                                            verbose=verbose)
-
     ## (1) Load and combine.
-    ## Note that if 'with.intdata=TRUE', we also load the locus info and
-    ## return it as a metadata column on 'allele_set'. clean_V_allele_set()
-    ## will require and use this metadata column when 'with.intdata' is TRUE.
-    allele_set <- .load_allele_set(original_fasta_files,
-                                   with.loci=with.intdata, region_type="V")
+    ## Note that 'allele_set' is loaded with the locus info as a metadata
+    ## column on it. clean_V_allele_set() will require and use this metadata
+    ## column when 'with.intdata' is TRUE.
+    allele_set <- .init_region_db(fasta_files, destdir, "V",
+                                  overwrite=overwrite, verbose=verbose)
 
     ## (2) Clean.
-    allele_set <- clean_V_allele_set(allele_set,
-                        gapped=gapped, with.intdata=with.intdata,
-                        disambiguate.allele.names=disambiguate.allele.names,
-                        verbose=verbose)
+    cleaned_allele_set <-
+        clean_V_allele_set(allele_set,
+                           gapped=gapped, with.intdata=with.intdata,
+                           disambiguate.allele.names=disambiguate.allele.names,
+                           verbose=verbose)
 
-    ## Write the clean allele set to the final FASTA file.
-    .dump_clean_allele_set(allele_set, destdir, "V", verbose=verbose)
-
+    ## Write the db.
+    DORsummary <-
+        clean_V_allele_set(allele_set,
+                           gapped=gapped, with.intdata=with.intdata,
+                           disambiguate.allele.names=disambiguate.allele.names,
+                           summary.only=TRUE)
+    .write_region_db(cleaned_allele_set, destdir, "V",
+		     fasta_files, DORsummary,
+                     verbose=verbose)
     if (with.intdata) {
         if (verbose)
             message(wmsg("Adding the intdata to the db"), " ... ",
                     appendLF=FALSE)
-        .add_intdata_to_db(allele_set, destdir)
+        .add_intdata_to_db(cleaned_allele_set, destdir)
         if (verbose)
             message("ok.\n")
     }
-
-    allele_set
+    cleaned_allele_set
 }
 
 
@@ -366,7 +469,7 @@ create_V_region_db <- function(fasta_files, destdir,
 ### Set 'with.auxdata' to TRUE if the auxiliary data associated with the
 ### J alleles should be computed and added to the db.
 create_J_region_db <- function(fasta_files, destdir,
-                               excluded_J_alleles=NULL,
+                               excluded_alleles=character(0),
                                with.auxdata=FALSE, imgt.fasta=FALSE,
                                disambiguate.allele.names=FALSE,
                                overwrite=FALSE, verbose=FALSE)
@@ -378,36 +481,37 @@ create_J_region_db <- function(fasta_files, destdir,
     if (!isTRUEorFALSE(disambiguate.allele.names))
         stop(wmsg("'disambiguate.allele.names' must be TRUE or FALSE"))
 
-    ## Create "original fasta" subdir and copy fasta files to it.
-    original_fasta_files <- .init_region_db(fasta_files, destdir, "J",
-                                            excluded_alleles=excluded_J_alleles,
-                                            overwrite=overwrite,
-                                            verbose=verbose)
-
     ## (1) Load and combine.
-    ## Note that if 'with.auxdata=TRUE', we also load the locus info and
-    ## return it as a metadata column on 'allele_set'. clean_V_allele_set()
-    ## will require and use this metadata column when 'with.auxdata' is TRUE.
-    allele_set <- .load_allele_set(original_fasta_files,
-                                   with.loci=with.auxdata, region_type="J")
+    ## Note that 'allele_set' is loaded with the locus info as a metadata
+    ## column on it. clean_J_allele_set() will require and use this metadata
+    ## column when 'with.auxdata' is TRUE.
+    allele_set <- .init_region_db(fasta_files, destdir, "J",
+                                  excluded_alleles=excluded_alleles,
+                                  overwrite=overwrite, verbose=verbose)
 
     ## (2) Clean.
-    allele_set <- clean_J_allele_set(allele_set,
-                        with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
-                        disambiguate.allele.names=disambiguate.allele.names,
-                        verbose=verbose)
+    cleaned_allele_set <-
+        clean_J_allele_set(allele_set,
+                           with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
+                           disambiguate.allele.names=disambiguate.allele.names,
+                           verbose=verbose)
 
-    ## Write the clean allele set to the final FASTA file.
-    .dump_clean_allele_set(allele_set, destdir, "J", verbose=verbose)
-
+    ## Write the db.
+    DORsummary <-
+        clean_J_allele_set(allele_set,
+                           with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
+                           disambiguate.allele.names=disambiguate.allele.names,
+                           summary.only=TRUE)
+    .write_region_db(cleaned_allele_set, destdir, "J",
+                     fasta_files, DORsummary, excluded_alleles=excluded_alleles,
+                     verbose=verbose)
     if (with.auxdata) {
-        allele_names <- names(allele_set)
-        auxdata <- mcols(allele_set, use.names=FALSE)
+        allele_names <- names(cleaned_allele_set)
+        auxdata <- mcols(cleaned_allele_set, use.names=FALSE)
         stopifnot(identical(allele_names, auxdata[ , "allele_name"]))
         auxdata <- as.data.frame(auxdata)
         .add_computed_auxdata_to_db(auxdata, destdir, verbose=verbose)
     }
-
-    allele_set
+    cleaned_allele_set
 }
 

@@ -14,8 +14,6 @@ test_that("list_germline_dbs()", {
     expect_identical(trimws(colnames(printed)), c(expected_colnames, ""))
 
     ## Check consistency of counts reported by short and long listings.
-    ## FIXME: Note that this will fail if some TCR germline dbs from IMGT
-    ## are installed. See "inconsistent counts" issue in TODO file.
     install_IMGT_germline_db("202614-2", "Homo sapiens", overwrite=TRUE)
     df <- list_germline_dbs()  # short listing
     all_counts <- list_germline_dbs(long.listing=TRUE)  # long listing

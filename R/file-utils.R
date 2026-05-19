@@ -310,6 +310,26 @@ display_data_frame_in_browser <- function(df)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### read_version_file()
+###
+
+read_version_file <- function(dirpath)
+{
+    stopifnot(isSingleNonWhiteString(dirpath), dir.exists(dirpath))
+    version_path <- file.path(dirpath, "version")
+    if (!file.exists(version_path))
+        stop(wmsg("missing 'version' file in ", dirpath, "/"))
+    version <- readLines(version_path)
+    if (length(version) != 1L)
+        stop(wmsg("file '", version_path, "' should contain exactly one line"))
+    version <- trimws2(version)
+    if (version == "")
+        stop(wmsg("file '", version_path, "' contains only white spaces"))
+    version
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### list_fasta_files()
 ###
 
@@ -323,55 +343,6 @@ list_fasta_files <- function(path, pattern="\\.fasta$", full.names=TRUE,
               isTRUEorFALSE(recursive))
     list.files(path, pattern=pattern, full.names=full.names,
                recursive=recursive)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### copy_fasta_file()
-###
-
-### By "repeated" alleles we mean alleles with identical sequences **and**
-### names. Note that:
-### - we keep alleles with identical sequences but different names;
-### - we also keep alleles with identical names but different sequences.
-### Note that the .drop_repeated_alleles() function in R/clean_allele_set.R
-### implements the same semantic.
-copy_fasta_file <- function(infasta, outfasta, excluded_alleles=NULL,
-                            drop.repeated.alleles=FALSE)
-{
-    stopifnot(isSingleNonWhiteString(infasta),
-              !dir.exists(infasta), file.exists(infasta),
-              isSingleNonWhiteString(outfasta),
-              !dir.exists(outfasta), !file.exists(outfasta),
-              isTRUEorFALSE(drop.repeated.alleles))
-    if (!is.null(excluded_alleles) || drop.repeated.alleles) {
-        headers <- names(fasta.seqlengths(infasta))
-        allele_names <- clean_imgt_fasta_headers(headers)
-        drop_me <- logical(length(allele_names))
-        if (!is.null(excluded_alleles)) {
-            stopifnot(is.character(excluded_alleles))
-            drop_me <- drop_me | (allele_names %in% excluded_alleles)
-        }
-        if (drop.repeated.alleles) {
-            alleles <- readBStringSet(infasta)
-            stopifnot(identical(names(alleles), headers))
-            m1 <- match(alleles, alleles)
-            m2 <- match(allele_names, allele_names)
-            is_repeated <- selfmatchIntegerPairs(m1, m2) != seq_along(alleles)
-            drop_me <- drop_me | is_repeated
-        }
-        drop_idx <- which(drop_me)
-        if (length(drop_idx) != 0L) {
-            lines <- readLines(infasta)
-            record_starts <- grep("^>", lines)
-            stopifnot(identical(lines[record_starts], paste0(">", headers)))
-            record_ends <- c(tail(record_starts - 1L, n=-1L), length(lines))
-            record_bounds <- IRanges(record_starts, record_ends)
-            lines <- extractROWS(lines, record_bounds[-drop_idx])
-            return(writeLines(lines, outfasta))
-        }
-    }
-    stopifnot(file.copy(infasta, outfasta, overwrite=FALSE))
 }
 
 

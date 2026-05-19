@@ -54,7 +54,7 @@ stop_on_existing_cached_germline_db <- function(db_name)
 ### Not exported!
 install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
                                 gapped=FALSE, with.intdata=FALSE,
-                                excluded_J_alleles=NULL,
+                                excluded_J_alleles=character(0),
                                 with.auxdata=FALSE, imgt.fasta=FALSE,
                                 disambiguate.allele.names=FALSE,
                                 if.exists=c("error", "overwrite", "no-op"),

@@ -7,18 +7,6 @@ o More testing of combine_germline_dbs(). Expand the examples in its man
 o In addition to combine_germline_dbs(), we need combine_c_region_dbs()
   to combine C-region dbs.
 
-o Fix the "inconsistent counts" issue:
-
-    db_name <- install_IMGT_germline_db("202614-2", "Homo_sapiens", tcr.db=TRUE)
-    all_counts <- list_germline_dbs(long.listing=TRUE)  # long listing
-    colSums(all_counts[[db_name]])
-    #   V   D   J 
-    # 370   6 101 
-
-  These counts are wrong and inconsistent with the counts reported
-  by list_germline_dbs()'s short listing (V:355 D:6 J:101).
-  See .finish_cleanup() in R/clean_allele_set.R why.
-
 o Maybe replace 'without.intdata' and 'without.auxdata' arguments with
   'with.intdata' and 'with.auxdata'. With default of TRUE for 'with.intdata'
   and "auto" for 'with.auxdata' ("auto" meaning "include the computed auxdata

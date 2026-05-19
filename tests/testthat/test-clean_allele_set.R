@@ -20,6 +20,47 @@ test_that(".drop_repeated_alleles()", {
     expect_identical(as.character(object), toupper(y[-c(5:7, 10L)]))
 })
 
+test_that(".make_DORsummary()", {
+    make_DORsummary <- igblastr:::.make_DORsummary
+
+    expected <- data.frame(allele_name="A", suffix="")
+    expect_identical(make_DORsummary(c(A="ct")), expected)
+
+    x <- c(A="ct", A="ct")
+    expected <- data.frame(allele_name=names(x), suffix=c("", NA))
+    expect_identical(make_DORsummary(x), expected)
+    expect_identical(make_DORsummary(BStringSet(x)), expected)
+    expect_identical(make_DORsummary(DNAStringSet(x)), expected)
+
+    x <- c(A="ct", A="ct", A="ct")
+    expected <- data.frame(allele_name=names(x), suffix=c("", NA, NA))
+    expect_identical(make_DORsummary(x), expected)
+    expect_identical(make_DORsummary(BStringSet(x)), expected)
+    expect_identical(make_DORsummary(DNAStringSet(x)), expected)
+
+    x <- c(A="ct", B="", A="ct", A="ct", C="", D="ggg", C="")
+    expected <- data.frame(allele_name=names(x),
+                           suffix=c("", "", NA, NA, "", "", NA))
+    expect_identical(make_DORsummary(x), expected)
+    expect_identical(make_DORsummary(BStringSet(x)), expected)
+    expect_identical(make_DORsummary(DNAStringSet(x)), expected)
+
+    x <- c(A="tt", B="g", C="gg", B="", C="g", A="tt", D="t",
+           B="ggg", B="", C="", B="g", C="gg", E="tt", B="tt")
+    expected <- data.frame(allele_name=names(x),
+                           suffix=c("", "a", "a", "b", "b", NA, "",
+                                    "c", NA, "c", NA, NA, "", "d"))
+    expect_identical(
+        make_DORsummary(x, disambiguate.allele.names=TRUE),
+        expected)
+    expect_identical(
+        make_DORsummary(BStringSet(x), disambiguate.allele.names=TRUE),
+        expected)
+    expect_identical(
+        make_DORsummary(DNAStringSet(x), disambiguate.allele.names=TRUE),
+        expected)
+})
+
 .check_object_mcols <- function(object)
 {
     object_mcols <- mcols(object)

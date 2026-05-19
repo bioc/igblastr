@@ -131,6 +131,65 @@ check_seqlens <- function(seqlens, varname)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### make_unique_allele_names()
+###
+
+### Generates a pool of unique suffixes made of lowercase letters.
+.make_pool_of_suffixes <- function(min_pool_size)
+{
+    max_pool_size <- (length(letters)**8 - 1) / (length(letters) - 1) - 1
+    if (min_pool_size > max_pool_size)
+        stop(wmsg("too many duplicated allele names"))
+    ans <- character(0)
+    for (i in 1:7) {
+        ans <- c(ans, mkAllStrings(letters, i))
+        if (length(ans) >= min_pool_size)
+            return(ans)
+    }
+    ## Should never happen because we checked for this condition earlier (see
+    ## above).
+    stop(wmsg("too many duplicated allele names"))
+}
+
+### Returns the suffixes in a named character vector parallel to 'x'.
+.make_disambiguation_suffixes <- function(x)
+{
+    stopifnot(is.character(x))
+    if (length(x) <= 1L) {
+        suffixes <- character(length(x))
+    } else {
+        oo <- order(x)
+        ordered_x <- x[oo]
+        ir <- IRanges(1L, runLength(Rle(ordered_x)))
+        pool_of_suffixes <- .make_pool_of_suffixes(max(width(ir)))
+        suffixes <- extractList(pool_of_suffixes, ir)  # CharacterList
+        suffixes[lengths(suffixes) == 1L] <- ""
+        rev_oo <- S4Vectors:::reverseIntegerInjection(oo, length(oo))
+        suffixes <- unlist(suffixes, use.names=FALSE)[rev_oo]
+    }
+    setNames(suffixes, names(x))
+}
+
+### Has its own tests in tests/testthat/test-utils.R!
+### We make the allele names unique by adding a disambiguation suffix to
+### them. Note that this is not guaranteed to make the allele names unique
+### because adding the suffixes can create clashes with some other allele
+### names that already looks like they have a disambiguation suffix.
+### So we check for that and raise an error if it happens.
+make_unique_allele_names <- function(allele_names, suffixes.only=FALSE)
+{
+    stopifnot(isTRUEorFALSE(suffixes.only))
+    suffixes <- .make_disambiguation_suffixes(allele_names)
+    ans <- add_suffix(allele_names, suffixes)
+    if (anyDuplicated(ans))
+        stop(wmsg("Our allele name disambiguation scheme doesn't work for ",
+                  "your set of alleles, sorry. Please file an issue at ",
+                  "https://github.com/HyrienLab/igblastr/issues"))
+    if (suffixes.only) suffixes else ans
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### interweave()
 ###
 
@@ -165,26 +224,6 @@ align_vectors_by_names <- function(vectors)
         function(v) setNames(v[unique_names], unique_names))
     stopifnot(all(lengths(ans) == length(ans[[1L]])))
     ans
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### read_version_file()
-###
-
-read_version_file <- function(dirpath)
-{
-    stopifnot(isSingleNonWhiteString(dirpath), dir.exists(dirpath))
-    version_path <- file.path(dirpath, "version")
-    if (!file.exists(version_path))
-        stop(wmsg("missing 'version' file in ", dirpath, "/"))
-    version <- readLines(version_path)
-    if (length(version) != 1L)
-        stop(wmsg("file '", version_path, "' should contain exactly one line"))
-    version <- trimws2(version)
-    if (version == "")
-        stop(wmsg("file '", version_path, "' contains only white spaces"))
-    version
 }
 
 

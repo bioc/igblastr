@@ -41,12 +41,12 @@ test_that("combine_germline_dbs()", {
     db_name2 <- "_OGRDB.mouse.PWD_PhJ.IGH+IGK+IGL.202410"
 
     ## Combine 'db_name1' and 'db_name2'.
-    db_name12  <- "comb.OGRDB.human+mouse.IGH+IGK+IGL"
+    db_name12 <- "comb.OGRDB.human+mouse.IGH+IGK+IGL"
     combine_germline_dbs(db_name12, db_name1, db_name2, "_Hs", "_Mm")
     .check_combined_germline_db(db_name12, db_name1, db_name2, "_Hs", "_Mm")
 
     ## Combine 'db_name2' and 'db_name1'.
-    db_name21  <- "comb.OGRDB.mouse+human.IGH+IGK+IGL"
+    db_name21 <- "comb.OGRDB.mouse+human.IGH+IGK+IGL"
     combine_germline_dbs(db_name21, db_name2, db_name1, "_Mm", "_Hs")
     .check_combined_germline_db(db_name21, db_name2, db_name1, "_Mm", "_Hs")
 
@@ -93,5 +93,8 @@ test_that("combine_germline_dbs()", {
     expect_true(all(AIRR_df12$locus %in% c("IGK", "IGL")))
     expect_true(all(igblastr:::has_suffix(AIRR_df21$v_call, "_Hs")))
     expect_true(all(igblastr:::has_suffix(AIRR_df21$j_call, "_Hs")))
+
+    rm_germline_db(db_name12)
+    rm_germline_db(db_name21)
 })
 

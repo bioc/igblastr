@@ -109,7 +109,7 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     if (organism == "Homo_sapiens" && loci_prefix == "IG") {
         excluded_J_alleles <- .EXCLUDED_IMGT_HUMAN_J_ALLELES
     } else {
-        excluded_J_alleles <- NULL
+        excluded_J_alleles <- character(0)
     }
 
     ## Create and install germline db.
