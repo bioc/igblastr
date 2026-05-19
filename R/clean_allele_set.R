@@ -14,7 +14,7 @@ checkarg_with.intdata <- function(with.intdata, gapped)
         stop(wmsg("'with.intdata=TRUE' can only be used when 'gapped' is TRUE"))
 }
 
-.check_locus <- function(locus, what)
+check_locus <- function(locus, what)
 {
     if (!is.character(locus))
         stop(wmsg(what, " must be of type character"))
@@ -100,9 +100,8 @@ checkarg_with.intdata <- function(with.intdata, gapped)
         return(allele_set)  # no-op
     if (verbose) {
         in1string <- paste(names(allele_set)[drop_idx], collapse=", ")
-        msg <- c("Deleted ", drop_idx_len, " \"repeated\" alleles from ",
-                 "original set of ", length(allele_set), " alleles: ",
-                 in1string, ".")
+        msg <- c("Dropped ", drop_idx_len, " \"repeated\" allele(s) from ",
+                 "set of ", length(allele_set), " alleles: ", in1string, ".")
         note <- c("Note that alleles are considered \"repeated\" when ",
                   "they share the same ungapped sequence and name.")
         message("  o ", wmsg(msg, margin=4L), "\n",
@@ -113,58 +112,20 @@ checkarg_with.intdata <- function(with.intdata, gapped)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .stop_on_ambiguous_allele_names()
+### .disambiguate_allele_names()
 ###
 
 .stop_on_ambiguous_allele_names <- function(allele_names)
 {
     stopifnot(is.character(allele_names))
-    ambiguous_allele_names <- unique(allele_names[duplicated(allele_names)])
+    is_dup <- duplicated(allele_names)
+    ambiguous_allele_names <- unique(allele_names[is_dup])
     in1string <- paste(ambiguous_allele_names, collapse=", ")
     stop(wmsg("The following allele names are ambiguous: ", in1string, "."),
          "\n  ",
          wmsg("Use 'disambiguate.allele.names=TRUE' to disambiguate ",
               "them. (Also using 'verbose=TRUE' will display the ",
               "disambiguation details.)"))
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .disambiguate_allele_names()
-###
-
-### Similar to base::make.unique() but mangles with suffixes made of
-### lowercase letters.
-.make_pool_of_suffixes <- function(min_pool_size)
-{
-    max_pool_size <- (length(letters)**8 - 1) / (length(letters) - 1) - 1
-    if (min_pool_size > max_pool_size)
-        stop(wmsg("too many duplicate seq ids"))
-    ans <- character(0)
-    for (i in 1:7) {
-        ans <- c(ans, mkAllStrings(letters, i))
-        if (length(ans) >= min_pool_size)
-            return(ans)
-    }
-    ## Should never happen because we checked for this condition earlier (see
-    ## above).
-    stop(wmsg("too many duplicate seq ids"))
-}
-
-.make_unique_seqids <- function(seqids)
-{
-    stopifnot(is.character(seqids))
-    if (length(seqids) <= 1L)
-        return(seqids)
-    oo <- order(seqids)
-    seqids2 <- seqids[oo]
-    ir <- IRanges(1L, runLength(Rle(seqids2)))
-    pool_of_suffixes <- .make_pool_of_suffixes(max(width(ir)))
-    suffixes <- extractList(pool_of_suffixes, ir)  # CharacterList
-    suffixes[lengths(suffixes) == 1L] <- ""
-    seqids2 <- paste0(seqids2, unlist(suffixes, use.names=FALSE))
-    ans <- seqids2[S4Vectors:::reverseIntegerInjection(oo, length(oo))]
-    setNames(ans, names(seqids))
 }
 
 .disambiguate_allele_names <- function(allele_set, annotated=FALSE,
@@ -179,7 +140,7 @@ checkarg_with.intdata <- function(with.intdata, gapped)
                   identical(allele_names, allele_set_mcols[ , "allele_name"]))
     }
     if (anyDuplicated(allele_names)) {
-        new_allele_names <- .make_unique_seqids(allele_names)
+        new_allele_names <- make_unique_allele_names(allele_names)
         if (verbose) {
             idx <- which(allele_names != new_allele_names)
             in1string <- paste0(allele_names[idx], "->", new_allele_names[idx],
@@ -199,39 +160,65 @@ checkarg_with.intdata <- function(with.intdata, gapped)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .finish_cleanup()
+### .drop_or_rename_alleles()
 ###
 
-.finish_cleanup <- function(allele_set, annotated=FALSE,
-                            disambiguate.allele.names=FALSE,
-                            verbose=FALSE)
+### Has its own tests in tests/testthat/test-clean_allele_set.R!
+### Make the "Drop Or Rename" summary, a data.frame with one row per allele
+### in 'allele_set', and the following columns:
+###   - allele_name: the names on 'allele_set'.
+###   - suffix: the disambiguation suffix (possible the empty string)
+###     or NA if the allele should be dropped. The disambiguation suffix is
+###     the suffix to add to the allele name in order to make allele names
+###     unique across the allele set.
+###   - locus: [optional] the "locus" metadata column from 'allele_set' if
+###     the latter is an XStringSet derivative with such metadata column.
+.make_DORsummary <- function(allele_set, disambiguate.allele.names=FALSE)
 {
-    ## (B) Drop "repeated" alleles.
-    ## TODO: It's too late to drop "repeated" alleles! This dropping should
-    ## happen early in .copy_fasta_files_to_original_fasta_dir() instead.
-    ## See .init_region_db() in R/create_region_db.R.
-    ## The problem with dropping "repeated" alleles this late is that then
-    ## the counts returned by list_germline_dbs() are inconsistent between
-    ## the short and long listings (the former are right, the latter are
-    ## wrong). So what would need to happen is that
-    ## .copy_fasta_files_to_original_fasta_dir() should be able to
-    ## drop alleles that are "repeated" **across** FASTA files, and not
-    ## just within individual files like it does at the moment.
-    allele_set <- .drop_repeated_alleles(allele_set, verbose=verbose)
+    stopifnot(is(allele_set, "XStringSet") || is.character(allele_set))
+    suffix <- rep.int(NA_character_, length(allele_set))
+    remaining_idx <- which(!.is_repeated(allele_set))
+    remaining_allele_names <- names(allele_set)[remaining_idx]
+    if (anyDuplicated(remaining_allele_names) && !disambiguate.allele.names)
+        .stop_on_ambiguous_allele_names(remaining_allele_names)
+    suffix[remaining_idx] <- make_unique_allele_names(remaining_allele_names,
+                                                      suffixes.only=TRUE)
+    DORsummary <- data.frame(allele_name=names(allele_set), suffix=suffix)
+    if (is(allele_set, "XStringSet"))
+        DORsummary$locus <- mcols(allele_set)$locus
+    DORsummary
+}
 
-    allele_names <- names(allele_set)
+### If 'summary.only' is FALSE (the default), returns the modified 'allele_set'
+### which is not necessarily parallel to the input 'allele_set' because
+### some alleles may have been dropped.
+### If 'summary.only' is TRUE, returns a 2-col data.frame parallel
+### to 'allele_set'. See function .make_DORsummary() above in this file for the
+### details. Also in this case 'verbose' is ignored and operations are quiet.
+.drop_or_rename_alleles <- function(allele_set, annotated=FALSE,
+                                    disambiguate.allele.names=FALSE,
+                                    summary.only=FALSE, verbose=FALSE)
+{
+    if (summary.only)
+        return(.make_DORsummary(allele_set,
+                     disambiguate.allele.names=disambiguate.allele.names))
+
+    ## (C) Drop "repeated" alleles.
+    cleaned_allele_set <- .drop_repeated_alleles(allele_set, verbose=verbose)
+
+    ## (D) Disambiguate allele names.
+    allele_names <- names(cleaned_allele_set)
     if (anyDuplicated(allele_names)) {
-        ## Note that, because we did (B), allele with repeated names
+        ## Note that, because we did (C), alleles with repeated names
         ## are now guaranteed to have distinct DNA sequences.
         if (!disambiguate.allele.names)
             .stop_on_ambiguous_allele_names(allele_names)
-        ## (C) Mangle allele names to make them unique if they're not.
-        allele_set <- .disambiguate_allele_names(allele_set,
-                                                 annotated=annotated,
-                                                 verbose=verbose)
+        cleaned_allele_set <- .disambiguate_allele_names(cleaned_allele_set,
+                                                         annotated=annotated,
+                                                         verbose=verbose)
     }
 
-    allele_set
+    cleaned_allele_set
 }
 
 
@@ -255,7 +242,7 @@ checkarg_with.intdata <- function(with.intdata, gapped)
     if (is.null(allele_set_mcols) || is.null(locus <- allele_set_mcols$locus))
         stop(wmsg("'allele_set' must have a \"locus\" metadata column ",
                   "when 'with.intdata' is TRUE"))
-    .check_locus(locus, "the \"locus\" metadata column on 'allele_set'")
+    check_locus(locus, "the \"locus\" metadata column on 'allele_set'")
 
     ## Annotate the V alleles based on their gaps.
     intdata <- compute_V_gene_delineations(allele_set)
@@ -323,7 +310,7 @@ checkarg_with.intdata <- function(with.intdata, gapped)
     if (is.null(allele_set_mcols) || is.null(locus <- allele_set_mcols$locus))
         stop(wmsg("'allele_set' must have a \"locus\" metadata column ",
                   "when 'with.auxdata' is TRUE"))
-    .check_locus(locus, "the \"locus\" metadata column on 'allele_set'")
+    check_locus(locus, "the \"locus\" metadata column on 'allele_set'")
 
     ## Annotate the J alleles.
     auxdata <- compute_auxdata(allele_set, codon_starts=codon_starts,
@@ -367,31 +354,32 @@ checkarg_with.intdata <- function(with.intdata, gapped)
 ### implemented in the edit_imgt_file.pl script included in IgBLAST.
 ### More precisely, they all do the following:
 ###   (A) clean FASTA headers, as with original edit_imgt_file.pl script;
-###   (B) drops repeated alleles;
-###   (C) disambiguates allele names.
+###   (C) drop "repeated" alleles;
+###   (D) disambiguate allele names.
 ###
-### In addition to (A) + (B) + (C) above, clean_V_allele_set() performs the
+### In addition to (A) + (C) + (D) above, clean_V_allele_set() performs the
 ### following steps:
-###   (aV) annotate the V alleles if 'gapped' and 'with.intdata' are TRUE;
-###    (G) remove gaps from sequences if 'gapped' is TRUE, as with original
-###        edit_imgt_file.pl script.
+###   (Bv1) annotate the V alleles if 'gapped' and 'with.intdata' are TRUE;
+###   (Bv2) remove gaps from sequences if 'gapped' is TRUE, as with original
+###         edit_imgt_file.pl script.
 ###
-### In addition to (A) + (B) + (C) above, clean_J_allele_set() performs the
+### In addition to (A) + (C) + (D) above, clean_J_allele_set() performs the
 ### following step:
-###   (aJ) annotate the J alleles if 'with.auxdata' is TRUE.
+###   (Bj) annotate the J alleles if 'with.auxdata' is TRUE.
 
-### Generic cleaning. Use to clean allele sets of type D or C.
-### Note that "repeated" alleles (i.e. alleles with identical sequences
-### DNA sequences **and** names) are dropped.
-### If, after dropping the "repeated" alleles, the names of the
-### remaining alleles are not unique, then an error will be raised,
-### unless 'disambiguate.allele.names' is set to TRUE, in which case
-### the ambiguous allele names will be disambiguated.
+### Generic cleaning. Performs: (A) -> (C) -> (D).
+### Use it to clean a set of germline D or C gene alleles.
+### If, after performing the (C) step (i.e. drop the "repeated" alleles),
+### the names of the remaining alleles are not unique, then an error will
+### be raised, unless 'disambiguate.allele.names' is set to TRUE, in which
+### case the ambiguous allele names will be disambiguated.
+### If 'summary.only' is TRUE then 'verbose' is ignored and operations
+### are quiet.
 clean_allele_set <- function(allele_set,
                              disambiguate.allele.names=FALSE,
-                             verbose=FALSE)
+                             summary.only=FALSE, verbose=FALSE)
 {
-    stopifnot(is(allele_set, "DNAStringSet"))
+    stopifnot(is(allele_set, "XStringSet") || is.character(allele_set))
     headers <- names(allele_set)  # typically the FASTA headers
     stopifnot(!is.null(headers))
     stopifnot(isTRUEorFALSE(disambiguate.allele.names))
@@ -400,12 +388,13 @@ clean_allele_set <- function(allele_set,
     ## (A) Clean possibly messy FASTA headers to keep only allele names.
     names(allele_set) <- clean_imgt_fasta_headers(headers)
 
-    ## (B) + (C).
-    .finish_cleanup(allele_set,
+    ## (C) + (D).
+    .drop_or_rename_alleles(allele_set,
                     disambiguate.allele.names=disambiguate.allele.names,
-                    verbose=verbose)
+                    summary.only=summary.only, verbose=verbose)
 }
 
+### Performs: (A) -> (Bv1) -> (Bv2) -> (C) -> (D).
 ### Set 'gapped' to TRUE if the sequences in 'allele_set' are gapped (note
 ### that only V allele sequences are allowed to have gaps).
 ### Set 'with.intdata' to TRUE if the sequences in 'allele_set' are
@@ -416,9 +405,11 @@ clean_allele_set <- function(allele_set,
 ### Furthermore, if 'with.intdata' is TRUE, the returned object will also
 ### carry the annotations obtained with compute_V_gene_delineations() in
 ### additional metadata columns.
+### If 'summary.only' is TRUE then 'verbose' is ignored and operations
+### are quiet.
 clean_V_allele_set <- function(allele_set, gapped=FALSE, with.intdata=FALSE,
                                disambiguate.allele.names=FALSE,
-                               verbose=FALSE)
+                               summary.only=FALSE, verbose=FALSE)
 {
     stopifnot(is(allele_set, "DNAStringSet"))
     headers <- names(allele_set)  # typically the FASTA headers
@@ -434,34 +425,33 @@ clean_V_allele_set <- function(allele_set, gapped=FALSE, with.intdata=FALSE,
     ngaps <- setNames(vcountPattern(GAP_LETTER, allele_set), names(allele_set))
     if (gapped) {
         if (with.intdata) {
-            ## (aV) Annotate the V alleles.
+            ## (Bv1) Annotate the V alleles.
             allele_set <- .annotate_V_alleles(allele_set)
         } else {
             warn_if_allele_sequences_have_no_gaps(ngaps)
         }
-        allele_set <- remove_gaps(allele_set)  # (G)
+        allele_set <- remove_gaps(allele_set)  # (Bv2)
         if (with.intdata)
             .stop_if_repeated_V_alleles_have_discordant_annotations(allele_set)
     } else {
         .stop_if_allele_sequences_have_gaps(ngaps)
     }
 
-    ## (B) + (C).
+    ## (C) + (D).
     ### Note that V alleles are considered "repeated" if the have
     ### identical **ungapped** sequences DNA sequences and names.
-    .finish_cleanup(allele_set, annotated=with.intdata,
+    .drop_or_rename_alleles(allele_set, annotated=with.intdata,
                     disambiguate.allele.names=disambiguate.allele.names,
-                    verbose=verbose)
+                    summary.only=summary.only, verbose=verbose)
 }
 
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### clean_J_allele_set()
-###
-
+### Performs: (A) -> (Bj) -> (C) -> (D).
+### If 'summary.only' is TRUE then 'verbose' is ignored and operations
+### are quiet.
 clean_J_allele_set <- function(allele_set,
                                with.auxdata=FALSE, imgt.fasta=FALSE,
-                               disambiguate.allele.names=FALSE, verbose=FALSE)
+                               disambiguate.allele.names=FALSE,
+                               summary.only=FALSE, verbose=FALSE)
 {
     stopifnot(is(allele_set, "DNAStringSet"))
     headers <- names(allele_set)  # typically the FASTA headers
@@ -481,15 +471,15 @@ clean_J_allele_set <- function(allele_set,
         } else {
             codon_starts <- NULL
         }
-        ## (aJ) Annotate the J alleles.
+        ## (Bj) Annotate the J alleles.
         allele_set <- .annotate_J_alleles(allele_set,
                                           codon_starts=codon_starts)
         .stop_if_repeated_J_alleles_have_discordant_annotations(allele_set)
     }
 
-    ## (B) + (C).
-    .finish_cleanup(allele_set, annotated=with.auxdata,
+    ## (C) + (D).
+    .drop_or_rename_alleles(allele_set, annotated=with.auxdata,
                     disambiguate.allele.names=disambiguate.allele.names,
-                    verbose=verbose)
+                    summary.only=summary.only, verbose=verbose)
 }
 

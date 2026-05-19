@@ -142,7 +142,7 @@ list_loci_in_germline_fasta_dir <-
 ### Create the three "region dbs": one V-, one D-, and one J-region db.
 .do_create_germline_db <- function(destdir, fasta_dir, loci,
                                    gapped=FALSE, with.intdata=FALSE,
-                                   excluded_J_alleles=NULL,
+                                   excluded_J_alleles=character(0),
                                    with.auxdata=FALSE, imgt.fasta=FALSE,
                                    disambiguate.allele.names=FALSE,
                                    verbose=FALSE)
@@ -158,7 +158,7 @@ list_loci_in_germline_fasta_dir <-
                        verbose=verbose)
     J_fasta_files <- .collect_fasta_files(fasta_dir, "J", loci)
     create_J_region_db(J_fasta_files, destdir,
-                       excluded_J_alleles=excluded_J_alleles,
+                       excluded_alleles=excluded_J_alleles,
                        with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
                        disambiguate.allele.names=disambiguate.allele.names,
                        verbose=verbose)
@@ -176,7 +176,7 @@ list_loci_in_germline_fasta_dir <-
 ### and 'disambiguate.allele.names' arguments.
 create_germline_db <- function(destdir, fasta_dir, loci,
                                gapped=FALSE, with.intdata=FALSE,
-                               excluded_J_alleles=NULL,
+                               excluded_J_alleles=character(0),
                                with.auxdata=FALSE, imgt.fasta=FALSE,
                                disambiguate.allele.names=FALSE,
                                overwrite=FALSE, verbose=FALSE)
