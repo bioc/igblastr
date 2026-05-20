@@ -42,7 +42,7 @@ rm_c_region_db(db_name)
   }
   \item{db_name}{
     A single string specifying the name of the C-region db to remove
-    from the cache. This cannot be a built-in db.
+    from \pkg{igblastr}'s persistent cache. This cannot be a built-in db.
   }
 }
 

@@ -148,7 +148,7 @@ print.germline_dbs_df <- function(x, ...)
 ### check_germline_db_name()
 ###
 
-.stop_on_no_installed_germline_db_yet <- function()
+.stop_on_no_germline_dbs_found <- function()
 {
     msg <- c("You don't have any installed germline database yet. ",
              "Use any of the install_*_germline_db() function (e.g. ",
@@ -159,11 +159,11 @@ print.germline_dbs_df <- function(x, ...)
 .list_germline_db_names <- function()
 {
     all_db_names <- list_germline_dbs(names.only=TRUE)
-    ## Should never happen because of the built-in OGRDB dbs but we keep this
-    ## check anyways just in case we get rid of the built-in OGRDB dbs in the
-    ## future.
+    ## Should never happen because of the built-in OGRDB dbs but we keep
+    ## this check anyways just in case we get rid of the built-in OGRDB dbs
+    ## in the future (unlikely to happen though).
     if (length(all_db_names) == 0L)
-        .stop_on_no_installed_germline_db_yet()
+        .stop_on_no_germline_dbs_found()
     all_db_names
 }
 
@@ -177,19 +177,19 @@ valid_germline_db_name <- function(db_name)
 .stop_on_invalid_germline_db_name <- function(db_name)
 {
     msg1 <- c("\"", db_name, "\" is not the name of a cached germline db.")
-    msg2 <- c("Use list_germline_dbs() to list the germline dbs ",
-              "currently installed in the cache (see '?list_germline_dbs').")
+    msg2 <- c("Use list_germline_dbs() to list the germline dbs currently ",
+              "installed in igblastr's cache (see '?list_germline_dbs').")
     msg3 <- c("Note that you can use any of the install_*_germline_db() ",
               "function (e.g. install_IMGT_germline_db()) to install ",
-              "additional germline dbs in the cache.")
+              "additional germline dbs in igblastr's cache.")
     stop(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", wmsg(msg3))
 }
 
 ### Not exported!
-check_germline_db_name <- function(db_name)
+check_germline_db_name <- function(db_name, what="'db_name'")
 {
     if (!isSingleNonWhiteString(db_name))
-        stop(wmsg("'db_name' must be a single (non-empty) string"))
+        stop(wmsg(what, " must be a single (non-empty) string"))
     if (!valid_germline_db_name(db_name))
         .stop_on_invalid_germline_db_name(db_name)
 }

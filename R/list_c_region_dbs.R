@@ -90,24 +90,50 @@ print.c_region_dbs_df <- function(x, ...)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### valid_c_region_db_name()
 ### check_c_region_db_name()
 ###
+
+.stop_on_no_c_region_dbs_found <- function()
+{
+    msg <- c("You don't have any built-in C-region database. This is an ",
+             "abnormal situation! Please call 'reset_c_region_dbs()' to ",
+             "restore the built-in C-region dbs.")
+    stop(wmsg(msg))
+}
+
+.list_c_region_db_names <- function()
+{
+    all_db_names <- list_c_region_dbs(names.only=TRUE)
+    ## Should never happen because of the built-in C-region dbs but we keep
+    ## this check anyways just in case we get rid of the built-in C-region dbs
+    ## in the future (unlikely to happen though).
+    if (length(all_db_names) == 0L)
+        .stop_on_no_c_region_dbs_found()
+    all_db_names
+}
+
+### Not exported!
+valid_c_region_db_name <- function(db_name)
+{
+    stopifnot(isSingleNonWhiteString(db_name))
+    db_name %in% .list_c_region_db_names()
+}
 
 .stop_on_invalid_c_region_db_name <- function(db_name)
 {
     msg1 <- c("\"", db_name, "\" is not the name of a cached C-region db.")
-    msg2 <- c("Use list_c_region_dbs() to list the C-region dbs ",
-              "currently installed in the cache (see '?list_c_region_dbs').")
+    msg2 <- c("Use list_c_region_dbs() to list the C-region dbs currently ",
+              "installed in igblastr's cache (see '?list_c_region_dbs').")
     stop(wmsg(msg1), "\n  ", wmsg(msg2))
 }
 
 ### Not exported!
-check_c_region_db_name <- function(db_name)
+check_c_region_db_name <- function(db_name, what="'db_name'")
 {
     if (!isSingleNonWhiteString(db_name))
-        stop(wmsg("'db_name' must be a single (non-empty) string"))
-    all_db_names <- list_c_region_dbs(names.only=TRUE)
-    if (!(db_name %in% all_db_names))
+        stop(wmsg(what, " must be a single (non-empty) string"))
+    if (!valid_c_region_db_name(db_name))
         .stop_on_invalid_c_region_db_name(db_name)
 }
 

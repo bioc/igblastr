@@ -62,7 +62,7 @@
 .load_allele_set <- function(fasta_files, region_type,
                              excluded_alleles=character(0), verbose=FALSE)
 {
-    .checkarg_fasta_files(fasta_files)
+    loci <- .infer_loci_from_filenames(fasta_files, region_type)
     stopifnot(is.character(excluded_alleles), isTRUEorFALSE(verbose))
 
     if (verbose) {
@@ -71,7 +71,6 @@
         message("  o ", wmsg(msg, margin=4L), " ", appendLF=FALSE)
     }
 
-    loci <- .infer_loci_from_filenames(fasta_files, region_type)
     allele_sets <- lapply(seq_along(fasta_files),
         function(i) {
             allele_set <- readDNAStringSet(fasta_files[[i]])
@@ -284,7 +283,7 @@
 .write_region_db <-
     function(cleaned_allele_set, destdir, region_type,
              fasta_files, DORsummary, excluded_alleles=character(0),
-	     verbose=FALSE)
+             verbose=FALSE)
 {
     stopifnot(is.data.frame(DORsummary))
     suffix <- DORsummary[ , "suffix"]
@@ -351,7 +350,7 @@ create_region_db <- function(fasta_files, destdir,
                          disambiguate.allele.names=disambiguate.allele.names,
                          summary.only=TRUE)
     .write_region_db(cleaned_allele_set, destdir, region_type,
-		     fasta_files, DORsummary, excluded_alleles=excluded_alleles,
+                     fasta_files, DORsummary, excluded_alleles=excluded_alleles,
                      verbose=verbose)
 }
 
@@ -412,7 +411,7 @@ create_V_region_db <- function(fasta_files, destdir,
                            disambiguate.allele.names=disambiguate.allele.names,
                            summary.only=TRUE)
     .write_region_db(cleaned_allele_set, destdir, "V",
-		     fasta_files, DORsummary,
+                     fasta_files, DORsummary,
                      verbose=verbose)
     if (with.intdata) {
         if (verbose)
