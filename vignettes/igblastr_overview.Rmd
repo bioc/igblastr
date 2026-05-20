@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 27 April 2026"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 20 May 2026"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -283,7 +283,7 @@ YYYYMM format.
 If your query sequences are from human, mouse, or rabbit, you can
 select the appropriate database using `use_c_region_db()`:
 ```{r}
-use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
+use_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
 ```
 
 Calling `list_c_region_dbs()` again should display an asterisk (`*`)

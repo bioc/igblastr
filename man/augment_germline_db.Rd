@@ -95,7 +95,7 @@ if (!has_igblast()) install_igblast()
 query <- system.file(package="igblastr", "extdata",
                      "BCR", "heavy_sequences.fasta")
 
-use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
+use_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
 
 ## ---------------------------------------------------------------------
 ## USE HUMAN GERMLINE DATABASE FROM AIRR
@@ -203,7 +203,7 @@ augment_germline_db_V(db_name1, human_V12_alleles,
 ## engineered mice:
 \dontrun{
   use_germline_db(db_name1)
-  use_c_region_db("_IMGT.mouse.IGH.202509")
+  use_c_region_db("_IMGT.mouse.IGH+IGK+IGL.202605")
   igblastn(query, germline_db_V=engmouseVdb_path, ...)
 }
 

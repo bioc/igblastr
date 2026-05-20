@@ -126,12 +126,6 @@
 ###       monkey, one IGHC sequence in set #2 has a Y.
 ###   (c) Same exon sequences as in set #2 but with IMGT gaps. Note that
 ###       removing the gaps produces exactly the same sequences as in set #2.
-###   (d) Set #4 is only available for a very limited number of organisms:
-###       Human, Mouse, Rat, Alpaca, and Rabbit (as of Aug 19, 2025).
-###       In particular rhesus monkey (Macaca mulatta) is missing.
-###       TO BE CONFIRMED: It seems that the artificial gene sequences in
-###       this set can be constructed by concatenating the corresponding
-###       exon sequences from set #2, possibly after dropping the last exon.
 ###
 ### Sequence sets #1-3 correspond to the yellow columns in the big table of
 ### the 'IG "V-REGION", "D-REGION", "J-REGION", "C-GENE exon" sets' section.
@@ -179,7 +173,7 @@
 ###
 
 ### Reflects the IG C-region sequence sets available in IMGT/GENE-DB for
-### the 5 official IgBLAST organisms as of Aug 21, 2025.
+### the 5 official IgBLAST organisms as of May 20, 2026.
 ### See file R/LATIN_NAMES.R for more information.
 .IMGT_IG_C_SEQUENCE_SETS <- list(
     human=list(
@@ -192,19 +186,19 @@
         `7.2`=c("IGHC", "IGKC", "IGLC"),
         `7.5`=c("IGHC", "IGKC", "IGLC"),
         `7.1`=c("IGHC", "IGKC", "IGLC"),
-       `14.1`=c("IGHC")
+       `14.1`=c("IGHC", "IGKC", "IGLC")
     ),
     rabbit=list(
         `7.2`=c("IGHC", "IGKC", "IGLC"),
         `7.5`=c("IGHC", "IGKC", "IGLC"),
         `7.1`=c("IGHC", "IGKC", "IGLC"),
-       `14.1`=c("IGHC")
+       `14.1`=c("IGHC", "IGKC", "IGLC")
     ),
     rat=list(
         `7.2`=c("IGHC", "IGKC", "IGLC"),
         `7.5`=c("IGHC", "IGKC", "IGLC"),
         `7.1`=c("IGHC", "IGKC", "IGLC"),
-       `14.1`=c("IGHC")
+       `14.1`=c("IGHC", "IGKC", "IGLC")
     ),
     rhesus_monkey=list(
         `7.2`=c("IGHC", "IGKC", "IGLC"),
@@ -215,12 +209,14 @@
 )
 
 ### Reflects the TR C-region groups available in IMGT/GENE-DB
-### as of Sep 8, 2025. Note that here we use a simpler list structure
-### than for the IG case above because for the TR case we are only
-### interested in the 14.1 sequence set.
+### as of May 20, 2026 (no sequences for Rat). Note that here we use a
+### simpler list structure than for the IG case above because for the
+### TR case we are only interested in the 14.1 sequence set.
 .IMGT_TR_C_GROUPS <- list(
-    human=c("TRAC", "TRBC", "TRGC", "TRDC"),
-    mouse=c("TRAC", "TRBC", "TRGC", "TRDC")
+    human        =c("TRAC", "TRBC", "TRGC", "TRDC"),
+    mouse        =c("TRAC", "TRBC", "TRGC", "TRDC"),
+    rabbit       =c("TRAC", "TRBC", "TRGC", "TRDC"),
+    rhesus_monkey=c("TRAC", "TRBC", "TRGC", "TRDC")
 )
 
 .normarg_IMGT_organisms <- function(organisms)

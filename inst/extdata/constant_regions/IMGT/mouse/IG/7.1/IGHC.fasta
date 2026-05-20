@@ -511,10 +511,10 @@ accacaacacccctgaaatccaatggctcc............aatcaaggcttcttcatc
 ttcagtcgcctagaggtcgccaagacactctgg......acacagagaaaacagttcacc
 tgccaagtgatccatgaggcacttcagaaacccaggaaactggagaaaacaatatccacg
 agcctt.........ggtaacacctccctccgtccctcc
->BK063714|IGHE*06|Mus musculus_DBA/2J|F|M1|g,3445619..3445750|133 nt|1|+1| | | |133+0=133| | |
-gctagacctccaggacctatgtattgaagaggtggagggcgaggagctggaagagctgtg
-gaccagtatttgtgtcttcatcaccctgttcctgctcagtgtgagctatggggccactgt
-caccgtcctcaag
+>BK063714|IGHE*06|Mus musculus_DBA/2J|F|M1|g,3445617..3445750|135 nt|1|+1| || |135+0=135| | |
+gagctagacctccaggacctatgtattgaagaggtggagggcgaggagctggaagagctg
+tggaccagtatttgtgtcttcatcaccctgttcctgctcagtgtgagctatggggccact
+gtcaccgtcctcaag
 >BK063714|IGHE*06|Mus musculus_DBA/2J|F|M2|3445833..3445913|81 nt|1| | | | |81+0=81| | |
 gtgaagtgggtcttctccacaccgatgcaggatacaccccagaccttccaagactatgcc
 aacatcctccagaccagggca
@@ -992,7 +992,7 @@ aacctgtctcgctcccct.........ggtaaa
 gagctggaactgaatgagacctgtgctgaggcccaggatggggagctggacgggctctgg
 acgaccatcaccatcttcatcagcctcttcctgctcagcgtgtgctacagcgcctctgtc
 accctcttcaag
->X00915|IGHG3*01|Mus musculus_BALB/c|F|M2|5701..5778|81 nt|1| | | | |81+0=81| | |
+>X00915|IGHG3*01|Mus musculus_BALB/c|F|M2|5698..5778|81 nt|1| | | | |81+0=81| | |
 gtgaagtggatcttctcctcagtggtgcaggtgaagcagacggccatccctgactacagg
 aacatgattggacaaggtgcc
 >V01526|IGHG3*02|Mus musculus|F|M1|g,100..230|132 nt|1|+1| | | |132+0=132| | |

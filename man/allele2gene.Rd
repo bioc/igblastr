@@ -58,7 +58,7 @@ J_alleles <- load_germline_db("_OGRDB.human.IGH+IGK+IGL.202410",
 names(J_alleles)
 allele2gene(names(J_alleles))
 
-C_alleles <- load_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
+C_alleles <- load_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
 names(C_alleles)
 allele2gene(names(C_alleles))
 }

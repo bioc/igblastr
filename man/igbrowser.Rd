@@ -78,7 +78,7 @@ use_germline_db("_OGRDB.human.IGH+IGK+IGL.202410")
 ## With C regions
 ## ---------------------------------------------------------------------
 
-use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
+use_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
 AIRR_df <- igblastn(query)
 igbrowser(AIRR_df)
 

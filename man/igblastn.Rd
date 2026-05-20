@@ -342,7 +342,7 @@ db_name <- install_IMGT_germline_db("202614-2", "Homo_sapiens",
 use_germline_db(db_name)
 
 ## Select C-region db to use with igblastn():
-use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
+use_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
 
 ## ---------------------------------------------------------------------
 ## Call igblastn()
@@ -429,7 +429,7 @@ db_name <- install_IMGT_germline_db("202614-2", "Homo_sapiens",
 use_germline_db(db_name)
 
 ## Select C-region db to use with igblastn():
-use_c_region_db("_IMGT.human.TRA+TRB+TRG+TRD.202509")
+use_c_region_db("_IMGT.human.TRA+TRB+TRG+TRD.202605")
 
 ## Call igblastn(). Note that the 'ig_seqtype' argument will be
 ## automatically set to "TCR" (see documentation of the 'ig_seqtype'

@@ -23,9 +23,10 @@
     version <- read_version_file(fasta_store)
     db_name <- .form_builtin_IMGT_c_region_db_name(organism, loci, version)
     db_path <- file.path(destdir, db_name)
-    ## Disambiguation needed for "IG" dbs for human, mouse, rabbit, and rat.
+    ## Disambiguation needed for "IG" dbs for human, mouse, rabbit, rat, and
+    ## rhesus_monkey.
     disambiguate <- (loci_prefix == "IG") &&
-                    (organism %in% c("human", "mouse", "rabbit", "rat"))
+        (organism %in% c("human", "mouse", "rabbit", "rat", "rhesus_monkey"))
     create_c_region_db(fasta_store, loci, db_path,
                        disambiguate.allele.names=disambiguate,
                        verbose=verbose)
