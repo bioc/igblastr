@@ -1,6 +1,6 @@
 test_that("igblastn(): basic operations", {
     use_germline_db("_OGRDB.human.IGH+IGK+IGL.202410")
-    use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
+    use_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
     query <- system.file(package="igblastr", "extdata",
                          "BCR", "heavy_sequences.fasta")
     query <- readDNAStringSet(query)
@@ -57,7 +57,7 @@ test_that("igblastn(): basic operations", {
 
 test_that("igblastn(): 'germline_db_[VDJ]_seqidlist' arguments", {
     use_germline_db("_OGRDB.human.IGH+IGK+IGL.202410")
-    use_c_region_db("_IMGT.human.IGH+IGK+IGL.202412")
+    use_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
     query <- system.file(package="igblastr", "extdata",
                          "BCR", "heavy_sequences.fasta")
     query10 <- head(readDNAStringSet(query), n=10L)

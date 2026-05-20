@@ -12,24 +12,19 @@
     warning(wmsg(msg))
 }
 
-### Starting with igblastr 1.0.12/1.1.12, create_region_db() and related
-### drop repeated alleles ("repeated" here means alleles with identical
-### names **and** identical sequences). See .drop_repeated_alleles() in
-### R/create_region_db.R for more info.
-### As a consequence, built-in C-region db _IMGT.mouse.IGH.202509 is now
-### expected to contain 55 alleles instead of 56. We use this as an
-### indication that the C-region dbs need to be reset.
+### The built-in C-region dbs were last updated on May 20, 2026 in
+### igblastr 1.2.3/1.3.3.
 .warn_if_c_region_dbs_need_reset <- function(c_region_dbs_home)
 {
     stopifnot(isSingleNonWhiteString(c_region_dbs_home),
               dir.exists(c_region_dbs_home))
-    db_name <- "_IMGT.mouse.IGH.202509"
+    db_name <- "_IMGT.human.IGH+IGK+IGL.202605"
     db_path <- file.path(c_region_dbs_home, db_name)
     ok <- dir.exists(db_path)
     if (ok) {
         db_fasta_file <- get_db_fasta_file(db_path, "C")
         ok <- file.exists(db_fasta_file) &&
-              length(fasta.seqlengths(db_fasta_file)) == 55L
+              length(fasta.seqlengths(db_fasta_file)) == 180L
     }
     if (!ok)
         .warn_about_out_of_sync_c_region_dbs()

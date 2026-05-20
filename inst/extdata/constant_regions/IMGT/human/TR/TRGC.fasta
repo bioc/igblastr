@@ -1,4 +1,4 @@
->M14996+M14997+M14998|TRGC1*01|Homo sapiens|F|EX1+EX2+EX3|M14996:41..370;M14997:25..72;M14998:174..313|519 nt|1|+1| | | |519+0=519| | |
+>M14996+M14997+M14998|TRGC1*01|Homo sapiens|F|EX1+EX2+EX3|M14996:g,41..370;M14997:25..72;M14998:174..313|519 nt|1|+1| | | |519+0=519| | |
 gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcaattgct
 gaaacaaagctccagaaggctggaacatacctttgtcttcttgagaaatttttccctgat
 gttattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
@@ -8,14 +8,47 @@ caagaaattatctttcctccaataaagacagatgtcatcacaatggatcccaaagacaat
 tgttcaaaagatgcaaatgatacactactgctgcagctcacaaacacctctgcatattac
 atgtacctcctcctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctg
 cttagaagaacggctttctgctgcaatggagagaaatca
->M14999|TRGC1*02|Homo sapiens|F|EX1|1..300|301 nt|1|+1| | | |301+0=301| | |
-gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcgattgct
-gaaacaaaactccagaaggctggaacatacctttgtcttcttgagaaatttttcccagat
-attattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
-aacaccatgaagactaacgacacatacatgaaatttagctggttaacggtgccagaagag
-tcactggacaaagaacacagatgtatcgtcagacatgagaataataaaaacggaattgat
-c
->M15002+M13231cDNA|TRGC2*01|Homo sapiens|F|EX1+EX2T+EX2+EX3|M15002:1..330;M13231:740..787+788..835+836..976|568 nt|1|+1| | | |568+0=568| | |
+>BC072396|TRGC1*03|Homo sapiens|(F)|EX1+EX2+EX3|804..1133+1134..1181+1182..1322|519 nt|1| | | | |519+0=519| | |
+gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcaattgct
+gaaacaaagctccagaaggctggaacatacctttgtcttcttgagaaatttttccctgat
+gttattaagatacattgggaagaaaagaagagcaacacgattctgggatcccaggagggg
+aacaccatgaagactaatgacacatacatgaaatttagctggttaacggtgccagaaaag
+tcactggacaaagaacacagatgtatcgtcagacatgagaataataaaaacggagttgat
+caagaaattatctttcctccaataaagacagatgtcatcacaatggatcccaaagacaat
+tgttcaaaagatgcaaatgatacactactgctgcagctcacaaacacctctgcatattac
+acgtacctcctcctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctg
+cttagaagaacggctttctgctgcaatggagagaaatca
+>AF151103|TRGC1*04|Homo sapiens|(F)|EX1+EX2+EX3|61..390+391..438+439..579|519 nt|1| | | | |519+0=519| | |
+gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcaattgct
+gaaacaaagctccagaaggctggaacatacctttgtcttcttgagaaatttttccctgat
+gttattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
+aacaccatgaagactaacgacacatacatgaaatttagctggttaacggtgccagaaaag
+tcactggacaaagaacacagatgtatcgtcagacatgagaataataaaaacggagttgat
+caagaaattatctttcctccaataaagacggatgtcatcacaatggatcccaaagacaat
+tgttcaaaagatgcaaatgatacactactgctgcagctcacaaacacctctgcatattac
+atgtacctcctcctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctg
+cttagaagaacggctttctgctgcaatggagagaaatca
+>BC062761|TRGC1*05|Homo sapiens|(F)|EX1+EX2+EX3|56..385+386..433+434..574|519 nt|1| | | | |519+0=519| | |
+gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcaattgct
+gaaacaaagctccagaaggctggaacatacctttgtcttcttgagaaatttttccctgat
+gttattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
+aacaccatgaagactaacgacacatacatgaaatttagctggttaacggtgccagaaaag
+tcactggacaaagaacacagatgtatcgtcagacatgagaataataaaaacggagttgat
+caagaaattatctttcctccaataaagacagatgtcatcacagtggatcccaaagacaat
+tgttcaaaagatgcaaatgatacactactgctgcagctcacaaacacctctgcatattac
+atgtacctcctcctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctg
+cttagaagaacggctttctgctgcaatggagagaaatca
+>IMGT000289|TRGC1*06|Homo sapiens|F|EX1+EX2+EX3|g,112129..112458+115589..115636+117577..117716|519 nt|1|+1| | | |519+0=519| | |
+gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcaattgct
+gaaacaaagctccagaaggctggaacatacctttgtcttcttgagaaatttttccctgat
+gttattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
+aacaccatgaagactaacgacacatacatgaaatttagctggttaacggtgccagaaaag
+tcactggacaaagaacacagatgtatcgtcagacatgagaataataaaaacggagttgat
+caagaaattatctttcctccaataaagacagatgtcatcacaatggatcccaaagacaat
+tgttcaaaagatgcaaatgatacactactgctgcagctcacaaacacctctgcatattac
+acgtacctcctcctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctg
+cttagaagaacggctttctgctgcaatggagagaaatca
+>M15002+M13231|TRGC2*01|Homo sapiens|F|EX1+EX2T+EX2+EX3|M15002:g,1..330;M13231:740..787+788..835+836..976|568 nt|1|+1| | | |568+0=568| | |
 gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcaattgct
 gaaacaaaactccagaaggctggaacatacctttgtcttcttgagaaatttttcccagat
 attattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
@@ -26,7 +59,7 @@ ttattcaaaagatgcaaatgatgtcatcacaatggatcccaaagacaattggtcaaaaga
 tgcaaatgatacactactgctgcagctcacaaacacctctgcatattacatgtacctcct
 cctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctgcttggaagaac
 ggctttctgctgcaatggagagaaatca
->M15001+M15004+M15005+M15007|TRGC2*02|Homo sapiens|F|EX1+EX2R+EX2+EX3|M15001:1..330;M15004:6..53;M15005:6..53;M15007:2..141|567 nt|1|+1| | | |567+0=567| | |
+>M15001+M15004+M15005+M15007|TRGC2*02|Homo sapiens|F|EX1+EX2R+EX2+EX3|M15001:g,1..330;M15004:6..53;M15005:6..53;M15007:2..141|567 nt|1|+1| | | |567+0=567| | |
 gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcgattgct
 gaaacaaaactccagaaggctggaacatacctttgtcttcttgagaaatttttcccagat
 attattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
@@ -37,7 +70,7 @@ tattcaaaggatgcaaatgatgtcatcacaatggatcccaaagacaattggtcaaaagat
 gcaaatgatacactactgctgcagctcacaaacacctctgcatattacatgtacctcctc
 ctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctgcttggaagaacg
 gctttctgctgcaatggagagaaatca
->M17324cDNA|TRGC2*03|Homo sapiens|F|EX1+EX2R+EX2+EX3|1..329+330..377+378..425+426..566|567 nt|1|+1| | | |567+0=567| | |
+>M17324|TRGC2*03|Homo sapiens|F|EX1+EX2R+EX2+EX3|g,1..329+330..377+378..425+426..566|567 nt|1|+1| | | |567+0=567| | |
 gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcgattgct
 gaaacaaaactccagaaggctggaacatacctttgtcttcttgagaaatttttcccagat
 attattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
@@ -48,7 +81,7 @@ tattcaaaggatgcaaatgatgtcatcacaatggatcccaaagacaattggtcaaaagat
 gcaattgatacactactgctgcagctcacaaacacctctgcatattacatgtacctcctc
 ctgctcctcaagagtggtgtctattttgccatcatcacctgctgtctgcttagaagaacg
 gctttctgctgcaatggagagaaatca
->AF159056|TRGC2*04|Homo sapiens|F|EX1+EX2R+EX2+EX3|124343..124672+128685..128732+131440..131487+133741..133880|567 nt|1|+1| | | |567+0=567| | |
+>AF159056|TRGC2*04|Homo sapiens|F|EX1+EX2R+EX2+EX3|g,124343..124672+128685..128732+131440..131487+133741..133880|567 nt|1|+1| | | |567+0=567| | |
 gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcaattgct
 gaaacaaaactccagaaggctggaacatacctttgtcttcttgagaaatttttcccagat
 attattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
@@ -59,15 +92,68 @@ tattcaaaggatgcaaatgatgtcatcacaatggatcccaaagacaattggtcaaaagat
 gcaattgatacactactgctgcagctcacaaacacctctgcatattacatgtacctcctc
 ctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctgcttggaagaacg
 gctttctgctgcaatggagagaaatca
->M17323cDNA+M25318|TRGC2*05|Homo sapiens|F|EX1+EX2T+EX2R+EX2+EX3|M17323:1..330;M25318:7..53;M17323:378..425+426..473+474..614|615 nt|1|+1| | | |615+0=615| | |
+>M17323+M25318+M17323|TRGC2*05|Homo sapiens|F|EX1+EX2T+EX2R+EX2+EX3|M17323:g,1..329;M25318:7..54;M17323:378..425+426..473+474..614|615 nt|1|+1| | | |615+0=615| | |
 gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcgattgct
 gaaacaaaactccagaaggctggaacatatctttgtcttcttgagaaatttttcccagat
 attattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
 aacaccatgaagactaacgacacatacatgaaatttagctggttaacggtgccagaagag
 tcactggacaaagaacacagatgtatcgtcagacatgagaataataaaaacggaattgat
-caagaaattatctttcctccaataaagacagatgtcaccacagtggatcccaaagacagt
-tattcaaaagatgcaaatgatgtcaccacagtggatcccaaatacaattattcaaaggat
+caagaaattatctttcctccaataaagacaatgtcaccacagtggatcccaaagacagtt
+attcaaaagatgcaaatggatgtcaccacagtggatcccaaatacaattattcaaaggat
 gcaaatgatgtcatcacaatggatcccaaagacaattggtcaaaagatgcaaatgataca
 ctactgctgcagctcacaaacacctctgcatattacatgtacctcctcctgctcctcaag
 agtgtggtctattttgccatcatcacctgctgtctgcttggaagaacggctttctgctgc
 aatggagagaaatca
+>Y00790|TRGC2*06|Homo sapiens|(F)|EX1+EX2R+EX2+EX3|439..768+769..816+817..864+865..1005|567 nt|1| | | | |567+0=567| | |
+gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcgattgct
+gaaacaaaactccagaaggctggaacatacctttgtcttcttgagaaatttttcccagat
+attattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
+aacaccatgaagactaacgacacatacatgaaatttagctggttaacggtgccagaagag
+tcactggacaaagaacacagatgtatcgtcagacatgagaataataaaaacggaattgat
+caagaaattatctttcctccaataaagacagatgtcaccacagtggatcccaaatacaat
+tattcaaaggatgcaaatgatgtcatcacaatggatcccaaagacaattggtcaaaagat
+gcaaatgatacactactgctgcagctcacaaacacctctgcatattacacgtacctcctc
+ctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctgcttagaagaacg
+gctttctgctgcaatggagagaaatca
+>M27331|TRGC2*07|Homo sapiens|(F)|EX1+EX2R+EX2+EX3|1..330+331..378+379..426+427..567|567 nt|1| | | | |567+0=567| | |
+gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcaattgct
+gaaacaaaactccagaaggctggaacatacctttgtcttcttgagaaatttttcccagat
+attattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
+aacaccatgaagactaacgacacatacatgaaatttagctggttaacggtgccagaagag
+tcactggacaaagaacacagatgtatcgtcagacatgagaataataaaaacggaattgat
+caagaaattatctttcctccaataaagacagatgtcaccacagtggatcccaaatacaat
+tattcaaaggatgcaaatgatgtcatcacaatggatcccaaagacaattggtcaaaagat
+gcaaatgatacactactgctgcagctcacaaacacctctgcatattacatgtacctcctc
+ctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctgcttggaagaacg
+gctttctgctgcaatggagagaaatca
+>M27332|TRGC2*08|Homo sapiens|(F)|EX1+EX2R+EX2+EX3|1..330+331..378+379..426+427..564|564 nt|1| | | | |564+0=564| | |
+gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcgattgct
+gaaacaaaactccagaaggctggaacatacctttgtcttcttgagaaatttttcccagat
+attattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
+aacaccatgaagactaacgacacatacatgaaatttagctggttaacggtgccagaagag
+tcactggacaaagaacacagatgtatcgtcagacatgagaataataaaaacggaattgat
+caagaaattatctttcctccaataaagacagatgtcaccacagtggatcccaaatacaat
+tattcaaaggatgcaaatgatgtcatcacaatggatcccaaagacaattggtcaaaagat
+gcaaatgatacactactgcagctcacaaacacctctgcatattacatgtacctcctcctg
+ctcctcaagagtgtggtctattttgccatcatcacctgctgtctgcttggaagaacggct
+ttctgctgcaatggagagaaatca
+>IMGT000289|TRGC2*09|Homo sapiens|F|EX1+EX2+EX3|g,128227..128556+138058..138105+140365..140504|519 nt|1|+1| | | |519+0=519| | |
+gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcaattgct
+gaaacaaaactccagaaggctggaacatacctttgtcttcttgagaaatttttcccagat
+attattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
+aacaccatgaagactaacgacacatacatgaaatttagctggttaacggtgccagaagag
+tcactggacaaagaacacagatgtatcgtcagacatgagaataataaaaacggaattgat
+caagaaattatctttcctccaataaagacagatgtcatcacaatggatcccaaagacaat
+tggtcaaaagatgcaaatgatacactactgctgcagctcacaaacacctctgcatattac
+acgtacctcctcctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctg
+cttagaagaacggctttctgctgcaatggagagaaatca
+>IMGT000291|TRGC2*10|Homo sapiens_HG02055|F|EX1+EX2+EX3|g,128229..128558+138062..138109+140368..140507|519 nt|1|+1| | | |519+0=519| | |
+gataaacaacttgatgcagatgtttcccccaagcccactatttttcttccttcaattgct
+gaaacaaaactccagaaggctggaacatacctttgtcttcttgagaaatttttcccagat
+attattaagatacattggcaagaaaagaagagcaacacgattctgggatcccaggagggg
+aacaccatgaagactaatgacacatacatgaaatttagctggttaacggtgccagaagag
+tcactggacaaagaacacagatgtatcgtcagacatgagaataataaaaacggaattgat
+caagaaattatctttcctccaataaagacagatgtcatcacaatggatcccaaagacaat
+tggtcaaaagatgcaaatgatacactactgctgcagctcacaaacacctctgcatattac
+atgtacctcctcctgctcctcaagagtgtggtctattttgccatcatcacctgctgtctg
+cttagaagaacggctttctgctgcaatggagagaaatca

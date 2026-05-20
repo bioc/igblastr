@@ -1,4 +1,15 @@
->M26057+M26058+M26059+M26060|TRBC2*01|Mus musculus_B10.A|F|EX1+EX2+EX3+EX4|M26057:63..437;M26058:48..65;M26059:29..135;M26060:78..95|519 nt|1|+1| | | |519+0=519| | |
+>IMGT000132|TRBC1*01|Mus musculus_C57BL/6J|F|EX0+EX1+EX2+EX3+EX4|n,658719..658790+659425..659799+660321..660338+660436..660542+660852..660869|591 nt|1|+1| | | |591+0=591| | |
+ngattgcggctttcctatgcaagccaccacagctctcttacatctcagtgtaggagtgaa
+tgtggaacatcagaggatctgagaaatgtgactccacccaaggtctccttgtttgagcca
+tcaaaagcagagattgcaaacaaacaaaaggctaccctcgtgtgcttggccaggggcttc
+ttccctgaccacgtggagctgagctggtgggtgaatggcaaggaggtccacagtggggtc
+agcacggaccctcaggcctacaaggagagcaattatagctactgcctgagcagccgcctg
+agggtctctgctaccttctggcacaatcctcgcaaccacttccgctgccaagtgcagttc
+catgggctttcagaggaggacaagtggccagagggctcacccaaacctgtcacacagaac
+atcagtgcagaggcctggggccgagcagactgtgggattacctcagcatcctatcaacaa
+ggggtcttgtctgccaccatcctctatgagatcctgctagggaaagccaccctgtatgct
+gtgcttgtcagtacactggtggtgatggctatggtcaaaagaaagaattca
+>M26057+M26058+M26059+M26060|TRBC2*01|Mus musculus_B10.A|F|EX1+EX2+EX3+EX4|M26057:n,63..437;M26058:48..65;M26059:29..135;M26060:78..95|519 nt|1|+1| | | |519+0=519| | |
 naggatctgagaaatgtgactccacccaaggtctccttgtttgagccatcaaaagcagag
 attgcaaacaaacaaaaggctaccctcgtgtgcttggccaggggcttcttccctgaccac
 gtggagctgagctggtgggtgaatggcaaggaggtccacagtggggtcagcacggaccct
@@ -8,7 +19,7 @@ gaggaggacaagtggccagagggctcacccaaacctgtcacacagaacatcagtgcagag
 gcctggggccgagcagactgtggaatcacttcagcatcctatcatcagggggttctgtct
 gcaaccatcctctatgagatcctactggggaaggccaccctatatgctgtgctggtcagt
 ggcctagtgctgatggccatggtcaagaaaaaaaattcc
->AE000665|TRBC2*03|Mus musculus_129|F|EX1+EX2+EX3+EX4|166812..167186+167692..167709+167854..167960+168243..168260|519 nt|1|+1| | | |519+0=519| | |
+>AE000665|TRBC2*03|Mus musculus_BALB/c|F|EX1+EX2+EX3+EX4|n,166812..167186+167692..167709+167854..167960+168243..168260|519 nt|1|+1| | | |519+0=519| | |
 naggatctgagaaatgtgactccacccaaggtctccttgtttgagccatcaaaagcagag
 attgcaaacaaacaaaaggctaccctcgtgtgcttggccaggggcttcttccctgaccac
 gtggagctgagctggtgggtgaatggcaaggaggtccacagtggggtcagcacggaccct

@@ -86,7 +86,7 @@ if (!has_igblast()) install_igblast()
 list_c_region_dbs()  # all cached C-region dbs
 
 ## Select C-region db to use with igblastn():
-db_name <- "_IMGT.human.IGH+IGK+IGL.202412"
+db_name <- "_IMGT.human.IGH+IGK+IGL.202605"
 use_c_region_db(db_name)
 
 ## Get current selection:
@@ -98,7 +98,7 @@ use_c_region_db()
 
 ## Load C-region sequences:
 load_c_region_db(db_name)
-load_c_region_db("_IMGT.mouse.IGH.202509")
+load_c_region_db("_IMGT.mouse.IGH+IGK+IGL.202605")
 }
 
 \keyword{utilities}

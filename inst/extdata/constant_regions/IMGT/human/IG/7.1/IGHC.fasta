@@ -297,7 +297,7 @@ ggctcttgctgtgttgcagattggcagatgccgcctccctatgtggtgctggacttgccg
 caggagaccctggaggaggagacccccggcgccaacctgtggcccaccaccatcaccttc
 ctcaccctcttcctgctgagcctgttctatagcacagcactgaccgtgaccagcgtccgg
 ggcccatctggcaagagggagggcccccagtac
->K02875|IGHD*01|Homo sapiens_Chronic lymphotic leukemia (CLL)  patient|F|CH1|g,101..402|303 nt|1|+1|-1| | |303+72=375| | |
+>K02875|IGHD*01|Homo sapiens|F|CH1|g,101..402|303 nt|1|+1|-1| | |303+72=375| | |
 ............gcacccaccaaggctccggatgtgttccccatcatatcagggtgcaga
 cacccaaaggat......aacagccctgtggtcctggcatgcttgataactgggtaccac
 cca......acgtccgtgactgtcacctggtacatggggacacagagccag.........
@@ -305,13 +305,13 @@ cca......acgtccgtgactgtcacctggtacatggggacacagagccag.........
 tactacatgacaagcagccagctctccacccccctccagcagtgg.........cgccaa
 ggcgagtacaaatgcgtggtccagcacacc.........gccagcaagagtaagaaggag
 atcttccgctggcca
->K02876|IGHD*01|Homo sapiens_Chronic lymphotic leukemia (CLL)  patient|F|H1|g,101..201|102 nt|1|+1|-1| | |102+0=102| | |
+>K02876|IGHD*01|Homo sapiens|F|H1|g,101..201|102 nt|1|+1|-1| | |102+0=102| | |
 gagtctccaaaggcacaggcctcctccgtgcccactgcacaaccccaagcagagggcagc
 ctcgccaaggcaaccacagccccagccaccacccgtaacaca
->K02877|IGHD*01|Homo sapiens_Chronic lymphotic leukemia (CLL)  patient|F|H2|g,101..171|72 nt|1|+1|-1| | |72+0=72| | |
+>K02877|IGHD*01|Homo sapiens|F|H2|g,101..171|72 nt|1|+1|-1| | |72+0=72| | |
 ggaagaggaggagaagagaagaagaaggagaaggagaaagaggaacaagaagagagagag
 acaaagacacca
->K02878|IGHD*01|Homo sapiens_Chronic lymphotic leukemia (CLL)  patient|F|CH2|g,101..423|324 nt|1|+1|-1| | |324+51=375| | |
+>K02878|IGHD*01|Homo sapiens|F|CH2|g,101..423|324 nt|1|+1|-1| | |324+51=375| | |
 ...gagtgtccgagccacacccagcctcttggcgtctacctgctaacccctgcagtgcag
 gacctgtggctc......cgggacaaagccaccttcacctgcttcgtggtgggcagtgac
 ctg......aaggatgctcacctgacctgggaggtggctgggaaggtccccacaggg...
@@ -319,7 +319,7 @@ ctg......aaggatgctcacctgacctgggaggtggctgggaaggtccccacaggg...
 tcccagagccagcacagccgtctgaccctgcccaggtccttgtgg......aacgcgggg
 acctccgtcacctgcacactgaaccatcccagc......ctcccaccccagaggttgatg
 gcgctgagagaaccc
->K02879|IGHD*01|Homo sapiens_Chronic lymphotic leukemia (CLL)  patient|F|CH3|g,101..423|324 nt|1|+1|-1| | |324+51=375| | |
+>K02879|IGHD*01|Homo sapiens|F|CH3|g,101..423|324 nt|1|+1|-1| | |324+51=375| | |
 ...............gctgcgcaggcacccgtcaagctttctctgaacctgctggcctcg
 tctgaccctccc......gaggcggcctcgtggctcctgtgtgaggtgtctggcttctcg
 ccc......cccaacatcctcctgatgtggctggaggaccagcgtgaggtgaacacttct
@@ -327,13 +327,13 @@ ccc......cccaacatcctcctgatgtggctggaggaccagcgtgaggtgaacacttct
 acgttctgggcctggagtgtgctgcgtgtcccagccccgcccagc......cctcagcca
 gccacctacacgtgtgtggtcagccacgaggactcccggactctgctcaacgccagccgg
 agcctagaagtcagc
->K02880|IGHD*01|Homo sapiens_Chronic lymphotic leukemia (CLL)  patient|F|CHS|t,25..50|27 nt|1|+1| | | |27+0=27| | |
+>K02880|IGHD*01|Homo sapiens|F|CHS|t,25..50|27 nt|1|+1| | | |27+0=27| | |
 tatgtaacagaccatggccccatgaaa
->K02881|IGHD*01|Homo sapiens_Chronic lymphotic leukemia (CLL)  patient|F|M1|t,25..182|159 nt|1|+1| | | |159+0=159| | |
+>K02881|IGHD*01|Homo sapiens|F|M1|t,25..182|159 nt|1|+1| | | |159+0=159| | |
 tacctggccatgacccccctgatccctcagagcaaggatgagaacagcgatgactacacg
 acctttgatgatgtgggcagcctgtggaccaccctgtccacgtttgtggccctcttcatc
 ctcaccctcctctacagcggcattgtcactttcatcaag
->K02882|IGHD*01|Homo sapiens_Chronic lymphotic leukemia (CLL)  patient|F|M2|44..49|6 nt|1| | | | |6+0=6| | |
+>K02882|IGHD*01|Homo sapiens|F|M2|44..49|6 nt|1| | | | |6+0=6| | |
 gtgaag
 >X57331|IGHD*02|Homo sapiens|F|CH1|g,10747..11048|303 nt|1|+1|-1| | |303+72=375| | |
 ............gcacccaccaaggctccggatgtgttccccatcatatcagggtgcaga
@@ -722,6 +722,45 @@ atg
 >IMGT000199|IGHE*08|Homo sapiens|F|M2|939859..939939|81 nt|1| | | | |81+0=81| | |
 gtgcagcggttcctctcagccacgcggcaggggaggccccagacctccctcgactacacc
 aacgtcctccagccccacgcc
+>IMGT000307|IGHE*09|Homo sapiens|F|CH1|n,1197638..1197945|309 nt|1|+1|-1| | |309+60=369| | |
+............ncctccacacagagcccatccgtcttccccttgacccgctgctgcaaa
+aacattccctccaat...gccacctccgtgactctgggctgcctggccacgggctacttc
+ccg......gagccggtgatggtgacctgggacacaggctccctcaacggg.........
+...acaactatgaccttaccacccaccaccctcacgctctct...............ggt
+cactatgccaccatcagcttgctgaccgtctcgggtgcgtgg............gccaag
+cagatgttcacctgccgtgtggcacacactccatcgtccacagactgggtcgacaacaaa
+accttcagc
+>IMGT000307|IGHE*09|Homo sapiens|F|CH2|g,1198154..1198473|321 nt|1|+1|-1| | |321+57=378| | |
+...gtctgctccagggacttcaccccgcccaccgtgaagatcttacagtcgtcctgcgac
+ggcggcgggcacttc...cccccgaccatccagctcctgtgcctcgtctctgggtacacc
+cca......gggactatcaacatcacctggctggaggacgggcaggtcatggac......
+...gtggacttgtccaccgcctctaccacgcaggagggt..................gag
+ctggcctccacacaaagcgagctcaccctcagccagaagcactgg......ctgtcagac
+cgcacctacacctgccaggtcacctatcaa............ggtcacacctttgaggac
+agcaccaagaagtgtgca
+>IMGT000307|IGHE*09|Homo sapiens|F|CH3|g,1198561..1198883|324 nt|1|+1|-1| | |324+54=378| | |
+.........gattccaacccgagaggggtgagcgcctacctaagccggcccagcccgttc
+gacctgttcatc......cgcaagtcgcccacgatcacctgtctggtggtggacctggca
+cccagcaaggggaccgtgaacctgacctggtcccgggccagtgggaagcctgtg......
+...aaccactccaccagaaaggaggagaagcagcgcaat..................ggc
+acgttaaccgtcacgtccaccctgccggtgggcacccgagactgg......atcgagggg
+gagacctaccagtgcagggtgacccacccccac......ctgcccagggccctcatgcgg
+tccacgaccaagaccagc
+>IMGT000307|IGHE*09|Homo sapiens|F|CH4-CHS|g,1198968..1199296|330 nt|1|+1| | | |330+63=393| | |
+............ggcccgcgtgctgccccggaagtctatgcgtttgcgacgccggagtgg
+ccggggagc.........cgggacaagcgcaccctcgcctgcctgatccagaacttcatg
+cct......gaggacatctcggtgcagtggctgcacaacgaggtgcagctcccggacgcc
+...cggcacagcacgacgcagccccgcaagaccaagggc..................tcc
+ggcttcttcgtcttcagccgcctggaggtgaccagggccgaatgg......gagcagaaa
+gatgagttcatctgccgtgcagtccatgaggcagcgagcccctcacagaccgtccagcga
+gcggtgtctgtaaatccc.........ggtaaa
+>IMGT000307|IGHE*09|Homo sapiens|F|M1|g,1201382..1201503|123 nt|1|+1| | | |123+0=123| | |
+gagctggacgtgtgcgtggaggaggccgagggcgaggcgccgtggacgtggaccggcctc
+tgcatcttcgccgcactcttcctgctcagcgtgagctacagcgccgccctcacgctcctc
+atg
+>IMGT000307|IGHE*09|Homo sapiens|F|M2|1201588..1201668|81 nt|1| | | | |81+0=81| | |
+gtgcagcggttcctctcagccacgcggcaggggaggccccagacctccctcgactacacc
+aacgtcctccagccccacgcc
 >J00228|IGHG1*01|Homo sapiens|F|CH1|g,210..502|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcctccaccaagggcccatcggtcttccccctggcaccctcctccaag
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
@@ -899,17 +938,17 @@ ccc......agcgacatcgccgtggagtgggagagcaatgggcagccggagaac......
 tccttcttcctctatagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacgtcttctcatgctccgtgatgcatgaggct...ctccacaaccactacacgcagaag
 agcctctccctgtccccg.........ggtaaa
->MG920245|IGHG1*07|Homo sapiens|F|CH1|g,2..294|294 nt|1|+1|-1| | |294+72=366| | |
-............gcctccaccaagggcccatcggtcttccccctggcaccctcctccaag
+>IMGT000307|IGHG1*07|Homo sapiens|F|CH1|n,1057211..1057503|294 nt|1|+1|-1| | |294+72=366| | |
+............ncctccaccaagggcccatcggtcttccccctggcaccctcctccaag
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ...ggcgtgcacaccttcccggctgtcctacagtcctca..................gga
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacatctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 aaagtt
->MG920245|IGHG1*07|Homo sapiens|F|H|g,687..730|45 nt|1|+1|-1| | |45+0=45| | |
+>IMGT000307|IGHG1*07|Homo sapiens|F|H|g,1057896..1057939|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacaaaactcacacatgcccaccgtgccca
->MG920245|IGHG1*07|Homo sapiens|F|CH2|g,850..1178|330 nt|1|+1|-1| | |330+48=378| | |
+>IMGT000307|IGHG1*07|Homo sapiens|F|CH2|g,1058059..1058387|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctggggggaccgtcagtcttcctcttccccccaaaacccaag
 gacaccctcatgatc...tcccggacccctgaggtcacatgcgtggtggtggacgtgagc
 cacgaagaccctgaggtcaagttcaactggtacgtggacggcgtggaggtgcat......
@@ -917,7 +956,7 @@ cacgaagaccctgaggtcaagttcaactggtacgtggacggcgtggaggtgcat......
 acgtaccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaatggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaagccaaa
->MG920245|IGHG1*07|Homo sapiens|F|CH3-CHS|g,1277..1596|321 nt|1|+1| | | |321+72=393| | |
+>IMGT000307|IGHG1*07|Homo sapiens|F|CH3-CHS|g,1058486..1058805|321 nt|1|+1| | | |321+72=393| | |
 ............gggcagccccgagaaccacaggtgtacaccctgcccccatcccgggat
 gagctgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctat
 ccc......agcgacatcgccgtggagtgggagagcaatgggcagccggagaac......
@@ -925,6 +964,13 @@ ccc......agcgacatcgccgtggagtgggagagcaatgggcagccggagaac......
 tccttcttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacgtcttctcatgctccgtgatgcatgagggt...ctgcacaaccactacacgcagaag
 agcctctccctgtctccg.........ggtaaa
+>IMGT000307|IGHG1*07|Homo sapiens|F|M1|g,1060089..1060219|132 nt|1|+1| | | |132+0=132| | |
+gagctgcaactggaggagagctgtgcggaggcgcaggacggggagctggacgggctgtgg
+acgaccatcaccatcttcatcacactcttcctgttaagcgtgtgctacagtgccaccgtc
+accttcttcaag
+>IMGT000307|IGHG1*07|Homo sapiens|F|M2|1062437..1062517|81 nt|1| | | | |81+0=81| | |
+gtgaagtggatcttctcctcggtggtggacctgaagcagaccatcatccccgactacagg
+aacatgatcggacagggggcc
 >MG920246|IGHG1*08|Homo sapiens|F|CH1|g,2..294|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcctccaccaagggcccatcggtcttccccctggcaccctcctccaag
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
@@ -1766,7 +1812,7 @@ gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
 ............................................................
 ............................................................
 .................................
->X16110|IGHG3*03|Homo sapiens_LAT|F|CH1|g,216..508|294 nt|1|+1|-1| | |294+72=366| | |
+>X16110|IGHG3*03|Homo sapiens|F|CH1|g,216..508|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -1774,13 +1820,13 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->X16110|IGHG3*03|Homo sapiens_LAT|F|H1|g,902..951|51 nt|1|+1|-1| | |51+0=51| | |
+>X16110|IGHG3*03|Homo sapiens|F|H1|g,902..951|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->X16110|IGHG3*03|Homo sapiens_LAT|F|H3|g,1096..1139|45 nt|1|+1|-1| | |45+0=45| | |
+>X16110|IGHG3*03|Homo sapiens|F|H3|g,1096..1139|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccatgcccacggtgccca
->X16110|IGHG3*03|Homo sapiens_LAT|F|H4|g,1284..1327|45 nt|1|+1|-1| | |45+0=45| | |
+>X16110|IGHG3*03|Homo sapiens|F|H4|g,1284..1327|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->X16110|IGHG3*03|Homo sapiens_LAT|F|CH2|g,1447..1775|330 nt|1|+1|-1| | |330+48=378| | |
+>X16110|IGHG3*03|Homo sapiens|F|CH2|g,1447..1775|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -1788,7 +1834,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->X16110|IGHG3*03|Homo sapiens_LAT|F|CH3-CHS|g,1874..2193|321 nt|1|+1| | | |321+72=393| | |
+>X16110|IGHG3*03|Homo sapiens|F|CH3-CHS|g,1874..2193|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
@@ -1796,14 +1842,14 @@ ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
 tccttcttcctctacagcaggctaaccgtggacaagagcaggtgg......caggagggg
 aatgtcttctcatgctccgtgatgcatgaggct...ctgcacaaccgcttcacgcagaag
 agcctctccctgtctccg.........ggtaaa
->M60195|IGHG3*03|Homo sapiens_LAT|F|M1|g,285..415|132 nt|1|+1| | | |132+0=132| | |
+>M60195|IGHG3*03|Homo sapiens|F|M1|g,285..415|132 nt|1|+1| | | |132+0=132| | |
 gagctgcaactggaggagagctgtgcggaggcgcaggacggggagctggacgggctgtgg
 acgaccatcaccatcttgatcacactcttcctgttaagcgtgtgctacagtgccaccgtc
 accttcttcaag
->M60196|IGHG3*03|Homo sapiens_LAT|F|M2|385..465|81 nt|1| | | | |81+0=81| | |
+>M60196|IGHG3*03|Homo sapiens|F|M2|385..465|81 nt|1| | | | |81+0=81| | |
 gtgaagtggatcttctcctcggtggtggacctgaagcagaccatcatccccgactatagg
 aacatgattgggcagggggcc
->X99549|IGHG3*04|Homo sapiens_Mandenka individual (eastern Senegal)|F|CH1|g,7..299|294 nt|1|+1|-1| | |294+72=366| | |
+>X99549|IGHG3*04|Homo sapiens|F|CH1|g,7..299|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcctccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -1811,11 +1857,11 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->X99549|IGHG3*04|Homo sapiens_Mandenka individual (eastern Senegal)|F|H1|g,693..742|51 nt|1|+1|-1| | |51+0=51| | |
+>X99549|IGHG3*04|Homo sapiens|F|H1|g,693..742|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->X99549|IGHG3*04|Homo sapiens_Mandenka individual (eastern Senegal)|F|H4|g,887..930|45 nt|1|+1|-1| | |45+0=45| | |
+>X99549|IGHG3*04|Homo sapiens|F|H4|g,887..930|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->X99549|IGHG3*04|Homo sapiens_Mandenka individual (eastern Senegal)|F|CH2|g,1050..1378|330 nt|1|+1|-1| | |330+48=378| | |
+>X99549|IGHG3*04|Homo sapiens|F|CH2|g,1050..1378|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -1823,7 +1869,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->X99549|IGHG3*04|Homo sapiens_Mandenka individual (eastern Senegal)|F|CH3-CHS|g,1477..1796|321 nt|1|+1| | | |321+72=393| | |
+>X99549|IGHG3*04|Homo sapiens|F|CH3-CHS|g,1477..1796|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
@@ -1831,7 +1877,7 @@ ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
 tccttcttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacatcttctcatgctccgtgatgcatgaggct...ctgcacaaccgcttcacgcagaag
 agcctctccctgtctccg.........ggtaaa
->AJ390236|IGHG3*05|Homo sapiens_Mandenka individual (Mand-205)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390236|IGHG3*05|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -1839,15 +1885,15 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390236|IGHG3*05|Homo sapiens_Mandenka individual (Mand-205)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390236|IGHG3*05|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390236|IGHG3*05|Homo sapiens_Mandenka individual (Mand-205)|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390236|IGHG3*05|Homo sapiens|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390236|IGHG3*05|Homo sapiens_Mandenka individual (Mand-205)|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390236|IGHG3*05|Homo sapiens|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccatgcccacggtgccca
->AJ390236|IGHG3*05|Homo sapiens_Mandenka individual (Mand-205)|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390236|IGHG3*05|Homo sapiens|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->AJ390236|IGHG3*05|Homo sapiens_Mandenka individual (Mand-205)|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390236|IGHG3*05|Homo sapiens|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -1855,7 +1901,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->AJ390236|IGHG3*05|Homo sapiens_Mandenka individual (Mand-205)|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
+>AJ390236|IGHG3*05|Homo sapiens|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
@@ -1863,7 +1909,7 @@ ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
 tccttcttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacatcttctcatgctccgtgatgcatgaggct...ctgcacaaccgcttcacgcagaag
 agcctctccctgtctccg.........ggtaaa
->AJ390237|IGHG3*06|Homo sapiens_Mandenka individual (Mand-108)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390237|IGHG3*06|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 cca......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -1871,15 +1917,15 @@ cca......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390237|IGHG3*06|Homo sapiens_Mandenka individual (Mand-108)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390237|IGHG3*06|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390237|IGHG3*06|Homo sapiens_Mandenka individual (Mand-108)|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390237|IGHG3*06|Homo sapiens|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390237|IGHG3*06|Homo sapiens_Mandenka individual (Mand-108)|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390237|IGHG3*06|Homo sapiens|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccatgcccacggtgccca
->AJ390237|IGHG3*06|Homo sapiens_Mandenka individual (Mand-108)|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390237|IGHG3*06|Homo sapiens|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->AJ390237|IGHG3*06|Homo sapiens_Mandenka individual (Mand-108)|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390237|IGHG3*06|Homo sapiens|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -1887,7 +1933,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->AJ390237|IGHG3*06|Homo sapiens_Mandenka individual (Mand-108)|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
+>AJ390237|IGHG3*06|Homo sapiens|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
 ............gggcagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
@@ -1895,7 +1941,7 @@ ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
 tccttcttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacatcttctcatgctccgtgatgcatgaggct...ctgcacaaccgcttcacgcagaag
 agcctctccctgtctccg.........ggtaaa
->AJ390238|IGHG3*07|Homo sapiens_Mandenka individual (Mand-548)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390238|IGHG3*07|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -1903,15 +1949,15 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390238|IGHG3*07|Homo sapiens_Mandenka individual (Mand-548)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390238|IGHG3*07|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390238|IGHG3*07|Homo sapiens_Mandenka individual (Mand-548)|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390238|IGHG3*07|Homo sapiens|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390238|IGHG3*07|Homo sapiens_Mandenka individual (Mand-548)|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390238|IGHG3*07|Homo sapiens|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccatgcccacggtgccca
->AJ390238|IGHG3*07|Homo sapiens_Mandenka individual (Mand-548)|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390238|IGHG3*07|Homo sapiens|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->AJ390238|IGHG3*07|Homo sapiens_Mandenka individual (Mand-548)|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390238|IGHG3*07|Homo sapiens|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -1919,7 +1965,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->AJ390238|IGHG3*07|Homo sapiens_Mandenka individual (Mand-548)|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
+>AJ390238|IGHG3*07|Homo sapiens|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
 ............gggcagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
@@ -1927,7 +1973,7 @@ ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
 tccttcttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacatcttctcatgctccgtgatgcatgaggct...ctgcacaaccgcttcacgcagaag
 agcctctccctgtctccg.........ggtaaa
->AJ390241|IGHG3*08|Homo sapiens_Mandenka individual (Mand-114)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390241|IGHG3*08|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -1935,15 +1981,15 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390241|IGHG3*08|Homo sapiens_Mandenka individual (Mand-114)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390241|IGHG3*08|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390241|IGHG3*08|Homo sapiens_Mandenka individual (Mand-114)|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390241|IGHG3*08|Homo sapiens|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390241|IGHG3*08|Homo sapiens_Mandenka individual (Mand-114)|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390241|IGHG3*08|Homo sapiens|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccatgcccacggtgccca
->AJ390241|IGHG3*08|Homo sapiens_Mandenka individual (Mand-114)|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390241|IGHG3*08|Homo sapiens|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->AJ390241|IGHG3*08|Homo sapiens_Mandenka individual (Mand-114)|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390241|IGHG3*08|Homo sapiens|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -1951,7 +1997,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->AJ390241|IGHG3*08|Homo sapiens_Mandenka individual (Mand-114)|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
+>AJ390241|IGHG3*08|Homo sapiens|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccgtggagtgggagagcaatgggcagccggagaac......
@@ -1959,7 +2005,7 @@ ccc......agcgacatcgccgtggagtgggagagcaatgggcagccggagaac......
 tccttcttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacatcttctcatgctccgtgatgcatgaggct...ctgcacaaccgcttcacgcagaag
 agcctctccctgtctccg.........ggtaaa
->AJ390242|IGHG3*09|Homo sapiens_Mandenka individual (Mand-333)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390242|IGHG3*09|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -1967,15 +2013,15 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390242|IGHG3*09|Homo sapiens_Mandenka individual (Mand-333)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390242|IGHG3*09|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390242|IGHG3*09|Homo sapiens_Mandenka individual (Mand-333)|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390242|IGHG3*09|Homo sapiens|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390242|IGHG3*09|Homo sapiens_Mandenka individual (Mand-333)|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390242|IGHG3*09|Homo sapiens|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccatgcccacggtgccca
->AJ390242|IGHG3*09|Homo sapiens_Mandenka individual (Mand-333)|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390242|IGHG3*09|Homo sapiens|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->AJ390242|IGHG3*09|Homo sapiens_Mandenka individual (Mand-333)|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390242|IGHG3*09|Homo sapiens|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -1983,7 +2029,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcgtgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->AJ390242|IGHG3*09|Homo sapiens_Mandenka individual (Mand-333)|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
+>AJ390242|IGHG3*09|Homo sapiens|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
@@ -2069,7 +2115,7 @@ accttcttcaag
 >BK063800|IGHG3*11|Homo sapiens|F|M2|1124031..1124111|81 nt|1| | | | |81+0=81| | |
 gtgaagtggatcttctcctcggtggtggacctgaagcagaccatcatccccgactatagg
 aacatgattgggcagggggcc
->AJ390252|IGHG3*12|Homo sapiens_French individual (Fr-BL)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390252|IGHG3*12|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -2077,13 +2123,13 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390252|IGHG3*12|Homo sapiens_French individual (Fr-BL)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390252|IGHG3*12|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390252|IGHG3*12|Homo sapiens_French individual (Fr-BL)|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390252|IGHG3*12|Homo sapiens|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390252|IGHG3*12|Homo sapiens_French individual (Fr-BL)|F|H4|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390252|IGHG3*12|Homo sapiens|F|H4|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccatgcccacggtgccca
->AJ390252|IGHG3*12|Homo sapiens_French individual (Fr-BL)|F|CH2|g,1257..1585|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390252|IGHG3*12|Homo sapiens|F|CH2|g,1257..1585|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -2091,7 +2137,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->AJ390252|IGHG3*12|Homo sapiens_French individual (Fr-BL)|F|CH3-CHS|g,1684..2003|321 nt|1|+1| | | |321+72=393| | |
+>AJ390252|IGHG3*12|Homo sapiens|F|CH3-CHS|g,1684..2003|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
@@ -2099,7 +2145,7 @@ ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
 tccttcttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacatcttctcatgctccgtgatgcatgaggct...ctgcacaaccgcttcacgcagaag
 agcctctccctgtctccg.........ggtaaa
->AJ390244|IGHG3*13|Homo sapiens_Mandenka individual (Mand-428)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390244|IGHG3*13|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -2107,15 +2153,15 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390244|IGHG3*13|Homo sapiens_Mandenka individual (Mand-428)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390244|IGHG3*13|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390244|IGHG3*13|Homo sapiens_Mandenka individual (Mand-428)|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390244|IGHG3*13|Homo sapiens|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390244|IGHG3*13|Homo sapiens_Mandenka individual (Mand-428)|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390244|IGHG3*13|Homo sapiens|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccatgcccacggtgccca
->AJ390244|IGHG3*13|Homo sapiens_Mandenka individual (Mand-428)|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390244|IGHG3*13|Homo sapiens|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->AJ390244|IGHG3*13|Homo sapiens_Mandenka individual (Mand-428)|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390244|IGHG3*13|Homo sapiens|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -2123,7 +2169,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->AJ390244|IGHG3*13|Homo sapiens_Mandenka individual (Mand-428)|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
+>AJ390244|IGHG3*13|Homo sapiens|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccgtggagtgggagagcagcgggcagccggagaac......
@@ -2170,7 +2216,7 @@ accttcttcaag
 >BK068299|IGHG3*14|Homo sapiens|F|M2|1127891..1127971|81 nt|1| | | | |81+0=81| | |
 gtgaagtggatcttctcctcggtggtggacctgaagcagaccatcatccccgactatagg
 aacatgattgggcagggggcc
->AJ390260|IGHG3*15|Homo sapiens_Sel'Kup individual (Kp-150)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390260|IGHG3*15|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -2178,15 +2224,15 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390260|IGHG3*15|Homo sapiens_Sel'Kup individual (Kp-150)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390260|IGHG3*15|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390260|IGHG3*15|Homo sapiens_Sel'Kup individual (Kp-150)|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390260|IGHG3*15|Homo sapiens|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390260|IGHG3*15|Homo sapiens_Sel'Kup individual (Kp-150)|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390260|IGHG3*15|Homo sapiens|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccatgcccacggtgccca
->AJ390260|IGHG3*15|Homo sapiens_Sel'Kup individual (Kp-150)|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390260|IGHG3*15|Homo sapiens|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->AJ390260|IGHG3*15|Homo sapiens_Sel'Kup individual (Kp-150)|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390260|IGHG3*15|Homo sapiens|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -2194,7 +2240,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->AJ390260|IGHG3*15|Homo sapiens_Sel'Kup individual (Kp-150)|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
+>AJ390260|IGHG3*15|Homo sapiens|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccgtggagtgggagagcaatgggcagccggagaac......
@@ -2202,7 +2248,7 @@ ccc......agcgacatcgccgtggagtgggagagcaatgggcagccggagaac......
 tccttcttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacatcttctcatgctccgtgatgcatgaggct...ctgcacaaccgctacacgcagaag
 agcctctccctgtctccg.........ggtaaa
->AJ390262|IGHG3*16|Homo sapiens_Lebanese individual (LibF2)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390262|IGHG3*16|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -2210,15 +2256,15 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390262|IGHG3*16|Homo sapiens_Lebanese individual (LibF2)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390262|IGHG3*16|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390262|IGHG3*16|Homo sapiens_Lebanese individual (LibF2)|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390262|IGHG3*16|Homo sapiens|F|H2|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390262|IGHG3*16|Homo sapiens_Lebanese individual (LibF2)|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390262|IGHG3*16|Homo sapiens|F|H3|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccatgcccacggtgccca
->AJ390262|IGHG3*16|Homo sapiens_Lebanese individual (LibF2)|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390262|IGHG3*16|Homo sapiens|F|H4|g,1282..1325|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->AJ390262|IGHG3*16|Homo sapiens_Lebanese individual (LibF2)|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390262|IGHG3*16|Homo sapiens|F|CH2|g,1445..1773|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -2226,7 +2272,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaagccaaa
->AJ390262|IGHG3*16|Homo sapiens_Lebanese individual (LibF2)|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
+>AJ390262|IGHG3*16|Homo sapiens|F|CH3-CHS|g,1872..2191|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccgtggagtgggagagcaatgggcagccggagaac......
@@ -2234,7 +2280,7 @@ ccc......agcgacatcgccgtggagtgggagagcaatgggcagccggagaac......
 tccttcttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacatcttctcatgctccgtgatgcatgaggct...ctgcacaaccgctacacgcagaag
 agcctctccctgtctccg.........ggtaaa
->AJ390272|IGHG3*17|Homo sapiens_Mandenka individual (Mand-231)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390272|IGHG3*17|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -2242,13 +2288,13 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcaacttc.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390272|IGHG3*17|Homo sapiens_Mandenka individual (Mand-231)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390272|IGHG3*17|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390272|IGHG3*17|Homo sapiens_Mandenka individual (Mand-231)|F|H3|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390272|IGHG3*17|Homo sapiens|F|H3|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390272|IGHG3*17|Homo sapiens_Mandenka individual (Mand-231)|F|H4|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390272|IGHG3*17|Homo sapiens|F|H4|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->AJ390272|IGHG3*17|Homo sapiens_Mandenka individual (Mand-231)|F|CH2|g,1257..1585|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390272|IGHG3*17|Homo sapiens|F|CH2|g,1257..1585|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -2256,7 +2302,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->AJ390272|IGHG3*17|Homo sapiens_Mandenka individual (Mand-231)|F|CH3-CHS|g,1684..2003|321 nt|1|+1| | | |321+72=393| | |
+>AJ390272|IGHG3*17|Homo sapiens|F|CH3-CHS|g,1684..2003|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccatggagtgggagagcagcgggcagccggagaac......
@@ -2264,7 +2310,7 @@ ccc......agcgacatcgccatggagtgggagagcagcgggcagccggagaac......
 tccttcttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacatcttctcatgctccgtgatgcatgaggct...ctgcacaaccactacacgcagaag
 agcctctccctgtctccg.........ggtaaa
->AJ390276|IGHG3*18|Homo sapiens_Lebanese individual (Lib-C5)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390276|IGHG3*18|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -2272,13 +2318,13 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390276|IGHG3*18|Homo sapiens_Lebanese individual (Lib-C5)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390276|IGHG3*18|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390276|IGHG3*18|Homo sapiens_Lebanese individual (Lib-C5)|F|H3|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390276|IGHG3*18|Homo sapiens|F|H3|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390276|IGHG3*18|Homo sapiens_Lebanese individual (Lib-C5)|F|H4|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390276|IGHG3*18|Homo sapiens|F|H4|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->AJ390276|IGHG3*18|Homo sapiens_Lebanese individual (Lib-C5)|F|CH2|g,1257..1585|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390276|IGHG3*18|Homo sapiens|F|CH2|g,1257..1585|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -2286,7 +2332,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->AJ390276|IGHG3*18|Homo sapiens_Lebanese individual (Lib-C5)|F|CH3-CHS|g,1684..2003|321 nt|1|+1| | | |321+72=393| | |
+>AJ390276|IGHG3*18|Homo sapiens|F|CH3-CHS|g,1684..2003|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccatggagtgggagagcagcgggcagccggagaac......
@@ -2294,7 +2340,7 @@ ccc......agcgacatcgccatggagtgggagagcagcgggcagccggagaac......
 tccttcttcctctacagcaagctcaccgtggacaagagcaggtgg......cagcagggg
 aacatcttctcatgctccgtgatgcatgaggct...ctgcacaaccactacacgcagaag
 agcctctccctgtctccg.........ggtaaa
->AJ390279|IGHG3*19|Homo sapiens_Sel'Kup individual (Kp-60)|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
+>AJ390279|IGHG3*19|Homo sapiens|F|CH1|g,26..318|294 nt|1|+1|-1| | |294+72=366| | |
 ............gcttccaccaagggcccatcggtcttccccctggcgccctgctccagg
 agcacctct.........gggggcacagcggccctgggctgcctggtcaaggactacttc
 ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
@@ -2302,13 +2348,13 @@ ccc......gaaccggtgacggtgtcgtggaactcaggcgccctgaccagc.........
 ctctactccctcagcagcgtggtgaccgtgccctccagcagcttg.........ggcacc
 cagacctacacctgcaacgtgaatcacaagccc......agcaacaccaaggtggacaag
 agagtt
->AJ390279|IGHG3*19|Homo sapiens_Sel'Kup individual (Kp-60)|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
+>AJ390279|IGHG3*19|Homo sapiens|F|H1|g,712..761|51 nt|1|+1|-1| | |51+0=51| | |
 gagctcaaaaccccacttggtgacacaactcacacatgcccacggtgccca
->AJ390279|IGHG3*19|Homo sapiens_Sel'Kup individual (Kp-60)|F|H3|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390279|IGHG3*19|Homo sapiens|F|H3|g,906..949|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccacggtgccca
->AJ390279|IGHG3*19|Homo sapiens_Sel'Kup individual (Kp-60)|F|H4|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
+>AJ390279|IGHG3*19|Homo sapiens|F|H4|g,1094..1137|45 nt|1|+1|-1| | |45+0=45| | |
 gagcccaaatcttgtgacacacctcccccgtgcccaaggtgccca
->AJ390279|IGHG3*19|Homo sapiens_Sel'Kup individual (Kp-60)|F|CH2|g,1257..1585|330 nt|1|+1|-1| | |330+48=378| | |
+>AJ390279|IGHG3*19|Homo sapiens|F|CH2|g,1257..1585|330 nt|1|+1|-1| | |330+48=378| | |
 ......gcacctgaactcctgggaggaccgtcagtcttcctcttccccccaaaacccaag
 gatacccttatgatt...tcccggacccctgaggtcacgtgcgtggtggtggacgtgagc
 cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
@@ -2316,7 +2362,7 @@ cacgaagaccccgaggtccagttcaagtggtacgtggacggcgtggaggtgcat......
 acgttccgtgtggtcagcgtcctcaccgtcctgcaccaggactgg......ctgaacggc
 aaggagtacaagtgcaaggtctccaacaaagcc......ctcccagcccccatcgagaaa
 accatctccaaaaccaaa
->AJ390279|IGHG3*19|Homo sapiens_Sel'Kup individual (Kp-60)|F|CH3-CHS|g,1684..2003|321 nt|1|+1| | | |321+72=393| | |
+>AJ390279|IGHG3*19|Homo sapiens|F|CH3-CHS|g,1684..2003|321 nt|1|+1| | | |321+72=393| | |
 ............ggacagccccgagaaccacaggtgtacaccctgcccccatcccgggag
 gagatgacc.........aagaaccaggtcagcctgacctgcctggtcaaaggcttctac
 ccc......agcgacatcgccatggagtgggagagcagcgggcagccggagaac......

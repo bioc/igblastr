@@ -1,4 +1,4 @@
->M22148+M22149+M22150|TRDC*01|Homo sapiens|F|EX1+EX2+EX3|M22148:128..406;M22149:22..87;M22150:22..141|466 nt|1|+1| | | |466+0=466| | |
+>M22148+M22149+M22150|TRDC*01|Homo sapiens|F|EX1+EX2+EX3|M22148:n,128..406;M22149:22..87;M22150:22..141|462 nt|1|+1|-4| | |462+0=462| | |
 ngaagtcagcctcataccaaaccatccgtttttgtcatgaaaaatggaacaaatgtcgct
 tgtctggtgaaggaattctaccccaaggatataagaataaatctcgtgtcatccaagaag
 ataacagagtttgatcctgctattgtcatctctcccagtgggaagtacaatgctgtcaag
@@ -6,4 +6,4 @@ cttggtaaatatgaagattcaaattcagtgacatgttcagttcaacacgacaataaaact
 gtgcactccactgactttgaagtgaagacagattctacagatcacgtaaaaccaaaggaa
 actgaaaacacaaagcaaccttcaaagagctgccataaacccaaagccatagttcatacc
 gagaaggtgaacatgatgtccctcacagtgcttgggctacgaatgctgtttgcaaagact
-gttgccgtcaattttctcttgactgccaagttatttttcttgtaag
+gttgccgtcaattttctcttgactgccaagttatttttcttg

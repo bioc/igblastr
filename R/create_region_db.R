@@ -216,10 +216,12 @@
         ## approach instead of a readBStringSet/writeBStringSet approach is
         ## because we want to copy the FASTA records in their original form
         ## (the readBStringSet/writeBStringSet approach would reformat the
-        ## multi-line sequences into fixed-width lines), so we could use Unix
-        ## command diff to compare the input and output files and see what was
-        ## dropped if we wanted to. The drawback of this is that the
-        ## readLines/writeLines approach is quite inefficient.
+        ## multi-line sequences into fixed-width lines). This would allow us
+        ## to use Unix command diff to compare the input and output files, if
+        ## we wanted to, and get a clean/minimalist output that shows what was
+        ## dropped. The drawback of the readLines/writeLines approach is that
+        ## it's quite inefficient on big files (although the FASTA files we
+        ## use to create a region db are typically small).
         lines <- readLines(infasta)
         record_starts <- grep("^>", lines)
         stopifnot(identical(lines[record_starts], paste0(">", headers)))

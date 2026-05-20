@@ -38,6 +38,30 @@ acagtggcccctacagaatgttca
 ....................cctgagcctgacgcctgagcagtgg......aagtcccac
 agaagctacagctgccaggtcacgcatgaa............gggagcaccgtggagaag
 acagtggcccctacagaatgttca
+>IMGT000312|IGLC2*04|Homo sapiens|F|C-REGION|g,891731..892047|318 nt|1|+1| || |318+66=384| | |
+.........ggtcagcccaaggctgccccctcggtcactctgttcccgccctcctctgag
+gagcttcaa.........gccaacaaggccacactggtgtgtctcataagtgacttctac
+ccg......ggagccgtgacagtggcctggaaggcagatagcagccccgtcaaggcg...
+...ggagtggagaccaccacaccctccaaacaaagcaac..................aac
+aagtacgcggccagcagctacctgagcctgacgcctgagcagtgg......aagtcccac
+agaagctacagctgccaggtcacgcatgaa............gggagcaccgtggagaag
+acagtggcccctacagaatgttca
+>IMGT000293|IGLC2A*01|Homo sapiens|F|C-REGION|g,902894..903210|318 nt|1|+1| || |318+66=384| | |
+.........ggtcagcccaaggctgccccctcggtcactctgttcccgccctcctctgag
+gagcttcaa.........gccaacaaggccacactggtgtgtctcataagtgacttctac
+ccg......ggagccgtgacagtggcctggaaggcagatagcagccccgtcaaggcg...
+...ggagtggagaccaccacaccctccaaacaaagcaac..................aac
+aagtacgcggccagcagctatctgagcctgacgcctgagcagtgg......aagtcccac
+agaagctacagctgccaggtcacgcatgaa............gggagcaccgtggagaag
+acagtggcccctacagaatgttca
+>IMGT000312|IGLC2A*02|Homo sapiens|F|C-REGION|g,897091..897407|318 nt|1|+1| || |318+66=384| | |
+.........ggtcagcccaaggctgccccctcggtcactctgttcccgccctcctctgag
+gagcttcaa.........gccaacaaggccacactggtgtgtctcataagtgacttctac
+ccg......ggagccgtgacagtggcctggaaggcagatagcagccccgtcaaggcg...
+...ggagtggagaccaccacaccctccaaacaaagcaac..................aac
+aagtacgcggccagcagctacctgagcctgacgcctgagcagtgg......aagtcccac
+agaagctacagctgccaggtcacgcatgaa............gggagcaccgtggagaag
+acagtggcccctacagaatgttca
 >J00254|IGLC3*01|Homo sapiens|F|C-REGION|1..312|312 nt|1| | | | |312+72=384|partial in 5'| |
 ...............cccaaggctgccccctcggtcactctgttcccaccctcctctgag
 gagcttcaa.........gccaacaaggccacactggtgtgtctcataagtgacttctac
@@ -69,6 +93,14 @@ ccg......ggagccgtgacagtggcctggaaggcagatagcagccccgtcaaggcg...
 ...ggagtggagaccaccacaccctccaaacaaagcaac..................aac
 aagtacgcggccagcagctacctgagcctgacgcctgagcagtgg......aagtcccac
 agaagctacagctgccaggtcacgcatgaa............gggagcaccgtggagaag
+acagtggcccctacagaatgttca
+>BK075720|IGLC3*05|Homo sapiens|F|C-REGION|g,902558..902874|318 nt|1|+1| | | |318+66=384| | |
+.........ggtcagcccaaggctgccccctcggtcactctgttcccgccctcctctgag
+gagcttcaa.........gccaacaaggccacactggtgtgtctcataagtgacttctac
+ccg......ggagccgtgacagtggcctggaaggcagatagcagccccgtcaaggcg...
+...ggagtggagaccaccacaccctccaaacaaagcaac..................aac
+aagtacgcggccagcagctacctgagcctgacgcctgagcagtgg......aagtcccac
+aaaagctacagctgccaggtcacgcatgaa............gggagcaccgtggagaag
 acagtggcccctacagaatgttca
 >J03011|IGLC6*01|Homo sapiens|F|C-REGION|g,2..318|318 nt|1|+1| | | |318+66=384| | |
 .........ggtcagcccaaggctgccccatcggtcactctgttcccgccctcctctgag

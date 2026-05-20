@@ -9,7 +9,7 @@ test_that("list_c_region_dbs()", {
     expect_true(is.data.frame(printed))
     expect_identical(dim(printed), dim(df))
 
-    db_name <- "_IMGT.rabbit.IGH.202412"
+    db_name <- "_IMGT.rabbit.IGH+IGK+IGL.202605"
     use_c_region_db(db_name)
     printed <- print(df)
     expect_true(is.data.frame(printed))

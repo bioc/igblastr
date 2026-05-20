@@ -266,7 +266,7 @@ test_that("prepare_igblastn_cmdline_args()", {
     expected_argnames[[organism_idx]] <- "custom_internal_data"
     expect_identical(names(cmd_args), expected_argnames)
 
-    db_name <- "_IMGT.rabbit.IGH.202412"
+    db_name <- "_IMGT.rabbit.IGH+IGK+IGL.202605"
     use_c_region_db(db_name)
     cmd_args <- prepare_igblastn_cmdline_args("path/to/query",
                                               auxiliary_data=NULL)
