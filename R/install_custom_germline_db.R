@@ -3,22 +3,23 @@
 ### -------------------------------------------------------------------------
 
 
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### install_germline_db()
-###
-
 .LIST_GERMLINE_DB_TIP <- c(
     "Use list_germline_dbs() to list all the germline dbs ",
     "currently installed in the cache (see '?list_germline_dbs')."
 )
 
-stop_on_existing_cached_germline_db <- function(db_name)
+stop_on_existing_germline_db <- function(db_name)
 {
     msg1 <- c("Germline db ", db_name, " is already installed ",
               "in igblastr's persistent cache.")
     msg3 <- c("Use 'overwrite=TRUE' to reinstall.")
     stop(wmsg(msg1), "\n  ", wmsg(.LIST_GERMLINE_DB_TIP), "\n  ", wmsg(msg3))
 }
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### install_germline_db()
+###
 
 .install_germline_db_succeeded <- function(db_name)
 {
@@ -86,7 +87,7 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
         if (if.exists == "no-op")
             return()
         if (if.exists == "error")
-            stop_on_existing_cached_germline_db(db_name)
+            stop_on_existing_germline_db(db_name)
     }
 
     if (verbose) {

@@ -1,6 +1,7 @@
 \name{combine_germline_dbs}
 
 \alias{combine_germline_dbs}
+\alias{combine_c_region_dbs}
 
 \title{Combine two existing germline dbs}
 
@@ -10,16 +11,22 @@
   organisms, into a new one.
   The new germline database gets added to \pkg{igblastr}'s persistent
   cache and can then be used later with \code{\link{igblastn}()}.
+
+  Similarly, the \code{combine_c_region_dbs()} function is provided to
+  combine two existing C-region databases.
 }
 
 \usage{
 combine_germline_dbs(db_name, db_name1, db_name2, suffix1, suffix2,
                      overwrite=FALSE, verbose=FALSE)
+
+combine_c_region_dbs(db_name, db_name1, db_name2, suffix1, suffix2,
+                     overwrite=FALSE, verbose=FALSE)
 }
 
 \arguments{
   \item{db_name}{
-    A single string specifying the name of the germline db to install.
+    A single string specifying the name of the combined database.
     The string \emph{must} start with "comb" and cannot contain whitespace
     characters.
   }
@@ -30,9 +37,9 @@ combine_germline_dbs(db_name, db_name1, db_name2, suffix1, suffix2,
     COMING SOON...
   }
   \item{overwrite}{
-    Set to \code{TRUE} if a germline db with the specified name is
-    already installed in \pkg{igblastr}'s persistent cache, in which
-    case the existing db will be replaced with the new one.
+    Set to \code{TRUE} if a database with the specified name is already
+    installed in \pkg{igblastr}'s persistent cache, in which
+    case the existing database will be replaced with the new one.
   }
   \item{verbose}{
     Set to \code{TRUE} to have the function display some details about
@@ -41,8 +48,8 @@ combine_germline_dbs(db_name, db_name1, db_name2, suffix1, suffix2,
 }
 
 \value{
-  \code{combine_germline_dbs()} returns the name to the newly
-  installed germline db as an invisible string.
+  \code{combine_germline_dbs()} and \code{combine_c_region_dbs()} both
+  return the name to the newly installed database as an invisible string.
 }
 
 \seealso{
@@ -59,8 +66,10 @@ combine_germline_dbs(db_name, db_name1, db_name2, suffix1, suffix2,
     \item \code{\link{use_germline_db}} to select the cached germline db
           to use with \code{igblastn()}.
 
-    \item \code{\link{load_germline_db}} to load the nucleotide sequences
-          of the gene regions stored in a cached germline db.
+    \item \code{\link{list_c_region_dbs}} to list the cached C-region dbs.
+
+    \item \code{\link{use_c_region_db}} to select the cached C-region db
+          to use with \code{igblastn()}.
 
     \item IgBLAST is described at
           \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.

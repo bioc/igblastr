@@ -1,11 +1,9 @@
 High-priority TODO list
 =======================
 
-o More testing of combine_germline_dbs(). Expand the examples in its man
-  page. Add cross links in other man pages.
-
-o In addition to combine_germline_dbs(), we need combine_c_region_dbs()
-  to combine C-region dbs.
+o More testing of combine_germline_dbs() and combine_c_region_dbs(). Improve
+  unit tests. Improve man page and expand examples. Add cross links in other
+  man pages. Add section in the vignette.
 
 o Maybe replace 'without.intdata' and 'without.auxdata' arguments with
   'with.intdata' and 'with.auxdata'. With default of TRUE for 'with.intdata'

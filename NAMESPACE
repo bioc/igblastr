@@ -184,6 +184,7 @@ export(
 
     ## combine_germline_dbs.R:
     combine_germline_dbs,
+    combine_c_region_dbs,
 
     ## augment_germline_db.R:
     augment_germline_db_V,

@@ -26,7 +26,7 @@ install_IMGT_germline_db(release, organism="Homo sapiens", tcr.db=FALSE,
                          without.intdata=FALSE, without.auxdata=FALSE,
                          overwrite=FALSE, verbose=FALSE, ...)
 
-## Can only be used to "subset" a built-in C-region databse (see
+## Can only be used to "subset" a built-in C-region database (see
 ## advanced example in Examples section below):
 install_IMGT_c_region_db(organism, loci,
                          disambiguate.allele.names=FALSE,
@@ -207,7 +207,7 @@ if (IMGT_is_up()) {
   list_c_region_dbs()
 
   ## Note that install_IMGT_c_region_db() can only be used to "subset"
-  ## a built-in C-region databse.
+  ## a built-in C-region database.
 }
 }
 

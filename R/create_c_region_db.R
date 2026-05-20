@@ -6,6 +6,20 @@
 ###
 
 
+.LIST_C_REGION_DB_TIP <- c(
+    "Use list_c_region_dbs() to list all the C-region dbs ",
+    "currently installed in the cache (see '?list_c_region_dbs')."
+)
+
+stop_on_existing_c_region_db <- function(db_name)
+{
+    msg1 <- c("C-region db ", db_name, " is already installed ",
+              "in igblastr's persistent cache.")
+    msg3 <- c("Use 'overwrite=TRUE' to reinstall.")
+    stop(wmsg(msg1), "\n  ", wmsg(.LIST_C_REGION_DB_TIP), "\n  ", wmsg(msg3))
+}
+
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### list_loci_in_c_region_fasta_dir()
 ###
@@ -59,16 +73,6 @@ list_loci_in_c_region_fasta_dir <- function(fasta_dir, loci_prefix)
 ### create_c_region_db()
 ###
 
-.stop_on_existing_c_region_db <- function(destdir)
-{
-    db_name <- basename(destdir)
-    msg1 <- c("C-region db ", db_name, " is already installed.")
-    msg2 <- c("Use list_c_region_dbs() to list the C-region databases ",
-              "already installed on your machine (see '?list_c_region_dbs').")
-    msg3 <- c("Use 'overwrite=TRUE' to reinstall.")
-    stop(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", wmsg(msg3))
-}
-
 ### Creates a C-region db (constant regions) from a collection of FASTA
 ### files (typically obtained from IMGT) for a given organism.
 ### Note that 'destdir' will typically be the path to a subdir of the
@@ -93,7 +97,7 @@ create_c_region_db <- function(fasta_dir, loci, destdir,
     }
 
     if (dir.exists(destdir) && !overwrite)
-        .stop_on_existing_c_region_db(destdir)
+        stop_on_existing_c_region_db(basename(destdir))
 
     fasta_files <- .collect_C_fasta_files(fasta_dir, loci)
 
