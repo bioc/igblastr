@@ -57,6 +57,7 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
                                 gapped=FALSE, with.intdata=FALSE,
                                 excluded_J_alleles=character(0),
                                 with.auxdata=FALSE, imgt.fasta=FALSE,
+                                known_auxdata=NULL,
                                 disambiguate.allele.names=FALSE,
                                 if.exists=c("error", "overwrite", "no-op"),
                                 verbose=FALSE, cheer.if.success=FALSE)
@@ -99,6 +100,7 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
                        gapped=gapped, with.intdata=with.intdata,
                        excluded_J_alleles=excluded_J_alleles,
                        with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
+                       known_auxdata=known_auxdata,
                        disambiguate.allele.names=disambiguate.allele.names,
                        overwrite=TRUE, verbose=verbose)
 
@@ -124,6 +126,7 @@ install_custom_germline_db <- function(db_name, fasta_dir,
                                        tcr.db=FALSE, loci="auto",
                                        gapped=FALSE, with.intdata=FALSE,
                                        with.auxdata=FALSE, imgt.fasta=FALSE,
+                                       known_auxdata=NULL,
                                        disambiguate.allele.names=FALSE,
                                        overwrite=FALSE, verbose=FALSE)
 {
@@ -146,6 +149,7 @@ install_custom_germline_db <- function(db_name, fasta_dir,
     install_germline_db(germline_dbs_home, db_name, fasta_dir, loci,
                         gapped=gapped, with.intdata=with.intdata,
                         with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
+                        known_auxdata=known_auxdata,
                         disambiguate.allele.names=disambiguate.allele.names,
                         if.exists=if.exists, verbose=verbose)
 }

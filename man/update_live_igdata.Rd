@@ -1,6 +1,7 @@
 \name{update_live_igdata}
 
 \alias{update_live_igdata}
+\alias{live_igdata}
 \alias{igdata_info}
 \alias{time_since_live_igdata_last_checked}
 \alias{reset_live_igdata}
@@ -74,8 +75,9 @@ reset_live_igdata(subdirs=c("all", "internal_data", "optional_file"))
 }
 
 \value{
-  \code{update_live_igdata()} and \code{reset_live_igdata()} don't return
-  anything (invisible \code{NULL}).
+  \code{update_live_igdata()} returns an invisible \code{TRUE} or
+  \code{FALSE} that indicates whether updates were found (and applied)
+  or not.
 
   \code{igdata_info()} returns a named list containing information about
   the state of the "live" and "original" IgBLAST data.
@@ -83,6 +85,8 @@ reset_live_igdata(subdirs=c("all", "internal_data", "optional_file"))
   \code{time_since_live_igdata_last_checked()} returns the time passed
   since the last run of \code{update_live_igdata()} in the specified
   units (days by default).
+
+  \code{update_live_igdata()} doesn't return anything (invisible \code{NULL}).
 }
 
 \seealso{
@@ -116,7 +120,10 @@ igblast_info()
 ## ---------------------------------------------------------------------
 
 igdata_info()
-update_live_igdata(check.only=TRUE)
+
+ok <- update_live_igdata(check.only=TRUE)
+ok  # TRUE if updates were found, FALSE if not
+
 igdata_info()
 
 ## ---------------------------------------------------------------------

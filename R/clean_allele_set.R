@@ -300,7 +300,8 @@ check_locus <- function(locus, what)
     setNames(as.integer(codon_starts), names(codon_starts))
 }
 
-.annotate_J_alleles <- function(allele_set, codon_starts=NULL)
+.annotate_J_alleles <- function(allele_set, codon_starts=NULL,
+                                            known_auxdata=NULL)
 {
     stopifnot(is(allele_set, "DNAStringSet"))
     allele_names <- names(allele_set)
@@ -320,6 +321,9 @@ check_locus <- function(locus, what)
     stopifnot(identical(auxdata[ , "allele_name"], allele_names))
     expected_chain_type <- make_chain_type("J", locus)
     stopifnot(identical(auxdata$chain_type, expected_chain_type))
+
+    if (!is.null(known_auxdata))
+        auxdata <- complete_auxdata(auxdata, known_auxdata)
 
     mcols(allele_set) <- cbind(allele_set_mcols, auxdata)
     allele_set
@@ -381,9 +385,9 @@ clean_allele_set <- function(allele_set,
 {
     stopifnot(is(allele_set, "XStringSet") || is.character(allele_set))
     headers <- names(allele_set)  # typically the FASTA headers
-    stopifnot(!is.null(headers))
-    stopifnot(isTRUEorFALSE(disambiguate.allele.names))
-    stopifnot(isTRUEorFALSE(verbose))
+    stopifnot(!is.null(headers),
+              isTRUEorFALSE(disambiguate.allele.names),
+              isTRUEorFALSE(verbose))
 
     ## (A) Clean possibly messy FASTA headers to keep only allele names.
     names(allele_set) <- clean_imgt_fasta_headers(headers)
@@ -413,11 +417,11 @@ clean_V_allele_set <- function(allele_set, gapped=FALSE, with.intdata=FALSE,
 {
     stopifnot(is(allele_set, "DNAStringSet"))
     headers <- names(allele_set)  # typically the FASTA headers
-    stopifnot(!is.null(headers))
-    stopifnot(isTRUEorFALSE(gapped))
+    stopifnot(!is.null(headers),
+              isTRUEorFALSE(gapped),
+              isTRUEorFALSE(disambiguate.allele.names),
+              isTRUEorFALSE(verbose))
     checkarg_with.intdata(with.intdata, gapped)
-    stopifnot(isTRUEorFALSE(disambiguate.allele.names))
-    stopifnot(isTRUEorFALSE(verbose))
 
     ## (A) Clean possibly messy FASTA headers to keep only allele names.
     names(allele_set) <- clean_imgt_fasta_headers(headers)
@@ -450,16 +454,17 @@ clean_V_allele_set <- function(allele_set, gapped=FALSE, with.intdata=FALSE,
 ### are quiet.
 clean_J_allele_set <- function(allele_set,
                                with.auxdata=FALSE, imgt.fasta=FALSE,
+                               known_auxdata=NULL,
                                disambiguate.allele.names=FALSE,
                                summary.only=FALSE, verbose=FALSE)
 {
     stopifnot(is(allele_set, "DNAStringSet"))
     headers <- names(allele_set)  # typically the FASTA headers
-    stopifnot(!is.null(headers))
-    stopifnot(isTRUEorFALSE(with.auxdata))
-    stopifnot(isTRUEorFALSE(imgt.fasta))
-    stopifnot(isTRUEorFALSE(disambiguate.allele.names))
-    stopifnot(isTRUEorFALSE(verbose))
+    stopifnot(!is.null(headers),
+              isTRUEorFALSE(with.auxdata),
+              isTRUEorFALSE(imgt.fasta),
+              isTRUEorFALSE(disambiguate.allele.names),
+              isTRUEorFALSE(verbose))
 
     ## (A) Clean possibly messy FASTA headers to keep only allele names.
     names(allele_set) <- clean_imgt_fasta_headers(headers)
@@ -473,7 +478,8 @@ clean_J_allele_set <- function(allele_set,
         }
         ## (Bj) Annotate the J alleles.
         allele_set <- .annotate_J_alleles(allele_set,
-                                          codon_starts=codon_starts)
+                                          codon_starts=codon_starts,
+                                          known_auxdata=known_auxdata)
         .stop_if_repeated_J_alleles_have_discordant_annotations(allele_set)
     }
 

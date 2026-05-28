@@ -53,6 +53,26 @@
     sprintf("IMGT-%s.%s.%s", release, organism, paste(loci, collapse="+"))
 }
 
+### Loads IgBLAST auxdata for the organism associated with the germline db.
+.load_known_auxdata <- function(db_name)
+{
+    organism_shortname <- infer_organism_shortname_from_db_name(db_name)
+    if (is.na(organism_shortname))
+        return(NULL)
+    auxdata <- load_auxdata(organism_shortname)
+    ## We know that the human auxdata shipped with IgBLAST is incorrect
+    ## for IGHJ6*02 and IGHJ6*03 -- and so is discordant with what
+    ## install_germline_db() will compute -- so we correct these rows.
+    ## Note that if the user updated their "live" IgBLAST data with
+    ## update_live_igdata(), then these rows should already be correct
+    ## in 'auxdata'.
+    if (organism_shortname == "human") {
+        fixme <- auxdata[ , "allele_name"] %in% c("IGHJ6*02", "IGHJ6*03")
+        auxdata[fixme, "extra_bps"] <- 1L  # replace 0L with 1L
+    }
+    auxdata
+}
+
 ### Why does IMGT human J allele IGLJ2A*01 have a codon start set to 1?
 ### This is unexpected because:
 ### - there's no FGXG motif in this coding frame (the allele sequence
@@ -115,11 +135,13 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     ## Create and install germline db.
     install_dir <- get_germline_dbs_home(TRUE)  # guaranteed to exist
     with.auxdata <- !(without.auxdata || loci_prefix == "TR")
+    known_auxdata <- if (with.auxdata) .load_known_auxdata(db_name) else NULL
     if.exists <- if (overwrite) "overwrite" else "error"
     install_germline_db(install_dir, db_name, fasta_store, loci,
                         gapped=TRUE, with.intdata=!without.intdata,
                         excluded_J_alleles=excluded_J_alleles,
                         with.auxdata=with.auxdata, imgt.fasta=TRUE,
+                        known_auxdata=known_auxdata,
                         if.exists=if.exists, verbose=verbose,
                         cheer.if.success=TRUE)
 }

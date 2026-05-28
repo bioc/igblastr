@@ -187,9 +187,10 @@ update_live_igdata <- function(check.only=FALSE)
     ## .download_latest_igblast_data("internal_data") will break.
     ## See WARNING/FIXME for .download_latest_igblast_data() above.
     #.download_latest_igblast_data("internal_data", quiet=TRUE)
-    .download_latest_igblast_data("optional_file", check.only=check.only,
-                                  quiet=TRUE)
-    invisible(NULL)
+    updates <- .download_latest_igblast_data("optional_file",
+                                             check.only=check.only,
+                                             quiet=TRUE)
+    invisible(any(lengths(updates) != 0L))
 }
 
 
