@@ -144,6 +144,7 @@ list_loci_in_germline_fasta_dir <-
                                    gapped=FALSE, with.intdata=FALSE,
                                    excluded_J_alleles=character(0),
                                    with.auxdata=FALSE, imgt.fasta=FALSE,
+                                   known_auxdata=NULL,
                                    disambiguate.allele.names=FALSE,
                                    verbose=FALSE)
 {
@@ -160,6 +161,7 @@ list_loci_in_germline_fasta_dir <-
     create_J_region_db(J_fasta_files, destdir,
                        excluded_alleles=excluded_J_alleles,
                        with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
+                       known_auxdata=known_auxdata,
                        disambiguate.allele.names=disambiguate.allele.names,
                        verbose=verbose)
 }
@@ -178,6 +180,7 @@ create_germline_db <- function(destdir, fasta_dir, loci,
                                gapped=FALSE, with.intdata=FALSE,
                                excluded_J_alleles=character(0),
                                with.auxdata=FALSE, imgt.fasta=FALSE,
+                               known_auxdata=NULL,
                                disambiguate.allele.names=FALSE,
                                overwrite=FALSE, verbose=FALSE)
 {
@@ -206,6 +209,7 @@ create_germline_db <- function(destdir, fasta_dir, loci,
                            gapped=gapped, with.intdata=with.intdata,
                            excluded_J_alleles=excluded_J_alleles,
                            with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
+                           known_auxdata=known_auxdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            verbose=verbose)
     rename_file(tmp_destdir, destdir, replace=TRUE)

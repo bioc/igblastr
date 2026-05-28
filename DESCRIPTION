@@ -7,9 +7,10 @@ Description: The igblastr package provides functions to conveniently install
 	various organisms. It provides functions to create additional
 	IgBLAST-compatible germline databases using reference sequences
 	retrieved from IMGT/V-QUEST or local FASTA files supplied by the user.
-	When possible, the FWR/CDR boundaries on the V alleles (a.k.a "internal
-	data") are computed and stored in the germline database, so can be used
-	as a replacement for the internal data shipped with IgBLAST.
+	When possible, annotations for the V and J alleles in a new germline
+	database are automatically computed and added to the database, so they
+	can be used as replacements for the internal and auxiliary data shipped
+	with IgBLAST.
 	IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>.
 	IgBLAST web interface: <https://www.ncbi.nlm.nih.gov/igblast/>.
 	OGRDB: <https://ogrdb.airr-community.org/>.
@@ -51,9 +52,9 @@ Collate:
 	db-utils.R
 	ndm_data-IO.R
 	compute_V_gene_delineations.R
-	clean_allele_set.R
 	auxdata-IO.R
 	compute_auxdata.R
+	clean_allele_set.R
 	V_alleles-inspect.R
 	J_alleles-inspect.R
 	LATIN_NAMES.R

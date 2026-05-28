@@ -13,9 +13,10 @@
 }
 
 \usage{
-install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
-                           loci="auto", gapped=FALSE, with.intdata=FALSE,
+install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
+                           gapped=FALSE, with.intdata=FALSE,
                            with.auxdata=FALSE, imgt.fasta=FALSE,
+                           known_auxdata=NULL,
                            disambiguate.allele.names=FALSE,
                            overwrite=FALSE, verbose=FALSE)
 }
@@ -109,6 +110,9 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE,
     COMING SOON...
   }
   \item{imgt.fasta}{
+    COMING SOON...
+  }
+  \item{known_auxdata}{
     COMING SOON...
   }
   \item{disambiguate.allele.names}{

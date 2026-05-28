@@ -91,3 +91,76 @@ test_that("compute_auxdata()", {
     expect_identical(current, target)
 })
 
+test_that("complete_auxdata()", {
+    complete_auxdata <- igblastr:::complete_auxdata
+
+    ## --- trivial case ---
+
+    auxdata1 <- data.frame(
+        allele_name=c("A", "B", "C", "D", "E", "F"),
+        coding_frame_start=c(1L, 2L, 1L, 0L, 1L, 1L),
+        chain_type=c("JH", "JH", "JK", "JL", "JH", "JK"),
+        cdr3_end=c(11:13, NA, 15:16),
+        extra_bps=1L
+    )
+    expect_identical(complete_auxdata(auxdata1, auxdata1), auxdata1)
+
+    ## --- discordant data ---
+
+    auxdata2 <- data.frame(
+        allele_name=c("E", "F", "G", "H", "B", "D", "I", "A"),
+        coding_frame_start=c(NA, 1L, 1L, 2L, 1L, 0L, 0L, 1L),
+        chain_type=c("JH", "JK", "JH", "JH", "JH", "JL", "JL", "JH"),
+        cdr3_end=c(11L, 11:13, 12L, 15:16, 11L),
+        extra_bps=1L
+    )
+
+    expect_error(complete_auxdata(auxdata1, auxdata2), regexp="discordant")
+    disc_rowpairs <- complete_auxdata(auxdata1, auxdata2,
+                                      disc.rowpairs.only=TRUE)
+    expected <- data.frame(rowidx1=c(2L, 5L, 6L), rowidx2=c(5L, 1L, 2L))
+    expect_identical(disc_rowpairs, expected)
+
+    nopairs <- data.frame(rowidx1=integer(0), rowidx2=integer(0))
+    disc_rowpairs <- complete_auxdata(auxdata1,
+                                      auxdata2[-disc_rowpairs[[2L]], ],
+                                      disc.rowpairs.only=TRUE)
+    expect_identical(disc_rowpairs, nopairs)
+    disc_rowpairs <- complete_auxdata(auxdata1[-disc_rowpairs[[1L]], ],
+                                      auxdata2,
+                                      disc.rowpairs.only=TRUE)
+    expect_identical(disc_rowpairs, nopairs)
+
+    ## Swapping the two data.frames returns the same pairs but they are
+    ## possibly in a different order.
+    expect_error(complete_auxdata(auxdata2, auxdata1), regexp="discordant")
+    disc_rowpairs <- complete_auxdata(auxdata2, auxdata1,
+                                      disc.rowpairs.only=TRUE)
+    expected <- data.frame(rowidx1=c(1L, 2L, 5L), rowidx2=c(5L, 6L, 2L))
+    expect_identical(disc_rowpairs, expected)
+
+    ## --- concordant data ---
+
+    auxdata1[c(2L, 5L), "coding_frame_start"] <- NA
+    auxdata2[1:2, "cdr3_end"] <- NA
+
+    disc_rowpairs <- complete_auxdata(auxdata1, auxdata2,
+                                      disc.rowpairs.only=TRUE)
+    expect_identical(disc_rowpairs, nopairs)
+    expected <- auxdata1
+    expected[2L, "coding_frame_start"] <- 1L
+    expected[4L, "cdr3_end"] <- 15L
+    auxdata1a <- complete_auxdata(auxdata1, auxdata2)
+    expect_identical(auxdata1a, expected)
+    expect_identical(complete_auxdata(auxdata1a, auxdata2), auxdata1a)
+
+    disc_rowpairs <- complete_auxdata(auxdata2, auxdata1,
+                                      disc.rowpairs.only=TRUE)
+    expect_identical(disc_rowpairs, nopairs)
+    expected <- auxdata2
+    expected[c(1L, 2L), "cdr3_end"] <- c(15L, 16L)
+    auxdata2a <- complete_auxdata(auxdata2, auxdata1)
+    expect_identical(auxdata2a, expected)
+    expect_identical(complete_auxdata(auxdata2a, auxdata1), auxdata2a)
+})
+

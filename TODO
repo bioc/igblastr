@@ -1,6 +1,8 @@
 High-priority TODO list
 =======================
 
+o Ollivier's corrections to vignette.
+
 o More testing of combine_germline_dbs() and combine_c_region_dbs(). Improve
   unit tests. Improve man page and expand examples. Add cross links in other
   man pages. Add section in the vignette.
@@ -11,9 +13,9 @@ o Maybe replace 'without.intdata' and 'without.auxdata' arguments with
   if it's complete").
 
 o Fill missing documentation:
-  - document 'with.auxdata' and 'imgt.fasta' arguments of
-    install_custom_germline_db();
-  - document 'without.auxdata' argument of install_IMGT_germline_db();
+  - install_custom_germline_db(): document args 'with.auxdata', 'imgt.fasta',
+    and 'known_auxdata';
+  - install_IMGT_germline_db(): document arg 'without.auxdata';
   - add example to man/auxdata-IO.Rd;
   - document the *_ndm_data functions (ndm_data-IO.Rd file).
 
@@ -21,10 +23,6 @@ o Question for the IMGT folks: IMGT human J allele IGLJ2A*01 has a codon
   start set to 1, which is surprising for the various reasons explained
   in the comment preceding .EXCLUDED_IMGT_HUMAN_J_ALLELES in file
   R/install_IMGT_germline_db.R
-
-o Question for William Lees: It's not clear whether the j_cdr3_end reported
-  reported in OGRDB json files is 0-based or 1-based or something else.
-  See IMPORTANT NOTE in R/download_OGRDB_germline_json.R for the details.
 
 o Why are some of the V alleles provided by IMGT "truncated" at the 3' end
   before they reach the end of their FWR3?
@@ -53,7 +51,7 @@ o Investigate BIG inconsistency between local IgBLAST and web IgBLAST:
   email to the IgBLAST folks at NCBI (blast-help@ncbi.nlm.nih.gov or
   nlm-support@nlm.nih.gov).
 
-o Mismatch/indel summarization:
+o NEW FEATURE: Mismatch/indel summarization:
 
   The goal is to summarize information about the mismatches and indels
   between the query sequences (BCR or TCR nucleotide sequences) and the
@@ -77,6 +75,16 @@ o Mismatch/indel summarization:
   Questions:
 
   - Should we also add columns for the V, D, J, C regions?
+
+o NEW FEATURE: Add functionality to calculate the following features for
+  a set of BCR sequences:
+    1. CDRH3 length (heavy and light)
+    2. net charge
+    3. isoelectric point
+    4. hydrophobicity
+    5. polyreactivity
+  See email thread from April 14, 2026 for the details (thread was started by
+  Ollivier and includes Mike, Jason, and myself).
 
 
 Lower-priority TODO list

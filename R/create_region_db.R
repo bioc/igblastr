@@ -472,6 +472,7 @@ create_V_region_db <- function(fasta_files, destdir,
 create_J_region_db <- function(fasta_files, destdir,
                                excluded_alleles=character(0),
                                with.auxdata=FALSE, imgt.fasta=FALSE,
+                               known_auxdata=NULL,
                                disambiguate.allele.names=FALSE,
                                overwrite=FALSE, verbose=FALSE)
 {
@@ -494,6 +495,7 @@ create_J_region_db <- function(fasta_files, destdir,
     cleaned_allele_set <-
         clean_J_allele_set(allele_set,
                            with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
+                           known_auxdata=known_auxdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            verbose=verbose)
 
@@ -501,6 +503,7 @@ create_J_region_db <- function(fasta_files, destdir,
     DORsummary <-
         clean_J_allele_set(allele_set,
                            with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
+                           known_auxdata=known_auxdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            summary.only=TRUE)
     .write_region_db(cleaned_allele_set, destdir, "J",
