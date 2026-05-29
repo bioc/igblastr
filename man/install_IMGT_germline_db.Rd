@@ -208,6 +208,28 @@ if (IMGT_is_up()) {
 
   ## Note that install_IMGT_c_region_db() can only be used to "subset"
   ## a built-in C-region database.
+
+  ## -------------------------------------------------------------------
+  ## WARNING about disagreements between the computed "internal data"
+  ## that install_IMGT_germline_db() includes in the germline db and
+  ## the "internal data" shipped with IgBLAST
+  ## -------------------------------------------------------------------
+
+  ## 1. The IG "internal data" for rat and rhesus monkey that we infer
+  ##    from the IG gapped sequences provided by IMGT has disagreements
+  ##    with the "internal data" shipped with IgBLAST for these organisms!
+  suppressMessages(install_IMGT_germline_db("202614-2", "Rattus norvegicus",
+                                            overwrite=TRUE))
+  suppressMessages(install_IMGT_germline_db("202614-2", "Macaca mulatta",
+                                            overwrite=TRUE))
+
+  ## 2. The TR "internal data" for human and mouse that we infer
+  ##    from the TR gapped sequences provided by IMGT has disagreements
+  ##    with the "internal data" shipped with IgBLAST for these organisms!
+  suppressMessages(install_IMGT_germline_db("202614-2", "Homo sapiens",
+                                            tcr.db=TRUE, overwrite=TRUE))
+  suppressMessages(install_IMGT_germline_db("202614-2", "Mus musculus",
+                                            tcr.db=TRUE, overwrite=TRUE))
 }
 }
 

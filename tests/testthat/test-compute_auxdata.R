@@ -91,7 +91,8 @@ test_that("compute_auxdata()", {
     expect_identical(current, target)
 })
 
-test_that("complete_auxdata()", {
+test_that("find_discordant_auxdata()/complete_auxdata()", {
+    find_discordant_auxdata <- igblastr:::find_discordant_auxdata
     complete_auxdata <- igblastr:::complete_auxdata
 
     ## --- trivial case ---
@@ -116,26 +117,22 @@ test_that("complete_auxdata()", {
     )
 
     expect_error(complete_auxdata(auxdata1, auxdata2), regexp="discordant")
-    disc_rowpairs <- complete_auxdata(auxdata1, auxdata2,
-                                      disc.rowpairs.only=TRUE)
+    disc_rowpairs <- find_discordant_auxdata(auxdata1, auxdata2)
     expected <- data.frame(rowidx1=c(2L, 5L, 6L), rowidx2=c(5L, 1L, 2L))
     expect_identical(disc_rowpairs, expected)
 
     nopairs <- data.frame(rowidx1=integer(0), rowidx2=integer(0))
-    disc_rowpairs <- complete_auxdata(auxdata1,
-                                      auxdata2[-disc_rowpairs[[2L]], ],
-                                      disc.rowpairs.only=TRUE)
+    disc_rowpairs <- find_discordant_auxdata(auxdata1,
+                                             auxdata2[-disc_rowpairs[[2L]], ])
     expect_identical(disc_rowpairs, nopairs)
-    disc_rowpairs <- complete_auxdata(auxdata1[-disc_rowpairs[[1L]], ],
-                                      auxdata2,
-                                      disc.rowpairs.only=TRUE)
+    disc_rowpairs <- find_discordant_auxdata(auxdata1[-disc_rowpairs[[1L]], ],
+                                             auxdata2)
     expect_identical(disc_rowpairs, nopairs)
 
     ## Swapping the two data.frames returns the same pairs but they are
     ## possibly in a different order.
     expect_error(complete_auxdata(auxdata2, auxdata1), regexp="discordant")
-    disc_rowpairs <- complete_auxdata(auxdata2, auxdata1,
-                                      disc.rowpairs.only=TRUE)
+    disc_rowpairs <- find_discordant_auxdata(auxdata2, auxdata1)
     expected <- data.frame(rowidx1=c(1L, 2L, 5L), rowidx2=c(5L, 6L, 2L))
     expect_identical(disc_rowpairs, expected)
 
@@ -144,8 +141,7 @@ test_that("complete_auxdata()", {
     auxdata1[c(2L, 5L), "coding_frame_start"] <- NA
     auxdata2[1:2, "cdr3_end"] <- NA
 
-    disc_rowpairs <- complete_auxdata(auxdata1, auxdata2,
-                                      disc.rowpairs.only=TRUE)
+    disc_rowpairs <- find_discordant_auxdata(auxdata1, auxdata2)
     expect_identical(disc_rowpairs, nopairs)
     expected <- auxdata1
     expected[2L, "coding_frame_start"] <- 1L
@@ -154,8 +150,7 @@ test_that("complete_auxdata()", {
     expect_identical(auxdata1a, expected)
     expect_identical(complete_auxdata(auxdata1a, auxdata2), auxdata1a)
 
-    disc_rowpairs <- complete_auxdata(auxdata2, auxdata1,
-                                      disc.rowpairs.only=TRUE)
+    disc_rowpairs <- find_discordant_auxdata(auxdata2, auxdata1)
     expect_identical(disc_rowpairs, nopairs)
     expected <- auxdata2
     expected[c(1L, 2L), "cdr3_end"] <- c(15L, 16L)

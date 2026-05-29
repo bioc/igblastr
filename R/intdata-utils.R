@@ -119,6 +119,35 @@ load_intdata <- function(organism, for.aa=FALSE,
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### show_intdata_disagreements()
+###
+
+show_intdata_disagreements <- function(db_name)
+{
+    check_germline_db_name(db_name)
+    organism_shortname <- infer_organism_shortname_from_db_name(db_name)
+    if (is.na(organism_shortname))
+        stop(wmsg("the specified germline db not seem to be for ",
+                  "an organism that is supported by IgBLAST"))
+    computed_intdata <- load_intdata(db_name)
+    igblast_intdata <- load_intdata(organism_shortname)
+    diff <- df_diff(computed_intdata, igblast_intdata, "allele_name",
+                    "computed", "IgBLAST")
+    what <- c("the computed \"internal data\" included in this germline ",
+              "db and the \"internal data\" for ", organism_shortname, " ",
+              "shipped with IgBLAST")
+    if (length(diff) == 0L) {
+        msg <- c("No disagreements between ", what, ".")
+        cat(wmsg2(msg, margin=0L), "\n", sep="")
+    } else {
+        msg <- c("Disagreements between ", what, ":")
+        cat(wmsg2(msg, margin=0L), "\n", sep="")
+        cat(diff, sep="")
+    }
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### V_genes_with_varying_fwrcdr_boundaries()
 ###
 

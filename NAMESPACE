@@ -126,6 +126,7 @@ export(
     ## intdata-utils.R:
     get_intdata_path,
     load_intdata,
+    show_intdata_disagreements,
     V_genes_with_varying_fwrcdr_boundaries,
 
     ## auxdata-utils.R:

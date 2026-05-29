@@ -53,8 +53,27 @@
     sprintf("IMGT-%s.%s.%s", release, organism, paste(loci, collapse="+"))
 }
 
+### Why does IMGT human J allele IGLJ2A*01 have a codon start set to 1?
+### This is unexpected because:
+### - there's no FGXG motif in this coding frame (the allele sequence
+###   translates to CGIRRRDQADRP in this coding frame);
+### - IGLJ2A*01 sequence is exactly the same as IGLJ2*01 and IGLJ3*01
+###   sequences, which both have a codon start set to 2;
+### - IGLJ2*01 and IGLJ3*01 actually contain the FGXG motif in the coding
+###   frame that starts at position 2 (the 12 codons in the sequence
+###   translate to VVFGGGTKLTVL).
+### TODO: Ask the IMGT folks about this.
+### In the mean time, we exclude it. This shouldn't make any difference
+### from an IgBLAST operations point of view because its sequence is
+### the same as IGLJ2*01 and IGLJ3*01 which we keep (note for that matter
+### that we could also exclude IGLJ3*01 and it shouldn't make any difference
+### either).
+.EXCLUDED_IMGT_HUMAN_J_ALLELES <- "IGLJ2A*01"
+
 ### Loads IgBLAST auxdata for the organism associated with the germline db.
-.load_known_auxdata <- function(db_name)
+### Will be used to "complete" the computed auxiliary data and verify
+### agreement with it.
+.load_igblast_auxdata <- function(db_name)
 {
     organism_shortname <- infer_organism_shortname_from_db_name(db_name)
     if (is.na(organism_shortname))
@@ -73,22 +92,23 @@
     auxdata
 }
 
-### Why does IMGT human J allele IGLJ2A*01 have a codon start set to 1?
-### This is unexpected because:
-### - there's no FGXG motif in this coding frame (the allele sequence
-###   translates to CGIRRRDQADRP in this coding frame);
-### - IGLJ2A*01 sequence is exactly the same as IGLJ2*01 and IGLJ3*01
-###   sequences, which both have a codon start set to 2;
-### - IGLJ2*01 and IGLJ3*01 actually contain the FGXG motif in the coding
-###   frame that starts at position 2 (the 12 codons in the sequence
-###   translate to VVFGGGTKLTVL).
-### TODO: Ask the IMGT folks about this.
-### In the mean time, we exclude it. This shouldn't make any difference
-### from an IgBLAST operations point of view because its sequence is
-### the same as IGLJ2*01 and IGLJ3*01 which we keep (note for that matter
-### that we could also exclude IGLJ3*01 and it shouldn't make any difference
-### either).
-.EXCLUDED_IMGT_HUMAN_J_ALLELES <- "IGLJ2A*01"
+.check_concordance_with_igblast_intdata <- function(db_name)
+{
+    organism_shortname <- infer_organism_shortname_from_db_name(db_name)
+    if (is.na(organism_shortname))
+        return()
+    computed_intdata <- load_intdata(db_name)
+    igblast_intdata <- load_intdata(organism_shortname)
+    disc_rowpairs <- find_discordant_intdata(computed_intdata, igblast_intdata)
+    if (nrow(disc_rowpairs) == 0L)
+        return()
+    msg1 <- c("The computed \"internal data\" that we included in the ",
+              "germline db has some disagreements with the \"internal data\" ",
+              "for ", organism_shortname, " shipped with IgBLAST.")
+    msg2 <- c("To display the disagreements, run:")
+    msg3 <- c("  show_intdata_disagreements(\"", db_name, "\")")
+    warning(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", msg3)
+}
 
 install_IMGT_germline_db <- function(release, organism="Homo sapiens",
                                      tcr.db=FALSE, loci="auto",
@@ -135,15 +155,22 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     ## Create and install germline db.
     install_dir <- get_germline_dbs_home(TRUE)  # guaranteed to exist
     with.auxdata <- !(without.auxdata || loci_prefix == "TR")
-    known_auxdata <- if (with.auxdata) .load_known_auxdata(db_name) else NULL
+    igblast_auxdata <- if (with.auxdata) .load_igblast_auxdata(db_name)
+                       else NULL
     if.exists <- if (overwrite) "overwrite" else "error"
     install_germline_db(install_dir, db_name, fasta_store, loci,
                         gapped=TRUE, with.intdata=!without.intdata,
                         excluded_J_alleles=excluded_J_alleles,
                         with.auxdata=with.auxdata, imgt.fasta=TRUE,
-                        known_auxdata=known_auxdata,
+                        ref_auxdata=igblast_auxdata,
                         if.exists=if.exists, verbose=verbose,
                         cheer.if.success=TRUE)
+
+    ## Check concordance of computed intdata with IgBLAST intdata.
+    if (!without.intdata)
+        .check_concordance_with_igblast_intdata(db_name)
+
+    invisible(db_name)
 }
 
 

@@ -6,6 +6,7 @@
 
 \alias{get_intdata_path}
 \alias{load_intdata}
+\alias{show_intdata_disagreements}
 \alias{V_genes_with_varying_fwrcdr_boundaries}
 
 \title{Access IgBLAST internal data}
@@ -34,6 +35,10 @@ get_intdata_path(organism, for.aa=FALSE, domain_system=c("imgt", "kabat"),
                  which=c("live", "original"))
 load_intdata(organism, for.aa=FALSE, domain_system=c("imgt", "kabat"),
              which=c("live", "original"))
+
+## Show disagreements (if any) between the computed "internal data"
+## included in a germline db and the "internal data" shipped with IgBLAST:
+show_intdata_disagreements(db_name)
 
 ## Identify V genes with varying FWR/CDR boundaries across alleles:
 V_genes_with_varying_fwrcdr_boundaries(intdata, V_segment=NULL)
@@ -76,6 +81,9 @@ V_genes_with_varying_fwrcdr_boundaries(intdata, V_segment=NULL)
     See \code{?\link{update_live_igdata}} for more information about
     "live" and "original" IgBLAST data.
   }
+  \item{db_name}{
+    A single string specifying the name of a cached germline db.
+  }
   \item{intdata}{
     A data.frame as returned by \code{load_intdata()}.
   }
@@ -106,6 +114,9 @@ V_genes_with_varying_fwrcdr_boundaries(intdata, V_segment=NULL)
   with 1 row per germline V gene allele sequence and the same columns
   as the data.frame returned by \code{read_ndm_data()}.
   See \code{?\link{read_ndm_data}} for more information.
+
+  \code{show_intdata_disagreements()} doesn't return anything (i.e.
+  invisible \code{NULL}).
 
   \code{V_genes_with_varying_fwrcdr_boundaries()} returns a character
   vector containing the names of the germline V genes for which the
@@ -179,6 +190,15 @@ get_intdata_path(db_name)
 
 human_intdata <- load_intdata(db_name)
 head(human_intdata)
+
+## ---------------------------------------------------------------------
+## show_intdata_disagreements()
+## ---------------------------------------------------------------------
+
+show_intdata_disagreements(db_name)
+
+## See last examples in '?install_IMGT_germline_db' for some examples
+## of germline dbs with disagreements.
 
 ## ---------------------------------------------------------------------
 ## V_genes_with_varying_fwrcdr_boundaries()

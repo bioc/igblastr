@@ -19,12 +19,12 @@ get_intdata_col <- function(intdata, colname)
     intdata_col
 }
 
-### Extracts the specified column from the 'indata' data.frame, and
+### Extracts the specified column from the 'intdata' data.frame, and
 ### subset/reorder it to keep only the column values that correspond
 ### to the alleles in 'V_alleles'. Returns them in a named vector that
 ### is parallel to 'V_alleles' and has the allele names on it.
 ### The returned vector will have NAs for alleles that are not annotated
-### in 'indata' or when 'indata[[colname]]' reports an NA for the allele.
+### in 'intdata' or when 'intdata[[colname]]' reports an NA for the allele.
 .query_intdata <- function(intdata, V_alleles, colname)
 {
     allele_names <- get_intdata_col(intdata, "allele_name")

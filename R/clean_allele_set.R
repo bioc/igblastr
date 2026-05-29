@@ -300,8 +300,10 @@ check_locus <- function(locus, what)
     setNames(as.integer(codon_starts), names(codon_starts))
 }
 
-.annotate_J_alleles <- function(allele_set, codon_starts=NULL,
-                                            known_auxdata=NULL)
+### 'ref_auxdata' (if provided) is used to "complete" the computed
+### auxiliary data. Note that the completion process will also verify
+### that the computed auxiliary data is concordant with 'ref_auxdata'.
+.annotate_J_alleles <- function(allele_set, codon_starts=NULL, ref_auxdata=NULL)
 {
     stopifnot(is(allele_set, "DNAStringSet"))
     allele_names <- names(allele_set)
@@ -322,8 +324,8 @@ check_locus <- function(locus, what)
     expected_chain_type <- make_chain_type("J", locus)
     stopifnot(identical(auxdata$chain_type, expected_chain_type))
 
-    if (!is.null(known_auxdata))
-        auxdata <- complete_auxdata(auxdata, known_auxdata)
+    if (!is.null(ref_auxdata))
+        auxdata <- complete_auxdata(auxdata, ref_auxdata)
 
     mcols(allele_set) <- cbind(allele_set_mcols, auxdata)
     allele_set
@@ -411,7 +413,8 @@ clean_allele_set <- function(allele_set,
 ### additional metadata columns.
 ### If 'summary.only' is TRUE then 'verbose' is ignored and operations
 ### are quiet.
-clean_V_allele_set <- function(allele_set, gapped=FALSE, with.intdata=FALSE,
+clean_V_allele_set <- function(allele_set,
+                               gapped=FALSE, with.intdata=FALSE,
                                disambiguate.allele.names=FALSE,
                                summary.only=FALSE, verbose=FALSE)
 {
@@ -454,7 +457,7 @@ clean_V_allele_set <- function(allele_set, gapped=FALSE, with.intdata=FALSE,
 ### are quiet.
 clean_J_allele_set <- function(allele_set,
                                with.auxdata=FALSE, imgt.fasta=FALSE,
-                               known_auxdata=NULL,
+                               ref_auxdata=NULL,
                                disambiguate.allele.names=FALSE,
                                summary.only=FALSE, verbose=FALSE)
 {
@@ -479,7 +482,7 @@ clean_J_allele_set <- function(allele_set,
         ## (Bj) Annotate the J alleles.
         allele_set <- .annotate_J_alleles(allele_set,
                                           codon_starts=codon_starts,
-                                          known_auxdata=known_auxdata)
+                                          ref_auxdata=ref_auxdata)
         .stop_if_repeated_J_alleles_have_discordant_annotations(allele_set)
     }
 

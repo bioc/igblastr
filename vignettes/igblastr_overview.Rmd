@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 20 May 2026"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 29 May 2026"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -30,31 +30,36 @@ specialized bioinformatics tool developed by the National Center for
 Biotechnology Information (NCBI) for the analysis of B-cell receptor (BCR)
 and T-cell receptor (TCR) sequences (Ye et al., 2013). IgBLAST performs
 sequence alignment and annotation, with key outputs including germline
-V, D, and J gene assignments; detection of somatic hypermutations
-introduced during affinity maturation; identification and annotation
-of complementarity-determining regions (CDR1–CDR3) and framework
-regions (FWR1–FWR4); and both nucleotide and protein-level alignments.
+V, D, and J gene assignments; characterization of somatic hypermutations
+introduced during affinity maturation; identification of
+complementarity-determining regions (CDR1–CDR3), framework
+regions (FWR1–FWR4), and isotype; and both nucleotide and protein-level
+alignments. These outputs form the basis for many downstream analyses
+of BCR and TCR repertoires, including clonotype identification, lineage
+tracing, and repertoire feature characterization.
 
 `r Biocpkg("igblastr")` is an R/Bioconductor package that provides functions
 to conveniently install and use a local IgBLAST installation from within
 R while offering additional BCR or TCR sequence annotation.
-The package is designed to make it as easy as possible to use IgBLAST in R
+The package is designed to make it as easy as possible to run IgBLAST in R
 by streamlining the installation of both IgBLAST and its associated germline
 databases. In particular, these installations can be performed with a single
-function call, do not require root access, and persist across R sessions.
+function call, do not require root access, and can persist across R sessions.
 
 The main function in the package is `igblastn()`, a wrapper to the `igblastn`
 _standalone executable_ included in IgBLAST. In addition to `igblastn()`,
-the package provides:
+the package provides several other features, including:
 
 - A function (`install_igblast()`) to conveniently download and
   install a pre-compiled IgBLAST from NCBI.
 
-- A set of built-in germline databases from OGRDB, the AIRR Community’s
+- A set of built-in germline databases from
+  [OGRDB](https://ogrdb.airr-community.org/), the AIRR Community’s
   Open Germline Receptor Database.
 
 - Functions to download and install germline databases from the
-  IMGT/V-QUEST download site, and to configure them for use with `igblastn()`.
+  [IMGT/V-QUEST download site](https://www.imgt.org/download/V-QUEST/),
+  and to configure them for use with `igblastn()`.
 
 - The `install_custom_germline_db()` function to install a germline database
   from user-supplied germline gene allele sequences.
@@ -69,8 +74,9 @@ the package provides:
 
 - A simple tool to vizualize the annotated sequences in a browser.
 
-- Utility functions to download data from OAS, the Observed Antibody
-  Space database, and prepare it for use with IgBLAST.
+- Utility functions to download data from
+  [OAS](https://opig.stats.ox.ac.uk/webapps/oas/), the Observed
+  Antibody Space database, and prepare it for use with IgBLAST.
 
 - Etc.
 
@@ -102,7 +108,7 @@ BiocManager::install("igblastr")
 `BiocManager::install()` will take care of installing the package dependencies
 that are missing.
 
-Load the package:
+To load `r Biocpkg("igblastr")` into your R session, run:
 ```{r, message=FALSE}
 library(igblastr)
 ```
@@ -131,8 +137,8 @@ See `?install_igblast` for more information.
 Note that we use `has_igblast()` to avoid reinstalling IgBLAST if
 `r Biocpkg("igblastr")` already has access to a working IgBLAST installation.
 
-Display basic information about the IgBLAST installation used
-by `r Biocpkg("igblastr")`:
+To display basic information about the IgBLAST installation used
+by `r Biocpkg("igblastr")`, run:
 ```{r}
 igblast_info()
 ```
@@ -142,18 +148,17 @@ igblast_info()
 
 
 The `r Biocpkg("igblastr")` package includes a FASTA file containing
-8,437 paired heavy and light chain human antibody sequences (16,874
+8,437 paired heavy- and light-chain human antibody sequences (16,874
 individual sequences) retrieved from OAS. These sequences will serve as
 our _query sequences_, that is, the immunoglobulin (Ig) sequences that
-we will analyze in this vignette.
+analyzed in this vignette.
 
-Before we can do so, the `igblastn` _standalone executable_ in IgBLAST (and,
-by extension, our `igblastn()` function) needs access to the germline V, D,
-and J gene allele sequences for humans. Before `igblastn` can use them, these
-germline gene allele sequences must first be stored in three separate BLAST
-databases. We will refer to these as the V-region, D-region, and J-region
-databases, respectively. When considered together, we will refer to them as
-the _germline database_.
+Before we can do so, the `igblastn` _standalone executable_ included
+in IgBLAST -- and, by extension, our `igblastn()` function -- requires
+access to human germline V, D, and J gene allele sequences. To be used
+by `igblastn`, these sequences must first be organized into three separate
+BLAST databases: the V-region, D-region, and J-region databases. Collectively,
+we will refer to these three databases as the _germline database_.
 
 
 ## Built-in germline databases
@@ -241,7 +246,7 @@ function to create and install a germline database from a set of
 user-supplied FASTA files containing germline V/D/J gene allele sequences.
 See `?install_custom_germline_db` for more information.
 
-## Select germline database to use with `igblastn()`
+## Selecting a germline database to use with `igblastn()`
 
 Finally, we select the newly installed germline database for use
 with `igblastn()`:
@@ -261,19 +266,19 @@ database (you may need to scroll horizontally to see the asterisk).
 See `?list_germline_dbs` for more information.
 
 
-# Select a constant region database (optional)
+# Selecting a constant region database (optional)
 
 
-The `igblastn` _standalone executable_ in IgBLAST can also use constant
-region (C region) sequences to improve the analysis. As with the
-germline V, D, and J gene allele sequences, the C-region sequences should
-typically come from the same organism as the query sequences, and they
-must also be formatted as a BLAST database. We will refer to this database
-as the C-region database.
+The `igblastn` _standalone executable_ included in IgBLAST can also use
+constant region (C-region) sequences for sequence annotation. As with the
+germline V, D, and J gene allele sequences, the C-region sequences are
+generally expected to originate from the same organism(s) as the query
+sequences, and must likewise be formatted as a BLAST database. We will
+refer to this database as the C-region database.
 
-The `r Biocpkg("igblastr")` package includes a set of built-in C-region
-databases for human, mouse, and rabbit, obtained from IMGT/V-QUEST. These
-can be listed using:
+The `r Biocpkg("igblastr")` package includes built-in C-region databases
+for human, mouse, rabbit, rat, and rhesus monkey, obtained from IMGT/V-QUEST.
+The available databases can be listed using:
 ```{r}
 list_c_region_dbs()
 ```
@@ -435,9 +440,9 @@ AIRR_df |>
 
 ## Passing additional arguments to igblastn()
 
-The `igblastn` _standalone executable_ in IgBLAST supports many command
-line arguments. You can quickly list them with `igblastn_help()` (or with
-`igblastn_help(TRUE)` to get an expanded list with more details --
+The `igblastn` _standalone executable_ included in IgBLAST supports many
+command line arguments. You can quickly list them with `igblastn_help()`
+(or with `igblastn_help(TRUE)` to get an expanded list with more details --
 see `?igblastn_help`):
 ```{r}
 igblastn_help()
@@ -517,7 +522,7 @@ AIRR_df
 
 At the moment, the `r Biocpkg("igblastr")` package does not provide
 access to the full functionality of the IgBLAST software. Most notably,
-the `igblastp` _standalone executable_ included in IgBLAST has no
+the `igblastp` _standalone executable_ included included in IgBLAST has no
 counterpart in `r Biocpkg("igblastr")`.
 
 Some future developments include:
@@ -525,8 +530,8 @@ Some future developments include:
 - Implement `igblastp()`, a wrapper to the `igblastp` _standalone executable_
   included in IgBLAST for protein-level alignments.
 
-- Add facilities to retrieve germline databases from OGRDB, the AIRR
-  Community’s Open Germline Receptor Database.
+- Add facilities to retrieve arbitrary germline databases from OGRDB,
+  the AIRR Community’s Open Germline Receptor Database.
 
 
 # Session information

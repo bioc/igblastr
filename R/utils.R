@@ -272,6 +272,107 @@ have_same_rows <- function(df1, df2, key)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### find_discordant_rows()
+### df_diff()
+### complete_df_with_refdf()
+###
+
+### Returns a 2-col data.frame with 1 row per discordant row pairs
+### in 'df1' and 'df2'.
+find_discordant_rows <- function(df1, df2, key)
+{
+    stopifnot(is.data.frame(df1), is.data.frame(df2),
+              identical(colnames(df1), colnames(df2)),
+              isSingleNonWhiteString(key))
+    keys1 <- df1[ , key]
+    keys2 <- df2[ , key]
+    m <- match(keys1, keys2)
+    mapped_idx <- which(!is.na(m))
+    ok <- rep.int(TRUE, length(mapped_idx))
+    for (colname in setdiff(colnames(df1), key)) {
+        subcol1 <- df1[mapped_idx, colname]
+        subcol2 <- df2[m[mapped_idx] , colname]
+        ok <- ok & (subcol1 == subcol2 | is.na(subcol1) | is.na(subcol2))
+    }
+    rowidx1 <- mapped_idx[!ok]
+    rowidx2 <- m[rowidx1]
+    data.frame(rowidx1=rowidx1, rowidx2=rowidx2)
+}
+
+### 'rowlabels' can contain duplicates.
+### Returns 'df' in a single string.
+.df_as_string <- function(df, rowlabels)
+{
+    stopifnot(is.data.frame(df), is.character(rowlabels),
+              nrow(df) == length(rowlabels))
+    m <- as.matrix(format.data.frame(df, na.encode=FALSE))
+    m <- cbind(names(rowlabels), rowlabels, m)
+    m <- rbind(c(if (!is.null(names(rowlabels))) "", "", colnames(df)), m)
+    for (j in seq_len(ncol(m)))
+        m[ , j] <- format(m[ , j], justify="right")
+    paste0(apply(m, 1L, paste, collapse=" "), "\n", collapse="")
+}
+
+### Returns a character vector with 1 element per row in 'disc_df1'
+### (or 'disc_df2').
+.rowpairs_as_strings <- function(disc_df1, disc_df2, label1, label2)
+{
+    stopifnot(is.data.frame(disc_df1), is.data.frame(disc_df2),
+              identical(dim(disc_df1), dim(disc_df2)),
+              identical(colnames(disc_df1), colnames(disc_df2)))
+    vapply(seq_len(nrow(disc_df1)),
+        function(i) {
+            row1 <- disc_df1[i, ]
+            row2 <- disc_df2[i, ]
+            rowlabels <- c(rownames(row1), rownames(row2))
+            names(rowlabels) <- paste0("    ", c(label1, label2), ":")
+            .df_as_string(rbind(row1, row2), rowlabels)
+        },
+        character(1))
+}
+
+### Returns a character vector with 1 element per discordant row pair.
+df_diff <- function(df1, df2, key, label1, label2)
+{
+    stopifnot(isSingleString(label1), isSingleString(label2))
+    disc_rowpairs <- find_discordant_rows(df1, df2, key)
+    disc_df1 <- df1[disc_rowpairs[[1L]], ]
+    disc_df2 <- df2[disc_rowpairs[[2L]], ]
+    .rowpairs_as_strings(disc_df1, disc_df2, label1, label2)
+}
+
+### Replaces missing values in 'df' with corresponding values in 'refdf'.
+### Raises an error that displays the differences if 'df' and 'refdf' are
+### discordant.
+### Returns 'df' with possibly some of its missing values replaced with
+### non-NA values taken from 'refdf'.
+complete_df_with_refdf <- function(df, refdf, key, df_name, refdf_name)
+{
+    diff <- df_diff(df, refdf, key, df_name, refdf_name)
+    if (length(diff) != 0L) {
+        msg1 <- c("  Disagreements between '", df_name, "' ",
+                  "and '", refdf_name, "':\n", diff)
+        message(msg1)
+        msg2 <- c("'", df_name, "' and '", refdf_name, "' contain ",
+                  "discordant data (see above for the details)")
+        stop(wmsg(msg2))
+    }
+    keys1 <- df[ , key]
+    keys2 <- refdf[ , key]
+    m <- match(keys1, keys2)
+    mapped_idx <- which(!is.na(m))
+    ans <- df
+    for (colname in setdiff(colnames(df), key)) {
+        subcol1 <- df[mapped_idx, colname]
+        subcol2 <- refdf[m[mapped_idx] , colname]
+        subcol1[is.na(subcol1)] <- subcol2[is.na(subcol1)]
+        ans[mapped_idx, colname] <- subcol1
+    }
+    ans
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### count_bin_hits()
 ###
 
