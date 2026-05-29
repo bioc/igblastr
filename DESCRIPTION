@@ -97,3 +97,4 @@ Collate:
 	summarizeMismatches.R
 	OAS-utils.R
 	zzz.R
+Config/Bioconductor/UnsupportedPlatforms: aarch64-linux-gnu
