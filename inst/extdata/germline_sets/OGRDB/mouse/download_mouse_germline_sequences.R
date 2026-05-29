@@ -136,3 +136,5 @@ validate_mouse_intdata <- function()
     }
 }
 
+validate_mouse_intdata()
+

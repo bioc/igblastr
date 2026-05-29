@@ -229,15 +229,15 @@ if (!has_igblast()) install_igblast()
 
 ## In this admittedly artificial example, we're going to create and
 ## install a germline db from the gene allele sequences in built-in
-## germline db _OGRDB.human.IGH+IGK+IGL.202410. More precisely, we're
+## germline db _OGRDB.human.IGH+IGK+IGL.202605. More precisely, we're
 ## going to:
-##   1. Dump built-in germline db _OGRDB.human.IGH+IGK+IGL.202410
+##   1. Dump built-in germline db _OGRDB.human.IGH+IGK+IGL.202605
 ##      in 7 FASTA files.
 ##   2. Use these FASTA files to create and install a new germline db.
 ##   3. Check that the new db contains the same sequences as the
 ##      original db.
 
-## --- 1. Dump _OGRDB.human.IGH+IGK+IGL.202410 in 7 FASTA files ---
+## --- 1. Dump _OGRDB.human.IGH+IGK+IGL.202605 in 7 FASTA files ---
 
 dump_germline_db <- function(db_name, destdir) {
   for (region_type in c("V", "D", "J")) {
@@ -252,7 +252,7 @@ dump_germline_db <- function(db_name, destdir) {
   }
 }
 
-db_name0 <- "_OGRDB.human.IGH+IGK+IGL.202410"
+db_name0 <- "_OGRDB.human.IGH+IGK+IGL.202605"
 dir.create(exA_fasta_dir <- tempfile())
 
 dump_germline_db(db_name0, exA_fasta_dir)
@@ -282,9 +282,9 @@ stopifnot(identical(
 ##   1. Use download_OGRDB_germline_sequences() to download the
 ##      gapped sequences for the following "Reference Sets" from
 ##      AIRR-community/OGRDB:
-##        - IGH_VDJ version 9
-##        - IGKappa_VJ version 4
-##        - IGLambda_VJ version 3
+##        - IGH_VDJ version 10
+##        - IGKappa_VJ version 5
+##        - IGLambda_VJ version 4
 ##      Each "Reference Set" corresponds to a BCR germline locus. For
 ##      each set, download_OGRDB_germline_sequences() will download the
 ##      FASTA file provided by AIRR-community/OGRDB that contains the
@@ -292,12 +292,12 @@ stopifnot(identical(
 ##      one FASTA file per region type.
 ##   2. Use these FASTA files to create and install a new germline db.
 ##   3. Check that the new db contains the same sequences
-##      as built-in germline db _OGRDB.human.IGH+IGK+IGL.202410.
+##      as built-in germline db _OGRDB.human.IGH+IGK+IGL.202605.
 
 ## --- 1. Download human gapped sequences from AIRR-community/OGRDB ---
 
 dir.create(exB_fasta_dir <- tempfile())
-germline_sets <- c(IGH_VDJ=9, IGKappa_VJ=4, IGLambda_VJ=3)
+germline_sets <- c(IGH_VDJ=10, IGKappa_VJ=5, IGLambda_VJ=4)
 
 download_OGRDB_germline_sequences("Homo sapiens", germline_sets,
                                   destdir=exB_fasta_dir)
@@ -315,11 +315,11 @@ install_custom_germline_db(exB_db_name, exB_fasta_dir, gapped=TRUE)
 list_germline_dbs()
 
 ## --- 3. Check that the new db contains the same sequences ---
-## ---          as _OGRDB.human.IGH+IGK+IGL.202410          ---
+## ---          as _OGRDB.human.IGH+IGK+IGL.202605          ---
 
-## The Reference Sets we used to populate the new db (IGH_VDJ version 9,
-## IGKappa_VJ version 4, IGLambda_VJ version 3) are the same that were
-## used to populate built-in germline db _OGRDB.human.IGH+IGK+IGL.202410.
+## The Reference Sets we used to populate the new db (IGH_VDJ version 10,
+## IGKappa_VJ version 5, IGLambda_VJ version 4) are the same that were
+## used to populate built-in germline db _OGRDB.human.IGH+IGK+IGL.202605.
 ## Let's check that the two dbs contain the same sequences:
 stopifnot(identical(
     as.character(load_germline_db(db_name0)),
@@ -347,7 +347,7 @@ intdataC <- load_intdata(exC_db_name)
 head(intdataC)
 
 ## Check that the "internal data" in the new db is the same as in
-## _OGRDB.human.IGH+IGK+IGL.202410:
+## _OGRDB.human.IGH+IGK+IGL.202605:
 stopifnot(identical(intdataC, load_intdata(db_name0)))
 
 ## ---------------------------------------------------------------------

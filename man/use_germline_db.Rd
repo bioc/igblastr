@@ -90,7 +90,7 @@ if (!has_igblast()) install_igblast()
 list_germline_dbs()  # all cached germline dbs
 
 ## Select germline db to use with igblastn():
-db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
+db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
 use_germline_db(db_name)
 
 ## Get current selection:

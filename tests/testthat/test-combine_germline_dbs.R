@@ -37,7 +37,7 @@
 }
 
 test_that("combine_germline_dbs()", {
-    db_name1 <- "_OGRDB.human.IGH+IGK+IGL.202410"
+    db_name1 <- "_OGRDB.human.IGH+IGK+IGL.202605"
     db_name2 <- "_OGRDB.mouse.PWD_PhJ.IGH+IGK+IGL.202410"
 
     ## Combine 'db_name1' and 'db_name2'.

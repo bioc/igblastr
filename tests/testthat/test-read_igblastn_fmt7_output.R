@@ -28,7 +28,7 @@ test_that("parse_outfmt7()", {
     query <- system.file(package="igblastr", "extdata",
                          "BCR", "heavy_sequences.fasta")
     query <- head(readDNAStringSet(query), n=10)
-    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
     use_germline_db(db_name)
 
     ## parse_outfmt7() gets called internally by igblastn(..., outfmt=7).

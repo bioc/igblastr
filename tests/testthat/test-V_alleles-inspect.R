@@ -1,6 +1,6 @@
 
 test_that("translate_V_alleles()", {
-    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
     intdata <- load_intdata(db_name)
     V_alleles <- load_germline_db(db_name, region_types="V")
 
@@ -23,7 +23,7 @@ test_that("translate_V_alleles()", {
 })
 
 test_that("V_allele_has_stop_codon()", {
-    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
     intdata <- load_intdata(db_name)
     V_alleles <- load_germline_db(db_name, region_types="V")
 

@@ -4,9 +4,10 @@
 library(igblastr)
 
 HUMAN_GERMLINE_SETS <- list(
-    `202309`=c(IGH_VDJ=7, IGKappa_VJ=2, IGLambda_VJ=1),
-    `202401`=c(IGH_VDJ=8, IGKappa_VJ=3, IGLambda_VJ=2),
-    `202410`=c(IGH_VDJ=9, IGKappa_VJ=4, IGLambda_VJ=3)
+    `202309`=c(IGH_VDJ= 7, IGKappa_VJ=2, IGLambda_VJ=1),
+    `202401`=c(IGH_VDJ= 8, IGKappa_VJ=3, IGLambda_VJ=2),
+    `202410`=c(IGH_VDJ= 9, IGKappa_VJ=4, IGLambda_VJ=3),
+    `202605`=c(IGH_VDJ=10, IGKappa_VJ=5, IGLambda_VJ=4)
 )
 
 download_human_germline_sequences <- function(overwrite=FALSE)
@@ -55,9 +56,10 @@ make_human_auxdata <- function(version, germline_sets)
 
 download_human_germline_sequences()
 
-### Extract auxdata from the OGRDB json files but only for version 202410.
-### Older versions break extract_auxdata_from_ogrdb_json()!
+### Extract auxdata from the OGRDB json files but only for versions 202410
+### and 202605. Older versions break extract_auxdata_from_ogrdb_json()!
 make_human_auxdata(names(HUMAN_GERMLINE_SETS)[[3]], HUMAN_GERMLINE_SETS[[3]])
+make_human_auxdata(names(HUMAN_GERMLINE_SETS)[[4]], HUMAN_GERMLINE_SETS[[4]])
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -94,4 +96,6 @@ validate_human_intdata <- function()
         }
     }
 }
+
+validate_human_intdata()
 
