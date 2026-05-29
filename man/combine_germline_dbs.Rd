@@ -81,10 +81,10 @@ if (!has_igblast()) install_igblast()
 
 ## TO BE EXPANDED SOON...
 
-db_name12 <- "comb.IMGT-202616-1.human+mouse.IGH+IGK+IGL"
-db_name1 <- install_IMGT_germline_db("202616-1", "Homo_sapiens",
+db_name12 <- "comb.IMGT-202614-2.human+mouse.IGH+IGK+IGL"
+db_name1 <- install_IMGT_germline_db("202614-2", "Homo_sapiens",
                                      overwrite=TRUE)
-db_name2 <- install_IMGT_germline_db("202616-1", "Mus_musculus",
+db_name2 <- install_IMGT_germline_db("202614-2", "Mus_musculus",
                                      overwrite=TRUE)
 combine_germline_dbs(db_name12, db_name1, db_name2, "_Hs", "_Mm")
 

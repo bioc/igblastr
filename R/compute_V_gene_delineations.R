@@ -243,3 +243,28 @@ compute_imgt_intdata <- function(...)
     compute_V_gene_delineations(...)
 }
 
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### find_discordant_intdata()
+### complete_intdata()
+###
+
+### Not exported!
+### See find_discordant_rows() in R/utils.R for what it returns.
+find_discordant_intdata <- function(intdata, ref_intdata)
+{
+    check_ndm_data_col2class(intdata)
+    check_ndm_data_col2class(ref_intdata)
+    find_discordant_rows(intdata, ref_intdata, "allele_name")
+}
+
+### Not exported!
+### See complete_df_with_refdf() in R/utils.R for what it returns.
+complete_intdata <- function(intdata, ref_intdata)
+{
+    check_ndm_data_col2class(intdata)
+    check_ndm_data_col2class(ref_intdata)
+    complete_df_with_refdf(intdata, ref_intdata, "allele_name",
+                           "intdata", "ref_intdata")
+}
+

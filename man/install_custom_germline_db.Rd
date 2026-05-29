@@ -16,7 +16,7 @@
 install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
                            gapped=FALSE, with.intdata=FALSE,
                            with.auxdata=FALSE, imgt.fasta=FALSE,
-                           known_auxdata=NULL,
+                           ref_auxdata=NULL,
                            disambiguate.allele.names=FALSE,
                            overwrite=FALSE, verbose=FALSE)
 }
@@ -107,13 +107,47 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
     \emph{internal data}.
   }
   \item{with.auxdata}{
-    COMING SOON...
+    Set \code{with.auxdata} to \code{TRUE} to have the \emph{auxiliary data}
+    (i.e. J allele annotations used by IgBLAST) computed and added to the
+    new db.
+
+    Note that the presence of \emph{auxiliary data} in the new db will be
+    indicated in the \code{auxdata} column of the data.frame returned by
+    \code{\link{list_germline_dbs}()}.
+
+    If a cached germline db includes its own \emph{auxiliary data}, then
+    \code{\link{igblastn}()} will use it instead of the \emph{auxiliary data}
+    shipped with IgBLAST.
+    See documentation of the \code{auxiliary_data} argument in
+    \code{?\link{igblastn}} for more information.
   }
   \item{imgt.fasta}{
     COMING SOON...
   }
-  \item{known_auxdata}{
-    COMING SOON...
+  \item{ref_auxdata}{
+    Use only if \code{with.auxdata} is set to \code{TRUE} (\code{ref_auxdata}
+    is ignored if \code{with.auxdata} is \code{FALSE}).
+
+    \code{ref_auxdata} can be \code{NULL} (the default) or a data.frame
+    containing \emph{auxiliary data}. If the latter, then:
+    \itemize{
+      \item \code{ref_auxdata} would have typically be obtained with
+            \code{\link{load_auxdata}(organism)} where \code{organism}
+            is one of the organisms returned by
+            \code{\link{list_igblast_organisms}()} (e.g. \code{"mouse"}).
+      \item \code{install_custom_germline_db()} will use the
+            \code{ref_auxdata} data.frame internally to verify that
+            the computed \emph{auxiliary data} is \emph{concordant} (i.e.
+            in agreement) with \code{ref_auxdata}. An error will be raised
+            that shows the disagreements if there are any.
+      \item Furthermore, \code{install_custom_germline_db()} will also use
+            the \code{ref_auxdata} data.frame internally to complete the
+            computed \emph{auxiliary data}. The completion process consists
+            in eliminating missing values in the computed \emph{auxiliary data}
+            where possible. This is done by replacing each missing value with
+            the corresponding value from the \emph{auxiliary data} shipped with
+            IgBLAST, if the latter is available.
+    }
   }
   \item{disambiguate.allele.names}{
     Note that \emph{repeated} alleles (i.e. alleles with identical
@@ -175,11 +209,11 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
 
     \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
 
-    \item \code{\link{download_IMGT_germline_sequences}} to download
-          germline sequences from IMGT.
-
     \item \code{\link{download_OGRDB_germline_sequences}} to download
           germline sequences from OGRDB.
+
+    \item \code{\link{download_IMGT_germline_sequences}} to download
+          germline sequences from IMGT.
 
     \item IgBLAST is described at
           \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.
@@ -243,7 +277,7 @@ stopifnot(identical(
 ## ---------------------------------------------------------------------
 
 ## In this example, we're going to download human germline gene allele
-## **gapped** sequences from AIRR-community/OGRDB and use them to create
+## **gapped** sequences from AIRR-community/OGRDB, and use them to create
 ## and install a new germline db. More precisely, we're going to:
 ##   1. Use download_OGRDB_germline_sequences() to download the
 ##      gapped sequences for the following "Reference Sets" from
@@ -304,7 +338,8 @@ stopifnot(identical(
 exC_db_name <- "cus.exC.human.IGH+IGK+IGL"
 install_custom_germline_db(exC_db_name, exB_fasta_dir, gapped=TRUE,
                            with.intdata=TRUE)
-list_germline_dbs()  # 'intdata' col indicates presence of "internal data"
+list_germline_dbs()  # the 'intdata' col indicates the presence
+                     # of "internal data" in the new db
 
 ## Note that the "internal data" in a germline db can be loaded with
 ## load_intdata() (see '?load_intdata' for more information):
@@ -316,12 +351,109 @@ head(intdataC)
 stopifnot(identical(intdataC, load_intdata(db_name0)))
 
 ## ---------------------------------------------------------------------
-## Remove the 3 custom dbs
+## D. CREATE AND INSTALL GERMLINE DB WITH COMPUTED "INTERNAL DATA"
+##    AND "AUXILIARY DATA"
+## ---------------------------------------------------------------------
+
+## In this example, we're going to download mouse germline gene allele
+## **gapped** sequences from IMGT/V-QUEST, and use them to create
+## and install a new germline db with "internal data" and auxiliary data".
+## More precisely, we're going to:
+##   1. Use download_IMGT_germline_sequences() to download IMGT FASTA
+##      files containing the gapped sequences for mouse.
+##   2. Use these FASTA files to create and install a new germline db.
+##   3. Install IMGT-202614-2.Mus_musculus.IGH+IGK+IGL and compare it
+##      with the germline db obtained in 2.
+##   4. Leverage the "auxiliary data" shipped with IgBLAST to improve
+##      the "auxiliary data" computed by install_IMGT_germline_db().
+
+if (IMGT_is_up()) {
+
+  ## --- 1. Download mouse gapped sequences from IMGT ---
+
+  list_IMGT_releases()
+  dir.create(exD_fasta_dir <- tempfile())
+  download_IMGT_germline_sequences("202614-2", organism="Mus musculus",
+                                   destdir=exD_fasta_dir)
+
+  list.files(exD_fasta_dir)  # 7 FASTA files
+
+  ## Note that the V allele sequences have gaps:
+  IGKV_alleles <- readDNAStringSet(file.path(exD_fasta_dir, "IGKV.fasta"))
+  as.character(IGKV_alleles[1:3])
+
+  ## --- 2. Use FASTA files to install new germline db ---
+
+  exD_db_name <- "cus.exD.mouse.IGH+IGK+IGL"
+  install_custom_germline_db(exD_db_name, exD_fasta_dir, gapped=TRUE,
+                             with.intdata=TRUE, with.auxdata=TRUE,
+                             imgt.fasta=TRUE)
+  list_germline_dbs()  # the 'intdata' and 'auxdata' cols indicate the
+                       # presence of "internal data" and "auxiliary data"
+                       # in the new db
+
+  ## --- 3. Install IMGT-202614-2.Mus_musculus.IGH+IGK+IGL and ---
+  ## ---       compare it with cus.exD.mouse.IGH+IGK+IGL       ---
+
+  db_name <- install_IMGT_germline_db("202614-2", "Mus musculus",
+                                      overwrite=TRUE)
+
+  ## Let's check that the two dbs contain the same sequences:
+  stopifnot(identical(
+    as.character(load_germline_db(db_name)),
+    as.character(load_germline_db(exD_db_name))
+  ))
+
+  ## Let's check that the two dbs contain the same "internal data":
+  intdataD <- load_intdata(exD_db_name)
+  stopifnot(identical(intdataD, load_intdata(db_name)))
+
+  ## However the two dbs do NOT contain the same "auxiliary data":
+  auxdataD <- load_auxdata(exD_db_name)
+  identical(auxdataD, load_auxdata(db_name))  # FALSE!
+
+  ## Note the 4 NAs in the "cdr3_end" column:
+  auxdataD
+  ## where 'load_auxdata(db_name)' only has one:
+  load_auxdata(db_name)
+
+  ## --- 4. Leverage the "auxiliary data" shipped with IgBLAST ---
+  ## ---       to improve the "auxiliary data" computed        ---
+  ## ---             by install_IMGT_germline_db()             ---
+
+  ## When calling install_IMGT_germline_db(), we can pass some "reference
+  ## auxiliary data" for mouse to the 'ref_auxdata' argument. The
+  ## reference data we will use is the "auxiliary data" for mouse shipped
+  ## with IgBLAST. install_custom_germline_db() will then use this data
+  ## internally to verify that the computed "auxiliary data" is concordant
+  ## with the reference data and to complete it. See documentation of the
+  ## 'ref_auxdata' argument above in this man page for more information.
+
+  igblast_mouse_auxdata <- load_auxdata("mouse")
+  install_custom_germline_db(exD_db_name, exD_fasta_dir, gapped=TRUE,
+                             with.intdata=TRUE, with.auxdata=TRUE,
+                             imgt.fasta=TRUE,
+                             ref_auxdata=igblast_mouse_auxdata,
+                             overwrite=TRUE)
+
+  ## Now cus.exD.mouse.IGH+IGK+IGL and
+  ## IMGT-202614-2.Mus_musculus.IGH+IGK+IGL contain the
+  ## same "auxiliary data":
+  auxdataD <- load_auxdata(exD_db_name)
+  stopifnot(identical(auxdataD, load_auxdata(db_name)))
+
+  ## So the two dbs are now exactly the same: same allele names and
+  ## sequences, same "internal data", and same "auxiliary data"!
+}
+
+## ---------------------------------------------------------------------
+## Remove the 4 custom dbs
 ## ---------------------------------------------------------------------
 
 rm_germline_db(exA_db_name)
 rm_germline_db(exB_db_name)
 rm_germline_db(exC_db_name)
+rm_germline_db(exD_db_name)
 }
 
 \keyword{utilities}

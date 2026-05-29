@@ -252,84 +252,26 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### find_discordant_auxdata()
 ### complete_auxdata()
 ###
 
-### 'rowlabels' can contain duplicates.
-### Returns 'df' in a single string.
-.df_as_string <- function(df, rowlabels)
+### Not exported!
+### See find_discordant_rows() in R/utils.R for what it returns.
+find_discordant_auxdata <- function(auxdata, ref_auxdata)
 {
-    stopifnot(is.data.frame(df), is.character(rowlabels),
-              nrow(df) == length(rowlabels))
-    m <- as.matrix(format.data.frame(df, na.encode=FALSE))
-    m <- cbind(names(rowlabels), rowlabels, m)
-    m <- rbind(c(if (!is.null(names(rowlabels))) "", "", colnames(df)), m)
-    for (j in seq_len(ncol(m)))
-        m[ , j] <- format(m[ , j], justify="right")
-    paste0(apply(m, 1L, paste, collapse=" "), "\n", collapse="")
-}
-
-.rowpairs_as_strings <- function(df1, df2, argname1, argname2)
-{
-    stopifnot(is.data.frame(df1), is.data.frame(df2),
-              identical(dim(df1), dim(df2)),
-              identical(colnames(df1), colnames(df2)))
-    vapply(seq_len(nrow(df1)),
-        function(i) {
-            row1 <- df1[i, ]
-            row2 <- df2[i, ]
-            rowlabels <- c(rownames(row1), rownames(row2))
-            names(rowlabels) <- paste0("    ", c(argname1, argname2), ":")
-            .df_as_string(rbind(row1, row2), rowlabels)
-        },
-        character(1))
-}
-
-.stop_on_discordant_auxdata <- function(auxdata1, auxdata2, disc_rowpairs)
-{
-    msg1 <- "'auxdata1' and 'auxdata2' contain discordant data."
-    discdata1 <- auxdata1[disc_rowpairs[[1L]], ]
-    discdata2 <- auxdata2[disc_rowpairs[[2L]], ]
-    auxdata_diff <- .rowpairs_as_strings(discdata1, discdata2,
-                                         "auxdata1", "auxdata2")
-    msg2 <- c("Differences:\n", auxdata_diff)
-    stop(wmsg(msg1), "\n\n  ", msg2)
+    check_auxdata_col2class(auxdata)
+    check_auxdata_col2class(ref_auxdata)
+    find_discordant_rows(auxdata, ref_auxdata, "allele_name")
 }
 
 ### Not exported!
-### Replace missing values in 'auxdata1' with corresponding values
-### in 'auxdata2'. Raise an error that displays the differences
-### if 'auxdata1' and 'auxdata2' are discordant.
-### Returns 'auxdata1' with possibly some of its missing values replaced
-### with non-NA values taken from 'auxdata2'.
-complete_auxdata <- function(auxdata1, auxdata2, disc.rowpairs.only=FALSE)
+### See complete_df_with_refdf() in R/utils.R for what it returns.
+complete_auxdata <- function(auxdata, ref_auxdata)
 {
-    check_auxdata_col2class(auxdata1)
-    check_auxdata_col2class(auxdata2)
-    stopifnot(isTRUEorFALSE(disc.rowpairs.only))
-    allele_names1 <- auxdata1[ , "allele_name"]
-    allele_names2 <- auxdata2[ , "allele_name"]
-    allele_names <- intersect(allele_names1, allele_names2)
-    m <- match(allele_names1, allele_names2)
-    mapped_idx <- which(!is.na(m))
-    ok <- rep.int(TRUE, length(mapped_idx))
-    ans <- auxdata1
-    for (colname in colnames(auxdata1)[-1L]) {
-        subcol1 <- auxdata1[mapped_idx, colname]
-        subcol2 <- auxdata2[m[mapped_idx] , colname]
-        ok <- ok & (subcol1 == subcol2 | is.na(subcol1) | is.na(subcol2))
-        subcol1[is.na(subcol1)] <- subcol2[is.na(subcol1)]
-        ans[mapped_idx, colname] <- subcol1
-    }
-    disc_idx <- which(!ok)
-    if (disc.rowpairs.only || length(disc_idx) != 0L) {
-        rowidx1 <- mapped_idx[disc_idx]
-        rowidx2 <- m[rowidx1]
-        disc_rowpairs <- data.frame(rowidx1=rowidx1, rowidx2=rowidx2)
-        if (disc.rowpairs.only)
-            return(disc_rowpairs)  # return table of discordant row pairs
-        .stop_on_discordant_auxdata(auxdata1, auxdata2, disc_rowpairs)
-    }
-    ans
+    check_auxdata_col2class(auxdata)
+    check_auxdata_col2class(ref_auxdata)
+    complete_df_with_refdf(auxdata, ref_auxdata, "allele_name",
+                           "auxdata", "ref_auxdata")
 }
 
