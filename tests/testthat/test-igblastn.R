@@ -1,5 +1,5 @@
 test_that("igblastn(): basic operations", {
-    use_germline_db("_OGRDB.human.IGH+IGK+IGL.202410")
+    use_germline_db("_OGRDB.human.IGH+IGK+IGL.202605")
     use_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
     query <- system.file(package="igblastr", "extdata",
                          "BCR", "heavy_sequences.fasta")
@@ -56,7 +56,7 @@ test_that("igblastn(): basic operations", {
 })
 
 test_that("igblastn(): 'germline_db_[VDJ]_seqidlist' arguments", {
-    use_germline_db("_OGRDB.human.IGH+IGK+IGL.202410")
+    use_germline_db("_OGRDB.human.IGH+IGK+IGL.202605")
     use_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
     query <- system.file(package="igblastr", "extdata",
                          "BCR", "heavy_sequences.fasta")
@@ -134,7 +134,7 @@ test_that("igblastn(): 'germline_db_[VDJ]_seqidlist' arguments", {
 })
 
 test_that("igblastn(): 'auxiliary_data' argument", {
-    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
     use_germline_db(db_name)
     use_c_region_db("")
     query <- system.file(package="igblastr", "extdata",

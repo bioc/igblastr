@@ -97,3 +97,5 @@ validate_rhesus_monkey_intdata <- function()
     }
 }
 
+validate_rhesus_monkey_intdata()
+

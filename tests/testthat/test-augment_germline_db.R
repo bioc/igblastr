@@ -7,7 +7,7 @@ test_that("augment_germline_db_*()", {
                          "BCR", "heavy_sequences.fasta")
     query <- readDNAStringSet(query)[c(1:2, 117:120)]
 
-    db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
+    db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
     use_germline_db(db_name)
     AIRR_df0 <- igblastn(query)
 

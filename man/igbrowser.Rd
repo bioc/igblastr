@@ -72,7 +72,7 @@ if (!has_igblast()) install_igblast()
 
 query <- system.file(package="igblastr", "extdata",
                      "BCR", "heavy_sequences.fasta")
-use_germline_db("_OGRDB.human.IGH+IGK+IGL.202410")
+use_germline_db("_OGRDB.human.IGH+IGK+IGL.202605")
 
 ## ---------------------------------------------------------------------
 ## With C regions

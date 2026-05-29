@@ -55,7 +55,7 @@ test_that("load_intdata()", {
     ## fwr3_end not a multiple of 3 for allele "IGLV2-8*03":
     #expect_identical(intdata[!ok, "allele_name"], "IGLV2-8*03")
 
-    intdata <- load_intdata("_OGRDB.human.IGH+IGK+IGL.202410")
+    intdata <- load_intdata("_OGRDB.human.IGH+IGK+IGL.202605")
     expect_true(all(validate_ndm_rows(intdata)))
 
     intdata <- load_intdata("_OGRDB.mouse.NOD_ShiLtJ.IGH+IGK+IGL.202205")
@@ -72,7 +72,7 @@ test_that("load_intdata()", {
         regexp="'organism' must be one of \"human\", \"mouse\", "
     )
     expect_error(
-        load_intdata("_OGRDB.human.IGH+IGK+IGL.202410", domain_system="kabat"),
+        load_intdata("_OGRDB.human.IGH+IGK+IGL.202605", domain_system="kabat"),
         regexp="V.ndm.kabat not found"
     )
 })

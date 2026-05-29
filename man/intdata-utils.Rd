@@ -181,10 +181,10 @@ stopifnot(identical(rabbit_intdata [ , end_colnames],
 list_germline_dbs(with.intdata.only=TRUE)
 
 ## Access the internal data included in germline db
-## _OGRDB.human.IGH+IGK+IGL.202410 (this data was inferred from
+## _OGRDB.human.IGH+IGK+IGL.202605 (this data was inferred from
 ## the gaps in the germline V gene allele sequences provided by
 ## AIRR-community/OGRDB):
-db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
+db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
 
 get_intdata_path(db_name)
 

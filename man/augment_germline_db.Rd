@@ -101,7 +101,7 @@ use_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
 ## USE HUMAN GERMLINE DATABASE FROM AIRR
 ## ---------------------------------------------------------------------
 
-use_germline_db("_OGRDB.human.IGH+IGK+IGL.202410")
+use_germline_db("_OGRDB.human.IGH+IGK+IGL.202605")
 
 AIRR_df <- igblastn(query)
 
@@ -120,9 +120,9 @@ my_novel_V_alleles <- system.file(package="igblastr", "extdata",
 readDNAStringSet(my_novel_V_alleles)
 
 ## Create a new V germline database that combines the V alleles
-## from _OGRDB.human.IGH+IGK+IGL.202410 with our novel V alleles:
+## from _OGRDB.human.IGH+IGK+IGL.202605 with our novel V alleles:
 my_Vdb_path <- file.path(tempdir(), "myVdb")
-augment_germline_db_V("_OGRDB.human.IGH+IGK+IGL.202410",
+augment_germline_db_V("_OGRDB.human.IGH+IGK+IGL.202605",
                       my_novel_V_alleles,
                       destdir=my_Vdb_path)
 
@@ -183,7 +183,7 @@ stopifnot(all.equal(AIRR_df[-idx, ], AIRR_df2[-idx, ]))
 ## Let's do (2):
 
 db_name1 <- "_OGRDB.mouse.PWD_PhJ.IGH+IGK+IGL.202410"
-db_name2 <- "_OGRDB.human.IGH+IGK+IGL.202410"
+db_name2 <- "_OGRDB.human.IGH+IGK+IGL.202605"
 
 ## Extract human V germline alleles:
 human_V_alleles <- load_germline_db(db_name2, "V")

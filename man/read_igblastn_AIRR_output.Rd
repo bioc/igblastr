@@ -64,7 +64,7 @@ query <- c(head(readDNAStringSet(query[[1L]]), n=10),
            head(readDNAStringSet(query[[2L]]), n=10))
 
 ## Select the germline and C-region dbs to use with igblastn():
-use_germline_db("_OGRDB.human.IGH+IGK+IGL.202410")
+use_germline_db("_OGRDB.human.IGH+IGK+IGL.202605")
 use_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
 
 ## ---------------------------------------------------------------------

@@ -80,10 +80,10 @@ V_allele_has_stop_codon(V_alleles, intdata)
 
 \examples{
 ## Let's inspect the V allele sequences stored in
-## germline db _OGRDB.human.IGH+IGK+IGL.202410.
+## germline db _OGRDB.human.IGH+IGK+IGL.202605.
 
 ## Load the V allele sequences:
-db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
+db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
 V_alleles <- load_germline_db(db_name, region_types="V")
 V_alleles  # DNAStringSet object
 
@@ -98,7 +98,7 @@ head(V_aa)
 fwr2_aa <- translate_V_alleles(V_alleles, intdata, V_segment="fwr2")
 head(fwr2_aa)
 
-## Surprisingly, 13 V alleles in _OGRDB.human.IGH+IGK+IGL.202410
+## Surprisingly, 13 V alleles in _OGRDB.human.IGH+IGK+IGL.202605
 ## contain the stop codon:
 has_stop_codon <- grepl("*", V_aa, fixed=TRUE)
 table(has_stop_codon)

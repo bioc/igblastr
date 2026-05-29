@@ -116,7 +116,7 @@ translate_codons(dna1, with.init.codon=TRUE)
 
 ## Load germline V gene allele sequences for human:
 list_germline_dbs()
-db_name <- "_OGRDB.human.IGH+IGK+IGL.202410"
+db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
 V_alleles <- load_germline_db(db_name, region_types="V")
 V_alleles  # DNAStringSet object
 

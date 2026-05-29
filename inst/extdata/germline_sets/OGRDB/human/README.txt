@@ -15,6 +15,8 @@ Content
 
 - 202410/: See README.md in 202410/ subfolder.
 
+- 202605/: See README.md in 202605/ subfolder.
+
 - diffs/: A collection of R scripts that show what has changed between
           versions of the _OGRDB.human.IGH+IGK+IGL.* germline dbs.
 
