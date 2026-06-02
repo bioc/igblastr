@@ -1,6 +1,7 @@
 \name{use_c_region_db}
 
 \alias{use_c_region_db}
+\alias{load_c_region_sequences}
 \alias{load_c_region_db}
 
 \title{Select cached C-region db to use with igblastn()}
@@ -10,14 +11,14 @@
   db to use with \code{\link{igblastn}()}. This choice will be remembered
   for the duration of the current R session but can be changed anytime.
 
-  \code{load_c_region_db()} allows the user to load the nucleotide sequences
-  of the germline gene alleles stored in a cached C-region db.
+  \code{load_c_region_sequences()} allows the user to load the nucleotide
+  sequences of the gene alleles stored in a cached C-region db.
 }
 
 \usage{
 use_c_region_db(db_name=NULL, verbose=FALSE)
 
-load_c_region_db(db_name)
+load_c_region_sequences(db_name)
 }
 
 \arguments{
@@ -26,7 +27,7 @@ load_c_region_db(db_name)
 
     \code{NULL} or a single string specifying the name of the
     cached C-region db to use. Use \code{\link{list_c_region_dbs}()}
-    to list all the cached C-region dbs.
+    get the list of all cached C-region dbs.
 
     If set to \code{NULL} (the default), then
     \code{use_c_region_db()} returns the name of the cached
@@ -36,11 +37,12 @@ load_c_region_db(db_name)
     Note that the current selection can be cancelled with
     \code{use_c_region_db("")}.
 
-    For \code{load_c_region_db()}:
+    For \code{load_c_region_sequences()}:
 
     A single string specifying the name of the cached C-region db
     from which to load the allele sequences. Use
-    \code{\link{list_c_region_dbs}()} to list all the cached C-region dbs.
+    \code{\link{list_c_region_dbs}()} to get the list of all cached
+    C-region dbs.
   }
   \item{verbose}{
     If set to \code{TRUE}, then \code{use_c_region_db()} will display
@@ -57,7 +59,7 @@ load_c_region_db(db_name)
   When called with the \code{db_name} argument, \code{use_c_region_db(db_name)}
   returns \code{db_name} invisibly.
 
-  \code{load_c_region_db()} returns the allele sequences from the
+  \code{load_c_region_sequences()} returns the allele sequences from the
   specified C-region db in a named \link[Biostrings]{DNAStringSet} object.
 }
 
@@ -97,8 +99,8 @@ use_c_region_db("")
 use_c_region_db()
 
 ## Load C-region sequences:
-load_c_region_db(db_name)
-load_c_region_db("_IMGT.mouse.IGH+IGK+IGL.202605")
+load_c_region_sequences(db_name)
+load_c_region_sequences("_IMGT.mouse.IGH+IGK+IGL.202605")
 }
 
 \keyword{utilities}

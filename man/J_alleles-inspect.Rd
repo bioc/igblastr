@@ -3,6 +3,7 @@
 \alias{J_alleles-inspect}
 \alias{J_alleles_inspect}
 
+\alias{print_J_alleles}
 \alias{translate_J_alleles}
 \alias{J_allele_has_stop_codon}
 \alias{translate_fwr4}
@@ -10,7 +11,7 @@
 \title{Basic inspection of J allele sequences}
 
 \description{
-  A small set of utilities for (very) basic inspection of J allele sequences.
+  A small set of utilities for basic inspection of J allele sequences.
 
   Note that all of them require access to the \emph{auxiliary data}
   associated with the J alleles to inspect. See \code{auxdata} argument
@@ -18,6 +19,9 @@
 }
 
 \usage{
+print_J_alleles(J_alleles, auxdata, translate=FALSE,
+                igblast_organism=NA, filler=".", cdr3fwr4_sep=" ")
+
 translate_J_alleles(J_alleles, auxdata)
 J_allele_has_stop_codon(J_alleles, auxdata)
 translate_fwr4(J_alleles, auxdata, max.codons=NA)
@@ -27,11 +31,43 @@ translate_fwr4(J_alleles, auxdata, max.codons=NA)
   \item{J_alleles}{
     A \link[Biostrings]{DNAStringSet} object containing germline J
     gene allele sequences.
+
+    Alternatively, this can be the name of a cached germline db, in
+    which case the \code{auxdata} argument doesn't need to (and
+    shouldn't) be supplied.
+    Note that this works only for germline dbs that include their
+    own \emph{auxiliary data}. You can use:
+    \preformatted{    list_germline_dbs(with.auxdata.only=TRUE)}
+    to list them.
+    See \code{?\link{list_germline_dbs}} for more information.
   }
   \item{auxdata}{
-    A data.frame as returned by \code{\link{compute_auxdata}()},
-    \code{\link{compute_germline_db_auxdata}()}, or
-    \code{\link{load_auxdata}()}.
+    A data.frame as returned by \code{\link{load_auxdata}()},
+    \code{\link{compute_auxdata}()}, or
+    \code{\link{compute_germline_db_auxdata}()}, that contains
+    annotations for the alleles in \code{J_alleles}.
+  }
+  \item{translate}{
+    By default, \code{print_J_alleles()} displays the nucleotide sequences.
+    Set \code{translate} to \code{TRUE} to display the amino acid sequences
+    instead.
+  }
+  \item{igblast_organism}{
+    If the alleles in \code{J_alleles} are from an "IgBLAST organism" (see
+    \code{?\link{list_igblast_organisms}}), then the name of the organism
+    can be passed to \code{igblast_organism}.
+    In this case \code{print_J_alleles()} will display whether each allele
+    is also annotated in the \emph{auxiliary data} shipped with IgBLAST for
+    this organism.
+  }
+  \item{filler}{
+    The character to use to pad the sequences on both ends. This padding
+    achieves the horizontal alignment of all sequences w.r.t. the
+    CDR3/FWR4 junction.
+  }
+  \item{cdr3fwr4_sep}{
+    The string to use to separate the CDR3 portions of the sequences from
+    their FWR4 portions.
   }
   \item{max.codons}{
     The maximum number of FWR4 codons to translate. By default (i.e. when
@@ -40,6 +76,10 @@ translate_fwr4(J_alleles, auxdata, max.codons=NA)
 }
 
 \value{
+  \code{print_J_alleles()} returns the CDR3 and FWR4 portions of the
+  J allele sequences in an invisible \link[S4Vectors]{DataFrame} with
+  1 row per J allele.
+
   \code{translate_J_alleles()} returns a named character vector with 1
   amino acid sequence per supplied allele. The vector contains an \code{NA}
   for any allele that is not annotated in \code{auxdata} or for which
@@ -69,11 +109,12 @@ translate_fwr4(J_alleles, auxdata, max.codons=NA)
     \item \code{\link{update_live_igdata}} for more information about "live"
           and "original" IgBLAST data.
 
-    \item \link[Biostrings]{DNAStringSet} objects in the \pkg{Biostrings}
-          package.
+    \item \link[Biostrings]{DNAStringSet} and \link[Biostrings]{AAStringSet}
+          objects in the \pkg{Biostrings} package.
 
-    \item The \code{\link{translate_codons}} function upon which
-          \code{translate_J_alleles()} and \code{translate_fwr4()} are based.
+    \item The \code{\link{translate_codons}} function which is used internally
+          by \code{print_J_alleles()}, \code{translate_J_alleles()}, and
+          \code{translate_fwr4()}.
 
     \item IgBLAST is described at
           \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.
@@ -86,39 +127,129 @@ if (!has_igblast()) install_igblast()
 igblast_info()
 
 ## ---------------------------------------------------------------------
-## 1. A close look at the J allele sequences for rabbit
+## 1. A QUICK LOOK AT THE GERMLINE J GENE ALLELES PROVIDED BY OGRDB
 ## ---------------------------------------------------------------------
 
-## IgBLAST only includes auxiliary data for the following organisms:
-list_igblast_organisms()
+list_germline_dbs()
 
-get_auxdata_path("rabbit")
-rabbit_auxdata <- load_auxdata("rabbit")
+## --- Human germline J gene alleles ---
 
-## It turns out that IgBLAST auxiliary data for rabbit matches exactly
-## the set of rabbit germline J alleles available at IMGT:
-db_name <- install_IMGT_germline_db("202614-2", "Oryctolagus cuniculus",
-                                    without.auxdata=TRUE,
+db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
+
+## The 'also_in_IgBLAST_auxdata' column indicates whether an allele is
+## also annotated in the "auxiliary data" shipped with IgBLAST (i.e. in
+## the optional_file/human_gl.aux file in the case of human):
+print_J_alleles(db_name)
+print_J_alleles(db_name, translate=TRUE)
+
+## Note that the above shows that:
+## - All FWR4 regions from the IGH locus (heavy chain) start with
+##   the "WGXG" motif.
+## - All FWR4 regions from the IGK and IGL loci (light chain) start
+##   with the "FGXG" motif.
+
+## --- Mouse germline J gene alleles ---
+
+db_name <- "_OGRDB.mouse.MSM_MsJ.IGH+IGK+IGL.202603"
+
+## None of the mouse J alleles from OGRDB are annotated in the "auxiliary
+## data" shipped with IgBLAST (i.e. in optional_file/mouse_gl.aux).
+print_J_alleles(db_name, translate=TRUE)
+
+## The "auxiliary data" included in this germline db is provided by OGRDB.
+## In fact, the "auxiliary data" included in **all** the OGRDB built-in
+## dbs is provided by OGRDB.
+
+## ---------------------------------------------------------------------
+## 2. A QUICK LOOK AT THE GERMLINE J GENE ALLELES PROVIDED BY IMGT
+## ---------------------------------------------------------------------
+
+## --- For "IgBLAST organisms" ---
+
+## Mouse:
+db_name <- install_IMGT_germline_db("202614-2", "Mus_musculus",
                                     overwrite=TRUE)
-J_alleles <- load_germline_db(db_name, region_types="J")
-J_alleles  # DNAStringSet object
-stopifnot(setequal(names(J_alleles), rabbit_auxdata$allele_name))
+print_J_alleles(db_name, translate=TRUE)
 
-## Note that this might change with future IMGT releases.
+## Note that:
+## - The annotations for the 3 alleles not annotated in
+##   IgBLAST "auxiliary data" for mouse were computed by
+##   install_IMGT_germline_db().
+## - The CDR3 of allele IGHJ3*02 contains a stop codon (indicated by
+##   character "*").
 
-## Let's put the allele sequences in 'J_alleles' in the same order as
-## in 'rabbit_auxdata':
-J_alleles <- J_alleles[rabbit_auxdata$allele_name]
-stopifnot(identical(names(J_alleles), rabbit_auxdata$allele_name))
+## Rat:
+db_name <- suppressWarnings(
+  install_IMGT_germline_db("202614-2", "Rattus_norvegicus", overwrite=TRUE)
+)
+print_J_alleles(db_name, translate=TRUE)
 
-## The 'coding_frame_start' column in 'rabbit_auxdata' contains integer
+## Notes:
+## - The >> and << tags around a sequence indicate an allele for which
+##   the CDR3/FWR4 junction is unknown.
+## - Even though allele IGKJ3*01 is annotated in the "auxiliary data"
+##   shipped with IgBLAST (in optional_file/rat_gl.aux), its cdr3_end
+##   value is missing:
+imgt_auxdata <- load_auxdata("rat")
+imgt_auxdata
+subset(imgt_auxdata, is.na(cdr3_end))
+
+## --- For non-IgBLAST organisms ---
+
+## Gorilla:
+db_name <- install_IMGT_germline_db("202614-2", "Gorilla_gorilla_gorilla",
+                                    overwrite=TRUE)
+print_J_alleles(db_name, translate=TRUE)
+
+## Note that, in this case:
+## - There's no 'also_in_IgBLAST_auxdata' column.
+## - install_IMGT_germline_db() took care of computing the annotations
+##   for all the alleles.
+
+## Pig:
+db_name <- install_IMGT_germline_db("202614-2", "Sus_scrofa",
+                                    overwrite=TRUE)
+print_J_alleles(db_name, translate=TRUE)
+
+## ---------------------------------------------------------------------
+## 3. MORE ABOUT print_J_alleles()
+## ---------------------------------------------------------------------
+
+## print_J_alleles() also accepts an arbitrary set of J allele sequences
+## and their annotations (via arguments 'J_alleles' and 'auxdata',
+## respectively):
+
+db_name <- "IMGT-202614-2.Mus_musculus.IGH+IGK+IGL"
+J_alleles <- load_germline_sequences(db_name, region_types="J")
+auxdata <- load_auxdata(db_name)
+print_J_alleles(J_alleles, auxdata, igblast_organism="mouse")
+
+## Note that the above is equivalent to 'print_J_alleles(db_name)'.
+
+## print_J_alleles() returns a DataFrame with the CDR3 and FWR4
+## portions of the J allele sequences:
+
+DF <- suppressMessages(print_J_alleles(db_name, translate=TRUE))
+DF
+
+## ---------------------------------------------------------------------
+## 4. translate_J_alleles()
+## ---------------------------------------------------------------------
+
+db_name <- install_IMGT_germline_db("202614-2", "Oryctolagus cuniculus",
+                                    overwrite=TRUE)
+J_alleles <- load_germline_sequences(db_name, region_types="J")
+auxdata <- load_auxdata(db_name)
+head(auxdata)
+
+## The 'coding_frame_start' column in 'auxdata' contains integer
 ## values that are >= 0 and <= 2. They indicate how many nucleotides
 ## precede the first codon on each allele sequence. In other words,
 ## this is the number of nucleotides that we need to trim on the 5'
 ## end of the germline J allele sequence before we start translating
 ## it. translate_J_alleles() uses this information to translate the
 ## DNA sequences in 'J_alleles':
-J_aa <- translate_J_alleles(J_alleles, rabbit_auxdata)
+J_aa <- translate_J_alleles(J_alleles, auxdata)
 J_aa
 
 ## No sequence in 'J_aa' should contain the letter "*" which is used
@@ -126,12 +257,12 @@ J_aa
 ## J allele in IMGT-202614-2.Oryctolagus_cuniculus.IGH+IGK+IGL seems
 ## to disobey:
 has_stop_codon <- grepl("*", J_aa, fixed=TRUE)
-rabbit_auxdata[has_stop_codon, ]  # coding_frame_start = 0 for IGKJ1-2*04
-J_alleles[has_stop_codon]         # first codon (TGA) is a stop codon
-J_aa[has_stop_codon]              # indeed!
+auxdata[has_stop_codon, ]  # coding_frame_start = 0 for IGKJ1-2*04
+J_alleles[has_stop_codon]  # first codon (TGA) is a stop codon
+J_aa[has_stop_codon]       # indeed!
 
 ## ---------------------------------------------------------------------
-## 2. About the "WGXG" and "FGXG" motifs
+## 5. ABOUT THE "WGXG" AND "FGXG" MOTIFS
 ## ---------------------------------------------------------------------
 
 ## The FWR4 region is expected to start with the following amino acid
@@ -141,7 +272,7 @@ J_aa[has_stop_codon]              # indeed!
 
 ## Let's use translate_fwr4() to extract and translate the first 4
 ## codons of the FWR4 region:
-fwr4_head <- translate_fwr4(J_alleles, rabbit_auxdata, max.codons=4)
+fwr4_head <- translate_fwr4(J_alleles, auxdata, max.codons=4)
 
 ## We expect to see the "WGXG" and "FGXG" motifs here, and most of the
 ## time we do:
@@ -150,26 +281,6 @@ table(has_motif)
 
 ## However, there are a few exceptions:
 fwr4_head[!has_motif]
-
-## ---------------------------------------------------------------------
-## 3. Compute auxiliary data for a set of J allele sequences
-## ---------------------------------------------------------------------
-
-## See '?compute_auxdata' for the details of what compute_auxdata() does.
-computed_auxdata <- compute_auxdata(J_alleles)
-head(computed_auxdata)
-
-## Alleles for which the CDR3 end could not found:
-cdr3_end_not_found <- is.na(computed_auxdata$cdr3_end)
-stopifnot(identical(cdr3_end_not_found, !has_motif))
-J_alleles[cdr3_end_not_found]
-fwr4_head[cdr3_end_not_found]  # déjà vu
-
-## 'computed_auxdata' is in agreement with 'rabbit_auxdata', except for
-## the 8 alleles for which the CDR3 end could not be found:
-keep_idx <- which(!cdr3_end_not_found)
-stopifnot(identical(computed_auxdata[keep_idx, ],
-                    rabbit_auxdata[keep_idx, ]))
 }
 
 \keyword{utilities}

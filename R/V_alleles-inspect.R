@@ -7,15 +7,15 @@
 ### Not exported!
 get_intdata_col <- function(intdata, colname)
 {
+    what <- "a data.frame as returned by load_intdata()"
     if (!is.data.frame(intdata))
-        stop(wmsg("'intdata' must be a data.frame as returned ",
-                  "by load_intdata()"))
+        stop(wmsg("'intdata' must be ", what))
     if (!isSingleNonWhiteString(colname))
         stop(wmsg("'colname' must be a single (non-empty) string"))
     intdata_col <- intdata[[colname]]
     if (is.null(intdata_col))
-        stop(wmsg("'intdata' has no \"", colname, "\" column. Make sure ",
-                  "that it's a data.frame as returned by load_intdata()."))
+        stop(wmsg("'intdata' has no \"", colname, "\" column. ",
+                  "Make sure that it's ", what, "."))
     intdata_col
 }
 

@@ -141,7 +141,7 @@
     stopifnot(isSingleNonWhiteString(bdb_path))
     db_name <- basename(dirname(bdb_path))
     region_type <- basename(bdb_path)
-    code <- sprintf("load_germline_db(\"%s\", region_types=\"%s\")",
+    code <- sprintf("load_germline_sequences(\"%s\", region_types=\"%s\")",
                     db_name, region_type)
     sprintf("names(%s)", code)
 }
@@ -292,7 +292,7 @@
         #    warning(wmsg("the specified 'organism' (", organism, ") is ",
         #                 "ignored when 'custom_internal_data' is specified"),
         #            immediate.=TRUE)
-        return(normalize_igblast_organism(organism))
+        return(normalize_igblast_organism(organism, "organism"))
     }
     if (!is.null(custom_internal_data))
         return(NULL)
@@ -302,7 +302,7 @@
                   "(unless you also supply your own internal data thru ",
                   "the 'custom_internal_data' argument)"))
     db_name <- use_germline_db()  # cannot be ""
-    organism <- infer_organism_shortname_from_db_name(db_name)
+    organism <- infer_igblast_organism_from_db_name(db_name)
     if (is.na(organism))
         stop(wmsg("Don't know how to infer 'organism' from ",
                   "germline db name \"", db_name, "\". Please set ",
@@ -380,7 +380,7 @@
              wmsg(msg3), "\n  ", wmsg(msg4), "\n  ", wmsg(msg5))
     }
     db_name <- use_germline_db()  # cannot be ""
-    organism <- infer_organism_shortname_from_db_name(db_name)
+    organism <- infer_igblast_organism_from_db_name(db_name)
     if (is.na(organism)) {
         msg2 <- c("The germline db in use (", db_name, ") ",
                   "does not seem to correspond to an organism for ",

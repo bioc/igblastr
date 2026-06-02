@@ -35,16 +35,16 @@
 
 \usage{
 ## Access auxiliary data:
-get_auxdata_path(organism, which=c("live", "original"))
-load_auxdata(organism, which=c("live", "original"))
+get_auxdata_path(igblast_organism, which=c("live", "original"))
+load_auxdata(igblast_organism, which=c("live", "original"))
 
 ## Compute auxiliary data associated with the J alleles in germline db:
 compute_germline_db_auxdata(db_name, ...)
 }
 
 \arguments{
-  \item{organism}{
-    A single string containing the name of an organism as
+  \item{igblast_organism}{
+    A single string containing the name of an "IgBLAST organism" as
     returned by \code{\link{list_igblast_organisms}()}.
 
     Alternatively, this can be the name of a cached germline db.
@@ -69,7 +69,7 @@ compute_germline_db_auxdata(db_name, ...)
   }
   \item{db_name}{
     A single string specifying the name of a cached germline db.
-    Use \code{\link{list_germline_dbs}()} to list all the cached
+    Use \code{\link{list_germline_dbs}()} to get the list of all cached
     germline dbs.
   }
   \item{...}{
@@ -99,8 +99,8 @@ compute_germline_db_auxdata(db_name, ...)
 \value{
   \code{get_auxdata_path()} returns a single string containing
   the path to the \emph{auxiliary data} included in the IgBLAST installation
-  used by \pkg{igblastr}, for the specified organism. Not necessarily suitable
-  to use with \code{\link{igblastn}()} (see WARNING below).
+  used by \pkg{igblastr}, for the specified organism. Not necessarily
+  suitable to use with \code{\link{igblastn}()} (see WARNING below).
 
   \code{load_auxdata()} returns the \emph{auxiliary data} in a data.frame
   with 1 row per supplied J allele sequence and the same columns as the
@@ -125,7 +125,7 @@ compute_germline_db_auxdata(db_name, ...)
           and "original" IgBLAST data.
 
     \item \code{\link{list_igblast_organisms}} to list the organisms
-          supported by IgBLAST.
+          supported by IgBLAST (a.k.a. "IgBLAST organisms").
 
     \item \code{\link{list_germline_dbs}} to list the cached germline dbs.
 
@@ -145,7 +145,7 @@ compute_germline_db_auxdata(db_name, ...)
 if (!has_igblast()) install_igblast()
 
 ## ---------------------------------------------------------------------
-## Access IgBLAST auxiliary data for a given organism
+## Access IgBLAST auxiliary data for a given "IgBLAST organism"
 ## ---------------------------------------------------------------------
 
 ## IgBLAST only includes auxiliary data for the following organisms:

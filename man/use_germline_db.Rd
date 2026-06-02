@@ -1,6 +1,7 @@
 \name{use_germline_dbs}
 
 \alias{use_germline_db}
+\alias{load_germline_sequences}
 \alias{load_germline_db}
 
 \title{Select cached germline db to use with igblastn()}
@@ -10,14 +11,14 @@
   db to use with \code{\link{igblastn}()}. This choice will be remembered
   for the duration of the current R session but can be changed anytime.
 
-  \code{load_germline_db()} allows the user to load the nucleotide sequences
-  of the germline gene alleles stored in a cached germline db.
+  \code{load_germline_sequences()} allows the user to load the nucleotide
+  sequences of the gene alleles stored in a cached germline db.
 }
 
 \usage{
 use_germline_db(db_name=NULL, verbose=FALSE)
 
-load_germline_db(db_name, region_types=NULL)
+load_germline_sequences(db_name, region_types=NULL)
 }
 
 \arguments{
@@ -26,18 +27,19 @@ load_germline_db(db_name, region_types=NULL)
 
     \code{NULL} or a single string specifying the name of the
     cached germline db to use. Use \code{\link{list_germline_dbs}()}
-    to list all the cached germline dbs.
+    to get the list of all cached germline dbs.
 
     If set to \code{NULL} (the default), then
     \code{use_germline_db()} returns the name of the cached
     germline db that is currently in use, if any. Otherwise it
     raises an error.
 
-    For \code{load_germline_db()}:
+    For \code{load_germline_sequences()}:
 
     A single string specifying the name of the cached germline db
     from which to load the V, D, and/or J allele sequences. Use
-    \code{\link{list_germline_dbs}()} to list all the cached germline dbs.
+    \code{\link{list_germline_dbs}()} to get the list of all cached
+    germline dbs.
   }
   \item{verbose}{
     If set to \code{TRUE}, then \code{use_germline_db()} will display
@@ -61,7 +63,7 @@ load_germline_db(db_name, region_types=NULL)
   When called with the \code{db_name} argument, \code{use_germline_db(db_name)}
   returns \code{db_name} invisibly.
 
-  \code{load_germline_db()} returns the allele sequences from the
+  \code{load_germline_sequences()} returns the allele sequences from the
   specified germline db in a named \link[Biostrings]{DNAStringSet} object.
 }
 
@@ -97,9 +99,9 @@ use_germline_db(db_name)
 use_germline_db()
 
 ## Load germline gene allele sequences:
-load_germline_db(db_name)
-load_germline_db(db_name, region_types="D")
-load_germline_db(db_name, region_types="DJ")
+load_germline_sequences(db_name)
+load_germline_sequences(db_name, region_types="D")
+load_germline_sequences(db_name, region_types="DJ")
 }
 
 \keyword{utilities}

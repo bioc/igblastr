@@ -38,7 +38,7 @@ IMGT_is_up()
     A single string specifying the IMGT/V-QUEST release to download
     the germline sequences from (or to list the organisms from for
     \code{list_IMGT_organisms()}).
-    Use \code{list_IMGT_releases()} to list all releases.
+    Use \code{list_IMGT_releases()} to get the list of all releases.
   }
   \item{organism}{
     A single string specifying the latin name of the organism for which

@@ -65,12 +65,12 @@ make_chain_type <- function(region_type, locus)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### checkarg_loci()
+### check_selected_loci()
 ###
 
 ### A very shallow check. Doesn't actually check that the supplied loci
 ### are valid loci.
-checkarg_loci <- function(loci)
+check_selected_loci <- function(loci)
 {
     if (!is.character(loci) || length(loci) == 0L)
         stop(wmsg("'loci' must be a non-empty character vector"))
@@ -81,17 +81,27 @@ checkarg_loci <- function(loci)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### extract_loci_prefix()
+### extract_selected_loci_prefix()
 ###
 
-### Also checks that the supplied loci are valid loci.
-### Returns "IG" or "TR".
 extract_loci_prefix <- function(loci)
 {
-    checkarg_loci(loci)
+    stopifnot(is.character(loci))
     if (all(loci %in% IG_LOCI))
         return("IG")
     if (all(loci %in% TR_LOCI))
         return("TR")
+    NA_character_
+}
+
+### Expects 'loci' to be a character vector that represents a selection
+### of unique valid loci. Returns "IG" or "TR".
+extract_selected_loci_prefix <- function(loci)
+{
+    check_selected_loci(loci)
+    loci_prefix <- extract_loci_prefix(loci)
+    if (!is.na(loci_prefix))
+        return(loci_prefix)
     IG_loci_in1string <- paste0("\"", IG_LOCI, "\"", collapse=", ")
     TR_loci_in1string <- paste0("\"", TR_LOCI, "\"", collapse=", ")
     stop(wmsg("'loci' must be a subset of 'c(", IG_loci_in1string, ")' ",
@@ -108,7 +118,7 @@ extract_loci_prefix <- function(loci)
 ### regions but some loci (e.g. IGK or TRA) don't have D regions.
 .check_loci_for_missing_regions <- function(loci)
 {
-    loci_prefix <- extract_loci_prefix(loci)
+    loci_prefix <- extract_selected_loci_prefix(loci)
     loci_2_region_types <- switch(loci_prefix,
                                   IG=.IG_LOCI_2_REGION_TYPES,
                                   TR=.TR_LOCI_2_REGION_TYPES,
@@ -131,7 +141,7 @@ extract_loci_prefix <- function(loci)
 normalize_user_supplied_loci <- function(loci="auto", tcr.db=FALSE,
                                          stop.if.missing.regions=FALSE)
 {
-    checkarg_loci(loci)
+    check_selected_loci(loci)
     if (length(loci) == 1L) {
         if (loci == "auto") {
             if (!isTRUEorFALSE(tcr.db))
@@ -146,7 +156,7 @@ normalize_user_supplied_loci <- function(loci="auto", tcr.db=FALSE,
         stop(wmsg("'stop.if.missing.regions' must be TRUE or FALSE"))
     if (stop.if.missing.regions)
         .check_loci_for_missing_regions(loci)
-    loci_prefix <- extract_loci_prefix(loci)
+    loci_prefix <- extract_selected_loci_prefix(loci)
     if (!identical(tcr.db, FALSE))
         stop(wmsg("'tcr.db' should not be used when 'loci' is supplied"))
     valid_loci <- if (loci_prefix == "IG") IG_LOCI else TR_LOCI
@@ -160,7 +170,7 @@ normalize_user_supplied_loci <- function(loci="auto", tcr.db=FALSE,
 
 map_loci_to_region_types <- function(loci)
 {
-    loci_prefix <- extract_loci_prefix(loci)
+    loci_prefix <- extract_selected_loci_prefix(loci)
     if (loci_prefix == "IG") {
         loci2regiontypes <- .IG_LOCI_2_REGION_TYPES
     } else {

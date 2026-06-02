@@ -56,14 +56,16 @@ write_ndm_data_to_db <- function(ndm_data, db_path,
 ### get_intdata_path()
 ###
 
-.get_igblast_intdata_path <- function(which, organism, for.aa, domain_system)
+.get_igblast_intdata_path <- function(which, igblast_organism,
+                                      for.aa, domain_system)
 {
-    organism <- normalize_igblast_organism(organism)
-    intdata_dir <- file.path(path_to_igdata(which), "internal_data", organism)
+    igblast_organism <- normalize_igblast_organism(igblast_organism)
+    intdata_dir <- file.path(path_to_igdata(which), "internal_data",
+                             igblast_organism)
     if (!dir.exists(intdata_dir))
-        stop(wmsg("no internal data found for organism ", organism))
+        stop(wmsg("no internal data found for organism ", igblast_organism))
     file_suffix <- .make_intdata_file_suffix(for.aa, domain_system)
-    intdata_filename <- paste0(organism, file_suffix)
+    intdata_filename <- paste0(igblast_organism, file_suffix)
     intdata_path <- file.path(intdata_dir, intdata_filename)
     if (!file.exists(intdata_path))
         stop(wmsg("internal data file ", intdata_filename, " ",
@@ -71,30 +73,30 @@ write_ndm_data_to_db <- function(ndm_data, db_path,
     intdata_path
 }
 
-get_intdata_path <- function(organism, for.aa=FALSE,
+get_intdata_path <- function(igblast_organism, for.aa=FALSE,
                              domain_system=c("imgt", "kabat"),
                              which=c("live", "original"))
 {
-    if (!isSingleNonWhiteString(organism))
-        stop(wmsg("'organism' must be a single (non-empty) string"))
+    if (!isSingleNonWhiteString(igblast_organism))
+        stop(wmsg("'igblast_organism' must be a single (non-empty) string"))
     if (!isTRUEorFALSE(for.aa))
         stop(wmsg("'for.aa' must be TRUE or FALSE"))
     domain_system <- match.arg(domain_system)
     which <- match.arg(which)
 
-    if (!valid_germline_db_name(organism))
-        return(.get_igblast_intdata_path(which, organism,
+    if (!valid_germline_db_name(igblast_organism))
+        return(.get_igblast_intdata_path(which, igblast_organism,
                                          for.aa, domain_system))
 
-    ## Treat 'organism' as a valid germline db name.
-    db_path <- get_germline_db_path(organism)
+    ## Treat 'igblast_organism' as a valid germline db name.
+    db_path <- get_germline_db_path(igblast_organism)
     intdata_path <- make_germline_db_intdata_path(db_path,
                                                   for.aa, domain_system)
     if (!dir.exists(dirname(intdata_path)))
-        stop(wmsg("no internal data found in germline db ", organism))
+        stop(wmsg("no internal data found in germline db ", igblast_organism))
     if (!file.exists(intdata_path))
         stop(wmsg("internal data file ", basename(intdata_path), " ",
-                  "not found in germline db ", organism))
+                  "not found in germline db ", igblast_organism))
     intdata_path
 }
 
@@ -105,13 +107,13 @@ get_intdata_path <- function(organism, for.aa=FALSE,
 
 ### IMPORTANT NOTE: The FWR/CDR positions in the returned data.frame are
 ### 1-based while the coding frame start positions are 0-based!
-load_intdata <- function(organism, for.aa=FALSE,
+load_intdata <- function(igblast_organism, for.aa=FALSE,
                          domain_system=c("imgt", "kabat"),
                          which=c("live", "original"))
 {
     domain_system <- match.arg(domain_system)
     which <- match.arg(which)
-    intdata_path <- get_intdata_path(organism, for.aa=for.aa,
+    intdata_path <- get_intdata_path(igblast_organism, for.aa=for.aa,
                                      domain_system=domain_system,
                                      which=which)
     read_ndm_data(intdata_path)
@@ -125,16 +127,16 @@ load_intdata <- function(organism, for.aa=FALSE,
 show_intdata_disagreements <- function(db_name)
 {
     check_germline_db_name(db_name)
-    organism_shortname <- infer_organism_shortname_from_db_name(db_name)
-    if (is.na(organism_shortname))
+    igblast_organism <- infer_igblast_organism_from_db_name(db_name)
+    if (is.na(igblast_organism))
         stop(wmsg("the specified germline db not seem to be for ",
                   "an organism that is supported by IgBLAST"))
     computed_intdata <- load_intdata(db_name)
-    igblast_intdata <- load_intdata(organism_shortname)
+    igblast_intdata <- load_intdata(igblast_organism)
     diff <- df_diff(computed_intdata, igblast_intdata, "allele_name",
                     "computed", "IgBLAST")
     what <- c("the computed \"internal data\" included in this germline ",
-              "db and the \"internal data\" for ", organism_shortname, " ",
+              "db and the \"internal data\" for ", igblast_organism, " ",
               "shipped with IgBLAST")
     if (length(diff) == 0L) {
         msg <- c("No disagreements between ", what, ".")

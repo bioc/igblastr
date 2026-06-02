@@ -13,7 +13,7 @@ LATIN_NAMES <- c(
 
 ### Treats 'organism' as a regular expression.
 ### Returns one of 'names(LATIN_NAMES)'.
-find_organism_shortname <- function(organism)
+lookup_igblast_organism <- function(organism)
 {
     stopifnot(isSingleNonWhiteString(organism))
     ans <- grep(chartr(" ", "_", organism), names(LATIN_NAMES),
@@ -31,23 +31,23 @@ find_organism_shortname <- function(organism)
     names(LATIN_NAMES)[[idx]]
 }
 
-find_organism_latin_name <- function(organism)
-    LATIN_NAMES[[find_organism_shortname(organism)]]
+lookup_organism_latin_name <- function(organism)
+    LATIN_NAMES[[lookup_igblast_organism(organism)]]
 
 ### Tries to map 'db_name' to one of the 5 organisms officially
 ### supported by IgBLAST.
-infer_organism_shortname_from_db_name <- function(db_name)
+infer_igblast_organism_from_db_name <- function(db_name)
 {
     stopifnot(isSingleNonWhiteString(db_name))
     db_name <- chartr(".", "_", tolower(db_name))
     for (i in seq_along(LATIN_NAMES)) {
-        shortname <- names(LATIN_NAMES)[[i]]
-        pattern <- paste0("_", chartr("_", ".", shortname), "_")
+        igblast_organism <- names(LATIN_NAMES)[[i]]
+        pattern <- paste0("_", chartr("_", ".", igblast_organism), "_")
         if (grepl(pattern, db_name, ignore.case=TRUE))
-            return(shortname)
+            return(igblast_organism)
         pattern <- paste0("_", chartr(" ", ".", LATIN_NAMES[[i]]), "_")
         if (grepl(pattern, db_name, ignore.case=TRUE))
-            return(shortname)
+            return(igblast_organism)
     }
     NA_character_
 }

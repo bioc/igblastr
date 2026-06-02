@@ -8,8 +8,8 @@
 library(igblastr)
 
 ## Load the two databases as DNAStringSet objects:
-old <- load_germline_db("_OGRDB.human.IGH+IGK+IGL.202410")
-new <- load_germline_db("_OGRDB.human.IGH+IGK+IGL.202605")
+old <- load_germline_sequences("_OGRDB.human.IGH+IGK+IGL.202410")
+new <- load_germline_sequences("_OGRDB.human.IGH+IGK+IGL.202605")
 
 length(old)
 # [1] 396

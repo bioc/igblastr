@@ -9,9 +9,9 @@
     expect_identical(counts, counts1 + counts2)
 
     ## Check combined allele names.
-    allele_names  <- names(load_germline_db(db_name))
-    allele_names1 <- names(load_germline_db(db_name1))
-    allele_names2 <- names(load_germline_db(db_name2))
+    allele_names  <- names(load_germline_sequences(db_name))
+    allele_names1 <- names(load_germline_sequences(db_name1))
+    allele_names2 <- names(load_germline_sequences(db_name2))
     expect_identical(length(allele_names),  sum(counts))
     allele_names1 <- add_suffix(allele_names1, suffix1)
     allele_names2 <- add_suffix(allele_names2, suffix2)

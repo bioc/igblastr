@@ -95,9 +95,7 @@ remove_gaps(dna, gap_letter=".")
           \pkg{Biostrings} package upon which \code{translate_codons()}
           is based.
 
-    \item \code{\link{list_germline_dbs}} to list all the \emph{cached
-          germline dbs}, that is, all the germline databases currently
-          installed in \pkg{igblastr}'s persistent cache.
+    \item \code{\link{list_germline_dbs}} to list the cached germline dbs.
   }
 }
 
@@ -117,7 +115,7 @@ translate_codons(dna1, with.init.codon=TRUE)
 ## Load germline V gene allele sequences for human:
 list_germline_dbs()
 db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
-V_alleles <- load_germline_db(db_name, region_types="V")
+V_alleles <- load_germline_sequences(db_name, region_types="V")
 V_alleles  # DNAStringSet object
 
 ## Translate them:

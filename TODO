@@ -1,7 +1,28 @@
 High-priority TODO list
 =======================
 
-o Ollivier's corrections to vignette.
+
+Several issues with the auxiliary data and internal data shipped with IgBLAST:
+
+o What's up with all the rows in the *_gl.aux files shipped with IgBLAST
+  for which the "coding_frame_start" / "cdr3_end" combination doesn't make
+  sense? See .load_igblast_auxdata() in R/install_IMGT_germline_db.R for
+  more information.
+
+o Starting with IMGT release 202611-4, we get:
+
+  > install_IMGT_germline_db("202611-4", "Homo_sapiens", tcr.db=TRUE)
+    Disagreements between 'computed auxdata' and 'IgBLAST auxdata':
+                            allele_name coding_frame_start cdr3_end extra_bps
+      computed auxdata:  99    TRDJ4*01                  0       NA         0
+       IgBLAST auxdata: 132    TRDJ4*01                  2       13         1
+
+  The codon start reported by IMGT (8th field in the FASTA headers) was
+  changed from 3 to 1 between IMGT releases 202603-4 and 202611-4. Note
+  that this is always reported as a 1-based position in IMGT FASTA headers,
+  so this change would translate into changing the "coding_frame_start" field
+  in IgBLAST file human_gl.aux from 2 to 0 (the "coding_frame_start" field
+  is 0-based).
 
 o Investigate the disagreements between the "internal data" that we
   include in the germline dbs obtained with install_IMGT_germline_db()
@@ -14,6 +35,10 @@ o Investigate the disagreements between the "internal data" that we
   the sets of V allele sequences provided by IMGT have evolved over the
   years, it became out-of-sync.
   Should we contact the NCBI folks about this?
+
+Other high-priority TODO items:
+
+o Add unit tests for and document infer_cdr3_ends_via_fwr4_comparisons().
 
 o More testing of combine_germline_dbs() and combine_c_region_dbs(). Improve
   unit tests. Improve man page and expand examples. Add cross links in other
@@ -41,7 +66,7 @@ o Why are some of the V alleles provided by IMGT "truncated" at the 3' end
   To identify them e.g. for mouse:
 
     db_name <- "IMGT-202614-2.Mus_musculus.IGH+IGK+IGL"
-    V_alleles <- load_germline_db(db_name, region_types="V")
+    V_alleles <- load_germline_sequences(db_name, region_types="V")
     intdata <- load_intdata(db_name)
     stopifnot(identical(names(V_alleles), intdata[ , "allele_name"]))
     seq_lens <- width(V_alleles)  # same as lengths(V_alleles)

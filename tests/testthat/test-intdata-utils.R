@@ -69,7 +69,7 @@ test_that("load_intdata()", {
 
     expect_error(
         load_intdata("toto"),
-        regexp="'organism' must be one of \"human\", \"mouse\", "
+        regexp="not an IgBLAST organism"
     )
     expect_error(
         load_intdata("_OGRDB.human.IGH+IGK+IGL.202605", domain_system="kabat"),

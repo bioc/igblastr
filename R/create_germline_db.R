@@ -90,7 +90,7 @@ list_loci_in_germline_fasta_dir <-
 
 .get_loci_for_region_type <- function(region_type, selected_loci)
 {
-    loci_prefix <- extract_loci_prefix(selected_loci)
+    loci_prefix <- extract_selected_loci_prefix(selected_loci)
     all_loci <- .get_all_region_type_loci(region_type, loci_prefix)
     intersect(all_loci, selected_loci)
 }

@@ -123,7 +123,7 @@ clean_germline_blastdbs <- function()
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### load_germline_db()
+### load_germline_sequences()
 ###
 
 .normarg_region_types <- function(region_types=NULL)
@@ -145,7 +145,7 @@ clean_germline_blastdbs <- function()
 }
 
 ### Returns the V, D, and/or J regions in a DNAStringSet object.
-load_germline_db <- function(db_name, region_types=NULL)
+load_germline_sequences <- function(db_name, region_types=NULL)
 {
     check_germline_db_name(db_name)
     db_path <- get_germline_db_path(db_name)
@@ -154,5 +154,11 @@ load_germline_db <- function(db_name, region_types=NULL)
         function(region_type) get_db_fasta_file(db_path, region_type),
         character(1), USE.NAMES=FALSE)
     readDNAStringSet(db_fasta_files)
+}
+
+load_germline_db <- function(...)
+{
+    .Deprecated("load_germline_sequences")
+    load_germline_sequences(...)
 }
 

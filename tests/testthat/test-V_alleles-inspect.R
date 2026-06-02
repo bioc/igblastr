@@ -2,7 +2,7 @@
 test_that("translate_V_alleles()", {
     db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
     intdata <- load_intdata(db_name)
-    V_alleles <- load_germline_db(db_name, region_types="V")
+    V_alleles <- load_germline_sequences(db_name, region_types="V")
 
     V_aa <- translate_V_alleles(V_alleles, intdata)
     expect_true(is.character(V_aa))
@@ -25,7 +25,7 @@ test_that("translate_V_alleles()", {
 test_that("V_allele_has_stop_codon()", {
     db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
     intdata <- load_intdata(db_name)
-    V_alleles <- load_germline_db(db_name, region_types="V")
+    V_alleles <- load_germline_sequences(db_name, region_types="V")
 
     has_stop_codon <- V_allele_has_stop_codon(V_alleles, intdata)
     expect_true(is.logical(has_stop_codon))
