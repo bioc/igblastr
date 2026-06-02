@@ -154,7 +154,7 @@
              group=c("IGHC", "IGKC", "IGLC", "TRAC", "TRBC", "TRGC", "TRDC"),
              seqset_nb=1L)
 {
-    species <- find_organism_latin_name(organism)
+    species <- lookup_organism_latin_name(organism)
     group <- match.arg(group)
     if (isSingleNonWhiteString(seqset_nb)) {
         seqset_internal_nb <- seqset_nb

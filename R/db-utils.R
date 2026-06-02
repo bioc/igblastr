@@ -111,7 +111,7 @@ get_db_original_fasta_dir <- function(db_path, region_type=VDJC_REGION_TYPES)
             loci
         })
     loci <- unique(unlist(all_loci, use.names=FALSE))
-    loci_prefix <- extract_loci_prefix(loci)
+    loci_prefix <- extract_selected_loci_prefix(loci)
     valid_loci <- if (loci_prefix == "IG") IG_LOCI else TR_LOCI
     valid_loci[valid_loci %in% loci]  # return loci in canonical order
 }

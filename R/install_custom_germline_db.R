@@ -35,14 +35,15 @@ stop_on_existing_germline_db <- function(db_name)
     if (file.exists(make_germline_db_auxdata_path(db_path)))
         return()
     db_name <- basename(db_path)
-    organism <- infer_organism_shortname_from_db_name(db_name)
+    igblast_organism <- infer_igblast_organism_from_db_name(db_name)
     msg1 <- c("The auxiliary data didn't get added to ",
               "germline db ", db_name, " because the \"coding frame start\" ",
               "could not be determined for some of the J alleles in the db.")
-    if (is.na(organism)) {
+    if (is.na(igblast_organism)) {
         msg2 <- "no auxiliary data"
     } else {
-        msg2 <- c("the auxiliary data included in IgBLAST for ", organism)
+        msg2 <- c("the auxiliary data included in IgBLAST for ",
+                  igblast_organism)
     }
     msg2 <- c("This means that, when you select the db as the ",
               "germline db to use with igblastn(), ", msg2, " will ",
@@ -68,7 +69,7 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
         stop(wmsg("'fasta_dir' must be a single (non-empty) string"))
     if (!dir.exists(fasta_dir))
         stop(wmsg(fasta_dir, ": directory not found"))
-    checkarg_loci(loci)
+    check_selected_loci(loci)
     if (!isTRUEorFALSE(gapped))
         stop(wmsg("'gapped' must be TRUE or FALSE"))
     checkarg_with.intdata(with.intdata, gapped)

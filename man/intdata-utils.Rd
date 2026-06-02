@@ -31,9 +31,11 @@
 
 \usage{
 ## Access internal data:
-get_intdata_path(organism, for.aa=FALSE, domain_system=c("imgt", "kabat"),
+get_intdata_path(igblast_organism, for.aa=FALSE,
+                 domain_system=c("imgt", "kabat"),
                  which=c("live", "original"))
-load_intdata(organism, for.aa=FALSE, domain_system=c("imgt", "kabat"),
+load_intdata(igblast_organism, for.aa=FALSE,
+             domain_system=c("imgt", "kabat"),
              which=c("live", "original"))
 
 ## Show disagreements (if any) between the computed "internal data"
@@ -45,8 +47,8 @@ V_genes_with_varying_fwrcdr_boundaries(intdata, V_segment=NULL)
 }
 
 \arguments{
-  \item{organism}{
-    A single string containing the name of an organism as
+  \item{igblast_organism}{
+    A single string containing the name of an "IgBLAST organism" as
     returned by \code{\link{list_igblast_organisms}()}.
 
     Alternatively, this can be the name of a cached germline db.
@@ -134,7 +136,7 @@ V_genes_with_varying_fwrcdr_boundaries(intdata, V_segment=NULL)
           and "original" IgBLAST data.
 
     \item \code{\link{list_igblast_organisms}} to list the organisms
-          supported by IgBLAST.
+          supported by IgBLAST (a.k.a. "IgBLAST organisms").
 
     \item \code{\link{list_germline_dbs}} to list the cached germline dbs.
 
@@ -153,7 +155,7 @@ if (!has_igblast()) install_igblast()
 igblast_info()
 
 ## ---------------------------------------------------------------------
-## Access IgBLAST internal data for a given organism
+## Access IgBLAST internal data for a given "IgBLAST organism"
 ## ---------------------------------------------------------------------
 
 ## IgBLAST only includes internal data for the following organisms:

@@ -1,6 +1,7 @@
 \name{compute_auxdata}
 
 \alias{compute_auxdata}
+\alias{infer_cdr3_ends_via_fwr4_comparisons}
 
 \title{Compute IgBLAST auxiliary data}
 
@@ -18,6 +19,9 @@
 
 \usage{
 compute_auxdata(J_alleles, codon_starts=NULL, no.warnings=FALSE)
+
+infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles,
+                                     maxdist=2L, mindist.for.2ndbest=6L)
 }
 
 \arguments{
@@ -45,6 +49,12 @@ compute_auxdata(J_alleles, codon_starts=NULL, no.warnings=FALSE)
     otherwise issues when the returned data.frame has \code{NA}s in its
     \code{coding_frame_start} column or negative values in its \code{cdr3_end}
     column.
+  }
+  \item{auxdata}{
+    COMING SOON...
+  }
+  \item{maxdist, mindist.for.2ndbest}{
+    COMING SOON...
   }
 }
 
@@ -102,7 +112,7 @@ compute_auxdata(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 
 ## Let's load a set of human J allele sequences:
 db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
-J_alleles <- load_germline_db(db_name, region_types="J")
+J_alleles <- load_germline_sequences(db_name, region_types="J")
 J_alleles  # DNAStringSet object
 
 computed_auxdata <- compute_auxdata(J_alleles)

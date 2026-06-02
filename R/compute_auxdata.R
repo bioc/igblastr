@@ -89,26 +89,24 @@
 ### compute_auxdata()
 ###
 
-.VALID_J_GROUPS <- paste0(IG_LOCI, "J")
-
 ### Returns a data.frame with the same column names as the data.frame
 ### returned by load_auxdata() (see file R/auxdata-utils.R), minus
 ### the "extra_bps" column and plus the "fwr4_start_motif" column.
 ### NOTE: We set coding_frame_start/cdr3_end/fwr4_start_motif
 ### to NA for alleles for which the FWR4 start cannot be determined.
-.compute_auxdata_for_J_group <- function(J_alleles, J_group)
+.compute_auxdata_for_locus <- function(J_alleles, locus)
 {
-    stopifnot(is(J_alleles, "DNAStringSet"), J_group %in% .VALID_J_GROUPS)
+    stopifnot(is(J_alleles, "DNAStringSet"), locus %in% c(IG_LOCI , TR_LOCI))
     allele_names <- names(J_alleles)
     stopifnot(!is.null(allele_names))
     if (length(J_alleles) == 0L) {
         chain_type <- character(0)
     } else {
-        allele_groups <- substr(allele_names, 1L, 4L)
-        stopifnot(all(allele_groups == J_group))
-        chain_type <- make_chain_type("J", substr(J_group, 1L, 3L))
+        allele_loci <- substr(allele_names, 1L, 3L)
+        stopifnot(all(allele_loci == locus))
+        chain_type <- make_chain_type("J", locus)
     }
-    if (J_group == "IGHJ") {
+    if (locus %in% c("IGH", "TRB", "TRD")) {
         fwr4_starts <- .find_heavy_fwr4_starts(J_alleles)
     } else {
         fwr4_starts <- .find_light_fwr4_starts(J_alleles)
@@ -203,6 +201,8 @@ warn_if_negative_cdr3_end <- function(auxdata, what)
     }
 }
 
+### Compute the auxiliary data for 'J_alleles' by searching motifs WGXG
+### and FGXG.
 ### Returns a data.frame with 1 row per sequence in 'J_alleles'.
 compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 {
@@ -211,11 +211,16 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
     allele_names <- names(J_alleles)
     if (is.null(allele_names))
         stop(wmsg("'J_alleles' must have names"))
+
     names(J_alleles) <- allele_names <- clean_imgt_fasta_headers(allele_names)
 
-    allele_groups <- substr(allele_names, 1L, 4L)
-    if (!all(allele_groups %in% .VALID_J_GROUPS))
-        stop(wmsg("all allele names must start with 'IG[HKL]J'"))
+    allele_loci <- substr(allele_names, 1L, 3L)
+    loci_prefix <- extract_loci_prefix(allele_loci)
+    if (is.na(loci_prefix))
+        stop(wmsg("all allele names must start either ",
+                  "with 'IG[HKL]' or with 'TR[ABGD]'"))
+    if (!all(substr(allele_names, 4L, 4L) == "J"))
+        stop(wmsg("the 4th letter in all allele names must be a J"))
 
     if (!is.null(codon_starts))
         codon_starts <- .normarg_codon_starts(codon_starts, allele_names)
@@ -223,13 +228,25 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
     if (!isTRUEorFALSE(no.warnings))
         stop(wmsg("'no.warnings' must be TRUE or FALSE"))
 
-    JH_alleles <- J_alleles[allele_groups == "IGHJ"]
-    JK_alleles <- J_alleles[allele_groups == "IGKJ"]
-    JL_alleles <- J_alleles[allele_groups == "IGLJ"]
-    JH_df <- .compute_auxdata_for_J_group(JH_alleles, "IGHJ")
-    JK_df <- .compute_auxdata_for_J_group(JK_alleles, "IGKJ")
-    JL_df <- .compute_auxdata_for_J_group(JL_alleles, "IGLJ")
-    ans <- rbind(JH_df, JK_df, JL_df)
+    if (loci_prefix == "IG") {
+        JH_alleles <- J_alleles[allele_loci == "IGH"]
+        JK_alleles <- J_alleles[allele_loci == "IGK"]
+        JL_alleles <- J_alleles[allele_loci == "IGL"]
+        JH_df <- .compute_auxdata_for_locus(JH_alleles, "IGH")
+        JK_df <- .compute_auxdata_for_locus(JK_alleles, "IGK")
+        JL_df <- .compute_auxdata_for_locus(JL_alleles, "IGL")
+        ans <- rbind(JH_df, JK_df, JL_df)
+    } else {
+        JA_alleles <- J_alleles[allele_loci == "TRA"]
+        JB_alleles <- J_alleles[allele_loci == "TRB"]
+        JG_alleles <- J_alleles[allele_loci == "TRG"]
+        JD_alleles <- J_alleles[allele_loci == "TRD"]
+        JA_df <- .compute_auxdata_for_locus(JA_alleles, "TRA")
+        JB_df <- .compute_auxdata_for_locus(JB_alleles, "TRB")
+        JG_df <- .compute_auxdata_for_locus(JG_alleles, "TRG")
+        JD_df <- .compute_auxdata_for_locus(JD_alleles, "TRD")
+        ans <- rbind(JA_df, JB_df, JG_df, JD_df)
+    }
     rownames(ans) <- NULL
 
     i <- match(allele_names, ans[ , "allele_name"])
@@ -253,7 +270,7 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### find_discordant_auxdata()
-### complete_auxdata()
+### fill_missing_auxdata_with_ref()
 ###
 
 ### Not exported!
@@ -267,11 +284,229 @@ find_discordant_auxdata <- function(auxdata, ref_auxdata)
 
 ### Not exported!
 ### See complete_df_with_refdf() in R/utils.R for what it returns.
-complete_auxdata <- function(auxdata, ref_auxdata)
+fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
+                                          auxdata_name="auxdata",
+                                          ref_auxdata_name="ref_auxdata")
 {
     check_auxdata_col2class(auxdata)
     check_auxdata_col2class(ref_auxdata)
     complete_df_with_refdf(auxdata, ref_auxdata, "allele_name",
-                           "auxdata", "ref_auxdata")
+                           auxdata_name, ref_auxdata_name)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### infer_cdr3_ends_via_fwr4_comparisons()
+###
+
+.normarg_maxdist <- function(maxdist)
+{
+    if (!isSingleNumber(maxdist))
+        stop(wmsg("'maxdist' must be a single integer"))
+    if (!is.integer(maxdist))
+        maxdist <- as.integer(maxdist)
+    if (!(maxdist >= 0L && maxdist <= 5L))
+        stop(wmsg("'maxdist' must be >= 0 and <= 5"))
+    maxdist
+}
+
+.normarg_mindist.for.2ndbest <- function(mindist.for.2ndbest, maxdist)
+{
+    if (!isSingleNumber(mindist.for.2ndbest))
+        stop(wmsg("'mindist.for.2ndbest' must be a single integer"))
+    if (!is.integer(mindist.for.2ndbest))
+        mindist.for.2ndbest <- as.integer(mindist.for.2ndbest)
+    if (!(mindist.for.2ndbest > maxdist && mindist.for.2ndbest <= 10L))
+        stop(wmsg("'mindist.for.2ndbest' must be > 'maxdist' and <= 10"))
+    mindist.for.2ndbest
+}
+
+### Moves a sliding window of 10 amino acids across 'J_allele', and, for
+### each position of the window, computes the Hamming distance between the
+### sequence in the window and the set of known FWR4 sequences in 'fwr4set'.
+### Returns the distances in an integer vector of length 'nchar(J_allele)' - 9.
+.compute_sliding_window_dist_to_fwr4set <- function(J_allele, fwr4set)
+{
+    stopifnot(is(J_allele, "AAString"), nchar(J_allele) >= 12L,
+              is(fwr4set, "AAStringSet"), all(nchar(fwr4set) >= 10L))
+    vapply(seq_len(nchar(J_allele) - 9L),
+        function(pos)
+            min(neditAt(subseq(J_allele, start=pos, width=10L), fwr4set)),
+        integer(1)
+    )
+}
+
+### The "best FWR4 start position" in 'J_allele' is defined as follow:
+### If D(pos) is the distance between the 10-amino acid window in 'J_allele'
+### that starts at position 'pos' and the set of known FWR4 sequences
+### in 'fwr4set', then the "best FWR4 start position" is the position P
+### in 'J_allele' for which D(P) <= 2.
+### Furthermore, for P to be unambiguously defined, we also require that
+### there's only one position for which D(P) <= 5. In other words, P must
+### stand out amongst all possible positions!
+.find_best_fwr4_start <- function(J_allele, fwr4set,
+                                  maxdist=2L, mindist.for.2ndbest=6L)
+{
+    maxdist <- .normarg_maxdist(maxdist)
+    mindist.for.2ndbest <-
+               .normarg_mindist.for.2ndbest(mindist.for.2ndbest, maxdist)
+    if (nchar(J_allele) < 12L)
+        return(NA_integer_)
+    dists <- .compute_sliding_window_dist_to_fwr4set(J_allele, fwr4set)
+    if (sum(dists < mindist.for.2ndbest) != 1L)
+        return(NA_integer_)
+    P <- which.min(dists)
+    if (dists[[P]] <= maxdist) P else NA_integer_
+}
+
+### Returns an integer vector parallel to 'J_alleles' that contains the
+### 1-based FWR4 start positions.
+.find_best_fwr4_starts <- function(J_alleles, fwr4set,
+                                   maxdist=2L, mindist.for.2ndbest=6L)
+{
+    stopifnot(is(J_alleles, "AAStringSet"),
+              is(fwr4set, "AAStringSet"), all(nchar(fwr4set) >= 10L))
+    vapply(seq_along(J_alleles),
+        function(i)
+            .find_best_fwr4_start(J_alleles[[i]], fwr4set,
+                                  maxdist=maxdist,
+                                  mindist.for.2ndbest=mindist.for.2ndbest),
+        integer(1)
+    )
+}
+
+infer_cdr3_ends_via_fwr4_comparisons <-
+    function(auxdata, J_alleles, maxdist=2L, mindist.for.2ndbest=6L)
+{
+    check_auxdata_col2class(auxdata)
+    if (!is(J_alleles, "DNAStringSet") || length(J_alleles) != nrow(auxdata))
+        stop(wmsg("'J_alleles' must be a DNAStringSet object ",
+                  "with one sequence per row in 'auxdata'"))
+    if (!identical(names(J_alleles), auxdata[ , "allele_name"]))
+        stop(wmsg("'J_alleles' must have names and they must ",
+                  "be identical to 'auxdata$allele_name'"))
+    maxdist <- .normarg_maxdist(maxdist)
+    mindist.for.2ndbest <-
+               .normarg_mindist.for.2ndbest(mindist.for.2ndbest, maxdist)
+
+    coding_frame_start <- auxdata[ , "coding_frame_start"]
+    if (anyNA(coding_frame_start))
+        stop(wmsg("'auxdata$coding_frame_start' cannot contain NAs"))
+
+    cdr3_end <- auxdata[ , "cdr3_end"]  # 0-based
+    solve_me <- is.na(cdr3_end)
+    if (!any(solve_me))
+        return(auxdata)
+
+    cdr3_end <- cdr3_end + 1L  # 1-based
+    fwr4set <- translate_codons(J_alleles[!solve_me],
+                                offset=cdr3_end[!solve_me])
+    unsolved_J_aa <- translate_codons(J_alleles[solve_me],
+                                offset=coding_frame_start[solve_me])
+    solved_J_aa_fwr4_start <-
+        .find_best_fwr4_starts(unsolved_J_aa, fwr4set,
+                               maxdist=maxdist,
+                               mindist.for.2ndbest=mindist.for.2ndbest)
+    solved_J_aa_cdr3_end <- solved_J_aa_fwr4_start - 1L
+    solved_cdr3_end <- coding_frame_start[solve_me] + 3L * solved_J_aa_cdr3_end
+    solved_cdr3_end <- solved_cdr3_end - 1L  # 0-based
+    auxdata[solve_me, "cdr3_end"] <- solved_cdr3_end
+    warn_if_negative_cdr3_end(auxdata, "CDR3 end position")
+    auxdata
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### infer_cdr3_ends_via_full_J_sequence_comparisons()
+###
+### Not used and superseded by infer_cdr3_ends_via_fwr4_comparisons() above!
+###
+### For each J allele with an unknown CDR3 end, we infer it from the J
+### alleles with a known CDR3 end that are "close". Proximity is defined by
+### the Hamming distance between the amino acid sequences.
+### Based on Biostrings::matchPattern().
+
+.find_cdr3_end <- function(x, y, y_cdr3_end, max.mismatch)
+{
+    stopifnot(is(x, "AAString"),
+              is(y, "AAStringSet"),
+              is.integer(y_cdr3_end),
+              length(y) == length(y_cdr3_end),
+              identical(names(y), names(y_cdr3_end)),
+              isSingleNumber(max.mismatch))
+    delta <- rep.int(NA_integer_, length(y))
+    for (j in seq_along(y)) {
+        subject <- y[[j]]
+        if (length(x) <= length(subject)) {
+            v <- matchPattern(x, subject, max.mismatch=max.mismatch)
+            d <- start(v) - 1L
+        } else {
+            v <- matchPattern(subject, x, max.mismatch=max.mismatch)
+            d <- 1L - start(v)
+        }
+        if (length(d) >= 2L)
+            return(NA_integer_)
+        if (length(d) == 0L)
+            next
+        delta[[j]] <- d
+    }
+    x_cdr3_end <- y_cdr3_end - delta
+    ans <- unique(x_cdr3_end[!is.na(x_cdr3_end)])
+    if (length(ans) == 1L) ans else NA_integer_
+}
+
+### Returns an integer vector parallel to 'unsolved_J_aa' that contains the
+### 1-based CDR3 end positions w.r.t. to the sequences in 'unsolved_J_aa'.
+.find_cdr3_ends <- function(unsolved_J_aa,
+                            ref_J_aa, ref_J_aa_cdr3_end, max.mismatch=2L)
+{
+    stopifnot(is(unsolved_J_aa, "AAStringSet"),
+              is(ref_J_aa, "AAStringSet"),
+              is.integer(ref_J_aa_cdr3_end),
+              length(ref_J_aa) == length(ref_J_aa_cdr3_end),
+              identical(names(ref_J_aa), names(ref_J_aa_cdr3_end)),
+              isSingleNumber(max.mismatch))
+    vapply(seq_along(unsolved_J_aa),
+        function(i)
+            .find_cdr3_end(unsolved_J_aa[[i]],
+                           ref_J_aa, ref_J_aa_cdr3_end,
+                           max.mismatch=max.mismatch),
+        integer(1)
+    )
+}
+
+### Not exported!
+infer_cdr3_ends_via_full_J_sequence_comparisons <-
+    function(auxdata, J_alleles, max.mismatch=2L)
+{
+    check_auxdata_col2class(auxdata)
+    coding_frame_start <- auxdata[ , "coding_frame_start"]
+    stopifnot(!anyNA(coding_frame_start),
+              is(J_alleles, "DNAStringSet"),
+              identical(names(J_alleles), auxdata[ , "allele_name"]),
+              isSingleNumber(max.mismatch))
+
+    cdr3_end <- auxdata[ , "cdr3_end"]  # 0-based
+    solve_me <- is.na(cdr3_end)
+    if (!any(solve_me))
+        return(auxdata)
+
+    cdr3_end <- setNames(cdr3_end + 1L, names(J_alleles))  # 1-based
+    cdr3_coding_frame_width <- cdr3_end - coding_frame_start
+    stopifnot(all(cdr3_coding_frame_width %% 3L == 0L, na.rm=TRUE))
+    J_aa_cdr3_end <- cdr3_coding_frame_width %/% 3L
+
+    J_aa <- translate_codons(J_alleles, offset=coding_frame_start)
+    unsolved_J_aa <- J_aa[solve_me]
+    ref_J_aa <- J_aa[!solve_me]
+    ref_J_aa_cdr3_end <- J_aa_cdr3_end[!solve_me]
+    solved_J_aa_cdr3_end <- .find_cdr3_ends(unsolved_J_aa,
+                                            ref_J_aa, ref_J_aa_cdr3_end,
+                                            max.mismatch=max.mismatch)
+    solved_cdr3_end <- coding_frame_start[solve_me] + 3L * solved_J_aa_cdr3_end
+    solved_cdr3_end <- solved_cdr3_end - 1L  # 0-based
+    auxdata[solve_me, "cdr3_end"] <- solved_cdr3_end
+    warn_if_negative_cdr3_end(auxdata, "CDR3 end position")
+    auxdata
 }
 

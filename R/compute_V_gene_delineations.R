@@ -246,7 +246,7 @@ compute_imgt_intdata <- function(...)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### find_discordant_intdata()
-### complete_intdata()
+### fill_missing_intdata_with_ref()
 ###
 
 ### Not exported!
@@ -260,11 +260,13 @@ find_discordant_intdata <- function(intdata, ref_intdata)
 
 ### Not exported!
 ### See complete_df_with_refdf() in R/utils.R for what it returns.
-complete_intdata <- function(intdata, ref_intdata)
+fill_missing_intdata_with_ref <- function(intdata, ref_intdata,
+                                          intdata_name="intdata",
+                                          ref_intdata_name="ref_intdata")
 {
     check_ndm_data_col2class(intdata)
     check_ndm_data_col2class(ref_intdata)
     complete_df_with_refdf(intdata, ref_intdata, "allele_name",
-                           "intdata", "ref_intdata")
+                           intdata_name, ref_intdata_name)
 }
 

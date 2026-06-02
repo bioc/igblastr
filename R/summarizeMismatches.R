@@ -388,7 +388,8 @@ tabulate_mismatches <- function(AIRR_df, germline_db_name, c_region_db_name="")
     region_types <- VDJ_REGION_TYPES
     all_counts <- lapply(setNames(region_types, region_types),
         function(region_type) {
-            germline_db <- load_germline_db(germline_db_name, region_type)
+            germline_db <- load_germline_sequences(germline_db_name,
+                                                   region_type)
             .tabulate_mismatches_for_region_type(AIRR_df, region_type,
                                                  ROI_ranges, germline_db)
         })
@@ -396,7 +397,7 @@ tabulate_mismatches <- function(AIRR_df, germline_db_name, c_region_db_name="")
         if (c_region_db_name == "")
             stop(wmsg("please specify the name of the C-region db ",
                       "that was used to produce 'AIRR_df'"))
-        c_region_db <- load_c_region_db(c_region_db_name)
+        c_region_db <- load_c_region_sequences(c_region_db_name)
         c_counts <- .tabulate_mismatches_for_region_type(AIRR_df, "C",
                                                  ROI_ranges, c_region_db)
         all_counts <- c(all_counts, list(C=c_counts))

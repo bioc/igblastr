@@ -18,7 +18,7 @@ test_that("augment_germline_db_*()", {
     novel_J_alleles <- DNAStringSet()
     augment_germline_db_J(db_name, novel_J_alleles, destdir=destdir)
     all_J_alleles <- readDNAStringSet(file.path(destdir, "J.fasta"))
-    expected <- load_germline_db(db_name, "J")
+    expected <- load_germline_sequences(db_name, "J")
     expect_identical(as.character(all_J_alleles), as.character(expected))
 
     AIRR_df1 <- igblastn(query, germline_db_J=destdir)

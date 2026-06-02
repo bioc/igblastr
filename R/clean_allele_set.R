@@ -315,17 +315,29 @@ check_locus <- function(locus, what)
                   "when 'with.auxdata' is TRUE"))
     check_locus(locus, "the \"locus\" metadata column on 'allele_set'")
 
-    ## Annotate the J alleles.
+    ## STEP 1: Compute the auxiliary data by searching motifs WGXG
+    ## and FGXG.
     auxdata <- compute_auxdata(allele_set, codon_starts=codon_starts,
                                            no.warnings=TRUE)
 
     ## Sanity checks.
     stopifnot(identical(auxdata[ , "allele_name"], allele_names))
     expected_chain_type <- make_chain_type("J", locus)
-    stopifnot(identical(auxdata$chain_type, expected_chain_type))
+    stopifnot(identical(auxdata[ , "chain_type"], expected_chain_type))
 
+    ## STEP 2: Replace missing values (if any) in 'auxdata' with corresponding
+    ## values in 'ref_auxdata'. Also raise an error that displays the
+    ## differences if 'auxdata' and 'ref_auxdata' are discordant.
     if (!is.null(ref_auxdata))
-        auxdata <- complete_auxdata(auxdata, ref_auxdata)
+        auxdata <- fill_missing_auxdata_with_ref(auxdata, ref_auxdata,
+                                                 "computed auxdata",
+                                                 "IgBLAST auxdata")
+
+    ## STEP 3: Try to get rid of the remaining missing "cdr3_end" values
+    ## in 'auxdata' by comparing the unsolved sequences in 'allele_set' (i.e.
+    ## the sequences with a missing "cdr3_end") with the set of known FWR4
+    ## sequences.
+    auxdata <- infer_cdr3_ends_via_fwr4_comparisons(auxdata, allele_set)
 
     mcols(allele_set) <- cbind(allele_set_mcols, auxdata)
     allele_set

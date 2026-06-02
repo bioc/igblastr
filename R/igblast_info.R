@@ -29,17 +29,21 @@ list_igblast_organisms <- function(igblast_root=get_igblast_root())
 }
 
 ### Not exported!
-normalize_igblast_organism <- function(organism)
+normalize_igblast_organism <- function(igblast_organism,
+                                       argname="igblast_organism")
 {
-    if (!isSingleNonWhiteString(organism))
-        stop(wmsg("'organism' must be a single (non-empty) string"))
-    all_organisms <- list_igblast_organisms()
-    organism <- tolower(organism)
-    if (!(organism %in% all_organisms)) {
-        in1string <- paste0("\"", all_organisms, "\"", collapse=", ")
-        stop(wmsg("'organism' must be one of ", in1string))
+    if (!isSingleNonWhiteString(igblast_organism))
+        stop(wmsg("'", argname, "' must be a single (non-empty) string"))
+    ans <- gsub(" +", "_", tolower(trimws2(igblast_organism)))
+    igblast_organisms <- list_igblast_organisms()
+    if (ans %notin% igblast_organisms) {
+        in1string <- paste0(head(igblast_organisms, n=-1L), collapse=", ")
+        in1string <- paste0(in1string, ", and ", tail(igblast_organisms, n=1L))
+        msg <- c("\"", igblast_organism, "\" is not an IgBLAST organism. ",
+                 "The IgBLAST organisms are ", in1string, ".")
+        stop(wmsg(msg))
     }
-    organism
+    ans
 }
 
 
@@ -113,11 +117,11 @@ igblast_info <- function(igblast_root=get_igblast_root())
     igblastn_ver <- .extract_version_string_from_raw_version(raw_version)
     makeblastdb_ver <- makeblastdb_version(igblast_root)
     OS_arch <- get_OS_arch()
-    all_organisms <- list_igblast_organisms(igblast_root)
-    if (length(all_organisms) == 0L) {
-        organisms <- "none!"
+    igblast_organisms <- list_igblast_organisms(igblast_root)
+    if (length(igblast_organisms) == 0L) {
+        igblast_organisms <- "none!"
     } else {
-        organisms <- paste0(all_organisms, collapse=", ")
+        igblast_organisms <- paste0(igblast_organisms, collapse=", ")
     }
 
     ans <- list(
@@ -130,7 +134,7 @@ igblast_info <- function(igblast_root=get_igblast_root())
         #igblastn_version=raw_version[[1L]],
         #igblastp_exe=igblastp_exe,
         #igblastp_version=igblastp_ver[[1L]],
-        organisms=organisms
+        igblast_organisms=igblast_organisms
     )
     class(ans) <- "igblast_info"
     ans

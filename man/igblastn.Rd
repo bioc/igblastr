@@ -422,7 +422,7 @@ query <- system.file(package="igblastr", "extdata", "TCR", filename)
 query <- head(readDNAStringSet(query), n=100)
 
 ## Install Human TCR germline db from IMGT:
-db_name <- install_IMGT_germline_db("202614-2", "Homo_sapiens",
+db_name <- install_IMGT_germline_db("202603-4", "Homo_sapiens",
                                     tcr.db=TRUE, overwrite=TRUE)
 
 ## Select germline db to use with igblastn():

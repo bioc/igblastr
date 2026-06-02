@@ -109,9 +109,11 @@ rm_germline_db(db_name)
     Note that the built-in germline dbs starting with \code{_AIRR}
     are made of the AIRR-community/OGRDB germline sets available at
     \url{https://ogrdb.airr-community.org/germline_sets/Homo\%20sapiens}
-    for human and at
-    \url{https://ogrdb.airr-community.org/germline_sets/Mus\%20musculus}.
-    for mouse.
+    for human, at
+    \url{https://ogrdb.airr-community.org/germline_sets/Mus\%20musculus}
+    for mouse, and at
+    \url{https://ogrdb.airr-community.org/germline_sets/Macaca\%20mulatta}
+    for rhesus monkey.
 
     Each AIRR db is populated with the latest germline datasets that were
     available at AIRR-community/OGRDB at the time indicated by the date (in

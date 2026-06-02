@@ -18,7 +18,7 @@ test_that("translate_J_alleles()", {
     auxdata <- load_and_fix_human_auxdata()
 
     db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
-    J_alleles <- load_germline_db(db_name, region_types="J")
+    J_alleles <- load_germline_sequences(db_name, region_types="J")
     J_aa <- translate_J_alleles(J_alleles, auxdata)
     expect_true(is.character(J_aa))
     expect_identical(names(J_aa), names(J_alleles))
@@ -27,7 +27,7 @@ test_that("translate_J_alleles()", {
     expect_true(all(grepl("[WF]G.G", J_aa)))
 
     db_name <- "IMGT-202614-2.Homo_sapiens.IGH+IGK+IGL"
-    J_alleles <- load_germline_db(db_name, region_types="J")
+    J_alleles <- load_germline_sequences(db_name, region_types="J")
     ## 3 human J alleles in IMGT release 202614-2 have no entries
     ## in 'auxdata'. Note that this could change in the future.
     expected_unknown <- c("IGHJ5*03", "IGHJ5*04", "IGKJ4*03")
@@ -43,7 +43,7 @@ test_that("translate_J_alleles()", {
     auxdata <- load_auxdata("mouse", which="original")
 
     db_name <- "IMGT-202614-2.Mus_musculus.IGH+IGK+IGL"
-    J_alleles <- load_germline_db(db_name, region_types="J")
+    J_alleles <- load_germline_sequences(db_name, region_types="J")
     ## 3 mouse J alleles in IMGT release 202614-2 have no entries
     ## in 'auxdata'. Note that this could change in the future.
     expected_unknown <- c("IGLJ2P*01", "IGLJ4*01_Mus_spretus",
@@ -64,14 +64,14 @@ test_that("J_allele_has_stop_codon()", {
     auxdata <- load_and_fix_human_auxdata()
 
     db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
-    J_alleles <- load_germline_db(db_name, region_types="J")
+    J_alleles <- load_germline_sequences(db_name, region_types="J")
     has_stop_codon <- J_allele_has_stop_codon(J_alleles, auxdata)
     expect_true(is.logical(has_stop_codon))
     expect_identical(names(has_stop_codon), names(J_alleles))
     expect_false(any(has_stop_codon))
 
     db_name <- "IMGT-202614-2.Homo_sapiens.IGH+IGK+IGL"
-    J_alleles <- load_germline_db(db_name, region_types="J")
+    J_alleles <- load_germline_sequences(db_name, region_types="J")
     allele_is_known <- names(J_alleles) %in% auxdata$allele_name
     has_stop_codon <- J_allele_has_stop_codon(J_alleles, auxdata)
     expect_identical(unname(is.na(has_stop_codon)), !allele_is_known)
@@ -82,7 +82,7 @@ test_that("J_allele_has_stop_codon()", {
     auxdata <- load_auxdata("rabbit", which="original")
 
     db_name <- "IMGT-202614-2.Oryctolagus_cuniculus.IGH+IGK+IGL"
-    J_alleles <- load_germline_db(db_name, region_types="J")
+    J_alleles <- load_germline_sequences(db_name, region_types="J")
     has_stop_codon <- J_allele_has_stop_codon(J_alleles, auxdata)
     expect_false(anyNA(has_stop_codon))
     expect_identical(names(J_alleles)[has_stop_codon], "IGKJ1-2*04")
@@ -95,7 +95,7 @@ test_that("translate_fwr4()", {
     auxdata <- load_and_fix_human_auxdata()
 
     db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
-    J_alleles <- load_germline_db(db_name, region_types="J")
+    J_alleles <- load_germline_sequences(db_name, region_types="J")
     fwr4_aa <- translate_fwr4(J_alleles, auxdata)
     expect_true(is.character(fwr4_aa))
     expect_identical(names(fwr4_aa), names(J_alleles))
@@ -108,7 +108,7 @@ test_that("translate_fwr4()", {
     expect_true(all(grepl("^[WF]G.G$", fwr4_head)))
 
     db_name <- "IMGT-202614-2.Homo_sapiens.IGH+IGK+IGL"
-    J_alleles <- load_germline_db(db_name, region_types="J")
+    J_alleles <- load_germline_sequences(db_name, region_types="J")
     allele_is_known <- names(J_alleles) %in% auxdata$allele_name
     fwr4_head <- translate_fwr4(J_alleles, auxdata, max.codons=4L)
     expect_identical(unname(is.na(fwr4_head)), !allele_is_known)
@@ -119,7 +119,7 @@ test_that("translate_fwr4()", {
     auxdata <- load_auxdata("mouse", which="original")
 
     db_name <- "IMGT-202614-2.Mus_musculus.IGH+IGK+IGL"
-    J_alleles <- load_germline_db(db_name, region_types="J")
+    J_alleles <- load_germline_sequences(db_name, region_types="J")
     ## 3 mouse J alleles in IMGT release 202614-2 have no entries
     ## in 'auxdata'. Note that this could change in the future.
     allele_is_known <- names(J_alleles) %in% auxdata$allele_name
@@ -140,7 +140,7 @@ test_that("translate_fwr4()", {
     auxdata <- load_auxdata("rat", which="original")
 
     db_name <- "IMGT-202614-2.Rattus_norvegicus.IGH+IGK+IGL"
-    J_alleles <- load_germline_db(db_name, region_types="J")
+    J_alleles <- load_germline_sequences(db_name, region_types="J")
     fwr4_head <- translate_fwr4(J_alleles, auxdata, max.codons=4L)
     ## translate_fwr4() uses 'auxdata$cdr3_end' to get the position of
     ## the first FWR4 codons, but this column has an NA for IGKJ3*01.

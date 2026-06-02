@@ -27,7 +27,8 @@ V_allele_has_stop_codon(V_alleles, intdata)
     gene allele sequences.
   }
   \item{intdata}{
-    A data.frame as returned by \code{\link{load_intdata}(..., for.aa=FALSE)}.
+    A data.frame as returned by \code{\link{load_intdata}(..., for.aa=FALSE)}
+    that contains annotations for the alleles in \code{V_alleles}.
   }
   \item{V_segment}{
     The name of a V gene segment. This can be set to \code{"fwr1"},
@@ -84,7 +85,7 @@ V_allele_has_stop_codon(V_alleles, intdata)
 
 ## Load the V allele sequences:
 db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
-V_alleles <- load_germline_db(db_name, region_types="V")
+V_alleles <- load_germline_sequences(db_name, region_types="V")
 V_alleles  # DNAStringSet object
 
 ## Load the corresponding internal data:

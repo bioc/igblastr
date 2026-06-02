@@ -101,12 +101,14 @@ export(
 
     ## compute_auxata.R:
     compute_auxdata,
+    infer_cdr3_ends_via_fwr4_comparisons,
 
     ## V_alleles-inspect.R:
     translate_V_alleles,
     V_allele_has_stop_codon,
 
     ## J_alleles-inspect.R:
+    print_J_alleles,
     translate_J_alleles,
     J_allele_has_stop_codon,
     translate_fwr4,
@@ -146,6 +148,7 @@ export(
 
     ## use_germline_db.R:
     use_germline_db,
+    load_germline_sequences,
     load_germline_db,
 
     ## reset_c_region_dbs.R:
@@ -157,6 +160,7 @@ export(
 
     ## use_c_region_db.R:
     use_c_region_db,
+    load_c_region_sequences,
     load_c_region_db,
 
     ## install_custom_germline_db.R:

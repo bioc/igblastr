@@ -40,11 +40,11 @@ allele2gene(allele_names)
 
 \seealso{
   \itemize{
-    \item \code{\link{load_germline_db}} to load the nucleotide sequences
-          of the gene regions stored in a cached germline db.
+    \item \code{\link{load_germline_sequences}} to load the nucleotide
+          sequences of the gene alleles stored in a cached germline db.
 
-    \item \code{\link{load_c_region_db}} to load the nucleotide sequences of
-          the gene regions stored in a cached C-region db.
+    \item \code{\link{load_c_region_sequences}} to load the nucleotide
+          sequences of the gene alleles stored in a cached C-region db.
 
     \item \link{intdata_utils} to access IgBLAST \emph{internal data}.
   }
@@ -53,12 +53,12 @@ allele2gene(allele_names)
 \examples{
 allele2gene(c("IGHV1-2*04", "IGHV1-2*06", "IGHV5-51*01", "IGHD3-16*03"))
 
-J_alleles <- load_germline_db("_OGRDB.human.IGH+IGK+IGL.202605",
-                              region_types="J")
+J_alleles <- load_germline_sequences("_OGRDB.human.IGH+IGK+IGL.202605",
+                                     region_types="J")
 names(J_alleles)
 allele2gene(names(J_alleles))
 
-C_alleles <- load_c_region_db("_IMGT.human.IGH+IGK+IGL.202605")
+C_alleles <- load_c_region_sequences("_IMGT.human.IGH+IGK+IGL.202605")
 names(C_alleles)
 allele2gene(names(C_alleles))
 }

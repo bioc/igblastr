@@ -80,15 +80,21 @@ clean_c_region_blastdbs <- function()
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### load_c_region_db()
+### load_c_region_sequences()
 ###
 
 ### Returns the C regions in a DNAStringSet object.
-load_c_region_db <- function(db_name)
+load_c_region_sequences <- function(db_name)
 {
     check_c_region_db_name(db_name)
     db_path <- get_c_region_db_path(db_name)
     db_fasta_file <- get_db_fasta_file(db_path, "C")
     readDNAStringSet(db_fasta_file)
+}
+
+load_c_region_db <- function(...)
+{
+    .Deprecated("load_c_region_sequences")
+    load_c_region_sequences(...)
 }
 

@@ -43,7 +43,7 @@
 .form_IMGT_germline_db_name <- function(fasta_store, loci)
 {
     stopifnot(isSingleNonWhiteString(fasta_store), dir.exists(fasta_store))
-    checkarg_loci(loci)
+    check_selected_loci(loci)
     organism_path <- dirname(fasta_store)
     organism <- basename(organism_path)
     refdir <- dirname(organism_path)
@@ -75,36 +75,45 @@
 ### agreement with it.
 .load_igblast_auxdata <- function(db_name)
 {
-    organism_shortname <- infer_organism_shortname_from_db_name(db_name)
-    if (is.na(organism_shortname))
+    igblast_organism <- infer_igblast_organism_from_db_name(db_name)
+    if (is.na(igblast_organism))
         return(NULL)
-    auxdata <- load_auxdata(organism_shortname)
+    auxdata <- load_auxdata(igblast_organism)
     ## We know that the human auxdata shipped with IgBLAST is incorrect
     ## for IGHJ6*02 and IGHJ6*03 -- and so is discordant with what
     ## install_germline_db() will compute -- so we correct these rows.
     ## Note that if the user updated their "live" IgBLAST data with
     ## update_live_igdata(), then these rows should already be correct
     ## in 'auxdata'.
-    if (organism_shortname == "human") {
+    if (igblast_organism == "human") {
         fixme <- auxdata[ , "allele_name"] %in% c("IGHJ6*02", "IGHJ6*03")
         auxdata[fixme, "extra_bps"] <- 1L  # replace 0L with 1L
     }
+    ## We also remove rows for which the "coding_frame_start" / "cdr3_end"
+    ## combination doesn't make sense. This is the case for example for
+    ## human allele TRAJ31*01 and for mouse alleles TRAJ21*02, TRAJ24*02,
+    ## and TRDJ2*02 (as of May 31, 2026).
+    coding_frame_start <- auxdata[ , "coding_frame_start"]
+    cdr3_end <- auxdata[ , "cdr3_end"]
+    drop_idx <- which(((cdr3_end + 1L - coding_frame_start) %% 3L) != 0L)
+    if (length(drop_idx) != 0L)
+        auxdata <- auxdata[-drop_idx, ]
     auxdata
 }
 
 .check_concordance_with_igblast_intdata <- function(db_name)
 {
-    organism_shortname <- infer_organism_shortname_from_db_name(db_name)
-    if (is.na(organism_shortname))
+    igblast_organism <- infer_igblast_organism_from_db_name(db_name)
+    if (is.na(igblast_organism))
         return()
     computed_intdata <- load_intdata(db_name)
-    igblast_intdata <- load_intdata(organism_shortname)
+    igblast_intdata <- load_intdata(igblast_organism)
     disc_rowpairs <- find_discordant_intdata(computed_intdata, igblast_intdata)
     if (nrow(disc_rowpairs) == 0L)
         return()
     msg1 <- c("The computed \"internal data\" that we included in the ",
               "germline db has some disagreements with the \"internal data\" ",
-              "for ", organism_shortname, " shipped with IgBLAST.")
+              "for ", igblast_organism, " shipped with IgBLAST.")
     msg2 <- c("To display the disagreements, run:")
     msg3 <- c("  show_intdata_disagreements(\"", db_name, "\")")
     warning(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", msg3)
@@ -120,7 +129,7 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     organism <- normalize_IMGT_organism(organism)
     loci <- normalize_user_supplied_loci(loci, tcr.db=tcr.db,
                                          stop.if.missing.regions=TRUE)
-    loci_prefix <- extract_loci_prefix(loci)
+    loci_prefix <- extract_selected_loci_prefix(loci)
     if (!isTRUEorFALSE(without.intdata))
         stop(wmsg("'without.intdata' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(without.auxdata))
@@ -154,7 +163,8 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
 
     ## Create and install germline db.
     install_dir <- get_germline_dbs_home(TRUE)  # guaranteed to exist
-    with.auxdata <- !(without.auxdata || loci_prefix == "TR")
+    with.auxdata <- !without.auxdata && (loci_prefix == "IG" ||
+                                         organism == "Homo_sapiens")
     igblast_auxdata <- if (with.auxdata) .load_igblast_auxdata(db_name)
                        else NULL
     if.exists <- if (overwrite) "overwrite" else "error"
@@ -188,9 +198,10 @@ install_IMGT_c_region_db <- function(organism, loci,
                                      disambiguate.allele.names=FALSE,
                                      overwrite=FALSE, verbose=FALSE)
 {
-    organism <- find_organism_shortname(normalize_IMGT_organism(organism))
+    organism <- normalize_IMGT_organism(organism)
+    igblast_organism <- lookup_igblast_organism(organism)
     loci <- normalize_user_supplied_loci(loci)
-    loci_prefix <- extract_loci_prefix(loci)
+    loci_prefix <- extract_selected_loci_prefix(loci)
     if (!isTRUEorFALSE(disambiguate.allele.names))
         stop(wmsg("'disambiguate.allele.names' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(overwrite))
@@ -199,10 +210,12 @@ install_IMGT_c_region_db <- function(organism, loci,
         stop(wmsg("'verbose' must be TRUE or FALSE"))
 
     ## Get path to local FASTA store for IMGT C-region sequences.
-    fasta_store <- path_to_IMGT_c_region_fasta_store(organism, loci_prefix)
+    fasta_store <-
+        path_to_IMGT_c_region_fasta_store(igblast_organism, loci_prefix)
     if (!dir.exists(fasta_store))
         stop(wmsg("we're not aware of any ", loci_prefix, " C-region ",
-                  "sequences available at IMGT for ", organism, ", sorry"))
+                  "sequences available at IMGT for ", igblast_organism,
+                  ", sorry"))
 
     ## Keep loci for which IMGT actually provides FASTA files.
     found_loci <- list_loci_in_c_region_fasta_dir(fasta_store, loci_prefix)
@@ -210,7 +223,7 @@ install_IMGT_c_region_db <- function(organism, loci,
 
     ## Compute 'db_name'.
     version <- read_version_file(fasta_store)
-    db_name <- .form_IMGT_c_region_db_name(organism, loci, version)
+    db_name <- .form_IMGT_c_region_db_name(igblast_organism, loci, version)
 
     ## Create IMGT C-region db.
     c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist

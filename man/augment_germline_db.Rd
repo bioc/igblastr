@@ -38,7 +38,8 @@ augment_germline_db_J(db_name, novel_alleles,
   \item{db_name}{
     A single string that is the name of the cached germline db that
     contains the set of gene alleles to augment.
-    Use \code{\link{list_germline_dbs}()} to list the cached germline dbs.
+    Use \code{\link{list_germline_dbs}()} to get the list of all cached
+    germline dbs.
 
     The exact function used (i.e. \code{augment_germline_db_V()},
     \code{augment_germline_db_D()}, or \code{augment_germline_db_J()})
@@ -186,7 +187,7 @@ db_name1 <- "_OGRDB.mouse.PWD_PhJ.IGH+IGK+IGL.202410"
 db_name2 <- "_OGRDB.human.IGH+IGK+IGL.202605"
 
 ## Extract human V germline alleles:
-human_V_alleles <- load_germline_db(db_name2, "V")
+human_V_alleles <- load_germline_sequences(db_name2, "V")
 
 ## Subset to keep only alleles for genes IGHV1-2:
 idx <- grep("^IGHV[12]", names(human_V_alleles))

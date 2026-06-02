@@ -204,8 +204,8 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
     \item \code{\link{use_germline_db}} to select the cached germline db
           to use with \code{igblastn()}.
 
-    \item \code{\link{load_germline_db}} to load the nucleotide sequences
-          of the gene regions stored in a cached germline db.
+    \item \code{\link{load_germline_sequences}} to load the nucleotide
+          sequences of the gene alleles stored in a cached germline db.
 
     \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
 
@@ -241,7 +241,7 @@ if (!has_igblast()) install_igblast()
 
 dump_germline_db <- function(db_name, destdir) {
   for (region_type in c("V", "D", "J")) {
-    alleles <- load_germline_db(db_name, region_types=region_type)
+    alleles <- load_germline_sequences(db_name, region_types=region_type)
     for (locus in c("IGH", "IGK", "IGL")) {
       loc_alleles <- alleles[grep(locus, names(alleles))]
       if (length(loc_alleles) == 0L)
@@ -268,8 +268,8 @@ list_germline_dbs()
 ## --- 3. Check that new and original dbs have the same sequences ---
 
 stopifnot(identical(
-    as.character(load_germline_db(db_name0)),
-    as.character(load_germline_db(exA_db_name))
+    as.character(load_germline_sequences(db_name0)),
+    as.character(load_germline_sequences(exA_db_name))
 ))
 
 ## ---------------------------------------------------------------------
@@ -322,8 +322,8 @@ list_germline_dbs()
 ## used to populate built-in germline db _OGRDB.human.IGH+IGK+IGL.202605.
 ## Let's check that the two dbs contain the same sequences:
 stopifnot(identical(
-    as.character(load_germline_db(db_name0)),
-    as.character(load_germline_db(exB_db_name))
+    as.character(load_germline_sequences(db_name0)),
+    as.character(load_germline_sequences(exB_db_name))
 ))
 
 ## ---------------------------------------------------------------------
@@ -400,8 +400,8 @@ if (IMGT_is_up()) {
 
   ## Let's check that the two dbs contain the same sequences:
   stopifnot(identical(
-    as.character(load_germline_db(db_name)),
-    as.character(load_germline_db(exD_db_name))
+    as.character(load_germline_sequences(db_name)),
+    as.character(load_germline_sequences(exD_db_name))
   ))
 
   ## Let's check that the two dbs contain the same "internal data":

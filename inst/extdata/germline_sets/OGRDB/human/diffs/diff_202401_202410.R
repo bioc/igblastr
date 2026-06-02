@@ -12,8 +12,8 @@
 library(igblastr)
 
 ## Load the two databases as DNAStringSet objects:
-old <- load_germline_db("_OGRDB.human.IGH+IGK+IGL.202401")
-new <- load_germline_db("_OGRDB.human.IGH+IGK+IGL.202410")
+old <- load_germline_sequences("_OGRDB.human.IGH+IGK+IGL.202401")
+new <- load_germline_sequences("_OGRDB.human.IGH+IGK+IGL.202410")
 
 ## 2 alleles were replaced:
 old_names <- setdiff(names(old), names(new))
