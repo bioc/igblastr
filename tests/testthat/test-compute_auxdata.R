@@ -7,7 +7,7 @@ install_IMGT_germline_db("202614-2", "Homo sapiens",
 install_IMGT_germline_db("202614-2", "Mus musculus",
                          without.auxdata=TRUE, overwrite=TRUE)
 install_IMGT_germline_db("202614-2", "Rattus norvegicus",
-                         without.auxdata=TRUE, overwrite=TRUE)
+                         overwrite=TRUE)
 
 .AUXDATA_COLNAMES <- names(igblastr:::AUXDATA_COL2CLASS)
 
@@ -162,5 +162,67 @@ test_that("find_discordant_auxdata()/fill_missing_auxdata_with_ref()", {
     expect_identical(auxdata2a, expected)
     expect_identical(fill_missing_auxdata_with_ref(auxdata2a, auxdata1),
                      auxdata2a)
+})
+
+test_that(".find_best_fwr4_start", {
+    find_best_fwr4_start <- igblastr:::.find_best_fwr4_start
+    fwr4set <- AAStringSet(c(
+        "WGTGTLVTISS",
+        "FGAGTKVEIK",
+        "FGPGTKLIITS",
+        "IVVSPKVEVVIG",
+        "FGSRTKVIVT",
+        "FKGGFGTLATIS",
+        "FAEGTVLVVTSP",
+        "FEKGTYLEEQQ",
+        "FGIGTKLQVIP",
+        "LVTIGGTKVS",
+        "TGTLVTISISS"
+    ))
+
+    ## Min distance is 0 (exact match) and is achieved for P = 8.
+    ## Second best distance is 6 and is achieved for P = 6.
+    J_allele <- AAString("LGKKIKVFGPGTKLIIT")
+    stopifnot(subseq(J_allele, start=8L, width=10L) ==
+              subseq(fwr4set[[3L]], start=1L, width=10L))
+    P <- find_best_fwr4_start(J_allele, fwr4set)
+    expect_identical(P, 8L)
+    P <- find_best_fwr4_start(J_allele, fwr4set, standout.by=6)
+    expect_identical(P, 8L)
+    P <- find_best_fwr4_start(J_allele, fwr4set, standout.by=7)
+    expect_identical(P, NA_integer_)
+
+    ## Min distance is 3 and is achieved for P = 5.
+    ## Second best distance is 6 and is achieved for P = 7 and P = 12.
+    J_allele <- AAString("QQQQSAEGTKLIVTSVVVPPTVGG")
+    P <- find_best_fwr4_start(J_allele, fwr4set)
+    expect_identical(P, NA_integer_)
+    P <- find_best_fwr4_start(J_allele, fwr4set, maxdist=3)
+    expect_identical(P, NA_integer_)
+    P <- find_best_fwr4_start(J_allele, fwr4set, maxdist=3, standout.by=3)
+    expect_identical(P, 5L)
+    P <- find_best_fwr4_start(J_allele, fwr4set, maxdist=5, standout.by=3)
+    expect_identical(P, 5L)
+})
+
+test_that("infer_cdr3_ends_via_fwr4_comparisons", {
+    ## The auxdata for IMGT rat has 1 unsolved allele.
+    db_name <- "IMGT-202614-2.Rattus_norvegicus.IGH+IGK+IGL"
+    auxdata <- load_auxdata(db_name)
+    solveme <- is.na(auxdata[ , "cdr3_end"])
+    stopifnot(identical(auxdata[solveme, "allele_name"], "IGKJ3*01"))
+
+    J_alleles <- load_germline_sequences(db_name, region_types="J")
+    auxdata2 <- infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles)
+    expect_identical(auxdata2, auxdata)
+    auxdata3 <- infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles,
+                                                     maxdist=5)
+    expect_identical(auxdata3, auxdata)
+    auxdata4 <- infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles,
+                                                     maxdist=5, standout.by=4)
+    expect_identical(auxdata4[solveme , "cdr3_end"], 6L)
+
+    DF <- suppressMessages(print_J_alleles(J_alleles, auxdata4, translate=TRUE))
+    expect_true(DF[solveme , "fwr4"] == AAStringSet("ISDETRLEIK"))
 })
 

@@ -159,7 +159,7 @@
     setNames(fcols, fcolnames)
 }
 
-.print_J_alleles_header <-
+.make_J_allele_header_line <-
     function(labelW, cdr3W, cdr3fwr4_sep, fwr4W, extra_colnames)
 {
     stopifnot(isSingleInteger(labelW),
@@ -183,7 +183,7 @@
         fwr4 <- strrep(" ", fwr4W)
     }
     xcolnames <- paste(extra_colnames, collapse=" ")
-    message(margin, cdr3, cdr3fwr4_sep, fwr4, " ", xcolnames)
+    paste0(margin, cdr3, cdr3fwr4_sep, fwr4, xcolnames)
 }
 
 .add_colors <- function(x)
@@ -196,9 +196,9 @@
     Biostrings:::add_colors.AA(s)
 }
 
-.print_J_allele <- function(i, labels, Lfillers, cdr3,
-                               cdr3fwr4_sep, fwr4, Rfillers,
-                               full_seq, extra_cols)
+.make_J_allele_line <- function(i, labels, Lfillers, cdr3,
+                                   cdr3fwr4_sep, fwr4, Rfillers,
+                                   full_seq, extra_cols)
 {
     stopifnot(isSingleInteger(i),
               is.character(labels),
@@ -214,20 +214,25 @@
               is.list(extra_cols))
     seq1 <- .add_colors(cdr3[[i]])
     seq2 <- .add_colors(fwr4[[i]])
-    xcols <- vapply(extra_cols, function(col) col[[i]], character(1))
-    xcols <- paste(xcols, collapse=" ")
     fseq <- full_seq[[i]]
+    ## Both 'Ltag' and 'Rtag' must be single characters. If that
+    ## needs to change then the call to .make_J_allele_header_line()
+    ## in .print_cdr3_fwr4_parts() below will need to be adjusted.
     if (length(fseq) == 0L) {
-        line <- c(labels[[i]], Lfillers[[i]], seq1,
-                  cdr3fwr4_sep, seq2, Rfillers[[i]])
+        Ltag <- Rtag <- " "
+        stuff <- c(Lfillers[[i]], seq1, cdr3fwr4_sep, seq2, Rfillers[[i]])
     } else {
-        Rtag <- "<<"
-        LtagW <- nchar(Lfillers[[i]]) + nchar(cdr3fwr4_sep) +
-                 nchar(Rfillers[[i]]) - nchar(fseq) - nchar(Rtag)
-        Ltag <- format(">>", justify="right", width=LtagW)
-        line <- c(labels[[i]], Ltag, .add_colors(fseq), Rtag)
+        Ltag <- Rtag <- "?"
+        Linnertag <- ">"
+        Rinnertag <- " <"  # note the space before the <
+        LinnertagW <- nchar(Lfillers[[i]]) + nchar(cdr3fwr4_sep) +
+                      nchar(Rfillers[[i]]) - nchar(fseq) - nchar(Rinnertag)
+        Linnertag <- format(Linnertag, width=LinnertagW)
+        stuff <- c(Linnertag, .add_colors(fseq), Rinnertag)
     }
-    message(c(line, " ", xcols))
+    stuff <- paste(stuff, collapse="")
+    xcols <- vapply(extra_cols, function(col) col[[i]], character(1))
+    paste0(labels[[i]], Ltag, stuff, Rtag, paste(xcols, collapse=" "))
 }
 
 .print_cdr3_fwr4_parts <- function(cdr3_fwr4_parts,
@@ -256,6 +261,7 @@
     extra_cols <- .format_extra_cols(extra_cols)
 
     ## Print everything.
+
     locus <- substr(allele_names, 1L, 3L)
     group_lens <- runLength(Rle(locus))
     if (length(group_lens) == length(unique(locus))) {
@@ -263,12 +269,21 @@
     } else {
         groupend_idx <- integer(0)
     }
-    .print_J_alleles_header(labelW, cdr3_maxwidth,
-                            cdr3fwr4_sep, fwr4_maxwidth, names(extra_cols))
+
+    ## We add 1 to 'cdr3_maxwidth' and 'fwr4_maxwidth' to account for
+    ## the size of the 'Ltag' and 'Rtag' used in .make_J_allele_line().
+    ## See .make_J_allele_line() above in this file.
+    line <- .make_J_allele_header_line(labelW, cdr3_maxwidth+1L,
+                                       cdr3fwr4_sep, fwr4_maxwidth+1L,
+                                       names(extra_cols))
+    stopifnot(is.character(line), length(line) == 1L)
+    message(line)
     for (i in seq_len(nrow(cdr3_fwr4_parts))) {
-        .print_J_allele(i, labels, Lfillers, cdr3,
-                           cdr3fwr4_sep, fwr4, Rfillers,
-                           full_seq, extra_cols)
+        line <- .make_J_allele_line(i, labels, Lfillers, cdr3,
+                                       cdr3fwr4_sep, fwr4, Rfillers,
+                                       full_seq, extra_cols)
+        stopifnot(is.character(line), length(line) == 1L)
+        message(line)
         if (i %in% groupend_idx)
             message("")
     }

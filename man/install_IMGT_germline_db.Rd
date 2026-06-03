@@ -189,7 +189,7 @@ if (IMGT_is_up()) {
 
   ## Download human TCR germline gene allele sequences from IMGT/V-QUEST
   ## release 202614-2, and store them in a cached germline database:
-  install_IMGT_germline_db("202603-4", organism="Homo sapiens",
+  install_IMGT_germline_db("202614-2", organism="Homo sapiens",
                            tcr.db=TRUE, overwrite=TRUE)
   list_germline_dbs()
 
@@ -226,7 +226,7 @@ if (IMGT_is_up()) {
   ## 2. The TR "internal data" for human and mouse that we infer
   ##    from the TR gapped sequences provided by IMGT has disagreements
   ##    with the "internal data" shipped with IgBLAST for these organisms!
-  suppressMessages(install_IMGT_germline_db("202603-4", "Homo sapiens",
+  suppressMessages(install_IMGT_germline_db("202614-2", "Homo sapiens",
                                             tcr.db=TRUE, overwrite=TRUE))
   suppressMessages(install_IMGT_germline_db("202614-2", "Mus musculus",
                                             tcr.db=TRUE, overwrite=TRUE))

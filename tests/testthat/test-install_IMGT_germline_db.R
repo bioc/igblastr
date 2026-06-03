@@ -13,9 +13,9 @@ test_that("install_IMGT_germline_db()", {
     use_germline_db(db_name)
     rm_germline_db(db_name)
 
-    db_name <- install_IMGT_germline_db("202603-4", "Homo sapiens",
+    db_name <- install_IMGT_germline_db("202614-2", "Homo sapiens",
                                         tcr.db=TRUE, overwrite=TRUE)
-    expect_identical(db_name, "IMGT-202603-4.Homo_sapiens.TRA+TRB+TRG+TRD")
+    expect_identical(db_name, "IMGT-202614-2.Homo_sapiens.TRA+TRB+TRG+TRD")
     intdata <- load_intdata(db_name)
     igblastr:::check_ndm_data_col2class(intdata)
     V_allele_names <- names(load_germline_sequences(db_name, region_types="V"))
