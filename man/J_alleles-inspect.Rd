@@ -13,9 +13,13 @@
 \description{
   A small set of utilities for basic inspection of J allele sequences.
 
-  Note that all of them require access to the \emph{auxiliary data}
-  associated with the J alleles to inspect. See \code{auxdata} argument
-  below for how to obtain this data.
+  The main function is \code{print_J_alleles()} which can be used to display
+  a set of J alleles sequences where the sequences are colored and justified
+  w.r.t. their CDR3/FWR4 junction.
+
+  Note that all of the functions documented in this man page require
+  access to the \emph{auxiliary data} associated with the J alleles to
+  inspect. See \code{auxdata} argument below for how to obtain this data.
 }
 
 \usage{
@@ -185,14 +189,14 @@ db_name <- suppressWarnings(
 print_J_alleles(db_name, translate=TRUE)
 
 ## Notes:
-## - The >> and << tags around a sequence indicate an allele for which
+## - The ?> and <? tags around a sequence indicate an allele for which
 ##   the CDR3/FWR4 junction is unknown.
 ## - Even though allele IGKJ3*01 is annotated in the "auxiliary data"
 ##   shipped with IgBLAST (in optional_file/rat_gl.aux), its cdr3_end
 ##   value is missing:
-imgt_auxdata <- load_auxdata("rat")
-imgt_auxdata
-subset(imgt_auxdata, is.na(cdr3_end))
+igblast_auxdata <- load_auxdata("rat")
+igblast_auxdata
+subset(igblast_auxdata, is.na(cdr3_end))
 
 ## --- For non-IgBLAST organisms ---
 
@@ -233,7 +237,50 @@ DF <- suppressMessages(print_J_alleles(db_name, translate=TRUE))
 DF
 
 ## ---------------------------------------------------------------------
-## 4. translate_J_alleles()
+## 4. FWR4 CONSENSUS SEQUENCES
+## ---------------------------------------------------------------------
+
+## The above can be used to determine the consensus amino acid sequence
+## for mouse FWR4 regions:
+
+fwr4_aa <- setNames(DF$fwr4, DF$allele_name)
+fwr4_aa <- fwr4_aa[width(fwr4_aa) != 0L]
+IGHJ_fwr4_aa <- fwr4_aa[substr(names(fwr4_aa), 1, 3) == "IGH"]
+IGKJ_fwr4_aa <- fwr4_aa[substr(names(fwr4_aa), 1, 3) == "IGK"]
+IGLJ_fwr4_aa <- fwr4_aa[substr(names(fwr4_aa), 1, 3) == "IGL"]
+consensusString(IGHJ_fwr4_aa)  # WGQGT?VTVSS  (starts with "WGXG" motif)
+consensusString(IGKJ_fwr4_aa)  # FG?GTKLEIK   (starts with "FGXG" motif)
+consensusString(IGLJ_fwr4_aa)  # FGGGT?LTVL   (starts with "FGXG" motif)
+
+## See '?consensusString' in the Biostrings package for more information
+## about the consensusString() function.
+
+## Let's take a look at the FWR4 sequences for human TCR J alleles:
+db_name <- suppressWarnings(
+  install_IMGT_germline_db("202614-2", "Homo_sapiens", tcr.db=TRUE,
+                           overwrite=TRUE)
+)
+print_J_alleles(db_name, translate=TRUE)
+
+DF <- suppressMessages(print_J_alleles(db_name, translate=TRUE))
+fwr4_aa <- setNames(DF$fwr4, DF$allele_name)
+fwr4_aa <- fwr4_aa[width(fwr4_aa) != 0L]
+TRAJ_fwr4_aa <- fwr4_aa[substr(names(fwr4_aa), 1, 3) == "TRA"]
+TRBJ_fwr4_aa <- fwr4_aa[substr(names(fwr4_aa), 1, 3) == "TRB"]
+TRGJ_fwr4_aa <- fwr4_aa[substr(names(fwr4_aa), 1, 3) == "TRG"]
+TRDJ_fwr4_aa <- fwr4_aa[substr(names(fwr4_aa), 1, 3) == "TRD"]
+consensusString(TRAJ_fwr4_aa)  # FG?GT?L?V?P
+consensusString(TRBJ_fwr4_aa)  # FG?GTRLTVL
+consensusString(TRGJ_fwr4_aa)  # FG?GT?LIVTSP
+consensusString(TRDJ_fwr4_aa)  # FGKGT?L?VEP
+
+## Note that, unlike with BCR J alleles where the FWR4 is expected to
+## start with the "WGXG" and "FGXG" motifs on the heavy- and light-chain,
+## respectively, for human TCR J alleles it's expected to start with
+## the "FGXG" motif regardless of the locus.
+
+## ---------------------------------------------------------------------
+## 5. translate_J_alleles()
 ## ---------------------------------------------------------------------
 
 db_name <- install_IMGT_germline_db("202614-2", "Oryctolagus cuniculus",
@@ -262,7 +309,7 @@ J_alleles[has_stop_codon]  # first codon (TGA) is a stop codon
 J_aa[has_stop_codon]       # indeed!
 
 ## ---------------------------------------------------------------------
-## 5. ABOUT THE "WGXG" AND "FGXG" MOTIFS
+## 6. ABOUT THE "WGXG" AND "FGXG" MOTIFS
 ## ---------------------------------------------------------------------
 
 ## The FWR4 region is expected to start with the following amino acid

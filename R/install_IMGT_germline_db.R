@@ -79,20 +79,49 @@
     if (is.na(igblast_organism))
         return(NULL)
     auxdata <- load_auxdata(igblast_organism)
-    ## We know that the human auxdata shipped with IgBLAST is incorrect
-    ## for IGHJ6*02 and IGHJ6*03 -- and so is discordant with what
-    ## install_germline_db() will compute -- so we correct these rows.
-    ## Note that if the user updated their "live" IgBLAST data with
-    ## update_live_igdata(), then these rows should already be correct
-    ## in 'auxdata'.
     if (igblast_organism == "human") {
-        fixme <- auxdata[ , "allele_name"] %in% c("IGHJ6*02", "IGHJ6*03")
-        auxdata[fixme, "extra_bps"] <- 1L  # replace 0L with 1L
+        allele_names <- auxdata[ , "allele_name"]
+        ## We know that the human auxdata shipped with IgBLAST is incorrect
+        ## for alleles IGHJ6*02 and IGHJ6*03, so is discordant with what
+        ## install_germline_db() will compute. So we correct these rows.
+        ## Note that if the user updated their "live" IgBLAST data with
+        ## update_live_igdata(), then these rows should already be correct
+        ## in 'auxdata'.
+        fixme <- allele_names %in% c("IGHJ6*02", "IGHJ6*03")
+        auxdata[fixme, "extra_bps"] <- 1L  # replace 0 with 1
+        ## It's also pretty clear that the cdr3_end for TRDJ3*01 should be
+        ## 24, not 21: the FWR4 starts at position 25, which is where the
+        ## FGXG motif is found. So we fix that too.
+        ## TODO: Report this to the IgBLAST folks at NCBI.
+        fixme <- allele_names == "TRDJ3*01"
+        auxdata[fixme, "cdr3_end"] <- 24L  # replace 21 with 24
+    }
+    if (igblast_organism == "mouse") {
+        allele_names <- auxdata[ , "allele_name"]
+        ## We know that the mouse auxdata shipped with IgBLAST is incorrect
+        ## for alleles TRAJ7*01, TRAJ31*02, TRAJ32*02, TRAJ45*02, and TRAJ59*01,
+        ## so is discordant with what install_germline_db() will compute.
+        ## So we correct these rows.
+        fixme <- allele_names == "TRAJ7*01"
+        auxdata[fixme, "coding_frame_start"] <- 0L  # replace 1 with 0
+        auxdata[fixme, "cdr3_end"] <- 23L  # replace 24 with 23
+        auxdata[fixme, "extra_bps"] <- 2L  # replace 1 with 2
+        ## I reported the incongruent extra_bps for the 4 alleles below
+        ## to the IgBLAST folks at NCBI on June 2, 2026.
+        fixme <- allele_names == "TRAJ31*02"
+        auxdata[fixme, "extra_bps"] <- 1L  # replace 0 with 1
+        fixme <- allele_names == "TRAJ32*02"
+        auxdata[fixme, "extra_bps"] <- 1L  # replace 0 with 1
+        fixme <- allele_names == "TRAJ45*02"
+        auxdata[fixme, "extra_bps"] <- 0L  # replace 1 with 0
+        fixme <- allele_names == "TRAJ59*01"
+        auxdata[fixme, "extra_bps"] <- 2L  # replace 1 with 2
     }
     ## We also remove rows for which the "coding_frame_start" / "cdr3_end"
     ## combination doesn't make sense. This is the case for example for
     ## human allele TRAJ31*01 and for mouse alleles TRAJ21*02, TRAJ24*02,
     ## and TRDJ2*02 (as of May 31, 2026).
+    ## I reported this to the IgBLAST folks at NCBI on June 2, 2026.
     coding_frame_start <- auxdata[ , "coding_frame_start"]
     cdr3_end <- auxdata[ , "cdr3_end"]
     drop_idx <- which(((cdr3_end + 1L - coding_frame_start) %% 3L) != 0L)
@@ -163,8 +192,7 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
 
     ## Create and install germline db.
     install_dir <- get_germline_dbs_home(TRUE)  # guaranteed to exist
-    with.auxdata <- !without.auxdata && (loci_prefix == "IG" ||
-                                         organism == "Homo_sapiens")
+    with.auxdata <- !without.auxdata
     igblast_auxdata <- if (with.auxdata) .load_igblast_auxdata(db_name)
                        else NULL
     if.exists <- if (overwrite) "overwrite" else "error"

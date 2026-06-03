@@ -106,9 +106,10 @@
         stopifnot(all(allele_loci == locus))
         chain_type <- make_chain_type("J", locus)
     }
-    if (locus %in% c("IGH", "TRB", "TRD")) {
+    if (locus == "IGH") {
         fwr4_starts <- .find_heavy_fwr4_starts(J_alleles)
     } else {
+        ## Used for loci IGK and IGL (light chain) and all TR* loci.
         fwr4_starts <- .find_light_fwr4_starts(J_alleles)
     }
     coding_frame_starts <- unname(fwr4_starts) %% 3L
@@ -310,16 +311,21 @@ fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
     maxdist
 }
 
-.normarg_mindist.for.2ndbest <- function(mindist.for.2ndbest, maxdist)
+.normarg_standout.by <- function(standout.by)
 {
-    if (!isSingleNumber(mindist.for.2ndbest))
-        stop(wmsg("'mindist.for.2ndbest' must be a single integer"))
-    if (!is.integer(mindist.for.2ndbest))
-        mindist.for.2ndbest <- as.integer(mindist.for.2ndbest)
-    if (!(mindist.for.2ndbest > maxdist && mindist.for.2ndbest <= 10L))
-        stop(wmsg("'mindist.for.2ndbest' must be > 'maxdist' and <= 10"))
-    mindist.for.2ndbest
+    if (!isSingleNumber(standout.by))
+        stop(wmsg("'standout.by' must be a single integer"))
+    if (!is.integer(standout.by))
+        standout.by <- as.integer(standout.by)
+    if (!(standout.by >= 1L && standout.by <= 10L))
+        stop(wmsg("'standout.by' must be >= 1 and <= 10"))
+    standout.by
 }
+
+### Most FWR4 we've seen so far have at least 10 amino acids except in
+### mouse J allele TRAJ45*02 from IMGT where it has only 9 amino acids
+### (this allele sequence is probably truncated).
+.MIN_FWR4_LENGTH <- 9L
 
 ### Moves a sliding window of 10 amino acids across 'J_allele', and, for
 ### each position of the window, computes the Hamming distance between the
@@ -328,7 +334,8 @@ fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
 .compute_sliding_window_dist_to_fwr4set <- function(J_allele, fwr4set)
 {
     stopifnot(is(J_allele, "AAString"), nchar(J_allele) >= 12L,
-              is(fwr4set, "AAStringSet"), all(nchar(fwr4set) >= 10L))
+              is(fwr4set, "AAStringSet"),
+              all(nchar(fwr4set) >= .MIN_FWR4_LENGTH))
     vapply(seq_len(nchar(J_allele) - 9L),
         function(pos)
             min(neditAt(subseq(J_allele, start=pos, width=10L), fwr4set)),
@@ -336,47 +343,50 @@ fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
     )
 }
 
+### Has its own tests in tests/testthat/test-compute_auxdata.R!
 ### The "best FWR4 start position" in 'J_allele' is defined as follow:
-### If D(pos) is the distance between the 10-amino acid window in 'J_allele'
-### that starts at position 'pos' and the set of known FWR4 sequences
-### in 'fwr4set', then the "best FWR4 start position" is the position P
-### in 'J_allele' for which D(P) <= 2.
-### Furthermore, for P to be unambiguously defined, we also require that
-### there's only one position for which D(P) <= 5. In other words, P must
-### stand out amongst all possible positions!
+### If D(p) is the distance between the 10-amino acid window in 'J_allele'
+### that starts at position 'p' and the set of known FWR4 sequences
+### in 'fwr4set', then the "best FWR4 start position" is the position 'P'
+### in 'J_allele' that minimize D(P). With the additional constraints that:
+###   (a) D(P) <= 2
+###   (b) D(p) >= D(P) + 5 for any other position 'p'
+### In other words, P must stand out in the crowd!
 .find_best_fwr4_start <- function(J_allele, fwr4set,
-                                  maxdist=2L, mindist.for.2ndbest=6L)
+                                  maxdist=2L, standout.by=5L)
 {
     maxdist <- .normarg_maxdist(maxdist)
-    mindist.for.2ndbest <-
-               .normarg_mindist.for.2ndbest(mindist.for.2ndbest, maxdist)
+    standout.by <- .normarg_standout.by(standout.by)
     if (nchar(J_allele) < 12L)
         return(NA_integer_)
     dists <- .compute_sliding_window_dist_to_fwr4set(J_allele, fwr4set)
-    if (sum(dists < mindist.for.2ndbest) != 1L)
-        return(NA_integer_)
     P <- which.min(dists)
-    if (dists[[P]] <= maxdist) P else NA_integer_
+    DP <- dists[[P]]
+    if (DP > maxdist)
+        return(NA_integer_)  # no P achieves D(P) <= maxdist
+    if (sum(dists < (DP + standout.by)) != 1L)
+        return(NA_integer_)  # P does not stand out in the crowd
+    P
 }
 
 ### Returns an integer vector parallel to 'J_alleles' that contains the
 ### 1-based FWR4 start positions.
 .find_best_fwr4_starts <- function(J_alleles, fwr4set,
-                                   maxdist=2L, mindist.for.2ndbest=6L)
+                                   maxdist=2L, standout.by=5L)
 {
     stopifnot(is(J_alleles, "AAStringSet"),
-              is(fwr4set, "AAStringSet"), all(nchar(fwr4set) >= 10L))
+              is(fwr4set, "AAStringSet"),
+              all(nchar(fwr4set) >= .MIN_FWR4_LENGTH))
     vapply(seq_along(J_alleles),
         function(i)
             .find_best_fwr4_start(J_alleles[[i]], fwr4set,
-                                  maxdist=maxdist,
-                                  mindist.for.2ndbest=mindist.for.2ndbest),
+                                  maxdist=maxdist, standout.by=standout.by),
         integer(1)
     )
 }
 
 infer_cdr3_ends_via_fwr4_comparisons <-
-    function(auxdata, J_alleles, maxdist=2L, mindist.for.2ndbest=6L)
+    function(auxdata, J_alleles, maxdist=2L, standout.by=5L)
 {
     check_auxdata_col2class(auxdata)
     if (!is(J_alleles, "DNAStringSet") || length(J_alleles) != nrow(auxdata))
@@ -386,8 +396,7 @@ infer_cdr3_ends_via_fwr4_comparisons <-
         stop(wmsg("'J_alleles' must have names and they must ",
                   "be identical to 'auxdata$allele_name'"))
     maxdist <- .normarg_maxdist(maxdist)
-    mindist.for.2ndbest <-
-               .normarg_mindist.for.2ndbest(mindist.for.2ndbest, maxdist)
+    standout.by <- .normarg_standout.by(standout.by)
 
     coding_frame_start <- auxdata[ , "coding_frame_start"]
     if (anyNA(coding_frame_start))
@@ -405,8 +414,7 @@ infer_cdr3_ends_via_fwr4_comparisons <-
                                 offset=coding_frame_start[solve_me])
     solved_J_aa_fwr4_start <-
         .find_best_fwr4_starts(unsolved_J_aa, fwr4set,
-                               maxdist=maxdist,
-                               mindist.for.2ndbest=mindist.for.2ndbest)
+                               maxdist=maxdist, standout.by=standout.by)
     solved_J_aa_cdr3_end <- solved_J_aa_fwr4_start - 1L
     solved_cdr3_end <- coding_frame_start[solve_me] + 3L * solved_J_aa_cdr3_end
     solved_cdr3_end <- solved_cdr3_end - 1L  # 0-based

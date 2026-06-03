@@ -21,7 +21,7 @@
 compute_auxdata(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 
 infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles,
-                                     maxdist=2L, mindist.for.2ndbest=6L)
+                                     maxdist=2L, standout.by=5L)
 }
 
 \arguments{
@@ -53,23 +53,27 @@ infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles,
   \item{auxdata}{
     COMING SOON...
   }
-  \item{maxdist, mindist.for.2ndbest}{
+  \item{maxdist, standout.by}{
     COMING SOON...
   }
 }
 
 \details{
-  The FWR4 region is expected to start with the following amino acid
-  motifs (X represents any amino acid):
+  For human germline BCR J alleles, the FWR4 region is expected to start
+  with the following amino acid motifs (X represents any amino acid):
   \itemize{
-    \item "WGXG" on the heavy chain;
-    \item "FGXG" on the light chain.
+    \item "WGXG" on the heavy chain (IGH locus);
+    \item "FGXG" on the light chain (IGK and IGL loci).
   }
+  Things might deviate slightly for other organisms, or for germline
+  TCR J alleles. For example, for human germline TCR J alleles, the FWR4
+  region is expected to start with the "FGXG" motif, regardless of the
+  locus.
 
-  \code{compute_auxdata()} searches for the "WGXG" and "FGXG" motifs in
-  the supplied allele sequences to determine the start of their FWR4
-  region. From there it can easily infer the \code{cdr3_end},
-  \code{coding_frame_start}, and \code{extra_bps} columns.
+  \code{compute_auxdata()} searches for the above motifs in the supplied
+  allele sequences to determine the start of their FWR4 region. From there,
+  it can easily infer the \code{cdr3_end}, \code{coding_frame_start},
+  and \code{extra_bps} columns.
 
   Note that the function will emit a warning if the start of the FWR4
   region (and therefore the CDR3 end) could not be found for some alleles,
@@ -85,6 +89,10 @@ infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles,
 
 \seealso{
   \itemize{
+    \item \code{\link{print_J_alleles}} to display a set of J alleles
+          sequences where the sequences are justified w.r.t. their
+          CDR3/FWR4 junction.
+
     \item \code{\link{load_auxdata}} to access IgBLAST \emph{auxiliary data}.
 
     \item \code{\link{compute_V_gene_delineations}} to annotate a set of
@@ -117,6 +125,9 @@ J_alleles  # DNAStringSet object
 
 computed_auxdata <- compute_auxdata(J_alleles)
 head(computed_auxdata)
+
+## The CDR3/FWR4 junction was found for all the alleles:
+print_J_alleles(J_alleles, computed_auxdata, translate=TRUE)
 
 ## ---------------------------------------------------------------------
 ## SANITY CHECK

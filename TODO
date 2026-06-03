@@ -4,26 +4,6 @@ High-priority TODO list
 
 Several issues with the auxiliary data and internal data shipped with IgBLAST:
 
-o What's up with all the rows in the *_gl.aux files shipped with IgBLAST
-  for which the "coding_frame_start" / "cdr3_end" combination doesn't make
-  sense? See .load_igblast_auxdata() in R/install_IMGT_germline_db.R for
-  more information.
-
-o Starting with IMGT release 202611-4, we get:
-
-  > install_IMGT_germline_db("202611-4", "Homo_sapiens", tcr.db=TRUE)
-    Disagreements between 'computed auxdata' and 'IgBLAST auxdata':
-                            allele_name coding_frame_start cdr3_end extra_bps
-      computed auxdata:  99    TRDJ4*01                  0       NA         0
-       IgBLAST auxdata: 132    TRDJ4*01                  2       13         1
-
-  The codon start reported by IMGT (8th field in the FASTA headers) was
-  changed from 3 to 1 between IMGT releases 202603-4 and 202611-4. Note
-  that this is always reported as a 1-based position in IMGT FASTA headers,
-  so this change would translate into changing the "coding_frame_start" field
-  in IgBLAST file human_gl.aux from 2 to 0 (the "coding_frame_start" field
-  is 0-based).
-
 o Investigate the disagreements between the "internal data" that we
   include in the germline dbs obtained with install_IMGT_germline_db()
   and the "internal data" shipped with IgBLAST. See last examples
@@ -38,11 +18,15 @@ o Investigate the disagreements between the "internal data" that we
 
 Other high-priority TODO items:
 
-o Add unit tests for and document infer_cdr3_ends_via_fwr4_comparisons().
+o Document infer_cdr3_ends_via_fwr4_comparisons().
 
 o More testing of combine_germline_dbs() and combine_c_region_dbs(). Improve
   unit tests. Improve man page and expand examples. Add cross links in other
   man pages. Add section in the vignette.
+
+o Report issue with codon start of human allele TRDJ4*01 and mouse allele
+  TRAJ7*01 to the IMGT folks.
+  See comment in .extract_codon_starts() function in R/clean_allele_set.R
 
 o Maybe replace 'without.intdata' and 'without.auxdata' arguments with
   'with.intdata' and 'with.auxdata'. With default of TRUE for 'with.intdata'

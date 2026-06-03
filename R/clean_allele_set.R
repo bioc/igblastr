@@ -297,6 +297,31 @@ check_locus <- function(locus, what)
 {
     parsed_headers <- parse_imgt_fasta_headers(headers)
     codon_starts <- parsed_headers[ , "codon_start"]
+    allele_name  <- parsed_headers[ , "allele_name"]
+    organism     <- parsed_headers[ , "organism"]
+    ## The codon start reported by IMGT for human allele TRDJ4*01 has changed
+    ## from 3 to 1 between IMGT releases 202603-4 and 202611-4, but the DNA
+    ## sequence of the allele has not changed. This looks like a mistake as
+    ## it completely messes up the translated sequence, which went from
+    ## RPLIFGKGTYLEVQQ (with the FWR4 starting at position 5 where motif FGXG
+    ## is found) to PDP*SLAKEPIWRYNN. So we revert this back!
+    ## TODO: Report this to the IMGT folks.
+    bad_idx <- which(organism == "Homo sapiens" & allele_name == "TRDJ4*01")
+    if (length(bad_idx) != 0L) {
+        stopifnot(length(bad_idx) == 1L)
+        codon_starts[[bad_idx]] <- 3L
+    }
+    ## The codon start reported by IMGT for mouse allele TRAJ7*01 is 2. This is
+    ## suspicious because this produces tranlated sequence DYSNNRLTLGKGTQVVVLP
+    ## (no FGXG motif) whereas if we start tranlation at position 1 we get
+    ## GLQQQQTYFGEGNPGGGVT (FGXG is now seen at position 9). So we fix that!
+    ## TODO: Report this to the IMGT folks.
+    bad_idx <- which(organism == "Mus musculus_B10.D2-H2dm1" &
+                     allele_name == "TRAJ7*01")
+    if (length(bad_idx) != 0L) {
+        stopifnot(length(bad_idx) == 1L)
+        codon_starts[[bad_idx]] <- 1L
+    }
     setNames(as.integer(codon_starts), names(codon_starts))
 }
 
