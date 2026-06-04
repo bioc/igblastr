@@ -85,11 +85,12 @@ percent_mutation <- function(AIRR_df, for.aa=FALSE)
     v_perc_mut <- .region_percent_mutation(AIRR_df, "V", for.aa=for.aa)
     d_perc_mut <- .region_percent_mutation(AIRR_df, "D", for.aa=for.aa)
     j_perc_mut <- .region_percent_mutation(AIRR_df, "J", for.aa=for.aa)
-    ans <- data.frame(sequence_id=sequence_id,
-                      locus=locus,
-                      v_perc_mut=v_perc_mut,
+    ans <- data.frame(v_perc_mut=v_perc_mut,
                       d_perc_mut=d_perc_mut,
                       j_perc_mut=j_perc_mut)
+    if (for.aa)
+        colnames(ans) <- paste0(colnames(ans), "_aa")
+    ans <- cbind(data.frame(sequence_id=sequence_id, locus=locus), ans)
     if (is_tibble(AIRR_df))
         ans <- as_tibble(ans)
     ans

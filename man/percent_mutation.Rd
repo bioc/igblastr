@@ -60,6 +60,8 @@ percent_mutation(AIRR_df, for.aa=FALSE)
     \item \code{j_perc_mut}: the percent mutation in the J segment of
           the BCR or TCR sequences.
   }
+  If \code{for.aa} is set to \code{TRUE}, then columns 3 to 5 are named
+  \code{v_perc_mut_aa}, \code{d_perc_mut_aa}, and \code{j_perc_mut_aa}.
 }
 
 \seealso{
@@ -85,9 +87,22 @@ use_germline_db("_OGRDB.human.IGH+IGK+IGL.202605")
 
 AIRR_df <- igblastn(query)
 
+## Percent mutation in V, D, J segments at the amino acid level:
+percent_mutation(AIRR_df, for.aa=TRUE)
+
+## Percent mutation in V, D, J segments at the nucleotide level:
 percent_mutation(AIRR_df)
 
-percent_mutation(AIRR_df, for.aa=TRUE)
+## Note that columns 'v_identity', 'd_identity', and 'j_identity'
+## in 'AIRR_df' are equal to '1 - v_perc_mut', '1 - d_perc_mut',
+## and '1- j_perc_mut', respectively:
+ident <- AIRR_df[ , c("v_identity", "d_identity", "j_identity")]
+ident
+
+## Sanity check:
+m1 <- as.matrix(ident)
+m2 <- as.matrix(percent_mutation(AIRR_df)[3:5])
+stopifnot(max((m1 + m2 - 100)^2, na.rm=TRUE) < 1e-6)
 }
 
 \keyword{utilities}
