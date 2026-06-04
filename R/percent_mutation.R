@@ -71,25 +71,38 @@
 ### Computes percent mutation in V, D, J segments at the nucleotide or
 ### amino acid levels.
 ### Returns a data.frame or tibble parallel to 'AIRR_df'.
-percent_mutation <- function(AIRR_df, for.aa=FALSE)
+percent_mutation <- function(AIRR_df, for.aa=FALSE, as.matrix=FALSE)
 {
     if (!is.data.frame(AIRR_df))
         stop(wmsg("'AIRR_df' must be data.frame or tibble ",
                   "as returned by igblastn()"))
+    if (!isTRUEorFALSE(for.aa))
+        stop(wmsg("'for.aa' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(as.matrix))
+        stop(wmsg("'as.matrix' must be TRUE or FALSE"))
     sequence_id <- AIRR_df[["sequence_id"]]
     if (is.null(sequence_id))
-        .stop_on_missing_AIRR_cols("sequence_id")
-    locus <- AIRR_df[["locus"]]
-    if (is.null(locus))
         .stop_on_missing_AIRR_cols("sequence_id")
     v_perc_mut <- .region_percent_mutation(AIRR_df, "V", for.aa=for.aa)
     d_perc_mut <- .region_percent_mutation(AIRR_df, "D", for.aa=for.aa)
     j_perc_mut <- .region_percent_mutation(AIRR_df, "J", for.aa=for.aa)
-    ans <- data.frame(v_perc_mut=v_perc_mut,
-                      d_perc_mut=d_perc_mut,
-                      j_perc_mut=j_perc_mut)
+    if (as.matrix) {
+        ans <- cbind(v_perc_mut=v_perc_mut,
+                     d_perc_mut=d_perc_mut,
+                     j_perc_mut=j_perc_mut)
+        rownames(ans) <- sequence_id
+    } else {
+        ans <- data.frame(v_perc_mut=v_perc_mut,
+                          d_perc_mut=d_perc_mut,
+                          j_perc_mut=j_perc_mut)
+    }
     if (for.aa)
         colnames(ans) <- paste0(colnames(ans), "_aa")
+    if (as.matrix)
+        return(ans)
+    locus <- AIRR_df[["locus"]]
+    if (is.null(locus))
+        .stop_on_missing_AIRR_cols("locus")
     ans <- cbind(data.frame(sequence_id=sequence_id, locus=locus), ans)
     if (is_tibble(AIRR_df))
         ans <- as_tibble(ans)

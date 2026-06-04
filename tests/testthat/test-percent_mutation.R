@@ -23,8 +23,10 @@ test_that("percent_mutation()", {
         ## filled with NAs. So the 'd_perc_mut(_aa)' column in 'percent_mut'
         ## should also be filled with NAs.
         expect_true(all(is.na(percent_mut[[4L]])))  # d_perc_mut(_aa) col
-        m <- as.matrix(percent_mut[ , tail(expected_colnames, n=3L)])
-        expect_true(typeof(m) == "double")
+        m <- percent_mutation(AIRR_df, for.aa=for.aa, as.matrix=TRUE)
+        expect_identical(rownames(m), AIRR_df$sequence_id)
+        rownames(m) <- NULL
+        expect_identical(m, as.matrix(percent_mut[ , 3:5]))
     }
 })
 
