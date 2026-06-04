@@ -10,7 +10,7 @@
 }
 
 \usage{
-percent_mutation(AIRR_df, for.aa=FALSE)
+percent_mutation(AIRR_df, for.aa=FALSE, as.matrix=FALSE)
 }
 
 \arguments{
@@ -21,6 +21,10 @@ percent_mutation(AIRR_df, for.aa=FALSE)
   \item{for.aa}{
     By default, the percent mutation is computed at the nucleotide level.
     Set \code{for.aa} to \code{TRUE} to compute it at the amino acid level.
+  }
+  \item{as.matrix}{
+    By default, the function returns the results in a data.frame.
+    Set \code{as.matrix} to \code{TRUE} to get the results in a matrix.
   }
 }
 
@@ -46,8 +50,8 @@ percent_mutation(AIRR_df, for.aa=FALSE)
 }
 
 \value{
-  A data.frame or \link[tibble]{tibble} with 1 row per row in
-  \code{AIRR_df}, and with the following columns:
+  By default, the function returns a data.frame or \link[tibble]{tibble} with
+  1 row per row in \code{AIRR_df}, and with the following columns:
   \enumerate{
     \item \code{sequence_id}: the \code{sequence_id} column taken as-is from
           \code{AIRR_df};
@@ -62,6 +66,13 @@ percent_mutation(AIRR_df, for.aa=FALSE)
   }
   If \code{for.aa} is set to \code{TRUE}, then columns 3 to 5 are named
   \code{v_perc_mut_aa}, \code{d_perc_mut_aa}, and \code{j_perc_mut_aa}.
+
+  If \code{as.matrix} is set to \code{TRUE}, then the function returns
+  a 3-column numeric matrix with 1 row per row in \code{AIRR_df}.
+  The rownames on the matrix are the sequence ids from
+  \code{AIRR_df$sequence_id}.
+  The colnames on the matrix are \code{[vdj]_perc_mut} if \code{for.aa}
+  is \code{FALSE}, or \code{[vdj]_perc_mut_aa} if it's \code{TRUE}.
 }
 
 \seealso{
@@ -90,8 +101,16 @@ AIRR_df <- igblastn(query)
 ## Percent mutation in V, D, J segments at the amino acid level:
 percent_mutation(AIRR_df, for.aa=TRUE)
 
+## Get the results in a 3-column matrix:
+m1 <- percent_mutation(AIRR_df, for.aa=TRUE, as.matrix=TRUE)
+m1[1:4, ]
+colMeans(m1)
+
 ## Percent mutation in V, D, J segments at the nucleotide level:
 percent_mutation(AIRR_df)
+m2 <- percent_mutation(AIRR_df, as.matrix=TRUE)
+m2[1:4, ]
+colMeans(m2)
 
 ## Note that columns 'v_identity', 'd_identity', and 'j_identity'
 ## in 'AIRR_df' are equal to '1 - v_perc_mut', '1 - d_perc_mut',
@@ -100,9 +119,8 @@ ident <- AIRR_df[ , c("v_identity", "d_identity", "j_identity")]
 ident
 
 ## Sanity check:
-m1 <- as.matrix(ident)
-m2 <- as.matrix(percent_mutation(AIRR_df)[3:5])
-stopifnot(max((m1 + m2 - 100)^2, na.rm=TRUE) < 1e-6)
+m <- as.matrix(ident)
+stopifnot(max((m + m2 - 100)^2, na.rm=TRUE) < 1e-6)
 }
 
 \keyword{utilities}
