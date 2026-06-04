@@ -327,7 +327,7 @@ fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
 ### (this allele sequence is probably truncated).
 .MIN_FWR4_LENGTH <- 9L
 
-### Moves a sliding window of 10 amino acids across 'J_allele', and, for
+### Moves a sliding window of 10 amino acids along 'J_allele', and, for
 ### each position of the window, computes the Hamming distance between the
 ### sequence in the window and the set of known FWR4 sequences in 'fwr4set'.
 ### Returns the distances in an integer vector of length 'nchar(J_allele)' - 9.

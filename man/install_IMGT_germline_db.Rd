@@ -6,12 +6,10 @@
 \title{Install a germline db from IMGT}
 
 \description{
-  The \code{install_IMGT_germline_db()} function downloads germline
-  V/D/J gene allele sequences from the IMGT/V-QUEST download site for
-  a given IMGT/V-QUEST release and organism, and stores them in a
-  local IgBLAST-compatible germline database. This local database gets
-  installed in \pkg{igblastr}'s persistent cache. It can then be used
-  later with \code{\link{igblastn}()}.
+  The \code{install_IMGT_germline_db()} function creates and installs
+  a blast database for germline V, D, and J gene sequences obtained
+  from the IMGT/V-QUEST download site:
+  \url{https://www.imgt.org/download/V-QUEST/}
 
   CONDITIONS OF USE AND LICENSE: The IMGT data is provided to the academic
   users and NPO's (Not for Profit Organization(s)) under the CC BY-NC-ND 4.0
@@ -93,6 +91,10 @@ install_IMGT_c_region_db(organism, loci,
 }
 
 \details{
+  \code{install_IMGT_germline_db()} installs the newly created blast
+  database in \pkg{igblastr}'s persistent cache. The database can then
+  be used later with \code{\link{igblastn}()}.
+
   The following naming scheme is used to form the name of the installed
   database:
   \preformatted{    IMGT-<release>.<organism>.<loci>}
