@@ -24,6 +24,27 @@ percent_mutation(AIRR_df, for.aa=FALSE)
   }
 }
 
+\details{
+  The percent mutation in the V segment is computed as follow.
+
+  For each sequence in \code{AIRR_df}:
+  \enumerate{
+    \item First the number of mutations is obtained by computing
+          the Hamming distance d between the string reported in the
+          \code{v_sequence_alignment} column and the string reported
+          in the \code{v_germline_alignment} column. Note that the
+          two strings are guaranteed to \emph{always} have the same
+          length L.
+    \item The percent mutation is 100 * d / L.
+  }
+  If \code{for.aa} is set to \code{TRUE}, then replace
+  \code{v_sequence_alignment} and \code{v_germline_alignment} with
+  \code{v_sequence_alignment_aa} and \code{v_germline_alignment_aa} above.
+
+  The percent mutation in the D and J segments is computed in the same
+  manner using the corresponding \code{d_*} and \code{j_*} columns.
+}
+
 \value{
   A data.frame or \link[tibble]{tibble} with 1 row per row in
   \code{AIRR_df}, and with the following columns:
