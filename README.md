@@ -3,7 +3,11 @@
 [![in_Bioc](https://bioconductor.org/shields/years-in-bioc/igblastr.svg)](https://bioconductor.org/packages/igblastr)
 [![rank](https://bioconductor.org/shields/downloads/release/igblastr.svg)](https://bioconductor.org/packages/stats/bioc/igblastr)
 
-**igblastr** is an R/Bioconductor package that provides functions to conveniently install and use a local IgBLAST installation from within R.
+**igblastr** is an R/Bioconductor package developed at the [Hyrien Lab](https://research.fredhutch.org/hyrien/en.html) that provides functions to conveniently install and use a local IgBLAST installation from within R.
+
+See <https://bioconductor.org/packages/igblastr> for more information,
+including for how to install the release version of the package (please refrain
+from installing directly from GitHub).
 
 To cite the **igblastr** package in publications, please use:
 
@@ -25,18 +29,14 @@ A BibTeX entry for LaTeX users is
 ```
 Please also cite the original IgBLAST tool if you use it in your analysis.
 
-See <https://bioconductor.org/packages/igblastr> for more information,
-including for how to install the release version of the package (please refrain
-from installing directly from GitHub).
+IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>
+
+IgBLAST web interface: <https://www.ncbi.nlm.nih.gov/igblast/>
 
 |BioC version|Status|
 |------------|------|
 | release    | [![build](https://bioconductor.org/shields/build/release/bioc/igblastr.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/igblastr/) [![dependencies](https://bioconductor.org/shields/dependencies/release/igblastr.svg)](https://bioconductor.org/packages/release/igblastr#since) |
 | devel      | [![build](https://bioconductor.org/shields/build/devel/bioc/igblastr.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/igblastr/) [![dependencies](https://bioconductor.org/shields/dependencies/devel/igblastr.svg)](https://bioconductor.org/packages/devel/igblastr#since) |
-
-IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>
-
-IgBLAST web interface: <https://www.ncbi.nlm.nih.gov/igblast/>
 
 Please use <https://github.com/HyrienLab/igblastr/issues> to report bugs,
 provide feedback, request features, etc...
