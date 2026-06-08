@@ -99,13 +99,9 @@
     if (igblast_organism == "mouse") {
         allele_names <- auxdata[ , "allele_name"]
         ## We know that the mouse auxdata shipped with IgBLAST is incorrect
-        ## for alleles TRAJ7*01, TRAJ31*02, TRAJ32*02, TRAJ45*02, and TRAJ59*01,
+        ## for alleles TRAJ31*02, TRAJ32*02, TRAJ45*02, and TRAJ59*01,
         ## so is discordant with what install_germline_db() will compute.
         ## So we correct these rows.
-        fixme <- allele_names == "TRAJ7*01"
-        auxdata[fixme, "coding_frame_start"] <- 0L  # replace 1 with 0
-        auxdata[fixme, "cdr3_end"] <- 23L  # replace 24 with 23
-        auxdata[fixme, "extra_bps"] <- 2L  # replace 1 with 2
         ## I reported the incongruent extra_bps for the 4 alleles below
         ## to the IgBLAST folks at NCBI on June 2, 2026.
         fixme <- allele_names == "TRAJ31*02"
