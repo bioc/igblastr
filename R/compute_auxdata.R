@@ -4,128 +4,25 @@
 ###
 
 
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .find_heavy_fwr4_starts()
-### .find_light_fwr4_starts()
-###
-
 ### For alleles in the IGHJ group (i.e. BCR germline J gene alleles on the
 ### heavy chain), the FWR4 region is expected to start with AA motif "WGXG.
-.WGXG_pattern <- "TGGGGNNNNGGN"  # reverse-translation of "WGXG"
+.WGXG_motif <- "WG.G"
+.WGXG_motif_dna <- DNAString("TGGGGNNNNGGN")  # reverse-translation of "WGXG"
 
 ### For all other J alleles, that is, for alleles in the IG[KL]J groups
 ### (i.e. BCR germline J gene alleles on the light chain) and all TCR
 ### germline J gene alleles, the FWR4 region is expected to start with
 ### AA motif "FGXG".
-.FGXG_pattern <- "TTYGGNNNNGGN"  # reverse-translation of "FGXG"
-
-### EXPERIMENTAL!
-### The "FGXG" motif is not found for 4 J alleles in
-### IMGT-202531-1.Mus_musculus.IGH+IGK+IGL: IGKJ3*01, IGKJ3*02,
-### IGLJ2P*01, IGLJ3P*01. However, except for IGLJ2P*01, these alleles
-### are annotated in mouse_gl.aux with a CDR3 end reported at position 6
-### (0-based). Turns out that for the 3 alleles annotated in mouse_gl.aux,
-### the two first codons of the FWR4 region translate to AA sequence "FS".
-### Is this a coincidence or does the FS sequence actually play a role on
-### the light chain? What do biologists say about this? In particular, does
-### it make sense to use this alternative motif to identify the start of
-### the FWR4 region on the light chain when the "FGXG" motif is not found?
-### Note that all the possible reverse-translations of FS cannot be
-### represented with a single DNA pattern (even with the use of IUPAC
-### ambiguity codes).
-.FS_pattern1 <- "TTYTCN"
-.FS_pattern2 <- "TTYAGY"
-
-### UPDATE on using the "FS" motif to identify the start of the FWR4
-### region on the light chain when the "FGXG" motif is not found:
-### Works well for IMGT-202531-1.Mus_musculus.IGH+IGK+IGL (well, it was
-### specifically designed for that so no surprise here), but not
-### so well for IMGT-202531-1.Rattus_norvegicus.IGH+IGK+IGL or
-### IMGT-202531-1.Oryctolagus_cuniculus.IGH+IGK+IGL (rabbit)
-### or IMGT-202531-1.Macaca_mulatta.IGH+IGK+IGL (rhesus monkey).
-### So we disabled this feature in .find_light_fwr4_starts() below.
-
-### .find_heavy_fwr4_starts() and .find_light_fwr4_starts() both return
-### a named integer vector parallel to 'J_alleles' that contains
-### the **0-based** FWR4 start position for each sequence in 'J_alleles'.
-### Th FWR4 start will be set to NA for alleles that don't have a match.
-### For alleles with more than one match, we keep the first match only.
-### The names on the returned vector indicate the AA motif that was used
-### to determine the start of the FWR4 region.
-
-.find_heavy_fwr4_starts <- function(J_alleles)
-{
-    stopifnot(is(J_alleles, "DNAStringSet"))
-    m <- vmatchPattern(.WGXG_pattern, J_alleles, fixed=FALSE)
-    ans <- as.integer(heads(start(m), n=1L)) - 1L
-    names(ans) <- ifelse(is.na(ans), NA_character_, "WGXG")
-    ans
-}
-
-.find_light_fwr4_starts <- function(J_alleles)
-{
-    stopifnot(is(J_alleles, "DNAStringSet"))
-    m <- vmatchPattern(.FGXG_pattern, J_alleles, fixed=FALSE)
-    FGXG_starts <- as.integer(heads(start(m), n=1L))
-    names(FGXG_starts) <- ifelse(is.na(FGXG_starts), NA_character_, "FGXG")
-    ## Disabling search for alternative "FS" motif for now.
-    #na_idx <- which(is.na(FGXG_starts))
-    #if (length(na_idx) != 0L) {
-    #    dangling_alleles <- J_alleles[na_idx]
-    #    m <- vmatchPattern(.FS_pattern1, dangling_alleles, fixed=FALSE)
-    #    FS_starts1 <- as.integer(heads(start(m), n=1L))
-    #    m <- vmatchPattern(.FS_pattern2, dangling_alleles, fixed=FALSE)
-    #    FS_starts2 <- as.integer(heads(start(m), n=1L))
-    #    FS_starts <- pmin(FS_starts1, FS_starts2, na.rm=TRUE)
-    #    FGXG_starts[na_idx] <- FS_starts
-    #    names(FGXG_starts)[na_idx] <-
-    #        ifelse(is.na(FS_starts), NA_character_, "FS")
-    #}
-    FGXG_starts - 1L
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### compute_auxdata()
-###
-
-### Returns a data.frame with the same column names as the data.frame
-### returned by load_auxdata() (see file R/auxdata-utils.R), minus
-### the "extra_bps" column and plus the "fwr4_start_motif" column.
-### NOTE: We set coding_frame_start/cdr3_end/fwr4_start_motif
-### to NA for alleles for which the FWR4 start cannot be determined.
-.compute_auxdata_for_locus <- function(J_alleles, locus)
-{
-    stopifnot(is(J_alleles, "DNAStringSet"), locus %in% c(IG_LOCI , TR_LOCI))
-    allele_names <- names(J_alleles)
-    stopifnot(!is.null(allele_names))
-    if (length(J_alleles) == 0L) {
-        chain_type <- character(0)
-    } else {
-        allele_loci <- substr(allele_names, 1L, 3L)
-        stopifnot(all(allele_loci == locus))
-        chain_type <- make_chain_type("J", locus)
-    }
-    if (locus == "IGH") {
-        fwr4_starts <- .find_heavy_fwr4_starts(J_alleles)
-    } else {
-        ## Used for loci IGK and IGL (light chain) and all TR* loci.
-        fwr4_starts <- .find_light_fwr4_starts(J_alleles)
-    }
-    coding_frame_starts <- unname(fwr4_starts) %% 3L
-    data.frame(
-        allele_name       =allele_names,
-        coding_frame_start=coding_frame_starts,      # 0-based
-        chain_type        =chain_type,
-        cdr3_end          =unname(fwr4_starts) - 1L  # 0-based
-        ## Returning this column only made sense when we were using "FS"
-        ## motif as a 2nd-chance motif on the light chain.
-        #fwr4_start_motif  =names(fwr4_starts)
-    )
-}
+.FGXG_motif <- "FG.G"
+.FGXG_motif_dna <- DNAString("TTYGGNNNNGGN")  # reverse-translation of "FGXG"
 
 .normarg_codon_starts <- function(codon_starts, allele_names)
 {
+    if (is.null(codon_starts)) {
+        codon_starts <- setNames(rep.int(NA_integer_, length(allele_names)),
+                                 allele_names)
+        return(codon_starts)
+    }
     if (!is.numeric(codon_starts))
         stop(wmsg("'codon_starts' must be NULL or an integer vector"))
     if (is.null(names(codon_starts)))
@@ -141,26 +38,54 @@
     codon_starts
 }
 
-.refine_with_codon_starts <- function(auxdata, codon_starts)
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .find_motif()
+###
+
+### Returns an integer vector parallel to 'J_alleles' that contains the
+### 1-based start position of the motif for each sequence in 'J_alleles'.
+### For alleles that don't contain the motif, the position is set to NA.
+### For alleles that contain more than one occurence of the motif, we return
+### the position of the first occurence.
+.find_motif_dna <- function(J_dna, motif_dna)
 {
-    stopifnot(is.data.frame(auxdata), is.integer(codon_starts),
-              identical(auxdata[ , "allele_name"], names(codon_starts)))
-    coding_frame_start <- auxdata[ , "coding_frame_start"]
-    expected_coding_frame_start <- codon_starts - 1L
-    bad_idx <- which(coding_frame_start != expected_coding_frame_start)
-    if (length(bad_idx) != 0L) {
-        in1string <- paste(auxdata[bad_idx, "allele_name"], collapse=", ")
-        stop(wmsg("the supplied \"codon start\" is in disagreement with ",
-                  "the computed \"coding frame start\" for allele(s): ",
-                  in1string))
-    }
-    na_idx <- which(is.na(coding_frame_start))
-    if (length(na_idx) != 0L) {
-        coding_frame_start[na_idx] <- expected_coding_frame_start[na_idx]
-        auxdata$coding_frame_start <- coding_frame_start
-    }
-    auxdata
+    stopifnot(is(J_dna, "DNAStringSet"), is(motif_dna, "DNAString"))
+    m <- vmatchPattern(motif_dna, J_dna, fixed=FALSE)
+    as.integer(heads(start(m), n=1L))
 }
+
+.find_motif_aa <- function(J_aa, motif)
+{
+    stopifnot(is(J_aa, "AAStringSet"), isSingleNonWhiteString(motif))
+    m <- gregexpr(motif, as.character(J_aa))
+    ans <- as.integer(heads(m, n=1L))
+    ans[ans == -1L] <- NA_integer_
+    ans
+}
+
+.find_motif <- function(J_alleles, codon_starts, motif_dna, motif)
+{
+    stopifnot(is(J_alleles, "DNAStringSet"), is.integer(codon_starts),
+              length(J_alleles) == length(codon_starts))
+    ans <- rep.int(NA_integer_, length(J_alleles))
+    idx1 <- which(is.na(codon_starts))
+    if (length(idx1) != 0L)
+        ans[idx1] <- .find_motif_dna(J_alleles[idx1], motif_dna)
+    idx2 <- which(!is.na(codon_starts))
+    if (length(idx2) != 0L) {
+        codon_starts2 <- codon_starts[idx2]
+        J_aa <- translate_codons(J_alleles[idx2], offset=codon_starts2 - 1L)
+        starts2 <- .find_motif_aa(J_aa, motif)
+        ans[idx2] <- codon_starts2 + 3L * (starts2 - 1L)
+    }
+    ans
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### compute_auxdata()
+###
 
 ### Not exported!
 J_alleles_with_missing_coding_frame_start <- function(auxdata)
@@ -204,7 +129,9 @@ warn_if_negative_cdr3_end <- function(auxdata, what)
 
 ### Compute the auxiliary data for 'J_alleles' by searching motifs WGXG
 ### and FGXG.
-### Returns a data.frame with 1 row per sequence in 'J_alleles'.
+### Returns a data.frame with 1 row per sequence in 'J_alleles' and with
+### the same columns as the data.frame returned by load_auxdata() (see
+### file R/auxdata-utils.R).
 compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 {
     if (!is(J_alleles, "DNAStringSet"))
@@ -223,41 +150,40 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
     if (!all(substr(allele_names, 4L, 4L) == "J"))
         stop(wmsg("the 4th letter in all allele names must be a J"))
 
-    if (!is.null(codon_starts))
-        codon_starts <- .normarg_codon_starts(codon_starts, allele_names)
+    codon_starts <- .normarg_codon_starts(codon_starts, allele_names)
 
     if (!isTRUEorFALSE(no.warnings))
         stop(wmsg("'no.warnings' must be TRUE or FALSE"))
 
-    if (loci_prefix == "IG") {
-        JH_alleles <- J_alleles[allele_loci == "IGH"]
-        JK_alleles <- J_alleles[allele_loci == "IGK"]
-        JL_alleles <- J_alleles[allele_loci == "IGL"]
-        JH_df <- .compute_auxdata_for_locus(JH_alleles, "IGH")
-        JK_df <- .compute_auxdata_for_locus(JK_alleles, "IGK")
-        JL_df <- .compute_auxdata_for_locus(JL_alleles, "IGL")
-        ans <- rbind(JH_df, JK_df, JL_df)
-    } else {
-        JA_alleles <- J_alleles[allele_loci == "TRA"]
-        JB_alleles <- J_alleles[allele_loci == "TRB"]
-        JG_alleles <- J_alleles[allele_loci == "TRG"]
-        JD_alleles <- J_alleles[allele_loci == "TRD"]
-        JA_df <- .compute_auxdata_for_locus(JA_alleles, "TRA")
-        JB_df <- .compute_auxdata_for_locus(JB_alleles, "TRB")
-        JG_df <- .compute_auxdata_for_locus(JG_alleles, "TRG")
-        JD_df <- .compute_auxdata_for_locus(JD_alleles, "TRD")
-        ans <- rbind(JA_df, JB_df, JG_df, JD_df)
-    }
-    rownames(ans) <- NULL
+    ## Compute 'cdr3_ends'.
+    ## We use WGXG motif for J alleles from IGH locus, and FGXG motif for
+    ## J alleles from all other loci.
+    fwr4_starts <- rep.int(NA_integer_, length(J_alleles))
+    idx1 <- which(allele_loci == "IGH")
+    fwr4_starts[idx1] <- .find_motif(J_alleles[idx1], codon_starts[idx1],
+                                    .WGXG_motif_dna, .WGXG_motif)
+    idx2 <- which(allele_loci != "IGH")
+    fwr4_starts[idx2] <- .find_motif(J_alleles[idx2], codon_starts[idx2],
+                                    .FGXG_motif_dna, .FGXG_motif)
+    cdr3_ends <- fwr4_starts - 1L  # 1-based
 
-    i <- match(allele_names, ans[ , "allele_name"])
-    ans <- S4Vectors:::extract_data_frame_rows(ans, i)
+    ## Compute 'coding_frame_starts'.
+    coding_frame_starts <- unname(codon_starts) - 1L
+    stopifnot(all(coding_frame_starts == cdr3_ends %% 3L, na.rm=TRUE))
+    idx <- which(is.na(coding_frame_starts) & !is.na(cdr3_ends))
+    coding_frame_starts[idx] <- cdr3_ends[idx] %% 3L
 
-    if (!is.null(codon_starts))
-        ans <- .refine_with_codon_starts(ans, codon_starts)
+    ## Compute 'chain_types' and 'extra_bps'.
+    chain_types <- make_chain_type("J", allele_loci)
+    extra_bps <- (width(J_alleles) - coding_frame_starts) %% 3L
 
-    ## Add "extra_bps" column.
-    ans$extra_bps <- (width(J_alleles) - ans[ , "coding_frame_start"]) %% 3L
+    ans <- data.frame(
+        allele_name       =allele_names,
+        coding_frame_start=coding_frame_starts,  # 0-based
+        chain_type        =chain_types,
+        cdr3_end          =cdr3_ends - 1L,  # 0-based
+        extra_bps         =extra_bps
+    )
 
     if (!no.warnings) {
         .warn_if_missing_coding_frame_starts(ans)
@@ -416,101 +342,6 @@ infer_cdr3_ends_via_fwr4_comparisons <-
         .find_best_fwr4_starts(unsolved_J_aa, fwr4set,
                                maxdist=maxdist, standout.by=standout.by)
     solved_J_aa_cdr3_end <- solved_J_aa_fwr4_start - 1L
-    solved_cdr3_end <- coding_frame_start[solve_me] + 3L * solved_J_aa_cdr3_end
-    solved_cdr3_end <- solved_cdr3_end - 1L  # 0-based
-    auxdata[solve_me, "cdr3_end"] <- solved_cdr3_end
-    warn_if_negative_cdr3_end(auxdata, "CDR3 end position")
-    auxdata
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### infer_cdr3_ends_via_full_J_sequence_comparisons()
-###
-### Not used and superseded by infer_cdr3_ends_via_fwr4_comparisons() above!
-###
-### For each J allele with an unknown CDR3 end, we infer it from the J
-### alleles with a known CDR3 end that are "close". Proximity is defined by
-### the Hamming distance between the amino acid sequences.
-### Based on Biostrings::matchPattern().
-
-.find_cdr3_end <- function(x, y, y_cdr3_end, max.mismatch)
-{
-    stopifnot(is(x, "AAString"),
-              is(y, "AAStringSet"),
-              is.integer(y_cdr3_end),
-              length(y) == length(y_cdr3_end),
-              identical(names(y), names(y_cdr3_end)),
-              isSingleNumber(max.mismatch))
-    delta <- rep.int(NA_integer_, length(y))
-    for (j in seq_along(y)) {
-        subject <- y[[j]]
-        if (length(x) <= length(subject)) {
-            v <- matchPattern(x, subject, max.mismatch=max.mismatch)
-            d <- start(v) - 1L
-        } else {
-            v <- matchPattern(subject, x, max.mismatch=max.mismatch)
-            d <- 1L - start(v)
-        }
-        if (length(d) >= 2L)
-            return(NA_integer_)
-        if (length(d) == 0L)
-            next
-        delta[[j]] <- d
-    }
-    x_cdr3_end <- y_cdr3_end - delta
-    ans <- unique(x_cdr3_end[!is.na(x_cdr3_end)])
-    if (length(ans) == 1L) ans else NA_integer_
-}
-
-### Returns an integer vector parallel to 'unsolved_J_aa' that contains the
-### 1-based CDR3 end positions w.r.t. to the sequences in 'unsolved_J_aa'.
-.find_cdr3_ends <- function(unsolved_J_aa,
-                            ref_J_aa, ref_J_aa_cdr3_end, max.mismatch=2L)
-{
-    stopifnot(is(unsolved_J_aa, "AAStringSet"),
-              is(ref_J_aa, "AAStringSet"),
-              is.integer(ref_J_aa_cdr3_end),
-              length(ref_J_aa) == length(ref_J_aa_cdr3_end),
-              identical(names(ref_J_aa), names(ref_J_aa_cdr3_end)),
-              isSingleNumber(max.mismatch))
-    vapply(seq_along(unsolved_J_aa),
-        function(i)
-            .find_cdr3_end(unsolved_J_aa[[i]],
-                           ref_J_aa, ref_J_aa_cdr3_end,
-                           max.mismatch=max.mismatch),
-        integer(1)
-    )
-}
-
-### Not exported!
-infer_cdr3_ends_via_full_J_sequence_comparisons <-
-    function(auxdata, J_alleles, max.mismatch=2L)
-{
-    check_auxdata_col2class(auxdata)
-    coding_frame_start <- auxdata[ , "coding_frame_start"]
-    stopifnot(!anyNA(coding_frame_start),
-              is(J_alleles, "DNAStringSet"),
-              identical(names(J_alleles), auxdata[ , "allele_name"]),
-              isSingleNumber(max.mismatch))
-
-    cdr3_end <- auxdata[ , "cdr3_end"]  # 0-based
-    solve_me <- is.na(cdr3_end)
-    if (!any(solve_me))
-        return(auxdata)
-
-    cdr3_end <- setNames(cdr3_end + 1L, names(J_alleles))  # 1-based
-    cdr3_coding_frame_width <- cdr3_end - coding_frame_start
-    stopifnot(all(cdr3_coding_frame_width %% 3L == 0L, na.rm=TRUE))
-    J_aa_cdr3_end <- cdr3_coding_frame_width %/% 3L
-
-    J_aa <- translate_codons(J_alleles, offset=coding_frame_start)
-    unsolved_J_aa <- J_aa[solve_me]
-    ref_J_aa <- J_aa[!solve_me]
-    ref_J_aa_cdr3_end <- J_aa_cdr3_end[!solve_me]
-    solved_J_aa_cdr3_end <- .find_cdr3_ends(unsolved_J_aa,
-                                            ref_J_aa, ref_J_aa_cdr3_end,
-                                            max.mismatch=max.mismatch)
     solved_cdr3_end <- coding_frame_start[solve_me] + 3L * solved_J_aa_cdr3_end
     solved_cdr3_end <- solved_cdr3_end - 1L  # 0-based
     auxdata[solve_me, "cdr3_end"] <- solved_cdr3_end

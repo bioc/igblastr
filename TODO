@@ -24,10 +24,6 @@ o More testing of combine_germline_dbs() and combine_c_region_dbs(). Improve
   unit tests. Improve man page and expand examples. Add cross links in other
   man pages. Add section in the vignette.
 
-o Report issue with codon start of human allele TRDJ4*01 and mouse allele
-  TRAJ7*01 to the IMGT folks.
-  See comment in .extract_codon_starts() function in R/clean_allele_set.R
-
 o Maybe replace 'without.intdata' and 'without.auxdata' arguments with
   'with.intdata' and 'with.auxdata'. With default of TRUE for 'with.intdata'
   and "auto" for 'with.auxdata' ("auto" meaning "include the computed auxdata

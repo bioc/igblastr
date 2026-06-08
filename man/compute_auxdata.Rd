@@ -39,10 +39,6 @@ infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles,
 
     Note that the "coding frame start" is 0-based so can simply be inferred
     from the "codon start" by subtracting 1.
-
-    \code{compute_auxdata()} will use the supplied "codon starts" to
-    either validate the "coding frame starts" that it could determine,
-    or to set the "coding frame starts" that it could not determine.
   }
   \item{no.warnings}{
     Set to \code{TRUE} to suppress the warnings that \code{compute_auxdata()}
