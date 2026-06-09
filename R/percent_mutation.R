@@ -13,16 +13,42 @@
     stop(wmsg(msg))
 }
 
+### In some rare situations, the sequences in 'v_sequence_alignment_aa'
+### don't have the same lengths as the corresponding sequences
+### in 'v_germline_alignment_aa'. This can happen for example when, for
+### some query, 'v_sequence_alignment' has a 1-nucleotide insertion or
+### deletion w.r.t. 'v_germline_alignment'. For example:
+###
+###   v_sequence_alignment GATTCTGCAACTTATTACTGCCAACAGTCTAATA-TTATTCT
+###                        |||| ||||||||||||||||||||||| ||||| |||||||
+###   v_germline_alignment GATTTTGCAACTTATTACTGCCAACAGTATAATAGTTATTCT
+###
+### Because of this 1-nucleotide deletion, 'v_sequence_alignment' has one
+### less codon than 'v_germline_alignment' (13 codons vs 14 codons). So the
+### sequences translate to:
+###
+###   v_sequence_alignment_aa DSATYYCQQSNII
+###                           | ||||||| |
+###   v_germline_alignment_aa DFATYYCQQYNSYS
+###
+### with the consequence that 'v_sequence_alignment_aa'
+### and 'v_germline_alignment_aa' don't have the same length.
+### Note that this deletion messes up the coding frame, with the consequence
+### that the downstream codons on both nucledotide sequences translate to
+### completely different amino acid sequences.
 .compute_hamming_dist <- function(sequence_aln, germline_aln, for.aa=FALSE)
 {
     stopifnot(is.character(sequence_aln), !anyNA(sequence_aln),
               is.character(germline_aln), !anyNA(germline_aln),
-              identical(nchar(sequence_aln), nchar(germline_aln)),
+              length(sequence_aln) == length(germline_aln),
               isTRUEorFALSE(for.aa))
     if (for.aa) {
         sequence_aln <- AAStringSet(sequence_aln)
         germline_aln <- AAStringSet(germline_aln)
     } else {
+        ## We only do this sanity check when 'for.aa' is FALSE. See comment
+        ## above why.
+        stopifnot(identical(nchar(sequence_aln), nchar(germline_aln)))
         sequence_aln <- DNAStringSet(sequence_aln)
         germline_aln <- DNAStringSet(germline_aln)
     }

@@ -27,10 +27,17 @@ read_igblastn_AIRR_output(out)
 
 \value{
   A data.frame with 1 row per query sequence and many columns.
+
+  The columns are standard "Rearrangement Schema" fields, which
+  are defined and documented by the AIRR Community at
+  \url{https://docs.airr-community.org/en/latest/datarep/rearrangements.html#fields}
 }
 
 \seealso{
   \itemize{
+    \item The "Rearrangement Schema" at
+          \url{https://docs.airr-community.org/en/latest/datarep/rearrangements.html}
+
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This
           is the main function in the \pkg{igblastr} package.

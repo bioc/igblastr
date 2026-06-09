@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 2 June 2026"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 8 June 2026"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -75,6 +75,9 @@ the package provides several other features, including:
 - Utility functions to parse the results returned by `igblastn()`.
 
 - A simple tool to vizualize the annotated sequences in a browser.
+
+- The `percent_mutation()` function to compute the percent mutation in
+  the V, D, J segments of a set of BCR or TCR sequences.
 
 - Utility functions to download data from
   [OAS](https://opig.stats.ox.ac.uk/webapps/oas/), the Observed
@@ -361,25 +364,52 @@ See `?igblastn` and `?igbrowser` for more information.
 # Downstream analysis examples
 
 
+## Distribution of percent mutation across BCR sequences
+
 ```{r, message=FALSE}
 library(ggplot2)
-library(dplyr)
-library(scales)
-library(ggseqlogo)
 ```
 
 One common analysis of AIRR format data is to examine the distribution of
 percent mutation across BCR sequences. Here we analyze the percent mutation
-in the V segments of each chain type (heavy, kappa, and lambda).
-Note that V percent mutation is 100 - v\_identity.
+in the V segments of each chain type (heavy, kappa, and lambda) at the
+nucleotide level. Note that V percent mutation at the nucleotide level is
+100 - `v_identity`:
 ```{r}
 AIRR_df |>
     ggplot(aes(locus, 100 - v_identity)) +
     theme_bw(base_size=14) +
     geom_point(position = position_jitter(width = 0.3), alpha = 0.1) +
     geom_boxplot(color = "blue", fill = NA, outliers = FALSE, alpha = 0.3) +
-    ggtitle("Distribution of V percent mutation by locus") +
+    ggtitle("Distribution of V percent mutation by locus at the nucleotide level") +
     xlab(NULL)
+```
+
+To do the same thing at the amino acid level, we first use the
+`percent_mutation()` function to compute the percent mutation in the
+V, D, J segments at the amino acid level:
+```{r}
+perc_mut_aa <- percent_mutation(AIRR_df, for.aa=TRUE)
+head(perc_mut_aa)
+```
+See `?percent_mutation` for more information.
+
+Then:
+```{r}
+perc_mut_aa |>
+    ggplot(aes(locus, v_perc_mut_aa)) +
+    theme_bw(base_size=14) +
+    geom_point(position = position_jitter(width = 0.3), alpha = 0.1) +
+    geom_boxplot(color = "blue", fill = NA, outliers = FALSE, alpha = 0.3) +
+    ggtitle("Distribution of V percent mutation by locus at the amino acid level") +
+    xlab(NULL)
+```
+
+## Distribution of germline genes
+
+```{r, message=FALSE}
+library(dplyr)
+library(scales)
 ```
 
 Another common analysis is to investigate the distribution of germline
@@ -410,6 +440,12 @@ plot_gene_dist(AIRR_df, "IGK")
 ```
 ```{r, fig.height=5.3}
 plot_gene_dist(AIRR_df, "IGL")
+```
+
+## Lengths and motifs of CDR3 sequences
+
+```{r, message=FALSE}
+library(ggseqlogo)
 ```
 
 A third category of analysis focuses on CDR3 sequences, including their

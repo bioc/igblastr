@@ -37,7 +37,7 @@ Imports: methods, utils, stats, tools,
 	R.utils, curl, httr, xml2, rvest, xtable, jsonlite,
 	BiocGenerics, S4Vectors, IRanges, GenomeInfoDb
 Suggests: GenomicAlignments, parallel, testthat, knitr, rmarkdown,
-	BiocStyle, ggplot2, dplyr, scales, ggseqlogo
+	BiocStyle, ggplot2, dplyr, scales, ggseqlogo, airr
 VignetteBuilder: knitr
 Collate:
 	utils.R
