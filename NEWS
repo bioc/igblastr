@@ -58,12 +58,14 @@ SIGNIFICANT USER-VISIBLE CHANGES
     o Two important changes to igblastn(), the main function in the package:
       1. If the selected germline db includes its own internal data then
          igblastn() will use it by default instead of the internal data
-         shipped with IgBLAST. See documentation of the 'custom_internal_data'
-         argument in '?igblastn' for more information.
+         provided by IgBLAST for the corresponding organism.
+         See documentation of the 'custom_internal_data' argument
+         in '?igblastn' for more information.
       2. If the selected germline db includes its own auxiliary data then
          igblastn() will use it by default instead of the auxiliary data
-         shipped with IgBLAST. See documentation of the 'auxiliary_data'
-         argument in '?igblastn' for more information.
+         provided by IgBLAST for the corresponding organism.
+         See documentation of the 'auxiliary_data' argument in '?igblastn'
+         for more information.
 
     o The "_AIRR." prefix in the name of the built-in germline dbs has been
       replaced with "_OGRDB.".

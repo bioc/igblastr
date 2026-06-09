@@ -38,8 +38,8 @@ load_intdata(igblast_organism, for.aa=FALSE,
              domain_system=c("imgt", "kabat"),
              which=c("live", "original"))
 
-## Show disagreements (if any) between the computed "internal data"
-## included in a germline db and the "internal data" shipped with IgBLAST:
+## Show disagreements (if any) between igblastr-generated "internal data"
+## included in a germline db and IgBLAST-provided "internal data":
 show_intdata_disagreements(db_name)
 
 ## Identify V genes with varying FWR/CDR boundaries across alleles:

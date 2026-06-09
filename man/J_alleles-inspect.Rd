@@ -61,7 +61,7 @@ translate_fwr4(J_alleles, auxdata, max.codons=NA)
     \code{?\link{list_igblast_organisms}}), then the name of the organism
     can be passed to \code{igblast_organism}.
     In this case \code{print_J_alleles()} will display whether each allele
-    is also annotated in the \emph{auxiliary data} shipped with IgBLAST for
+    is also annotated in the \emph{auxiliary data} provided by IgBLAST for
     this organism.
   }
   \item{filler}{
@@ -141,8 +141,8 @@ list_germline_dbs()
 db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
 
 ## The 'also_in_IgBLAST_auxdata' column indicates whether an allele is
-## also annotated in the "auxiliary data" shipped with IgBLAST (i.e. in
-## the optional_file/human_gl.aux file in the case of human):
+## also annotated in the "auxiliary data" provided by IgBLAST for human
+## (i.e. in the optional_file/human_gl.aux file shipped with IgBLAST):
 print_J_alleles(db_name)
 print_J_alleles(db_name, translate=TRUE)
 
@@ -157,7 +157,7 @@ print_J_alleles(db_name, translate=TRUE)
 db_name <- "_OGRDB.mouse.MSM_MsJ.IGH+IGK+IGL.202603"
 
 ## None of the mouse J alleles from OGRDB are annotated in the "auxiliary
-## data" shipped with IgBLAST (i.e. in optional_file/mouse_gl.aux).
+## data" provided by IgBLAST for mouse (i.e. in optional_file/mouse_gl.aux).
 print_J_alleles(db_name, translate=TRUE)
 
 ## The "auxiliary data" included in this germline db is provided by OGRDB.
@@ -192,8 +192,8 @@ print_J_alleles(db_name, translate=TRUE)
 ## - The ?> and <? tags around a sequence indicate an allele for which
 ##   the CDR3/FWR4 junction is unknown.
 ## - Even though allele IGKJ3*01 is annotated in the "auxiliary data"
-##   shipped with IgBLAST (in optional_file/rat_gl.aux), its cdr3_end
-##   value is missing:
+##   provided by IgBLAST for rat (in optional_file/rat_gl.aux), its
+##   cdr3_end value is missing:
 igblast_auxdata <- load_auxdata("rat")
 igblast_auxdata
 subset(igblast_auxdata, is.na(cdr3_end))

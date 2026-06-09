@@ -81,7 +81,7 @@
     auxdata <- load_auxdata(igblast_organism)
     if (igblast_organism == "human") {
         allele_names <- auxdata[ , "allele_name"]
-        ## We know that the human auxdata shipped with IgBLAST is incorrect
+        ## We know that the human auxdata provided by IgBLAST is incorrect
         ## for alleles IGHJ6*02 and IGHJ6*03, so is discordant with what
         ## install_germline_db() will compute. So we correct these rows.
         ## Note that if the user updated their "live" IgBLAST data with
@@ -98,7 +98,7 @@
     }
     if (igblast_organism == "mouse") {
         allele_names <- auxdata[ , "allele_name"]
-        ## We know that the mouse auxdata shipped with IgBLAST is incorrect
+        ## We know that the mouse auxdata provided by IgBLAST is incorrect
         ## for alleles TRAJ31*02, TRAJ32*02, TRAJ45*02, and TRAJ59*01,
         ## so is discordant with what install_germline_db() will compute.
         ## So we correct these rows.
@@ -138,7 +138,7 @@
         return()
     msg1 <- c("The computed \"internal data\" that we included in the ",
               "germline db has some disagreements with the \"internal data\" ",
-              "for ", igblast_organism, " shipped with IgBLAST.")
+              "for ", igblast_organism, " provided by IgBLAST.")
     msg2 <- c("To display the disagreements, run:")
     msg3 <- c("  show_intdata_disagreements(\"", db_name, "\")")
     warning(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", msg3)

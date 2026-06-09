@@ -7,11 +7,11 @@
 
 \description{
   A utility function to annotate a set of germline J gene allele sequences
-  in a way similar to how they are annotated in IgBLAST \emph{auxiliary data}.
+  in a way similar to how they are annotated in the \emph{auxiliary data}
+  provided by IgBLAST.
 
   Note that the annotation produced by the function can be used by IgBLAST
-  as a substitute to the \emph{auxiliary data} shipped with the IgBLAST
-  software (and typically included in a standard IgBLAST installation).
+  as a substitute to the IgBLAST-provided \emph{auxiliary data}.
 
   See \code{?\link{load_auxdata}} for more information about IgBLAST
   \emph{auxiliary data}.

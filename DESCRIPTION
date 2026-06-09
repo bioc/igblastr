@@ -9,8 +9,8 @@ Description: The igblastr package provides functions to conveniently install
 	retrieved from IMGT/V-QUEST or local FASTA files supplied by the user.
 	When possible, annotations for the V and J alleles in a new germline
 	database are automatically computed and added to the database, so they
-	can be used as replacements for the internal and auxiliary data shipped
-	with IgBLAST.
+	can be used as replacements for the internal and auxiliary data
+	provided by IgBLAST.
 	IgBLAST is described at <https://pubmed.ncbi.nlm.nih.gov/23671333/>.
 	IgBLAST web interface: <https://www.ncbi.nlm.nih.gov/igblast/>.
 	OGRDB: <https://ogrdb.airr-community.org/>.

@@ -99,7 +99,7 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
 
     If a cached germline db includes its own \emph{internal data}, then
     \code{\link{igblastn}()} will use it (as \emph{custom internal data})
-    instead of the \emph{internal data} shipped with IgBLAST.
+    instead of the \emph{internal data} provided by IgBLAST.
     See documentation of the \code{custom_internal_data} argument in
     \code{?\link{igblastn}} for more information.
 
@@ -117,7 +117,7 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
 
     If a cached germline db includes its own \emph{auxiliary data}, then
     \code{\link{igblastn}()} will use it instead of the \emph{auxiliary data}
-    shipped with IgBLAST.
+    provided by IgBLAST.
     See documentation of the \code{auxiliary_data} argument in
     \code{?\link{igblastn}} for more information.
   }
@@ -145,8 +145,8 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
             computed \emph{auxiliary data}. The completion process consists
             in eliminating missing values in the computed \emph{auxiliary data}
             where possible. This is done by replacing each missing value with
-            the corresponding value from the \emph{auxiliary data} shipped with
-            IgBLAST, if the latter is available.
+            the corresponding value from the \emph{auxiliary data} provided
+            by IgBLAST, if the latter is available.
     }
   }
   \item{disambiguate.allele.names}{
@@ -364,7 +364,7 @@ stopifnot(identical(intdataC, load_intdata(db_name0)))
 ##   2. Use these FASTA files to create and install a new germline db.
 ##   3. Install IMGT-202614-2.Mus_musculus.IGH+IGK+IGL and compare it
 ##      with the germline db obtained in 2.
-##   4. Leverage the "auxiliary data" shipped with IgBLAST to improve
+##   4. Leverage the IgBLAST-provided "auxiliary data" to improve
 ##      the "auxiliary data" computed by install_IMGT_germline_db().
 
 if (IMGT_is_up()) {
@@ -417,14 +417,14 @@ if (IMGT_is_up()) {
   ## where 'load_auxdata(db_name)' only has one:
   load_auxdata(db_name)
 
-  ## --- 4. Leverage the "auxiliary data" shipped with IgBLAST ---
-  ## ---       to improve the "auxiliary data" computed        ---
-  ## ---             by install_IMGT_germline_db()             ---
+  ## --- 4. Leverage the IgBLAST-provided "auxiliary data" ---
+  ## ---     to improve the "auxiliary data" computed      ---
+  ## ---           by install_IMGT_germline_db()           ---
 
   ## When calling install_IMGT_germline_db(), we can pass some "reference
   ## auxiliary data" for mouse to the 'ref_auxdata' argument. The
-  ## reference data we will use is the "auxiliary data" for mouse shipped
-  ## with IgBLAST. install_custom_germline_db() will then use this data
+  ## reference data we will use is the "auxiliary data" provided by IgBLAST
+  ## for mouse. install_custom_germline_db() will then use this data
   ## internally to verify that the computed "auxiliary data" is concordant
   ## with the reference data and to complete it. See documentation of the
   ## 'ref_auxdata' argument above in this man page for more information.

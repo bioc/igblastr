@@ -137,7 +137,7 @@ show_intdata_disagreements <- function(db_name)
                     "computed", "IgBLAST")
     what <- c("the computed \"internal data\" included in this germline ",
               "db and the \"internal data\" for ", igblast_organism, " ",
-              "shipped with IgBLAST")
+              "provided by IgBLAST")
     if (length(diff) == 0L) {
         msg <- c("No disagreements between ", what, ".")
         cat(wmsg2(msg, margin=0L), "\n", sep="")
