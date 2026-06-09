@@ -43,9 +43,8 @@ compute_V_gene_delineations(gapped_V_alleles, as.IRangesList=FALSE)
   V-DOMAIN and V-LIKE-DOMAIN".
 
   Note that the annotation returned by \code{compute_V_gene_delineations()}
-  can be used by IgBLAST as a substitute to the \emph{internal data} shipped
-  with the IgBLAST software (and typically included in a standard IgBLAST
-  installation).
+  can be used by IgBLAST as a substitute to the IgBLAST-provided
+  \emph{internal data}.
 
   See \code{?\link{load_intdata}} for more information about IgBLAST
   \emph{internal data}.

@@ -61,7 +61,7 @@ install_IMGT_c_region_db(organism, loci,
 
     If a cached germline db includes its own \emph{internal data}, then
     \code{\link{igblastn}()} will use it (as \emph{custom internal data})
-    instead of the \emph{internal data} shipped with IgBLAST.
+    instead of the \emph{internal data} provided by IgBLAST.
     See documentation of the \code{custom_internal_data} argument in
     \code{?\link{igblastn}} for more information.
 
@@ -212,22 +212,23 @@ if (IMGT_is_up()) {
   ## a built-in C-region database.
 
   ## -------------------------------------------------------------------
-  ## WARNING about disagreements between the computed "internal data"
-  ## that install_IMGT_germline_db() includes in the germline db and
-  ## the "internal data" shipped with IgBLAST
+  ## WARNING about disagreements between the igblastr-generated
+  ## "internal data" that install_IMGT_germline_db() includes in a
+  ## germline db and the "internal data" provided by IgBLAST for the
+  ## corresponding organism
   ## -------------------------------------------------------------------
 
-  ## 1. The IG "internal data" for rat and rhesus monkey that we infer
-  ##    from the IG gapped sequences provided by IMGT has disagreements
-  ##    with the "internal data" shipped with IgBLAST for these organisms!
+  ## 1. The igblastr-generated "internal data" for the rat and rhesus
+  ##    monkey IG V alleles from IMGT has disagreements with the
+  ##    "internal data" provided by IgBLAST for these organisms!
   suppressMessages(install_IMGT_germline_db("202614-2", "Rattus norvegicus",
                                             overwrite=TRUE))
   suppressMessages(install_IMGT_germline_db("202614-2", "Macaca mulatta",
                                             overwrite=TRUE))
 
-  ## 2. The TR "internal data" for human and mouse that we infer
-  ##    from the TR gapped sequences provided by IMGT has disagreements
-  ##    with the "internal data" shipped with IgBLAST for these organisms!
+  ## 2. The igblastr-generated "internal data" for the human and mouse
+  ##    TR V alleles from IMGT has disagreements with the "internal data"
+  ##    provided by IgBLAST for these organisms!
   suppressMessages(install_IMGT_germline_db("202614-2", "Homo sapiens",
                                             tcr.db=TRUE, overwrite=TRUE))
   suppressMessages(install_IMGT_germline_db("202614-2", "Mus musculus",

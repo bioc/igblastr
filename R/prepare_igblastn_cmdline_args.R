@@ -372,7 +372,7 @@
               "to NULL if you don't want to use any auxiliary data ",
               "(not recommended).")
     msg4 <- c("Note that you can use 'get_auxdata_path()' to obtain ",
-              "the path to the auxiliary data shipped with IgBLAST ",
+              "the path to the auxiliary data provided by IgBLAST ",
               "for a given organism.")
     msg5 <- c("See '?get_auxdata_path' for more information.")
     if (no_auto_germline_dbs) {

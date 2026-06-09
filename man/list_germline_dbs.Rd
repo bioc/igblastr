@@ -38,7 +38,8 @@ rm_germline_db(db_name)
 
     If a cached germline db includes its own \emph{internal data}, then
     \code{\link{igblastn}()} will use it (as \emph{custom internal data})
-    instead of the \emph{internal data} shipped with IgBLAST.
+    instead of the \emph{internal data} provided by IgBLAST for the
+    corresponding organism.
     See documentation of the \code{custom_internal_data} argument in
     \code{?\link{igblastn}} for more information.
   }
@@ -51,7 +52,7 @@ rm_germline_db(db_name)
 
     If a cached germline db includes its own \emph{auxiliary data}, then
     \code{\link{igblastn}()} will use it instead of the \emph{auxiliary data}
-    shipped with IgBLAST.
+    provided by IgBLAST for the corresponding organism.
     See documentation of the \code{auxiliary_data} argument in
     \code{?\link{igblastn}} for more information.
   }

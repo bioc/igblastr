@@ -2,22 +2,6 @@ High-priority TODO list
 =======================
 
 
-Several issues with the auxiliary data and internal data shipped with IgBLAST:
-
-o Investigate the disagreements between the "internal data" that we
-  include in the germline dbs obtained with install_IMGT_germline_db()
-  and the "internal data" shipped with IgBLAST. See last examples
-  in '?install_IMGT_germline_db' for more information.
-  Note that the disagreements for rhesus monkey seem to have started
-  with IMGT release 202110-2. For older releases (e.g. 202049-2) there
-  was no disagreement. This suggests that maybe the "internal data"
-  shipped with IgBLAST was computed against an old IMGT release, but as
-  the sets of V allele sequences provided by IMGT have evolved over the
-  years, it became out-of-sync.
-  Should we contact the NCBI folks about this?
-
-Other high-priority TODO items:
-
 o Document infer_cdr3_ends_via_fwr4_comparisons().
 
 o More testing of combine_germline_dbs() and combine_c_region_dbs(). Improve
@@ -35,10 +19,31 @@ o Fill missing documentation:
   - add example to man/auxdata-IO.Rd;
   - document the *_ndm_data functions (ndm_data-IO.Rd file).
 
+o Maybe revisit example 2. in '?compute_V_gene_delineations'.
+
+o Add 'pattern' argument to list_germline_dbs() and list_c_region_dbs()
+  to restrict listing to dbs with a name that match the regular expression.
+  This is modelled after the 'pattern' argument of list.files() and
+  list.dirs() in base R.
+  Typical use case is to use 'pattern="IG"' or 'pattern="TR"' to list
+  only BCR or TCR dbs.
+
 o Question for the IMGT folks: IMGT human J allele IGLJ2A*01 has a codon
   start set to 1, which is surprising for the various reasons explained
   in the comment preceding .EXCLUDED_IMGT_HUMAN_J_ALLELES in file
   R/install_IMGT_germline_db.R
+
+o Investigate the disagreements between the igblastr-generated "internal data"
+  that we include in the germline dbs created with install_IMGT_germline_db()
+  and the IgBLAST-provided "internal data". See last examples
+  in '?install_IMGT_germline_db' for more information.
+  Note that the disagreements for rhesus monkey seem to have started
+  with IMGT release 202110-2. For older releases (e.g. 202049-2) there
+  was no disagreement. This suggests that maybe the IgBLAST-provided
+  "internal data" was computed against an old IMGT release, but as the
+  sets of V allele sequences provided by IMGT have evolved over the
+  years, it became out-of-sync.
+  Should we contact the NCBI folks about this?
 
 o Why are some of the V alleles provided by IMGT "truncated" at the 3' end
   before they reach the end of their FWR3?
@@ -56,8 +61,6 @@ o Why are some of the V alleles provided by IMGT "truncated" at the 3' end
   A more straightforward way to identify them is to look at the gapped
   sequences. See how we compute 'has_incomplete_fwr3'
   in '?parse_imgt_fasta_headers' for the details.
-
-o Maybe revisit example 2. in '?compute_V_gene_delineations'.
 
 o Investigate BIG inconsistency between local IgBLAST and web IgBLAST:
   https://www.ncbi.nlm.nih.gov/igblast/

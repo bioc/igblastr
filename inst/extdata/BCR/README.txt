@@ -48,7 +48,7 @@ Content
   1279067_1_Paired_sequences.fasta.gz for which using the "internal data"
   included in _OGRDB.human.IGH+IGK+IGL.202410 or
   IMGT-202518-3.Homo_sapiens.IGH+IGK+IGL actually makes a
-  difference compared to using the "internal data" shipped with IgBLAST.
+  difference compared to using the "internal data" provided by IgBLAST.
   The discriminating fields (i.e. the fields where we see differences)
   in the AIRR-formatted data.frame are: sequence_aa, fwr2, fwr2_aa, cdr2,
   cdr2_aa, fwr3, fwr2_end, cdr2_start, cdr2_end, fwr3_start.
