@@ -3,13 +3,13 @@
 ### installations obtain the data from the IMGT local store (located
 ### in 'igblastr_cache(IMGT_STORE)') so are very fast and work offline.
 install_IMGT_germline_db("202614-2", "Homo sapiens",
-                         without.auxdata=TRUE, overwrite=TRUE)
+                         auto.auxdata=FALSE, overwrite=TRUE)
 install_IMGT_germline_db("202614-2", "Mus musculus",
-                         without.auxdata=TRUE, overwrite=TRUE)
+                         auto.auxdata=FALSE, overwrite=TRUE)
 install_IMGT_germline_db("202614-2", "Rattus norvegicus",
-                         without.auxdata=TRUE, overwrite=TRUE)
+                         auto.auxdata=FALSE, overwrite=TRUE)
 install_IMGT_germline_db("202614-2", "Oryctolagus cuniculus",
-                         without.auxdata=TRUE, overwrite=TRUE)
+                         auto.auxdata=FALSE, overwrite=TRUE)
 
 test_that("translate_J_alleles()", {
 
