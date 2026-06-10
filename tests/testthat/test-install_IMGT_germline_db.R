@@ -51,14 +51,14 @@ test_that("install_IMGT_germline_db()", {
     ## 202530-1 are empty!
     expect_error(
         install_IMGT_germline_db("202530-1", "Mus_musculus_C57BL6J",
-                                 without.intdata=TRUE, without.auxdata=TRUE,
+                                 auto.intdata=FALSE, auto.auxdata=FALSE,
                                  overwrite=TRUE),
         regexp="no alleles found in FASTA files"
     )
     expect_error(
         install_IMGT_germline_db("202530-1", "Mus_musculus_C57BL6J",
                                  tcr.db=TRUE,
-                                 without.intdata=TRUE, without.auxdata=TRUE,
+                                 auto.intdata=FALSE, auto.auxdata=FALSE,
                                  overwrite=TRUE),
         regexp="no alleles found in FASTA files"
     )
