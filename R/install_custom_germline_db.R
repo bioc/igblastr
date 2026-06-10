@@ -30,13 +30,13 @@ stop_on_existing_germline_db <- function(db_name)
                  .LIST_GERMLINE_DB_TIP, margin=0L))
 }
 
-.warn_if_auxdata_not_added_to_germline_db <- function(db_path)
+.warn_if_auto_auxdata_not_added_to_germline_db <- function(db_path)
 {
     if (file.exists(make_germline_db_auxdata_path(db_path)))
         return()
     db_name <- basename(db_path)
     igblast_organism <- infer_igblast_organism_from_db_name(db_name)
-    msg1 <- c("The auxiliary data didn't get added to ",
+    msg1 <- c("The igblastr-generated auxiliary data didn't get added to ",
               "germline db ", db_name, " because the \"coding frame start\" ",
               "could not be determined for some of the J alleles in the db.")
     if (is.na(igblast_organism)) {
@@ -55,10 +55,10 @@ stop_on_existing_germline_db <- function(db_name)
 
 ### Not exported!
 install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
-                                gapped=FALSE, with.intdata=FALSE,
+                                imgt.fasta.headers=FALSE,
+                                gapped=FALSE, intdata=NULL,
                                 excluded_J_alleles=character(0),
-                                with.auxdata=FALSE, imgt.fasta=FALSE,
-                                ref_auxdata=NULL,
+                                auxdata=NULL, ref_auxdata=NULL,
                                 disambiguate.allele.names=FALSE,
                                 if.exists=c("error", "overwrite", "no-op"),
                                 verbose=FALSE, cheer.if.success=FALSE)
@@ -70,13 +70,10 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
     if (!dir.exists(fasta_dir))
         stop(wmsg(fasta_dir, ": directory not found"))
     check_selected_loci(loci)
+    if (!isTRUEorFALSE(imgt.fasta.headers))
+        stop(wmsg("'imgt.fasta.headers' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(gapped))
         stop(wmsg("'gapped' must be TRUE or FALSE"))
-    checkarg_with.intdata(with.intdata, gapped)
-    if (!isTRUEorFALSE(with.auxdata))
-        stop(wmsg("'with.auxdata' must be TRUE or FALSE"))
-    if (!isTRUEorFALSE(imgt.fasta))
-        stop(wmsg("'imgt.fasta' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(disambiguate.allele.names))
         stop(wmsg("'disambiguate.allele.names' must be TRUE or FALSE"))
     if.exists <- match.arg(if.exists)
@@ -98,10 +95,10 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
     }
 
     create_germline_db(db_path, fasta_dir, loci,
-                       gapped=gapped, with.intdata=with.intdata,
+                       imgt.fasta.headers=imgt.fasta.headers,
+                       gapped=gapped, intdata=intdata,
                        excluded_J_alleles=excluded_J_alleles,
-                       with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
-                       ref_auxdata=ref_auxdata,
+                       auxdata=auxdata, ref_auxdata=ref_auxdata,
                        disambiguate.allele.names=disambiguate.allele.names,
                        overwrite=TRUE, verbose=verbose)
 
@@ -111,8 +108,8 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
     if (cheer.if.success)
         .install_germline_db_succeeded(db_name)
 
-    if (with.auxdata)
-        .warn_if_auxdata_not_added_to_germline_db(db_path)
+    if (isSingleNonWhiteString(auxdata) && auxdata == "auto")
+        .warn_if_auto_auxdata_not_added_to_germline_db(db_path)
 
     invisible(db_name)
 }
@@ -125,9 +122,9 @@ install_germline_db <- function(install_dir, db_name, fasta_dir, loci,
 ### A thin wrapper to install_germline_db().
 install_custom_germline_db <- function(db_name, fasta_dir,
                                        tcr.db=FALSE, loci="auto",
-                                       gapped=FALSE, with.intdata=FALSE,
-                                       with.auxdata=FALSE, imgt.fasta=FALSE,
-                                       ref_auxdata=NULL,
+                                       imgt.fasta.headers=FALSE,
+                                       gapped=FALSE, intdata=NULL,
+                                       auxdata=NULL, ref_auxdata=NULL,
                                        disambiguate.allele.names=FALSE,
                                        overwrite=FALSE, verbose=FALSE)
 {
@@ -148,9 +145,9 @@ install_custom_germline_db <- function(db_name, fasta_dir,
     germline_dbs_home <- get_germline_dbs_home(TRUE)  # guaranteed to exist
     if.exists <- if (overwrite) "overwrite" else "error"
     install_germline_db(germline_dbs_home, db_name, fasta_dir, loci,
-                        gapped=gapped, with.intdata=with.intdata,
-                        with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
-                        ref_auxdata=ref_auxdata,
+                        imgt.fasta.headers=imgt.fasta.headers,
+                        gapped=gapped, intdata=intdata,
+                        auxdata=auxdata, ref_auxdata=ref_auxdata,
                         disambiguate.allele.names=disambiguate.allele.names,
                         if.exists=if.exists, verbose=verbose)
 }

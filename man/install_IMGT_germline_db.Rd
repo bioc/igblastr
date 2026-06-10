@@ -21,7 +21,7 @@
 \usage{
 install_IMGT_germline_db(release, organism="Homo sapiens", tcr.db=FALSE,
                          loci="auto",
-                         without.intdata=FALSE, without.auxdata=FALSE,
+                         auto.intdata=TRUE, auto.auxdata=TRUE,
                          overwrite=FALSE, verbose=FALSE, ...)
 
 ## Can only be used to "subset" a built-in C-region database (see
@@ -48,12 +48,12 @@ install_IMGT_c_region_db(organism, loci,
     element per locus (e.g. \code{"IGH"} or \code{c("TRA", "TRB")}), or
     as a \code{+}-separated list in a single string (e.g. \code{"TRA+TRB"}).
   }
-  \item{without.intdata}{
+  \item{auto.intdata}{
     By default, \code{install_IMGT_germline_db()} will also compute and
     add the \emph{internal data} (i.e. the FWR/CDR boundaries on the V
     alleles) to the new db. Note that \code{install_IMGT_germline_db()}
     uses the \emph{gapped} V allele sequences provided by IMGT for that.
-    You can skip this step by setting \code{without.intdata} to \code{TRUE}.
+    You can skip this step by setting \code{auto.intdata} to \code{FALSE}.
 
     The presence of \emph{internal data} in the new db will be indicated
     in the \code{intdata} column of the data.frame returned by
@@ -68,7 +68,7 @@ install_IMGT_c_region_db(organism, loci,
     Also see \code{?\link{intdata_utils}} for more information about IgBLAST
     \emph{internal data}.
   }
-  \item{without.auxdata}{
+  \item{auto.auxdata}{
     COMING SOON...
   }
   \item{overwrite}{

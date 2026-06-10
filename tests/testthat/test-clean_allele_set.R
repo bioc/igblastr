@@ -156,14 +156,14 @@ test_that("clean_V_allele_set()", {
     expect_identical(as.character(object), c(A1="ACGT", A2="AAAAACGT", A3="GG"))
     expect_true(is.null(mcols(object)))
 
-    errmsg <- paste0("'with.intdata=TRUE' can only be used ",
+    errmsg <- paste0("'auto.intdata=TRUE' can only be used ",
                      "when 'gapped' is TRUE")
-    expect_error2(clean_V_allele_set(allele_set1, with.intdata=TRUE), errmsg)
+    expect_error2(clean_V_allele_set(allele_set1, auto.intdata=TRUE), errmsg)
 
     errmsg <- paste0("'allele_set' must have a \"locus\" ",
-                     "metadata column when 'with.intdata' is TRUE")
+                     "metadata column when 'auto.intdata' is TRUE")
     expect_error2(
-        clean_V_allele_set(allele_set1, gapped=TRUE, with.intdata=TRUE),
+        clean_V_allele_set(allele_set1, gapped=TRUE, auto.intdata=TRUE),
         errmsg
     )
 
@@ -172,7 +172,7 @@ test_that("clean_V_allele_set()", {
     names(allele_set) <- paste0("\t stuff |",
                                 names(allele_set),
                                 "\t   |more|| stuff  ")
-    object <- clean_V_allele_set(allele_set, gapped=TRUE, with.intdata=TRUE)
+    object <- clean_V_allele_set(allele_set, gapped=TRUE, auto.intdata=TRUE)
     expect_true(is(object, "DNAStringSet"))
     expect_identical(as.character(object), c(A1="ACGT", A2="AAAAACGT", A3="GG"))
     .check_object_mcols(object)
@@ -198,7 +198,7 @@ test_that("clean_V_allele_set()", {
     regexp <- "V allele sequences have no gaps"
     expect_warning(
         object <- clean_V_allele_set(allele_set,
-                                     gapped=TRUE, with.intdata=TRUE),
+                                     gapped=TRUE, auto.intdata=TRUE),
         regexp=regexp
     )
     expect_true(is(object, "DNAStringSet"))
@@ -215,7 +215,7 @@ test_that("clean_V_allele_set()", {
     expect_identical(as.character(object), as.character(allele_set0))
     expect_identical(colnames(mcols(object)), colnames(mcols(allele_set3)))
 
-    object <- clean_V_allele_set(allele_set3, gapped=TRUE, with.intdata=TRUE)
+    object <- clean_V_allele_set(allele_set3, gapped=TRUE, auto.intdata=TRUE)
     expect_true(is(object, "DNAStringSet"))
     expect_identical(as.character(object), as.character(allele_set0))
     .check_object_mcols(object)
@@ -239,7 +239,7 @@ test_that("clean_V_allele_set()", {
                      "and names must have gaps that result in ",
                      "identical annotations")
     expect_error2(
-        clean_V_allele_set(allele_set, gapped=TRUE, with.intdata=TRUE),
+        clean_V_allele_set(allele_set, gapped=TRUE, auto.intdata=TRUE),
         errmsg
     )
 
@@ -250,7 +250,7 @@ test_that("clean_V_allele_set()", {
     mcols(allele_set)$locus <- "TRB"
     names(allele_set)[c(1:2, 9L)] <- "A1"
     names(allele_set)[c(3L, 5:6, 8L)] <- "A3"
-    object <- clean_V_allele_set(allele_set, gapped=TRUE, with.intdata=TRUE,
+    object <- clean_V_allele_set(allele_set, gapped=TRUE, auto.intdata=TRUE,
                                  disambiguate.allele.names=TRUE)
     expect_identical(as.character(object), as.character(expected_object))
     .check_object_mcols(object)

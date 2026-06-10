@@ -146,8 +146,7 @@
 
 install_IMGT_germline_db <- function(release, organism="Homo sapiens",
                                      tcr.db=FALSE, loci="auto",
-                                     without.intdata=FALSE,
-                                     without.auxdata=FALSE,
+                                     auto.intdata=TRUE, auto.auxdata=TRUE,
                                      overwrite=FALSE, verbose=FALSE, ...)
 {
     ## Check arguments.
@@ -155,10 +154,10 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     loci <- normalize_user_supplied_loci(loci, tcr.db=tcr.db,
                                          stop.if.missing.regions=TRUE)
     loci_prefix <- extract_selected_loci_prefix(loci)
-    if (!isTRUEorFALSE(without.intdata))
-        stop(wmsg("'without.intdata' must be TRUE or FALSE"))
-    if (!isTRUEorFALSE(without.auxdata))
-        stop(wmsg("'without.auxdata' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(auto.intdata))
+        stop(wmsg("'auto.intdata' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(auto.auxdata))
+        stop(wmsg("'auto.auxdata' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(overwrite))
         stop(wmsg("'overwrite' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(verbose))
@@ -188,20 +187,25 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
 
     ## Create and install germline db.
     install_dir <- get_germline_dbs_home(TRUE)  # guaranteed to exist
-    with.auxdata <- !without.auxdata
-    igblast_auxdata <- if (with.auxdata) .load_igblast_auxdata(db_name)
-                       else NULL
+    intdata <- if (auto.intdata) "auto" else NULL
+    if (auto.auxdata) {
+        auxdata <- "auto"
+        igblast_auxdata <- .load_igblast_auxdata(db_name)
+    } else {
+        auxdata <- NULL
+        igblast_auxdata <- NULL
+    }
     if.exists <- if (overwrite) "overwrite" else "error"
     install_germline_db(install_dir, db_name, fasta_store, loci,
-                        gapped=TRUE, with.intdata=!without.intdata,
+                        imgt.fasta.headers=TRUE,
+                        gapped=TRUE, intdata=intdata,
                         excluded_J_alleles=excluded_J_alleles,
-                        with.auxdata=with.auxdata, imgt.fasta=TRUE,
-                        ref_auxdata=igblast_auxdata,
+                        auxdata=auxdata, ref_auxdata=igblast_auxdata,
                         if.exists=if.exists, verbose=verbose,
                         cheer.if.success=TRUE)
 
     ## Check concordance of computed intdata with IgBLAST intdata.
-    if (!without.intdata)
+    if (auto.intdata)
         .check_concordance_with_igblast_intdata(db_name)
 
     invisible(db_name)

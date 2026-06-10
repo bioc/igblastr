@@ -30,7 +30,7 @@
     function(install_dir, db_name, fasta_store, verbose=FALSE)
 {
     install_germline_db(install_dir, db_name, fasta_store, IG_LOCI,
-                        gapped=TRUE, with.intdata=TRUE,
+                        gapped=TRUE, intdata="auto",
                         if.exists="no-op", verbose=verbose)
     db_path <- file.path(install_dir, db_name)
     .add_ogrdb_auxdata_if_missing(db_path, fasta_store, verbose=verbose)
