@@ -226,6 +226,7 @@ See `?install_IMGT_germline_db` for more information.
 The `r Biocpkg("igblastr")` package provides the `install_custom_germline_db()`
 function to create and install a germline database from a set of
 user-supplied FASTA files containing germline V/D/J gene allele sequences.
+
 See `?install_custom_germline_db` for more information.
 
 ## Select the germline database to use with igblastn()

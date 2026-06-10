@@ -325,7 +325,7 @@
 ### - D_original_fasta/: subdirectory containing the input FASTA files
 ###       corresponding to the D regions, one FASTA file per region;
 ### - D.fasta: final FASTA file containing the clean allele set.
-create_region_db <- function(fasta_files, destdir,
+create_region_db <- function(destdir, fasta_files,
                              region_type=VDJC_REGION_TYPES,
                              excluded_alleles=character(0),
                              disambiguate.allele.names=FALSE,
@@ -378,44 +378,44 @@ create_region_db <- function(fasta_files, destdir,
 ### A specialized version of create_region_db() for V alleles.
 ### Set 'gapped' to TRUE if the supplied sequences are gapped V allele
 ### sequences (note that only V allele sequences are allowed to have gaps).
-### Set 'with.intdata' to TRUE if the supplied sequences are gapped V allele
+### Set 'auto.intdata' to TRUE if the supplied sequences are gapped V allele
 ### sequences **and** the associated internal data should be computed and
 ### added to the db.
-create_V_region_db <- function(fasta_files, destdir,
-                               gapped=FALSE, with.intdata=FALSE,
+create_V_region_db <- function(destdir, fasta_files,
+                               gapped=FALSE, auto.intdata=FALSE,
                                disambiguate.allele.names=FALSE,
                                overwrite=FALSE, verbose=FALSE)
 {
     if (!isTRUEorFALSE(gapped))
         stop(wmsg("'gapped' must be TRUE or FALSE"))
-    checkarg_with.intdata(with.intdata, gapped)
+    checkarg_auto.intdata(auto.intdata, gapped)
     if (!isTRUEorFALSE(disambiguate.allele.names))
         stop(wmsg("'disambiguate.allele.names' must be TRUE or FALSE"))
 
     ## (1) Load and combine.
     ## Note that 'allele_set' is loaded with the locus info as a metadata
     ## column on it. clean_V_allele_set() will require and use this metadata
-    ## column when 'with.intdata' is TRUE.
+    ## column when 'auto.intdata' is TRUE.
     allele_set <- .init_region_db(fasta_files, destdir, "V",
                                   overwrite=overwrite, verbose=verbose)
 
     ## (2) Clean.
     cleaned_allele_set <-
         clean_V_allele_set(allele_set,
-                           gapped=gapped, with.intdata=with.intdata,
+                           gapped=gapped, auto.intdata=auto.intdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            verbose=verbose)
 
     ## Write the db.
     DORsummary <-
         clean_V_allele_set(allele_set,
-                           gapped=gapped, with.intdata=with.intdata,
+                           gapped=gapped, auto.intdata=auto.intdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            summary.only=TRUE)
     .write_region_db(cleaned_allele_set, destdir, "V",
                      fasta_files, DORsummary,
                      verbose=verbose)
-    if (with.intdata) {
+    if (auto.intdata) {
         if (verbose)
             message(wmsg("Adding the intdata to the db"), " ... ",
                     appendLF=FALSE)
@@ -467,49 +467,46 @@ create_V_region_db <- function(fasta_files, destdir,
 }
 
 ### A specialized version of create_region_db() for J alleles.
-### Set 'with.auxdata' to TRUE if the auxiliary data associated with the
+### Set 'auto.auxdata' to TRUE if the auxiliary data associated with the
 ### J alleles should be computed and added to the db.
-create_J_region_db <- function(fasta_files, destdir,
+create_J_region_db <- function(destdir, fasta_files, imgt.fasta.headers=FALSE,
                                excluded_alleles=character(0),
-                               with.auxdata=FALSE, imgt.fasta=FALSE,
-                               ref_auxdata=NULL,
+                               auto.auxdata=FALSE, ref_auxdata=NULL,
                                disambiguate.allele.names=FALSE,
                                overwrite=FALSE, verbose=FALSE)
 {
-    if (!isTRUEorFALSE(with.auxdata))
-        stop(wmsg("'with.auxdata' must be TRUE or FALSE"))
-    if (!isTRUEorFALSE(imgt.fasta))
-        stop(wmsg("'imgt.fasta' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(imgt.fasta.headers))
+        stop(wmsg("'imgt.fasta.headers' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(auto.auxdata))
+        stop(wmsg("'auto.auxdata' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(disambiguate.allele.names))
         stop(wmsg("'disambiguate.allele.names' must be TRUE or FALSE"))
 
     ## (1) Load and combine.
     ## Note that 'allele_set' is loaded with the locus info as a metadata
     ## column on it. clean_J_allele_set() will require and use this metadata
-    ## column when 'with.auxdata' is TRUE.
+    ## column when 'auto.auxdata' is TRUE.
     allele_set <- .init_region_db(fasta_files, destdir, "J",
                                   excluded_alleles=excluded_alleles,
                                   overwrite=overwrite, verbose=verbose)
 
     ## (2) Clean.
     cleaned_allele_set <-
-        clean_J_allele_set(allele_set,
-                           with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
-                           ref_auxdata=ref_auxdata,
+        clean_J_allele_set(allele_set, imgt.fasta.headers=imgt.fasta.headers,
+                           auto.auxdata=auto.auxdata, ref_auxdata=ref_auxdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            verbose=verbose)
 
     ## Write the db.
     DORsummary <-
-        clean_J_allele_set(allele_set,
-                           with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
-                           ref_auxdata=ref_auxdata,
+        clean_J_allele_set(allele_set, imgt.fasta.headers=imgt.fasta.headers,
+                           auto.auxdata=auto.auxdata, ref_auxdata=ref_auxdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            summary.only=TRUE)
     .write_region_db(cleaned_allele_set, destdir, "J",
                      fasta_files, DORsummary, excluded_alleles=excluded_alleles,
                      verbose=verbose)
-    if (with.auxdata) {
+    if (auto.auxdata) {
         allele_names <- names(cleaned_allele_set)
         auxdata <- mcols(cleaned_allele_set, use.names=FALSE)
         stopifnot(identical(allele_names, auxdata[ , "allele_name"]))

@@ -14,9 +14,9 @@
 
 \usage{
 install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
-                           gapped=FALSE, with.intdata=FALSE,
-                           with.auxdata=FALSE, imgt.fasta=FALSE,
-                           ref_auxdata=NULL,
+                           imgt.fasta.headers=FALSE,
+                           gapped=FALSE, intdata=NULL,
+                           auxdata=NULL, ref_auxdata=NULL,
                            disambiguate.allele.names=FALSE,
                            overwrite=FALSE, verbose=FALSE)
 }
@@ -82,16 +82,31 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
     element per locus (e.g. \code{"IGH"} or \code{c("TRA", "TRB")}), or
     as a \code{+}-separated list in a single string (e.g. \code{"TRA+TRB"}).
   }
+  \item{imgt.fasta.headers}{
+    COMING SOON...
+  }
   \item{gapped}{
     Set to \code{TRUE} if the supplied V allele sequences are \emph{gapped},
     in which case the gaps will be removed when the sequences get imported
     in the database.
   }
-  \item{with.intdata}{
-    If the supplied V allele sequences are \emph{gapped}, you can
-    set \code{with.intdata} to \code{TRUE} to have the \emph{internal data}
-    (i.e. the FWR/CDR boundaries on the V alleles) computed and added to
-    the new db.
+  \item{intdata}{
+    \code{NULL} (the default), or \code{"auto"}, or a data.frame containing
+    custom \emph{internal data}, or the path to a file containing custom
+    \emph{internal data}.
+
+    By default, \code{install_custom_germline_db()} doesn't include any
+    \emph{internal data} in the new database.
+
+    To include \emph{internal data} in the new db, you can set \code{intdata}
+    to \code{"auto"}, in which case \code{install_custom_germline_db()} will
+    compute and add the \emph{internal data} to the database. Note that this
+    is only supported if the V allele sequences in the supplied FASTA files
+    have gaps and \code{gapped} is set to \code{TRUE}.
+
+    Alternatively, you can supply your own custom \emph{internal data}
+    as a data.frame or by passing the path to a file containing
+    \emph{internal data}.
 
     Note that the presence of \emph{internal data} in the new db will be
     indicated in the \code{intdata} column of the data.frame returned by
@@ -106,10 +121,21 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
     Also see \code{?\link{intdata_utils}} for more information about IgBLAST
     \emph{internal data}.
   }
-  \item{with.auxdata}{
-    Set \code{with.auxdata} to \code{TRUE} to have the \emph{auxiliary data}
-    (i.e. J allele annotations used by IgBLAST) computed and added to the
-    new db.
+  \item{auxdata}{
+    \code{NULL} (the default), or \code{"auto"}, or a data.frame containing
+    custom \emph{auxiliary data}, or the path to a file containing custom
+    \emph{auxiliary data}.
+
+    By default, \code{install_custom_germline_db()} doesn't include any
+    \emph{auxiliary data} in the new database.
+
+    To include \emph{auxiliary data} in the new db, you can set \code{auxdata}
+    to \code{"auto"}, in which case \code{install_custom_germline_db()} will
+    try to compute and add the \emph{auxiliary data} to the database.
+
+    Alternatively, you can supply your own custom \emph{auxiliary data}
+    as a data.frame or by passing the path to a file containing
+    \emph{auxiliary data}.
 
     Note that the presence of \emph{auxiliary data} in the new db will be
     indicated in the \code{auxdata} column of the data.frame returned by
@@ -121,12 +147,9 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
     See documentation of the \code{auxiliary_data} argument in
     \code{?\link{igblastn}} for more information.
   }
-  \item{imgt.fasta}{
-    COMING SOON...
-  }
   \item{ref_auxdata}{
-    Use only if \code{with.auxdata} is set to \code{TRUE} (\code{ref_auxdata}
-    is ignored if \code{with.auxdata} is \code{FALSE}).
+    Use only if \code{auxdata} is set to \code{"auto"} (\code{ref_auxdata}
+    is ignored otherwise).
 
     \code{ref_auxdata} can be \code{NULL} (the default) or a data.frame
     containing \emph{auxiliary data}. If the latter, then:
@@ -332,12 +355,12 @@ stopifnot(identical(
 
 ## The gaps that germline gene allele sequence providers like IMGT and
 ## AIRR-community/OGRDB inject in the V allele sequences reflect their
-## FWR/CDR boundaries. When the 'with.intdata' argument is set to TRUE,
+## FWR/CDR boundaries. When the 'intdata' argument is set to "auto",
 ## install_custom_germline_db() takes advantage of this to compute and
 ## add the "internal data" associated with the V alleles to the new db:
 exC_db_name <- "cus.exC.human.IGH+IGK+IGL"
-install_custom_germline_db(exC_db_name, exB_fasta_dir, gapped=TRUE,
-                           with.intdata=TRUE)
+install_custom_germline_db(exC_db_name, exB_fasta_dir,
+                           gapped=TRUE, intdata="auto")
 list_germline_dbs()  # the 'intdata' col indicates the presence
                      # of "internal data" in the new db
 
@@ -385,9 +408,9 @@ if (IMGT_is_up()) {
   ## --- 2. Use FASTA files to install new germline db ---
 
   exD_db_name <- "cus.exD.mouse.IGH+IGK+IGL"
-  install_custom_germline_db(exD_db_name, exD_fasta_dir, gapped=TRUE,
-                             with.intdata=TRUE, with.auxdata=TRUE,
-                             imgt.fasta=TRUE)
+  install_custom_germline_db(exD_db_name, exD_fasta_dir,
+                             imgt.fasta.headers=TRUE,
+                             gapped=TRUE, intdata="auto", auxdata="auto")
   list_germline_dbs()  # the 'intdata' and 'auxdata' cols indicate the
                        # presence of "internal data" and "auxiliary data"
                        # in the new db
@@ -430,9 +453,9 @@ if (IMGT_is_up()) {
   ## 'ref_auxdata' argument above in this man page for more information.
 
   igblast_mouse_auxdata <- load_auxdata("mouse")
-  install_custom_germline_db(exD_db_name, exD_fasta_dir, gapped=TRUE,
-                             with.intdata=TRUE, with.auxdata=TRUE,
-                             imgt.fasta=TRUE,
+  install_custom_germline_db(exD_db_name, exD_fasta_dir,
+                             imgt.fasta.headers=TRUE,
+                             gapped=TRUE, intdata="auto", auxdata="auto",
                              ref_auxdata=igblast_mouse_auxdata,
                              overwrite=TRUE)
 

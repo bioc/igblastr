@@ -8,13 +8,8 @@ o More testing of combine_germline_dbs() and combine_c_region_dbs(). Improve
   unit tests. Improve man page and expand examples. Add cross links in other
   man pages. Add section in the vignette.
 
-o Maybe replace 'without.intdata' and 'without.auxdata' arguments with
-  'with.intdata' and 'with.auxdata'. With default of TRUE for 'with.intdata'
-  and "auto" for 'with.auxdata' ("auto" meaning "include the computed auxdata
-  if it's complete").
-
 o Fill missing documentation:
-  - install_custom_germline_db(): document arg 'imgt.fasta';
+  - install_custom_germline_db(): document arg 'imgt.fasta.headers';
   - install_IMGT_germline_db(): document arg 'without.auxdata';
   - add example to man/auxdata-IO.Rd;
   - document the *_ndm_data functions (ndm_data-IO.Rd file).
@@ -27,6 +22,9 @@ o Add 'pattern' argument to list_germline_dbs() and list_c_region_dbs()
   list.dirs() in base R.
   Typical use case is to use 'pattern="IG"' or 'pattern="TR"' to list
   only BCR or TCR dbs.
+
+o Some improvements to internal helper .do_create_germline_db(). See
+  TODOs in R/create_germline_db.R.
 
 o Question for the IMGT folks: IMGT human J allele IGLJ2A*01 has a codon
   start set to 1, which is surprising for the various reasons explained

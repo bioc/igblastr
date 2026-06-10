@@ -109,7 +109,7 @@ create_c_region_db <- function(fasta_dir, loci, destdir,
     tmp_destdir <- tempfile("c_region_db_")
     dir.create(tmp_destdir)
     on.exit(nuke_file(tmp_destdir))
-    create_region_db(fasta_files, tmp_destdir, region_type="C",
+    create_region_db(tmp_destdir, fasta_files, region_type="C",
                      disambiguate.allele.names=disambiguate.allele.names,
                      verbose=verbose)
     rename_file(tmp_destdir, destdir, replace=TRUE)

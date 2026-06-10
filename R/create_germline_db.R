@@ -139,31 +139,82 @@ list_loci_in_germline_fasta_dir <-
 ### create_germline_db()
 ###
 
+### Return TRUE if 'intdata' is "auto", and FALSE otherwise.
+.infer_auto_intdata_from_intdata_arg <-
+    function(intdata, argname="intdata", what="internal data")
+{
+    if (is.null(intdata) || is.data.frame(intdata))
+        return(FALSE)
+    if (!isSingleNonWhiteString(intdata))
+        stop(wmsg("'", argname, "' must be NULL, \"auto\", or a data.frame ",
+                  "containing custom ", what, ", or the path to a file ",
+                  "containing custom ", what))
+    intdata == "auto"
+}
+
 ### Create the three "region dbs": one V-, one D-, and one J-region db.
 .do_create_germline_db <- function(destdir, fasta_dir, loci,
-                                   gapped=FALSE, with.intdata=FALSE,
+                                   imgt.fasta.headers=FALSE,
+                                   gapped=FALSE, intdata=FALSE,
                                    excluded_J_alleles=character(0),
-                                   with.auxdata=FALSE, imgt.fasta=FALSE,
-                                   ref_auxdata=NULL,
+                                   auxdata=FALSE, ref_auxdata=NULL,
                                    disambiguate.allele.names=FALSE,
                                    verbose=FALSE)
 {
+    auto_intdata <- .infer_auto_intdata_from_intdata_arg(intdata)
+    if (auto_intdata && !gapped)
+        stop(wmsg("'intdata=\"auto\"' is only supported if the V allele ",
+                  "sequences in the supplied FASTA files have gaps and ",
+                  "'gapped' is set to TRUE"))
+
+    auto_auxdata <- .infer_auto_intdata_from_intdata_arg(auxdata,
+                                                         argname="auxdata",
+                                                         what="auxiliary data")
+
     V_fasta_files <- .collect_fasta_files(fasta_dir, "V", loci)
-    create_V_region_db(V_fasta_files, destdir,
-                       gapped=gapped, with.intdata=with.intdata,
+    create_V_region_db(destdir, V_fasta_files,
+                       gapped=gapped, auto.intdata=auto_intdata,
                        disambiguate.allele.names=disambiguate.allele.names,
                        verbose=verbose)
+
     D_fasta_files <- .collect_fasta_files(fasta_dir, "D", loci)
-    create_region_db(  D_fasta_files, destdir, region_type="D",
+    create_region_db(  destdir, D_fasta_files, region_type="D",
                        disambiguate.allele.names=disambiguate.allele.names,
                        verbose=verbose)
+
     J_fasta_files <- .collect_fasta_files(fasta_dir, "J", loci)
-    create_J_region_db(J_fasta_files, destdir,
+    create_J_region_db(destdir, J_fasta_files,
+                       imgt.fasta.headers=imgt.fasta.headers,
                        excluded_alleles=excluded_J_alleles,
-                       with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
-                       ref_auxdata=ref_auxdata,
+                       auto.auxdata=auto_auxdata, ref_auxdata=ref_auxdata,
                        disambiguate.allele.names=disambiguate.allele.names,
                        verbose=verbose)
+
+    if (!(is.null(intdata) || auto_intdata)) {
+        ## Add the user-supplied internal data to the db.
+        if (isSingleNonWhiteString(intdata))
+            intdata <- read_ndm_data(intdata)
+        ## At this point 'intdata' is guaranteed to be a data.frame.
+        ## TODO: Right now write_ndm_data_to_db() fails in a not-so-informative
+        ## way if some J alleles in the db are not annotated in 'intdata' or
+        ## if the latter has more rows than the J alleles in the db.
+        ## It needs to be modified to:
+        ## 1. Fail with an informative error message if some J alleles in
+        ##    the db are not annotated in 'intdata'.
+        ## 2. Accept an 'intdata' data.frame that has more rows than the
+        ##    J alleles in the db, maybe with a warning.
+        write_ndm_data_to_db(intdata, destdir, check.and.reorder=TRUE)
+    }
+
+    if (!(is.null(auxdata) || auto_auxdata)) {
+        ## Add the user-supplied auxiliary data to the db.
+        if (isSingleNonWhiteString(auxdata))
+            auxdata <- read_auxdata(auxdata)
+        ## At this point 'auxdata' is guaranteed to be a data.frame.
+        ## TODO: write_auxdata_to_db() has the same problems as
+        ## write_ndm_data_to_db(). See previous TODO above.
+        write_auxdata_to_db(auxdata, destdir, check.and.reorder=TRUE)
+    }
 }
 
 ### A "germline db" is made of three "region dbs": one V-, one D-, and
@@ -174,24 +225,22 @@ list_loci_in_germline_fasta_dir <-
 ### igblastr's cache organization). This subdir or any of its parent
 ### directories don't need to exist yet.
 ### See create_V_region_db() and create_J_region_db() in R/create_region_db.R
-### for the roles of the 'gapped, 'with.intdata',
-### and 'disambiguate.allele.names' arguments.
+### for the roles of the 'gapped' and 'disambiguate.allele.names' arguments.
 create_germline_db <- function(destdir, fasta_dir, loci,
-                               gapped=FALSE, with.intdata=FALSE,
+                               imgt.fasta.headers=FALSE,
+                               gapped=FALSE, intdata=NULL,
                                excluded_J_alleles=character(0),
-                               with.auxdata=FALSE, imgt.fasta=FALSE,
-                               ref_auxdata=NULL,
+                               auxdata=NULL, ref_auxdata=NULL,
                                disambiguate.allele.names=FALSE,
                                overwrite=FALSE, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(destdir),
               isSingleNonWhiteString(fasta_dir), dir.exists(fasta_dir),
+              isTRUEorFALSE(imgt.fasta.headers),
               isTRUEorFALSE(gapped),
-              isTRUEorFALSE(with.auxdata), isTRUEorFALSE(imgt.fasta),
               isTRUEorFALSE(disambiguate.allele.names),
               isTRUEorFALSE(overwrite),
               isTRUEorFALSE(verbose))
-    checkarg_with.intdata(with.intdata, gapped)
 
     if (dir.exists(destdir) && !overwrite)
         stop(wmsg(destdir, ": directory already exists. ",
@@ -206,10 +255,10 @@ create_germline_db <- function(destdir, fasta_dir, loci,
     dir.create(tmp_destdir)
     on.exit(nuke_file(tmp_destdir))
     .do_create_germline_db(tmp_destdir, fasta_dir, loci,
-                           gapped=gapped, with.intdata=with.intdata,
+                           imgt.fasta.headers=imgt.fasta.headers,
+                           gapped=gapped, intdata=intdata,
                            excluded_J_alleles=excluded_J_alleles,
-                           with.auxdata=with.auxdata, imgt.fasta=imgt.fasta,
-                           ref_auxdata=ref_auxdata,
+                           auxdata=auxdata, ref_auxdata=ref_auxdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            verbose=verbose)
     rename_file(tmp_destdir, destdir, replace=TRUE)

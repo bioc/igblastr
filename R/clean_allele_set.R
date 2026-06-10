@@ -6,12 +6,12 @@
 ###
 
 
-checkarg_with.intdata <- function(with.intdata, gapped)
+checkarg_auto.intdata <- function(auto.intdata, gapped)
 {
-    if (!isTRUEorFALSE(with.intdata))
-        stop(wmsg("'with.intdata' must be TRUE or FALSE"))
-    if (with.intdata && !isTRUE(gapped))
-        stop(wmsg("'with.intdata=TRUE' can only be used when 'gapped' is TRUE"))
+    if (!isTRUEorFALSE(auto.intdata))
+        stop(wmsg("'auto.intdata' must be TRUE or FALSE"))
+    if (auto.intdata && !isTRUE(gapped))
+        stop(wmsg("'auto.intdata=TRUE' can only be used when 'gapped' is TRUE"))
 }
 
 check_locus <- function(locus, what)
@@ -241,7 +241,7 @@ check_locus <- function(locus, what)
     allele_set_mcols <- mcols(allele_set, use.names=FALSE)
     if (is.null(allele_set_mcols) || is.null(locus <- allele_set_mcols$locus))
         stop(wmsg("'allele_set' must have a \"locus\" metadata column ",
-                  "when 'with.intdata' is TRUE"))
+                  "when 'auto.intdata' is TRUE"))
     check_locus(locus, "the \"locus\" metadata column on 'allele_set'")
 
     ## Annotate the V alleles based on their gaps.
@@ -332,7 +332,7 @@ check_locus <- function(locus, what)
     allele_set_mcols <- mcols(allele_set, use.names=FALSE)
     if (is.null(allele_set_mcols) || is.null(locus <- allele_set_mcols$locus))
         stop(wmsg("'allele_set' must have a \"locus\" metadata column ",
-                  "when 'with.auxdata' is TRUE"))
+                  "when 'auto.auxdata' is TRUE"))
     check_locus(locus, "the \"locus\" metadata column on 'allele_set'")
 
     ## STEP 1: Compute the auxiliary data by searching motifs WGXG
@@ -397,13 +397,13 @@ check_locus <- function(locus, what)
 ###
 ### In addition to (A) + (C) + (D) above, clean_V_allele_set() performs the
 ### following steps:
-###   (Bv1) annotate the V alleles if 'gapped' and 'with.intdata' are TRUE;
+###   (Bv1) annotate the V alleles if 'gapped' and 'auto.intdata' are TRUE;
 ###   (Bv2) remove gaps from sequences if 'gapped' is TRUE, as with original
 ###         edit_imgt_file.pl script.
 ###
 ### In addition to (A) + (C) + (D) above, clean_J_allele_set() performs the
 ### following step:
-###   (Bj) annotate the J alleles if 'with.auxdata' is TRUE.
+###   (Bj) annotate the J alleles if 'auto.auxdata' is TRUE.
 
 ### Generic cleaning. Performs: (A) -> (C) -> (D).
 ### Use it to clean a set of germline D or C gene alleles.
@@ -435,18 +435,18 @@ clean_allele_set <- function(allele_set,
 ### Performs: (A) -> (Bv1) -> (Bv2) -> (C) -> (D).
 ### Set 'gapped' to TRUE if the sequences in 'allele_set' are gapped (note
 ### that only V allele sequences are allowed to have gaps).
-### Set 'with.intdata' to TRUE if the sequences in 'allele_set' are
+### Set 'auto.intdata' to TRUE if the sequences in 'allele_set' are
 ### gapped **and** the associated internal data should be computed. Note
 ### that in this case 'allele_set' **must** carry a "locus" metadata column.
 ### Returns a DNAStringSet object that contains the ungapped allele sequences
 ### and carries the metadata columns of input object 'allele_set', if any.
-### Furthermore, if 'with.intdata' is TRUE, the returned object will also
+### Furthermore, if 'auto.intdata' is TRUE, the returned object will also
 ### carry the annotations obtained with compute_V_gene_delineations() in
 ### additional metadata columns.
 ### If 'summary.only' is TRUE then 'verbose' is ignored and operations
 ### are quiet.
 clean_V_allele_set <- function(allele_set,
-                               gapped=FALSE, with.intdata=FALSE,
+                               gapped=FALSE, auto.intdata=FALSE,
                                disambiguate.allele.names=FALSE,
                                summary.only=FALSE, verbose=FALSE)
 {
@@ -456,21 +456,21 @@ clean_V_allele_set <- function(allele_set,
               isTRUEorFALSE(gapped),
               isTRUEorFALSE(disambiguate.allele.names),
               isTRUEorFALSE(verbose))
-    checkarg_with.intdata(with.intdata, gapped)
+    checkarg_auto.intdata(auto.intdata, gapped)
 
     ## (A) Clean possibly messy FASTA headers to keep only allele names.
     names(allele_set) <- clean_imgt_fasta_headers(headers)
 
     ngaps <- setNames(vcountPattern(GAP_LETTER, allele_set), names(allele_set))
     if (gapped) {
-        if (with.intdata) {
+        if (auto.intdata) {
             ## (Bv1) Annotate the V alleles.
             allele_set <- .annotate_V_alleles(allele_set)
         } else {
             warn_if_allele_sequences_have_no_gaps(ngaps)
         }
         allele_set <- remove_gaps(allele_set)  # (Bv2)
-        if (with.intdata)
+        if (auto.intdata)
             .stop_if_repeated_V_alleles_have_discordant_annotations(allele_set)
     } else {
         .stop_if_allele_sequences_have_gaps(ngaps)
@@ -479,7 +479,7 @@ clean_V_allele_set <- function(allele_set,
     ## (C) + (D).
     ### Note that V alleles are considered "repeated" if the have
     ### identical **ungapped** sequences DNA sequences and names.
-    .drop_or_rename_alleles(allele_set, annotated=with.intdata,
+    .drop_or_rename_alleles(allele_set, annotated=auto.intdata,
                     disambiguate.allele.names=disambiguate.allele.names,
                     summary.only=summary.only, verbose=verbose)
 }
@@ -487,25 +487,24 @@ clean_V_allele_set <- function(allele_set,
 ### Performs: (A) -> (Bj) -> (C) -> (D).
 ### If 'summary.only' is TRUE then 'verbose' is ignored and operations
 ### are quiet.
-clean_J_allele_set <- function(allele_set,
-                               with.auxdata=FALSE, imgt.fasta=FALSE,
-                               ref_auxdata=NULL,
+clean_J_allele_set <- function(allele_set, imgt.fasta.headers=FALSE,
+                               auto.auxdata=FALSE, ref_auxdata=NULL,
                                disambiguate.allele.names=FALSE,
                                summary.only=FALSE, verbose=FALSE)
 {
     stopifnot(is(allele_set, "DNAStringSet"))
     headers <- names(allele_set)  # typically the FASTA headers
     stopifnot(!is.null(headers),
-              isTRUEorFALSE(with.auxdata),
-              isTRUEorFALSE(imgt.fasta),
+              isTRUEorFALSE(imgt.fasta.headers),
+              isTRUEorFALSE(auto.auxdata),
               isTRUEorFALSE(disambiguate.allele.names),
               isTRUEorFALSE(verbose))
 
     ## (A) Clean possibly messy FASTA headers to keep only allele names.
     names(allele_set) <- clean_imgt_fasta_headers(headers)
 
-    if (with.auxdata) {
-        if (imgt.fasta) {
+    if (auto.auxdata) {
+        if (imgt.fasta.headers) {
             names(headers) <- names(allele_set)
             codon_starts <- .extract_codon_starts(headers)
         } else {
@@ -519,7 +518,7 @@ clean_J_allele_set <- function(allele_set,
     }
 
     ## (C) + (D).
-    .drop_or_rename_alleles(allele_set, annotated=with.auxdata,
+    .drop_or_rename_alleles(allele_set, annotated=auto.auxdata,
                     disambiguate.allele.names=disambiguate.allele.names,
                     summary.only=summary.only, verbose=verbose)
 }

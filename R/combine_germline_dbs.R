@@ -92,7 +92,7 @@
     on.exit(unlink(fasta_files))
 
     names(fasta_files) <- paste0(loci, region_type, ".fasta")
-    create_region_db(fasta_files, destdir, region_type=region_type,
+    create_region_db(destdir, fasta_files, region_type=region_type,
                      verbose=verbose)
 }
 

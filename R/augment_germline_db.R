@@ -151,7 +151,7 @@
     names(fasta_files) <- c(db_fasta_destfile, "novel_alleles.fasta")
 
     ## Create the new region db.
-    create_region_db(fasta_files, destdir, region_type=region_type,
+    create_region_db(destdir, fasta_files, region_type=region_type,
                      overwrite=overwrite, verbose=verbose)
     pattern <- paste0("^", region_type, "\\.fasta$")
     make_blastdbs(destdir, pattern=pattern, force=TRUE)
