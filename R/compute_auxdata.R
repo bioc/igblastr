@@ -223,96 +223,281 @@ fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### infer_cdr3_ends_via_fwr4_comparisons()
+### The .get_fwr4_start_from_fwr4refset_*() functions
 ###
 
-.normarg_maxdist <- function(maxdist)
+.normarg_max.dist <- function(max.dist, max_max.dist)
 {
-    if (!isSingleNumber(maxdist))
-        stop(wmsg("'maxdist' must be a single integer"))
-    if (!is.integer(maxdist))
-        maxdist <- as.integer(maxdist)
-    if (!(maxdist >= 0L && maxdist <= 5L))
-        stop(wmsg("'maxdist' must be >= 0 and <= 5"))
-    maxdist
+    if (!isSingleNumber(max.dist))
+        stop(wmsg("'max.dist' must be a single integer"))
+    if (!is.integer(max.dist))
+        max.dist <- as.integer(max.dist)
+    if (!(max.dist >= 0L && max.dist <= max_max.dist))
+        stop(wmsg("'max.dist' must be >= 0 and <= ", max_max.dist))
+    max.dist
 }
 
-.normarg_standout.by <- function(standout.by)
+.normarg_standout.by <- function(standout.by, max_standout.by)
 {
     if (!isSingleNumber(standout.by))
         stop(wmsg("'standout.by' must be a single integer"))
     if (!is.integer(standout.by))
         standout.by <- as.integer(standout.by)
-    if (!(standout.by >= 1L && standout.by <= 10L))
-        stop(wmsg("'standout.by' must be >= 1 and <= 10"))
+    if (!(standout.by >= 1L && standout.by <= max_standout.by))
+        stop(wmsg("'standout.by' must be >= 1 and <= ", max_standout.by))
     standout.by
 }
 
-### Most FWR4 we've seen so far have at least 10 amino acids except in
-### mouse J allele TRAJ45*02 from IMGT where it has only 9 amino acids
-### (this allele sequence is probably truncated).
-.MIN_FWR4_LENGTH <- 9L
-
-### Moves a sliding window of 10 amino acids along 'J_allele', and, for
-### each position of the window, computes the Hamming distance between the
-### sequence in the window and the set of known FWR4 sequences in 'fwr4set'.
-### Returns the distances in an integer vector of length 'nchar(J_allele)' - 9.
-.compute_sliding_window_dist_to_fwr4set <- function(J_allele, fwr4set)
+.normarg_min.score <- function(min.score)
 {
-    stopifnot(is(J_allele, "AAString"), nchar(J_allele) >= 12L,
-              is(fwr4set, "AAStringSet"),
-              all(nchar(fwr4set) >= .MIN_FWR4_LENGTH))
-    vapply(seq_len(nchar(J_allele) - 9L),
-        function(pos)
-            min(neditAt(subseq(J_allele, start=pos, width=10L), fwr4set)),
+    if (!isSingleNumber(min.score))
+        stop(wmsg("'min.score' must be a single number"))
+    if (!(min.score >= 0 && min.score <= 1))
+        stop(wmsg("'min.score' must be >= 0 and <= 1"))
+    min.score
+}
+
+.normarg_standout.by2 <- function(standout.by)
+{
+    if (!isSingleNumber(standout.by))
+        stop(wmsg("'standout.by' must be a single number"))
+    if (!(standout.by > 0 && standout.by <= 1))
+        stop(wmsg("'standout.by' must be > 0 and <= 1"))
+    standout.by
+}
+
+### 'fwr4refset' is a set of known FWR4 sequences that we use as reference.
+### The function moves a sliding window of width 'window_width' to the
+### positions in 'window_positions' on 'J_allele', and, for each position
+### of the window, computes the Hamming distance between the sequence in the
+### window and 'fwr4refset'.
+### Returns the distances in an integer vector parallel to 'window_positions'.
+.compute_sliding_window_dists_to_fwr4refset <-
+    function(J_allele, window_positions, window_width,
+             fwr4refset, min_fwr4_width)
+{
+    stopifnot(is(J_allele, "XString"),
+              is.integer(window_positions), isSingleInteger(window_width),
+              max(window_positions) + window_width - 1L <= nchar(J_allele),
+              is(fwr4refset, "XStringSet"), isSingleInteger(min_fwr4_width),
+              all(width(fwr4refset) >= min_fwr4_width))
+    vapply(window_positions,
+        function(pos) {
+            window_seq <- subseq(J_allele, start=pos, width=window_width)
+            min(neditAt(window_seq, fwr4refset))
+        },
         integer(1)
     )
 }
 
-### Has its own tests in tests/testthat/test-compute_auxdata.R!
-### The "best FWR4 start position" in 'J_allele' is defined as follow:
-### If D(p) is the distance between the 10-amino acid window in 'J_allele'
+.get_fwr4_start_from_fwr4refset_dist <-
+    function(J_allele, window_positions, window_width,
+             fwr4refset, min_fwr4_width,
+             max.dist, standout.by)
+{
+    stopifnot(is(J_allele, "XString"),
+              is.integer(window_positions), length(window_positions) >= 1L,
+              isSingleInteger(window_width),
+              max(window_positions) + window_width - 1L <= nchar(J_allele),
+              is(fwr4refset, "XStringSet"), isSingleInteger(min_fwr4_width),
+              all(width(fwr4refset) >= min_fwr4_width),
+              isSingleInteger(max.dist), isSingleInteger(standout.by))
+    dists <- .compute_sliding_window_dists_to_fwr4refset(J_allele,
+                                              window_positions, window_width,
+                                              fwr4refset, min_fwr4_width)
+    i <- which.min(dists)
+    DP <- dists[[i]]
+    if (DP > max.dist)
+        return(NA_integer_)  # no P achieves D(P) <= max.dist
+    if (sum(dists - standout.by < DP) != 1L)
+        return(NA_integer_)  # P does not stand out in the crowd
+    window_positions[[i]]    # returns P
+}
+
+### All FWR4 we've seen so far have at least 10 amino acids except in
+### mouse J allele TRAJ45*02 from IMGT where it has only 9 amino acids
+### (this allele sequence is probably truncated).
+.SLIDING_WINDOW_AA_WIDTH <- 10L
+.MIN_FWR4_AA_WIDTH <- 9L
+.AA_MAX_MAX_DIST <- 5L
+.AA_MAX_STANDOUT_BY <- 10L
+
+### Has its own unit tests in tests/testthat/test-compute_auxdata.R!
+### The "best FWR4 start position" in 'aa_string' is defined as follow:
+### If D(p) is the distance between the 10-amino acid window in 'aa_string'
 ### that starts at position 'p' and the set of known FWR4 sequences
-### in 'fwr4set', then the "best FWR4 start position" is the position 'P'
-### in 'J_allele' that minimize D(P). With the additional constraints that:
+### in 'fwr4refset', then the "best FWR4 start position" is the position 'P'
+### in 'aa_string' that minimize D(P). With the additional constraints that:
 ###   (a) D(P) <= 2
 ###   (b) D(p) >= D(P) + 5 for any other position 'p'
 ### In other words, P must stand out in the crowd!
-.find_best_fwr4_start <- function(J_allele, fwr4set,
-                                  maxdist=2L, standout.by=5L)
+.get_fwr4_start_from_fwr4refset_aa_dist <-
+    function(aa_string, fwr4refset, max.dist=2, standout.by=5)
 {
-    maxdist <- .normarg_maxdist(maxdist)
-    standout.by <- .normarg_standout.by(standout.by)
-    if (nchar(J_allele) < 12L)
+    max.dist <- .normarg_max.dist(max.dist, .AA_MAX_MAX_DIST)
+    standout.by <- .normarg_standout.by(standout.by, .AA_MAX_STANDOUT_BY)
+    npositions <- nchar(aa_string) - .SLIDING_WINDOW_AA_WIDTH + 1L
+    if (npositions <= 0L)
         return(NA_integer_)
-    dists <- .compute_sliding_window_dist_to_fwr4set(J_allele, fwr4set)
-    P <- which.min(dists)
-    DP <- dists[[P]]
-    if (DP > maxdist)
-        return(NA_integer_)  # no P achieves D(P) <= maxdist
-    if (sum(dists < (DP + standout.by)) != 1L)
-        return(NA_integer_)  # P does not stand out in the crowd
-    P
+    window_positions <- seq_len(npositions)
+    .get_fwr4_start_from_fwr4refset_dist(
+                    aa_string, window_positions, .SLIDING_WINDOW_AA_WIDTH,
+                    fwr4refset, .MIN_FWR4_AA_WIDTH,
+                    max.dist, standout.by)
 }
 
-### Returns an integer vector parallel to 'J_alleles' that contains the
-### 1-based FWR4 start positions.
-.find_best_fwr4_starts <- function(J_alleles, fwr4set,
-                                   maxdist=2L, standout.by=5L)
+.SLIDING_WINDOW_DNA_WIDTH <- .SLIDING_WINDOW_AA_WIDTH * 3L
+.MIN_FWR4_DNA_WIDTH <- .MIN_FWR4_AA_WIDTH * 3L
+.DNA_MAX_MAX_DIST <- .AA_MAX_MAX_DIST * 3L
+.DNA_MAX_STANDOUT_BY <- .AA_MAX_STANDOUT_BY * 3L
+
+### Has its own unit tests in tests/testthat/test-compute_auxdata.R!
+### Moves the sliding window to positions 1, 4, 7, etc..  on 'dna_string'.
+.get_fwr4_start_from_fwr4refset_dna_dist <-
+    function(dna_string, fwr4refset, max.dist=5, standout.by=12)
 {
-    stopifnot(is(J_alleles, "AAStringSet"),
-              is(fwr4set, "AAStringSet"),
-              all(nchar(fwr4set) >= .MIN_FWR4_LENGTH))
-    vapply(seq_along(J_alleles),
+    max.dist <- .normarg_max.dist(max.dist, .DNA_MAX_MAX_DIST)
+    standout.by <- .normarg_standout.by(standout.by, .DNA_MAX_STANDOUT_BY)
+    npositions <- (nchar(dna_string) - .SLIDING_WINDOW_DNA_WIDTH) %/% 3L + 1L
+    if (npositions <= 0L)
+        return(NA_integer_)
+    window_positions <- seq_len(npositions) * 3L - 2L
+    .get_fwr4_start_from_fwr4refset_dist(
+                    dna_string, window_positions, .SLIDING_WINDOW_DNA_WIDTH,
+                    fwr4refset, .MIN_FWR4_DNA_WIDTH,
+                    max.dist, standout.by)
+}
+
+### Has its own unit tests in tests/testthat/test-compute_auxdata.R!
+.get_fwr4_start_from_fwr4refset_dna_PWM <-
+    function(dna_string, pwm, min.score=0.80, standout.by=0.40)
+{
+    stopifnot(is.matrix(pwm),
+              identical(rownames(pwm), c("A", "C", "G", "T")),
+              ncol(pwm) == .SLIDING_WINDOW_DNA_WIDTH)
+    min.score <- .normarg_min.score(min.score)
+    standout.by <- .normarg_standout.by2(standout.by)
+    npositions <- (nchar(dna_string) - .SLIDING_WINDOW_DNA_WIDTH) %/% 3L + 1L
+    if (npositions <= 0L)
+        return(NA_integer_)
+    window_positions <- seq_len(npositions) * 3L - 2L
+    scores <- PWMscoreStartingAt(pwm, dna_string, starting.at=window_positions)
+    i <- which.max(scores)
+    SP <- scores[[i]]
+    if (SP < min.score)
+        return(NA_integer_)  # no P achieves S(P) >= min.score
+    if (sum(scores + standout.by > SP) != 1L)
+        return(NA_integer_)  # P does not stand out in the crowd
+    window_positions[[i]]    # returns P
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### The .compute_fwr4_starts_from_fwr4_*() functions
+###
+
+### Returns an integer vector parallel to 'aa_strings' that contains the
+### 1-based FWR4 start positions for each amnino acid sequence.
+.get_fwr4_starts_from_fwr4refset_aa_dist <-
+    function(aa_strings, fwr4refset, max.dist=2, standout.by=5)
+{
+    stopifnot(is(aa_strings, "AAStringSet"),
+              is(fwr4refset, "AAStringSet"),
+              all(nchar(fwr4refset) >= .MIN_FWR4_AA_WIDTH))
+    vapply(seq_along(aa_strings),
         function(i)
-            .find_best_fwr4_start(J_alleles[[i]], fwr4set,
-                                  maxdist=maxdist, standout.by=standout.by),
+            .get_fwr4_start_from_fwr4refset_aa_dist(
+                            aa_strings[[i]], fwr4refset,
+                            max.dist=max.dist, standout.by=standout.by),
         integer(1)
     )
 }
 
-infer_cdr3_ends_via_fwr4_comparisons <-
-    function(auxdata, J_alleles, maxdist=2L, standout.by=5L)
+### All .compute_fwr4_starts_from_fwr4_*() functions return an integer vector
+### parallel to 'J_alleles' that contains the 1-based FWR4 start positions.
+
+.compute_fwr4_starts_from_fwr4_aa_comparisons <-
+    function(J_alleles, fwr4refset, max.dist=2, standout.by=5)
+{
+    stopifnot(is(J_alleles, "DNAStringSet"),
+              is(fwr4refset, "DNAStringSet"),
+              all(nchar(fwr4refset) >= .MIN_FWR4_DNA_WIDTH))
+    aa_strings <- translate_codons(J_alleles)
+    fwr4refset <- translate_codons(fwr4refset)
+    aa_starts <- .get_fwr4_starts_from_fwr4refset_aa_dist(
+                                  aa_strings, fwr4refset,
+                                  max.dist=max.dist,
+                                  standout.by=standout.by)
+    aa_starts * 3L - 2L
+}
+
+.compute_fwr4_starts_from_fwr4_dna_comparisons <-
+    function(J_alleles, fwr4refset, max.dist=5, standout.by=12)
+{
+    stopifnot(is(J_alleles, "DNAStringSet"),
+              is(fwr4refset, "DNAStringSet"),
+              all(nchar(fwr4refset) >= .MIN_FWR4_DNA_WIDTH))
+    vapply(seq_along(J_alleles),
+        function(i)
+            .get_fwr4_start_from_fwr4refset_dna_dist(
+                            J_alleles[[i]], fwr4refset,
+                            max.dist=max.dist, standout.by=standout.by),
+        integer(1)
+    )
+}
+
+.build_fwr4_dna_PWM <- function(fwr4refset)
+{
+    stopifnot(is(fwr4refset, "DNAStringSet"),
+              all(nchar(fwr4refset) >= .MIN_FWR4_DNA_WIDTH))
+    ## We want to use a sliding window of width 30 so we need a PWM of
+    ## width 30. This means that all the FWR4 sequences we use to build
+    ## the PWM must have at least 30 nucleotides.
+    ## The only FWR4 we know that is shorter than that is mouse J allele
+    ## TRAJ45*02 from IMGT, which has only 27 nucleotides:
+    ##    TTTGGGAAAGGAACTCAGCTGATCATC         # 27 nucleotides
+    ## This seems to be a truncated version of the FWR4 of mouse J allele
+    ## TRAJ45*01, which is:
+    ##    TTTGGGAAAGGAACTCAGCTGATCATCCAGCCCT  # 34 nucleotides
+    ## So we replace the former with the latter.
+    bad_idx <- which(width(fwr4refset) < .SLIDING_WINDOW_DNA_WIDTH)
+    if (length(bad_idx) != 0L) {
+        ## First 30 nucleotides only.
+        mouse_TRAJ45star01_fwr4 <- DNAString("TTTGGGAAAGGAACTCAGCTGATCATCCAG")
+        stopifnot(nchar(mouse_TRAJ45star01_fwr4) == .SLIDING_WINDOW_DNA_WIDTH)
+        ## We check that the short FWR4 sequences are prefixes
+        ## of 'mouse_TRAJ45star01_fwr4'.
+        prefixes <- Views(mouse_TRAJ45star01_fwr4,
+                          start=1L,
+                          end=width(fwr4refset)[bad_idx])
+        stopifnot(all(fwr4refset[bad_idx] == as(prefixes, "DNAStringSet")))
+        fwr4refset[bad_idx] <- DNAStringSet(mouse_TRAJ45star01_fwr4)
+    }
+    PWM(subseq(fwr4refset, start=1L, end=.SLIDING_WINDOW_DNA_WIDTH))
+}
+
+.compute_fwr4_starts_from_fwr4_dna_PWM <-
+    function(J_alleles, fwr4refset, min.score=0.80, standout.by=0.40)
+{
+    stopifnot(is(J_alleles, "DNAStringSet"),
+              is(fwr4refset, "DNAStringSet"),
+              all(nchar(fwr4refset) >= .MIN_FWR4_DNA_WIDTH))
+    pwm <- .build_fwr4_dna_PWM(fwr4refset)
+    vapply(seq_along(J_alleles),
+        function(i)
+            .get_fwr4_start_from_fwr4refset_dna_PWM(
+                            J_alleles[[i]], pwm,
+                            min.score=min.score, standout.by=standout.by),
+        integer(1)
+    )
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### The infer_cdr3_ends_from_fwr4_*() functions
+###
+
+.infer_cdr3_ends <- function(auxdata, J_alleles, FUN, ...)
 {
     check_auxdata_col2class(auxdata)
     if (!is(J_alleles, "DNAStringSet") || length(J_alleles) != nrow(auxdata))
@@ -321,31 +506,49 @@ infer_cdr3_ends_via_fwr4_comparisons <-
     if (!identical(names(J_alleles), auxdata[ , "allele_name"]))
         stop(wmsg("'J_alleles' must have names and they must ",
                   "be identical to 'auxdata$allele_name'"))
-    maxdist <- .normarg_maxdist(maxdist)
-    standout.by <- .normarg_standout.by(standout.by)
 
-    coding_frame_start <- auxdata[ , "coding_frame_start"]
-    if (anyNA(coding_frame_start))
+    coding_frame_starts <- auxdata[ , "coding_frame_start"]
+    if (anyNA(coding_frame_starts))
         stop(wmsg("'auxdata$coding_frame_start' cannot contain NAs"))
 
-    cdr3_end <- auxdata[ , "cdr3_end"]  # 0-based
-    solve_me <- is.na(cdr3_end)
+    cdr3_ends <- auxdata[ , "cdr3_end"]  # 0-based
+    solve_me <- is.na(cdr3_ends)
     if (!any(solve_me))
         return(auxdata)
 
-    cdr3_end <- cdr3_end + 1L  # 1-based
-    fwr4set <- translate_codons(J_alleles[!solve_me],
-                                offset=cdr3_end[!solve_me])
-    unsolved_J_aa <- translate_codons(J_alleles[solve_me],
-                                offset=coding_frame_start[solve_me])
-    solved_J_aa_fwr4_start <-
-        .find_best_fwr4_starts(unsolved_J_aa, fwr4set,
-                               maxdist=maxdist, standout.by=standout.by)
-    solved_J_aa_cdr3_end <- solved_J_aa_fwr4_start - 1L
-    solved_cdr3_end <- coding_frame_start[solve_me] + 3L * solved_J_aa_cdr3_end
-    solved_cdr3_end <- solved_cdr3_end - 1L  # 0-based
-    auxdata[solve_me, "cdr3_end"] <- solved_cdr3_end
+    unsolved_offsets <- coding_frame_starts[solve_me]
+    unsolved_J_alleles <- subseq(J_alleles[solve_me],
+                                 start=unsolved_offsets + 1L)
+    fwr4refset <- subseq(J_alleles[!solve_me],
+                         start=cdr3_ends[!solve_me] + 2L)
+    solved_fwr4_starts <- FUN(unsolved_J_alleles, fwr4refset, ...)
+    solved_cdr3_ends <- solved_fwr4_starts + unsolved_offsets - 2L  # 0-based
+    auxdata[solve_me, "cdr3_end"] <- solved_cdr3_ends
     warn_if_negative_cdr3_end(auxdata, "CDR3 end position")
     auxdata
+}
+
+infer_cdr3_ends_from_fwr4_aa_comparisons <-
+    function(auxdata, J_alleles, max.dist=2, standout.by=5)
+{
+    .infer_cdr3_ends(auxdata, J_alleles,
+                     .compute_fwr4_starts_from_fwr4_aa_comparisons,
+                     max.dist=max.dist, standout.by=standout.by)
+}
+
+infer_cdr3_ends_from_fwr4_dna_comparisons <-
+    function(auxdata, J_alleles, max.dist=5, standout.by=12)
+{
+    .infer_cdr3_ends(auxdata, J_alleles,
+                     .compute_fwr4_starts_from_fwr4_dna_comparisons,
+                     max.dist=max.dist, standout.by=standout.by)
+}
+
+infer_cdr3_ends_from_fwr4_dna_PWM <-
+    function(auxdata, J_alleles, min.score=0.80, standout.by=0.40)
+{
+    .infer_cdr3_ends(auxdata, J_alleles,
+                     .compute_fwr4_starts_from_fwr4_dna_PWM,
+                     min.score=min.score, standout.by=standout.by)
 }
 

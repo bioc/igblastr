@@ -101,7 +101,9 @@ export(
 
     ## compute_auxata.R:
     compute_auxdata,
-    infer_cdr3_ends_via_fwr4_comparisons,
+    infer_cdr3_ends_from_fwr4_aa_comparisons,
+    infer_cdr3_ends_from_fwr4_dna_comparisons,
+    infer_cdr3_ends_from_fwr4_dna_PWM,
 
     ## V_alleles-inspect.R:
     translate_V_alleles,

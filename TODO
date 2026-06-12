@@ -2,7 +2,9 @@ High-priority TODO list
 =======================
 
 
-o Document infer_cdr3_ends_via_fwr4_comparisons().
+o Document infer_cdr3_ends_from_fwr4_aa_comparisons(),
+  infer_cdr3_ends_from_fwr4_dna_comparisons(), and
+  infer_cdr3_ends_from_fwr4_dna_PWM().
 
 o More testing of combine_germline_dbs() and combine_c_region_dbs(). Improve
   unit tests. Improve man page and expand examples. Add cross links in other

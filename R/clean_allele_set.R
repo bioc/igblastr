@@ -357,7 +357,7 @@ check_locus <- function(locus, what)
     ## in 'auxdata' by comparing the unsolved sequences in 'allele_set' (i.e.
     ## the sequences with a missing "cdr3_end") with the set of known FWR4
     ## sequences.
-    auxdata <- infer_cdr3_ends_via_fwr4_comparisons(auxdata, allele_set)
+    auxdata <- infer_cdr3_ends_from_fwr4_aa_comparisons(auxdata, allele_set)
 
     mcols(allele_set) <- cbind(allele_set_mcols, auxdata)
     allele_set
