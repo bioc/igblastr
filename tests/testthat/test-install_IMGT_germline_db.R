@@ -1,3 +1,4 @@
+
 test_that("install_IMGT_germline_db()", {
     db_name <- install_IMGT_germline_db("202614-2", "Homo sapiens",
                                         overwrite=TRUE)

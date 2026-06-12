@@ -1,7 +1,9 @@
 \name{compute_auxdata}
 
 \alias{compute_auxdata}
-\alias{infer_cdr3_ends_via_fwr4_comparisons}
+\alias{infer_cdr3_ends_from_fwr4_aa_comparisons}
+\alias{infer_cdr3_ends_from_fwr4_dna_comparisons}
+\alias{infer_cdr3_ends_from_fwr4_dna_PWM}
 
 \title{Compute IgBLAST auxiliary data}
 
@@ -20,8 +22,14 @@
 \usage{
 compute_auxdata(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 
-infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles,
-                                     maxdist=2L, standout.by=5L)
+infer_cdr3_ends_from_fwr4_aa_comparisons(auxdata, J_alleles,
+                                         max.dist=2, standout.by=5)
+
+infer_cdr3_ends_from_fwr4_dna_comparisons(auxdata, J_alleles,
+                                          max.dist=5, standout.by=12)
+
+infer_cdr3_ends_from_fwr4_dna_PWM(auxdata, J_alleles,
+                                  min.score=0.80, standout.by=0.40)
 }
 
 \arguments{
@@ -49,7 +57,13 @@ infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles,
   \item{auxdata}{
     COMING SOON...
   }
-  \item{maxdist, standout.by}{
+  \item{max.dist}{
+    COMING SOON...
+  }
+  \item{standout.by}{
+    COMING SOON...
+  }
+  \item{min.score}{
     COMING SOON...
   }
 }

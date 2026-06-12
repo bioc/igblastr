@@ -135,9 +135,11 @@ test_that("find_discordant_auxdata()/fill_missing_auxdata_with_ref()", {
                      auxdata2a)
 })
 
-test_that(".find_best_fwr4_start", {
-    find_best_fwr4_start <- igblastr:::.find_best_fwr4_start
-    fwr4set <- AAStringSet(c(
+test_that(".get_fwr4_start_from_fwr4refset_aa_dist", {
+    get_fwr4_start_from_fwr4refset_aa_dist <-
+        igblastr:::.get_fwr4_start_from_fwr4refset_aa_dist
+
+    fwr4refset <- AAStringSet(c(
         "WGTGTLVTISS",
         "FGAGTKVEIK",
         "FGPGTKLIITS",
@@ -153,48 +155,150 @@ test_that(".find_best_fwr4_start", {
 
     ## Min distance is 0 (exact match) and is achieved for P = 8.
     ## Second best distance is 6 and is achieved for P = 6.
-    J_allele <- AAString("LGKKIKVFGPGTKLIIT")
-    stopifnot(subseq(J_allele, start=8L, width=10L) ==
-              subseq(fwr4set[[3L]], start=1L, width=10L))
-    P <- find_best_fwr4_start(J_allele, fwr4set)
+    aa_string <- AAString("LGKKIKVFGPGTKLIIT")
+    stopifnot(subseq(aa_string, start=8L, width=10L) ==
+              subseq(fwr4refset[[3L]], start=1L, width=10L))
+    P <- get_fwr4_start_from_fwr4refset_aa_dist(aa_string, fwr4refset)
     expect_identical(P, 8L)
-    P <- find_best_fwr4_start(J_allele, fwr4set, standout.by=6)
+    P <- get_fwr4_start_from_fwr4refset_aa_dist(aa_string, fwr4refset,
+                                                standout.by=6)
     expect_identical(P, 8L)
-    P <- find_best_fwr4_start(J_allele, fwr4set, standout.by=7)
+    P <- get_fwr4_start_from_fwr4refset_aa_dist(aa_string, fwr4refset,
+                                                standout.by=7)
     expect_identical(P, NA_integer_)
 
     ## Min distance is 3 and is achieved for P = 5.
     ## Second best distance is 6 and is achieved for P = 7 and P = 12.
-    J_allele <- AAString("QQQQSAEGTKLIVTSVVVPPTVGG")
-    P <- find_best_fwr4_start(J_allele, fwr4set)
+    aa_string <- AAString("QQQQSAEGTKLIVTSVVVPPTVGG")
+    P <- get_fwr4_start_from_fwr4refset_aa_dist(aa_string, fwr4refset)
     expect_identical(P, NA_integer_)
-    P <- find_best_fwr4_start(J_allele, fwr4set, maxdist=3)
+    P <- get_fwr4_start_from_fwr4refset_aa_dist(aa_string, fwr4refset,
+                                                max.dist=3)
     expect_identical(P, NA_integer_)
-    P <- find_best_fwr4_start(J_allele, fwr4set, maxdist=3, standout.by=3)
+    P <- get_fwr4_start_from_fwr4refset_aa_dist(aa_string, fwr4refset,
+                                                max.dist=3, standout.by=3)
     expect_identical(P, 5L)
-    P <- find_best_fwr4_start(J_allele, fwr4set, maxdist=5, standout.by=3)
+    P <- get_fwr4_start_from_fwr4refset_aa_dist(aa_string, fwr4refset,
+                                                max.dist=5, standout.by=3)
     expect_identical(P, 5L)
 })
 
-test_that("infer_cdr3_ends_via_fwr4_comparisons", {
+test_that(".get_fwr4_start_from_fwr4refset_dna_dist", {
+    get_fwr4_start_from_fwr4refset_dna_dist <-
+        igblastr:::.get_fwr4_start_from_fwr4refset_dna_dist
+
+    fwr4refset <- DNAStringSet(c(
+        "TTACACCTGGAGATTAGGGAAAGTAGGGTC",     # 30 nucleotides
+        "ACTAATTAAAGGAGCTTATTTAAAAGA",        # 27 nucleotides
+        "GCTAGGATGGATTGATGTGTAGTAGGTCAAAT",   # 32 nucleotides
+        "AGCTAGGATGGACTGATCTGTAGTAGGTCA",     # 30 nucleotides
+        "AGGATGGAcTGATcTGTAGTAGGTCAATTTgggg"  # 34 nucleotides
+    ))
+
+    ## Min distance is 2 and is achieved for P = 10.
+    ## The exact match at P = 9  is ignored because we only look at
+    ## positions 1, 4, 7, 10, etc..
+    dna_string <- DNAString("aaagggaaaGCTAGGATGGAcTGATcTGTAGTAGGTCAA")
+    stopifnot(subseq(dna_string, start=9L, width=30L) == fwr4refset[[4L]])
+    P <- get_fwr4_start_from_fwr4refset_dna_dist(dna_string, fwr4refset)
+    expect_identical(P, 10L)
+    P <- get_fwr4_start_from_fwr4refset_dna_dist(dna_string, fwr4refset,
+                                                 max.dist=2)
+    expect_identical(P, 10L)
+    P <- get_fwr4_start_from_fwr4refset_dna_dist(dna_string, fwr4refset,
+                                                 max.dist=1)
+    expect_identical(P, NA_integer_)
+
+    ## Min distance is 0 (exact match) and is achieved for P = 13.
+    ## Second best distance is 5 and is achieved for P = 10.
+    dna_string <- DNAString("aaagggcccaaaAGGATGGAcTGATcTGTAGTAGGTCAATTTcgcg")
+    stopifnot(subseq(dna_string, start=13L, width=30L) ==
+              subseq(fwr4refset[[5L]], start=1L, width=30L))
+    P <- get_fwr4_start_from_fwr4refset_dna_dist(dna_string, fwr4refset,
+                                                 max.dist=0, standout.by=5)
+    expect_identical(P, 13L)
+    P <- get_fwr4_start_from_fwr4refset_dna_dist(dna_string, fwr4refset,
+                                                 max.dist=0, standout.by=6)
+    expect_identical(P, NA_integer_)
+
+    ## Min distance is 3 and is achieved for P = 7.
+    dna_string <- DNAString("aaaaaaACTAATTAAAGGAGCTTATTTAAAAGAaaa")
+    stopifnot(subseq(dna_string, start=7L, width=27L) == fwr4refset[[2L]])
+    P <- get_fwr4_start_from_fwr4refset_dna_dist(dna_string, fwr4refset)
+    expect_identical(P, 7L)
+    P <- get_fwr4_start_from_fwr4refset_dna_dist(dna_string, fwr4refset,
+                                                 max.dist=3)
+    expect_identical(P, 7L)
+    P <- get_fwr4_start_from_fwr4refset_dna_dist(dna_string, fwr4refset,
+                                                 max.dist=2)
+    expect_identical(P, NA_integer_)
+})
+
+test_that(".get_fwr4_start_from_fwr4refset_dna_PWM", {
+    get_fwr4_start_from_fwr4refset_dna_PWM <-
+        igblastr:::.get_fwr4_start_from_fwr4refset_dna_PWM
+
+    fwr4refset <- DNAStringSet(c(
+        "TTACACCTGGAGATTAGGGAAAGTAGGGTC",     # 30 nucleotides
+        "GCTAGGATGGATTGATGTGTAGTAGGTCAAAT",   # 32 nucleotides
+        "AGCTAGGATGGACTGATCTGTAGTAGGTCA",     # 30 nucleotides
+        "AGGATGGAcTGATcTGTAGTAGGTCAATTTgggg"  # 34 nucleotides
+    ))
+    pwm <- PWM(subseq(fwr4refset, start=1L, end=30L))
+
+    dna_string <- DNAString("aaagggaaaGCTAGGATGGAcTGATcTGTAGTAGGTCAA")
+    P <- get_fwr4_start_from_fwr4refset_dna_PWM(dna_string, pwm)
+    expect_identical(P, NA_integer_)
+    P <- get_fwr4_start_from_fwr4refset_dna_PWM(dna_string, pwm,
+                                                standout.by=0.17)
+    expect_identical(P, 10L)
+})
+
+test_that("infer_cdr3_ends_from_fwr4_*_comparisons", {
     ## The auxdata for IMGT rat has 1 unsolved allele.
     db_name <- install_IMGT_germline_db("202614-2", "Rattus norvegicus",
                                         overwrite=TRUE)
-    auxdata <- load_auxdata(db_name)
-    solveme <- is.na(auxdata[ , "cdr3_end"])
-    stopifnot(identical(auxdata[solveme, "allele_name"], "IGKJ3*01"))
-
+    auxdata0 <- load_auxdata(db_name)
+    solve_me <- is.na(auxdata0[ , "cdr3_end"])
+    stopifnot(identical(auxdata0[solve_me, "allele_name"], "IGKJ3*01"))
     J_alleles <- load_germline_sequences(db_name, region_types="J")
-    auxdata2 <- infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles)
-    expect_identical(auxdata2, auxdata)
-    auxdata3 <- infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles,
-                                                     maxdist=5)
-    expect_identical(auxdata3, auxdata)
-    auxdata4 <- infer_cdr3_ends_via_fwr4_comparisons(auxdata, J_alleles,
-                                                     maxdist=5, standout.by=4)
-    expect_identical(auxdata4[solveme , "cdr3_end"], 6L)
 
-    DF <- suppressMessages(print_J_alleles(J_alleles, auxdata4, translate=TRUE))
-    expect_true(DF[solveme , "fwr4"] == AAStringSet("ISDETRLEIK"))
+    auxdata <- infer_cdr3_ends_from_fwr4_aa_comparisons(auxdata0, J_alleles)
+    expect_identical(auxdata, auxdata0)
+    auxdata <- infer_cdr3_ends_from_fwr4_dna_comparisons(auxdata0, J_alleles)
+    expect_identical(auxdata, auxdata0)
+    auxdata <- infer_cdr3_ends_from_fwr4_dna_PWM(auxdata0, J_alleles)
+    expect_identical(auxdata, auxdata0)
+
+    auxdata <- infer_cdr3_ends_from_fwr4_aa_comparisons(auxdata0, J_alleles,
+                                                        max.dist=5)
+    expect_identical(auxdata, auxdata0)
+    auxdata <- infer_cdr3_ends_from_fwr4_dna_comparisons(auxdata0, J_alleles,
+                                                         max.dist=9)
+    expect_identical(auxdata, auxdata0)
+    auxdata <- infer_cdr3_ends_from_fwr4_dna_PWM(auxdata0, J_alleles,
+                                                 min.score=0.82,
+                                                 standout.by=0.37)
+    expect_identical(auxdata, auxdata0)
+    auxdata <- infer_cdr3_ends_from_fwr4_dna_PWM(auxdata0, J_alleles,
+                                                 min.score=0.81,
+                                                 standout.by=0.38)
+    expect_identical(auxdata, auxdata0)
+
+    auxdata1 <- infer_cdr3_ends_from_fwr4_aa_comparisons(auxdata0, J_alleles,
+                                                         max.dist=5,
+                                                         standout.by=4)
+    expect_identical(auxdata1[solve_me , "cdr3_end"], 6L)
+    auxdata2 <- infer_cdr3_ends_from_fwr4_dna_comparisons(auxdata0, J_alleles,
+                                                          max.dist=9,
+                                                          standout.by=11)
+    expect_identical(auxdata2, auxdata1)
+    auxdata3 <- infer_cdr3_ends_from_fwr4_dna_PWM(auxdata0, J_alleles,
+                                                  min.score=0.81,
+                                                  standout.by=0.37)
+    expect_identical(auxdata3, auxdata1)
+
+    DF <- suppressMessages(print_J_alleles(J_alleles, auxdata1, translate=TRUE))
+    expect_true(DF[solve_me , "fwr4"] == AAStringSet("ISDETRLEIK"))
 })
 
