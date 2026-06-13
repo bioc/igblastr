@@ -46,8 +46,8 @@
 ### Returns an integer vector parallel to 'J_alleles' that contains the
 ### 1-based start position of the motif for each sequence in 'J_alleles'.
 ### For alleles that don't contain the motif, the position is set to NA.
-### For alleles that contain more than one occurence of the motif, we return
-### the position of the first occurence.
+### For alleles that contain more than one occurrence of the motif, we
+### return the position of the first occurrence.
 .find_motif_dna <- function(J_dna, motif_dna)
 {
     stopifnot(is(J_dna, "DNAStringSet"), is(motif_dna, "DNAString"))
@@ -354,7 +354,7 @@ fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
 ### Has its own unit tests in tests/testthat/test-compute_auxdata.R!
 ### Moves the sliding window to positions 1, 4, 7, etc..  on 'dna_string'.
 .get_fwr4_start_from_fwr4refset_dna_dist <-
-    function(dna_string, fwr4refset, max.dist=5, standout.by=12)
+    function(dna_string, fwr4refset, max.dist=4, standout.by=15)
 {
     max.dist <- .normarg_max.dist(max.dist, .DNA_MAX_MAX_DIST)
     standout.by <- .normarg_standout.by(standout.by, .DNA_MAX_STANDOUT_BY)
@@ -432,7 +432,7 @@ fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
 }
 
 .compute_fwr4_starts_from_fwr4_dna_comparisons <-
-    function(J_alleles, fwr4refset, max.dist=5, standout.by=12)
+    function(J_alleles, fwr4refset, max.dist=4, standout.by=15)
 {
     stopifnot(is(J_alleles, "DNAStringSet"),
               is(fwr4refset, "DNAStringSet"),
@@ -494,10 +494,10 @@ fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### The infer_cdr3_ends_from_fwr4_*() functions
+### The solve_cdr3_ends_using_fwr4_*() functions
 ###
 
-.infer_cdr3_ends <- function(auxdata, J_alleles, FUN, ...)
+.solve_cdr3_ends <- function(auxdata, J_alleles, FUN, ...)
 {
     check_auxdata_col2class(auxdata)
     if (!is(J_alleles, "DNAStringSet") || length(J_alleles) != nrow(auxdata))
@@ -528,26 +528,26 @@ fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
     auxdata
 }
 
-infer_cdr3_ends_from_fwr4_aa_comparisons <-
+solve_cdr3_ends_using_fwr4_aa_comparisons <-
     function(auxdata, J_alleles, max.dist=2, standout.by=5)
 {
-    .infer_cdr3_ends(auxdata, J_alleles,
+    .solve_cdr3_ends(auxdata, J_alleles,
                      .compute_fwr4_starts_from_fwr4_aa_comparisons,
                      max.dist=max.dist, standout.by=standout.by)
 }
 
-infer_cdr3_ends_from_fwr4_dna_comparisons <-
-    function(auxdata, J_alleles, max.dist=5, standout.by=12)
+solve_cdr3_ends_using_fwr4_dna_comparisons <-
+    function(auxdata, J_alleles, max.dist=4, standout.by=15)
 {
-    .infer_cdr3_ends(auxdata, J_alleles,
+    .solve_cdr3_ends(auxdata, J_alleles,
                      .compute_fwr4_starts_from_fwr4_dna_comparisons,
                      max.dist=max.dist, standout.by=standout.by)
 }
 
-infer_cdr3_ends_from_fwr4_dna_PWM <-
+solve_cdr3_ends_using_fwr4_dna_PWM <-
     function(auxdata, J_alleles, min.score=0.80, standout.by=0.40)
 {
-    .infer_cdr3_ends(auxdata, J_alleles,
+    .solve_cdr3_ends(auxdata, J_alleles,
                      .compute_fwr4_starts_from_fwr4_dna_PWM,
                      min.score=min.score, standout.by=standout.by)
 }
