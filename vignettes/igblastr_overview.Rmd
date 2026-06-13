@@ -264,7 +264,7 @@ includes annotations for the germline V alleles (`intdata` column) and
 germline J alleles (`auxdata` column). These annotations consist of
 reporting the coding frame start position and FWR/CDR boundaries on
 the V and J sequences. Note that the FWR/CDR boundaries on the V sequences
-are also known as the V gene delineations. For the J sequences the only
+are also known as the V gene delineations. For the J sequences, the only
 FWR/CDR boundary is the CDR3/FWR4 boundary.
 
 When analyzing BCR or TCR sequences with IgBLAST, the latter needs

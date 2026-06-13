@@ -2,7 +2,7 @@
 test_that("compute_auxdata()", {
 
     ## Un unrealistic J allele sequence that contains 1 occurrence of
-    ## WGXG and 2 occurences of FGXG.
+    ## WGXG and 2 occurrences of FGXG.
     dna <- "TACAGCAACTGGGGACTTGGTTTGGGGAAGGGATTCGGAGTTGGCGTGTTACCAA"
     J_alleles <- DNAStringSet(c(`IGHJ5*01`=dna, `IGKJ2*03`=dna))
 
@@ -254,7 +254,7 @@ test_that(".get_fwr4_start_from_fwr4refset_dna_PWM", {
     expect_identical(P, 10L)
 })
 
-test_that("infer_cdr3_ends_from_fwr4_*_comparisons", {
+test_that("solve_cdr3_ends_using_fwr4_*_comparisons", {
     ## The auxdata for IMGT rat has 1 unsolved allele.
     db_name <- install_IMGT_germline_db("202614-2", "Rattus norvegicus",
                                         overwrite=TRUE)
@@ -263,39 +263,39 @@ test_that("infer_cdr3_ends_from_fwr4_*_comparisons", {
     stopifnot(identical(auxdata0[solve_me, "allele_name"], "IGKJ3*01"))
     J_alleles <- load_germline_sequences(db_name, region_types="J")
 
-    auxdata <- infer_cdr3_ends_from_fwr4_aa_comparisons(auxdata0, J_alleles)
+    auxdata <- solve_cdr3_ends_using_fwr4_aa_comparisons(auxdata0, J_alleles)
     expect_identical(auxdata, auxdata0)
-    auxdata <- infer_cdr3_ends_from_fwr4_dna_comparisons(auxdata0, J_alleles)
+    auxdata <- solve_cdr3_ends_using_fwr4_dna_comparisons(auxdata0, J_alleles)
     expect_identical(auxdata, auxdata0)
-    auxdata <- infer_cdr3_ends_from_fwr4_dna_PWM(auxdata0, J_alleles)
-    expect_identical(auxdata, auxdata0)
-
-    auxdata <- infer_cdr3_ends_from_fwr4_aa_comparisons(auxdata0, J_alleles,
-                                                        max.dist=5)
-    expect_identical(auxdata, auxdata0)
-    auxdata <- infer_cdr3_ends_from_fwr4_dna_comparisons(auxdata0, J_alleles,
-                                                         max.dist=9)
-    expect_identical(auxdata, auxdata0)
-    auxdata <- infer_cdr3_ends_from_fwr4_dna_PWM(auxdata0, J_alleles,
-                                                 min.score=0.82,
-                                                 standout.by=0.37)
-    expect_identical(auxdata, auxdata0)
-    auxdata <- infer_cdr3_ends_from_fwr4_dna_PWM(auxdata0, J_alleles,
-                                                 min.score=0.81,
-                                                 standout.by=0.38)
+    auxdata <- solve_cdr3_ends_using_fwr4_dna_PWM(auxdata0, J_alleles)
     expect_identical(auxdata, auxdata0)
 
-    auxdata1 <- infer_cdr3_ends_from_fwr4_aa_comparisons(auxdata0, J_alleles,
-                                                         max.dist=5,
-                                                         standout.by=4)
-    expect_identical(auxdata1[solve_me , "cdr3_end"], 6L)
-    auxdata2 <- infer_cdr3_ends_from_fwr4_dna_comparisons(auxdata0, J_alleles,
-                                                          max.dist=9,
-                                                          standout.by=11)
-    expect_identical(auxdata2, auxdata1)
-    auxdata3 <- infer_cdr3_ends_from_fwr4_dna_PWM(auxdata0, J_alleles,
-                                                  min.score=0.81,
+    auxdata <- solve_cdr3_ends_using_fwr4_aa_comparisons(auxdata0, J_alleles,
+                                                         max.dist=5)
+    expect_identical(auxdata, auxdata0)
+    auxdata <- solve_cdr3_ends_using_fwr4_dna_comparisons(auxdata0, J_alleles,
+                                                          max.dist=9)
+    expect_identical(auxdata, auxdata0)
+    auxdata <- solve_cdr3_ends_using_fwr4_dna_PWM(auxdata0, J_alleles,
+                                                  min.score=0.82,
                                                   standout.by=0.37)
+    expect_identical(auxdata, auxdata0)
+    auxdata <- solve_cdr3_ends_using_fwr4_dna_PWM(auxdata0, J_alleles,
+                                                  min.score=0.81,
+                                                  standout.by=0.38)
+    expect_identical(auxdata, auxdata0)
+
+    auxdata1 <- solve_cdr3_ends_using_fwr4_aa_comparisons(auxdata0, J_alleles,
+                                                          max.dist=5,
+                                                          standout.by=4)
+    expect_identical(auxdata1[solve_me , "cdr3_end"], 6L)
+    auxdata2 <- solve_cdr3_ends_using_fwr4_dna_comparisons(auxdata0, J_alleles,
+                                                           max.dist=9,
+                                                           standout.by=11)
+    expect_identical(auxdata2, auxdata1)
+    auxdata3 <- solve_cdr3_ends_using_fwr4_dna_PWM(auxdata0, J_alleles,
+                                                   min.score=0.81,
+                                                   standout.by=0.37)
     expect_identical(auxdata3, auxdata1)
 
     DF <- suppressMessages(print_J_alleles(J_alleles, auxdata1, translate=TRUE))
