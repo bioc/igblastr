@@ -193,7 +193,7 @@
     headers <- names(fasta.seqlengths(infasta))
     allele_names <- clean_imgt_fasta_headers(headers)
 
-    ## We use the "Drop Or Rename" summary ('DORsummary') to identify the
+    ## We use the "Drop Or Rename summary" ('DORsummary') to identify the
     ## FASTA records to drop.
     ## There are two reasons for dropping a FASTA record:
     ##   1. The record is for an allele that belongs to the exclusion list
@@ -288,9 +288,10 @@
 
 .write_db_fasta_files <-
     function(cleaned_allele_set, destdir, region_type,
-             fasta_files, DORsummary, excluded_alleles=character(0),
+             fasta_files, excluded_alleles=character(0),
              verbose=FALSE)
 {
+    DORsummary <- metadata(cleaned_allele_set)$DORsummary
     stopifnot(is.data.frame(DORsummary))
     suffix <- DORsummary[ , "suffix"]
     expected_allele_names <- add_suffix(DORsummary[ , "allele_name"], suffix)
@@ -352,15 +353,11 @@ create_region_db <- function(destdir, fasta_files,
         clean_allele_set(allele_set,
                          disambiguate.allele.names=disambiguate.allele.names,
                          verbose=verbose)
-    DORsummary <-
-        clean_allele_set(allele_set,
-                         disambiguate.allele.names=disambiguate.allele.names,
-                         summary.only=TRUE)
 
     ## Write the db.
     .write_db_fasta_files(cleaned_allele_set, destdir, region_type,
-                          fasta_files, DORsummary,
-                          excluded_alleles=excluded_alleles, verbose=verbose)
+                          fasta_files, excluded_alleles=excluded_alleles,
+                          verbose=verbose)
 }
 
 
@@ -418,17 +415,12 @@ create_V_region_db <- function(destdir, fasta_files,
                            gapped=gapped, auto.intdata=auto.intdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            verbose=verbose)
-    DORsummary <-
-        clean_V_allele_set(allele_set,
-                           gapped=gapped, auto.intdata=auto.intdata,
-                           disambiguate.allele.names=disambiguate.allele.names,
-                           summary.only=TRUE)
 
     ## Write the db.
     if (auto.intdata)
         .add_auto_intdata_to_db(cleaned_allele_set, destdir, verbose=verbose)
     .write_db_fasta_files(cleaned_allele_set, destdir, "V",
-                          fasta_files, DORsummary, verbose=verbose)
+                          fasta_files, verbose=verbose)
 }
 
 
@@ -500,11 +492,6 @@ create_J_region_db <- function(destdir, fasta_files, imgt.fasta.headers=FALSE,
                            auto.auxdata=auto.auxdata, ref_auxdata=ref_auxdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            verbose=verbose)
-    DORsummary <-
-        clean_J_allele_set(allele_set, imgt.fasta.headers=imgt.fasta.headers,
-                           auto.auxdata=auto.auxdata, ref_auxdata=ref_auxdata,
-                           disambiguate.allele.names=disambiguate.allele.names,
-                           summary.only=TRUE)
 
     ## Write the db.
     if (auto.auxdata) {
@@ -515,7 +502,7 @@ create_J_region_db <- function(destdir, fasta_files, imgt.fasta.headers=FALSE,
         .add_auto_auxdata_to_db(auxdata, destdir, verbose=verbose)
     }
     .write_db_fasta_files(cleaned_allele_set, destdir, "J",
-                          fasta_files, DORsummary,
-                          excluded_alleles=excluded_alleles, verbose=verbose)
+                          fasta_files, excluded_alleles=excluded_alleles,
+                          verbose=verbose)
 }
 

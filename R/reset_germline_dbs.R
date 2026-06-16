@@ -200,7 +200,7 @@ install_missing_builtin_germline_dbs <- function(install_dir, verbose=FALSE)
 ### reset_germline_dbs()
 ###
 
-### Has its own tests in tests/testthat/test-reset_germline_dbs.R!
+### Has its own unit tests in tests/testthat/test-reset_germline_dbs.R!
 ### If 'install_dir' exists, it gets destroyed and replaced with a freshly
 ### populated directory. In other words, its final content doesn't depend
 ### on whether it already exists or not. Note that the destroy/replace
