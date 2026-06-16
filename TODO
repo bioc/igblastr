@@ -6,12 +6,6 @@ o More testing of combine_germline_dbs() and combine_c_region_dbs(). Improve
   man pages. Add dedicated subsection of the "Advanced usage" section in the
   vignette.
 
-o create_region_db() (and family) calls clean_allele_set() twice which is
-  inefficient. The 2nd call uses 'summary.only=TRUE' to get the "Drop
-  Or Rename" summary (DORsummary). This 2-call approach should be replaced
-  with a single call approach that computes the DORsummary and returns it via
-  the metadata() of the returned DNAStringSet object.
-
 o Fill missing documentation:
   - install_custom_germline_db(): document arg 'imgt.fasta.headers';
   - install_IMGT_germline_db(): document arg 'auto.auxdata';

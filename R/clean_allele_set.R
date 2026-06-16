@@ -83,10 +83,55 @@ check_locus <- function(locus, what)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .make_DORsummary()
+###
+
+.stop_on_ambiguous_allele_names <- function(allele_names)
+{
+    stopifnot(is.character(allele_names))
+    is_dup <- duplicated(allele_names)
+    ambiguous_allele_names <- unique(allele_names[is_dup])
+    in1string <- paste(ambiguous_allele_names, collapse=", ")
+    stop(wmsg("The following allele names are ambiguous: ", in1string, "."),
+         "\n  ",
+         wmsg("Use 'disambiguate.allele.names=TRUE' to disambiguate ",
+              "them. (Also using 'verbose=TRUE' will display the ",
+              "disambiguation details.)"))
+}
+
+### Has its own unit tests in tests/testthat/test-clean_allele_set.R!
+### Make the "Drop Or Rename summary", a data.frame with one row per allele
+### in 'allele_set', and the following columns:
+###   - allele_name: the names on 'allele_set'.
+###   - suffix: the disambiguation suffix (possible the empty string)
+###     or NA if the allele should be dropped. The disambiguation suffix is
+###     the suffix to add to the allele name in order to make allele names
+###     unique across the allele set.
+###   - locus: [optional] the "locus" metadata column from 'allele_set' if
+###     the latter is an XStringSet derivative with such metadata column.
+.make_DORsummary <- function(allele_set, disambiguate.allele.names=FALSE)
+{
+    ## The unit tests actually test .make_DORsummary() on character vectors!
+    stopifnot(is(allele_set, "XStringSet") || is.character(allele_set))
+    suffix <- rep.int(NA_character_, length(allele_set))
+    remaining_idx <- which(!.is_repeated(allele_set))
+    remaining_allele_names <- names(allele_set)[remaining_idx]
+    if (anyDuplicated(remaining_allele_names) && !disambiguate.allele.names)
+        .stop_on_ambiguous_allele_names(remaining_allele_names)
+    suffix[remaining_idx] <- make_unique_allele_names(remaining_allele_names,
+                                                      suffixes.only=TRUE)
+    DORsummary <- data.frame(allele_name=names(allele_set), suffix=suffix)
+    if (is(allele_set, "XStringSet"))
+        DORsummary$locus <- mcols(allele_set)$locus
+    DORsummary
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .drop_repeated_alleles()
 ###
 
-### Has its own tests in tests/testthat/test-clean_allele_set.R!
+### Has its own unit tests in tests/testthat/test-clean_allele_set.R!
 ### By "repeated" alleles we mean alleles with identical sequences **and**
 ### names. Note that:
 ### - we keep alleles with identical sequences but different names;
@@ -114,19 +159,6 @@ check_locus <- function(locus, what)
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .disambiguate_allele_names()
 ###
-
-.stop_on_ambiguous_allele_names <- function(allele_names)
-{
-    stopifnot(is.character(allele_names))
-    is_dup <- duplicated(allele_names)
-    ambiguous_allele_names <- unique(allele_names[is_dup])
-    in1string <- paste(ambiguous_allele_names, collapse=", ")
-    stop(wmsg("The following allele names are ambiguous: ", in1string, "."),
-         "\n  ",
-         wmsg("Use 'disambiguate.allele.names=TRUE' to disambiguate ",
-              "them. (Also using 'verbose=TRUE' will display the ",
-              "disambiguation details.)"))
-}
 
 .disambiguate_allele_names <- function(allele_set, annotated=FALSE,
                                        verbose=FALSE)
@@ -163,45 +195,19 @@ check_locus <- function(locus, what)
 ### .drop_or_rename_alleles()
 ###
 
-### Has its own tests in tests/testthat/test-clean_allele_set.R!
-### Make the "Drop Or Rename" summary, a data.frame with one row per allele
-### in 'allele_set', and the following columns:
-###   - allele_name: the names on 'allele_set'.
-###   - suffix: the disambiguation suffix (possible the empty string)
-###     or NA if the allele should be dropped. The disambiguation suffix is
-###     the suffix to add to the allele name in order to make allele names
-###     unique across the allele set.
-###   - locus: [optional] the "locus" metadata column from 'allele_set' if
-###     the latter is an XStringSet derivative with such metadata column.
-.make_DORsummary <- function(allele_set, disambiguate.allele.names=FALSE)
-{
-    stopifnot(is(allele_set, "XStringSet") || is.character(allele_set))
-    suffix <- rep.int(NA_character_, length(allele_set))
-    remaining_idx <- which(!.is_repeated(allele_set))
-    remaining_allele_names <- names(allele_set)[remaining_idx]
-    if (anyDuplicated(remaining_allele_names) && !disambiguate.allele.names)
-        .stop_on_ambiguous_allele_names(remaining_allele_names)
-    suffix[remaining_idx] <- make_unique_allele_names(remaining_allele_names,
-                                                      suffixes.only=TRUE)
-    DORsummary <- data.frame(allele_name=names(allele_set), suffix=suffix)
-    if (is(allele_set, "XStringSet"))
-        DORsummary$locus <- mcols(allele_set)$locus
-    DORsummary
-}
-
-### If 'summary.only' is FALSE (the default), returns the modified 'allele_set'
-### which is not necessarily parallel to the input 'allele_set' because
-### some alleles may have been dropped.
-### If 'summary.only' is TRUE, returns a 2-col data.frame parallel
-### to 'allele_set'. See function .make_DORsummary() above in this file for the
-### details. Also in this case 'verbose' is ignored and operations are quiet.
+### Returns the modified 'allele_set' which is not necessarily parallel to
+### the input 'allele_set' because some alleles may have been dropped.
+### Also the returned object has the "Drop Or Rename summary" set on it (in
+### its metadata() component). This is a 2-col data.frame that is **parallel**
+### to the input 'allele_set'. See function .make_DORsummary() above in this
+### file for the details.
 .drop_or_rename_alleles <- function(allele_set, annotated=FALSE,
                                     disambiguate.allele.names=FALSE,
-                                    summary.only=FALSE, verbose=FALSE)
+                                    verbose=FALSE)
 {
-    if (summary.only)
-        return(.make_DORsummary(allele_set,
-                     disambiguate.allele.names=disambiguate.allele.names))
+    stopifnot(is(allele_set, "XStringSet"))
+    DORsummary <- .make_DORsummary(allele_set,
+                        disambiguate.allele.names=disambiguate.allele.names)
 
     ## (C) Drop "repeated" alleles.
     cleaned_allele_set <- .drop_repeated_alleles(allele_set, verbose=verbose)
@@ -209,7 +215,11 @@ check_locus <- function(locus, what)
     ## (D) Disambiguate allele names.
     allele_names <- names(cleaned_allele_set)
     if (anyDuplicated(allele_names)) {
-        ## Note that, because we did (C), alleles with repeated names
+        ## Note that .make_DORsummary() should already have caught this and
+        ## raised an error if 'disambiguate.allele.names' is FALSE, but we
+        ## check here anyways just in case one day .make_DORsummary() changes
+        ## or we get rid of it.
+        ## Also note that, because we did (C), alleles with repeated names
         ## are now guaranteed to have distinct DNA sequences.
         if (!disambiguate.allele.names)
             .stop_on_ambiguous_allele_names(allele_names)
@@ -218,6 +228,8 @@ check_locus <- function(locus, what)
                                                          verbose=verbose)
     }
 
+    stopifnot(is.null(metadata(cleaned_allele_set)$DORsummary))
+    metadata(cleaned_allele_set)$DORsummary <- DORsummary
     cleaned_allele_set
 }
 
@@ -524,11 +536,9 @@ check_locus <- function(locus, what)
 ### the names of the remaining alleles are not unique, then an error will
 ### be raised, unless 'disambiguate.allele.names' is set to TRUE, in which
 ### case the ambiguous allele names will be disambiguated.
-### If 'summary.only' is TRUE then 'verbose' is ignored and operations
-### are quiet.
 clean_allele_set <- function(allele_set,
                              disambiguate.allele.names=FALSE,
-                             summary.only=FALSE, verbose=FALSE)
+                             verbose=FALSE)
 {
     stopifnot(is(allele_set, "XStringSet") || is.character(allele_set))
     headers <- names(allele_set)  # typically the FASTA headers
@@ -542,7 +552,7 @@ clean_allele_set <- function(allele_set,
     ## (C) + (D).
     .drop_or_rename_alleles(allele_set,
                     disambiguate.allele.names=disambiguate.allele.names,
-                    summary.only=summary.only, verbose=verbose)
+                    verbose=verbose)
 }
 
 ### Performs: (A) -> (Bv1) -> (Bv2) -> (C) -> (D).
@@ -556,12 +566,10 @@ clean_allele_set <- function(allele_set,
 ### Furthermore, if 'auto.intdata' is TRUE, the returned object will also
 ### carry the annotations obtained with compute_V_gene_delineations() in
 ### additional metadata columns.
-### If 'summary.only' is TRUE then 'verbose' is ignored and operations
-### are quiet.
 clean_V_allele_set <- function(allele_set,
                                gapped=FALSE, auto.intdata=FALSE,
                                disambiguate.allele.names=FALSE,
-                               summary.only=FALSE, verbose=FALSE)
+                               verbose=FALSE)
 {
     stopifnot(is(allele_set, "DNAStringSet"))
     headers <- names(allele_set)  # typically the FASTA headers
@@ -594,16 +602,14 @@ clean_V_allele_set <- function(allele_set,
     ### identical **ungapped** sequences DNA sequences and names.
     .drop_or_rename_alleles(allele_set, annotated=auto.intdata,
                     disambiguate.allele.names=disambiguate.allele.names,
-                    summary.only=summary.only, verbose=verbose)
+                    verbose=verbose)
 }
 
 ### Performs: (A) -> (Bj) -> (C) -> (D).
-### If 'summary.only' is TRUE then 'verbose' is ignored and operations
-### are quiet.
 clean_J_allele_set <- function(allele_set, imgt.fasta.headers=FALSE,
                                auto.auxdata=FALSE, ref_auxdata=NULL,
                                disambiguate.allele.names=FALSE,
-                               summary.only=FALSE, verbose=FALSE)
+                               verbose=FALSE)
 {
     stopifnot(is(allele_set, "DNAStringSet"))
     headers <- names(allele_set)  # typically the FASTA headers
@@ -634,6 +640,6 @@ clean_J_allele_set <- function(allele_set, imgt.fasta.headers=FALSE,
     ## (C) + (D).
     .drop_or_rename_alleles(allele_set, annotated=auto.auxdata,
                     disambiguate.allele.names=disambiguate.allele.names,
-                    summary.only=summary.only, verbose=verbose)
+                    verbose=verbose)
 }
 

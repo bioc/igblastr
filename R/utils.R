@@ -170,7 +170,7 @@ check_seqlens <- function(seqlens, varname)
     setNames(suffixes, names(x))
 }
 
-### Has its own tests in tests/testthat/test-utils.R!
+### Has its own unit tests in tests/testthat/test-utils.R!
 ### We make the allele names unique by adding a disambiguation suffix to
 ### them. Note that this is not guaranteed to make the allele names unique
 ### because adding the suffixes can create clashes with some other allele
