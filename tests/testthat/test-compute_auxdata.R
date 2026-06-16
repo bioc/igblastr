@@ -62,9 +62,9 @@ test_that("compute_auxdata()", {
     expect_identical(computed_auxdata, orig_auxdata)
 })
 
-test_that("find_discordant_auxdata()/fill_missing_auxdata_with_ref()", {
+test_that("find_discordant_auxdata()/complete_auxdata_with_ref()", {
     find_discordant_auxdata <- igblastr:::find_discordant_auxdata
-    fill_missing_auxdata_with_ref <- igblastr:::fill_missing_auxdata_with_ref
+    complete_auxdata_with_ref <- igblastr:::complete_auxdata_with_ref
 
     ## --- trivial case ---
 
@@ -75,7 +75,7 @@ test_that("find_discordant_auxdata()/fill_missing_auxdata_with_ref()", {
         cdr3_end=c(11:13, NA, 15:16),
         extra_bps=1L
     )
-    expect_identical(fill_missing_auxdata_with_ref(auxdata1, auxdata1),
+    expect_identical(complete_auxdata_with_ref(auxdata1, auxdata1),
                      auxdata1)
 
     ## --- discordant data ---
@@ -88,7 +88,7 @@ test_that("find_discordant_auxdata()/fill_missing_auxdata_with_ref()", {
         extra_bps=1L
     )
 
-    expect_error(fill_missing_auxdata_with_ref(auxdata1, auxdata2),
+    expect_error(complete_auxdata_with_ref(auxdata1, auxdata2),
                  regexp="discordant")
     disc_rowpairs <- find_discordant_auxdata(auxdata1, auxdata2)
     expected <- data.frame(rowidx1=c(2L, 5L, 6L), rowidx2=c(5L, 1L, 2L))
@@ -104,7 +104,7 @@ test_that("find_discordant_auxdata()/fill_missing_auxdata_with_ref()", {
 
     ## Swapping the two data.frames returns the same pairs but they are
     ## possibly in a different order.
-    expect_error(fill_missing_auxdata_with_ref(auxdata2, auxdata1),
+    expect_error(complete_auxdata_with_ref(auxdata2, auxdata1),
                  regexp="discordant")
     disc_rowpairs <- find_discordant_auxdata(auxdata2, auxdata1)
     expected <- data.frame(rowidx1=c(1L, 2L, 5L), rowidx2=c(5L, 6L, 2L))
@@ -120,18 +120,18 @@ test_that("find_discordant_auxdata()/fill_missing_auxdata_with_ref()", {
     expected <- auxdata1
     expected[2L, "coding_frame_start"] <- 1L
     expected[4L, "cdr3_end"] <- 15L
-    auxdata1a <- fill_missing_auxdata_with_ref(auxdata1, auxdata2)
+    auxdata1a <- complete_auxdata_with_ref(auxdata1, auxdata2)
     expect_identical(auxdata1a, expected)
-    expect_identical(fill_missing_auxdata_with_ref(auxdata1a, auxdata2),
+    expect_identical(complete_auxdata_with_ref(auxdata1a, auxdata2),
                      auxdata1a)
 
     disc_rowpairs <- find_discordant_auxdata(auxdata2, auxdata1)
     expect_identical(disc_rowpairs, nopairs)
     expected <- auxdata2
     expected[c(1L, 2L), "cdr3_end"] <- c(15L, 16L)
-    auxdata2a <- fill_missing_auxdata_with_ref(auxdata2, auxdata1)
+    auxdata2a <- complete_auxdata_with_ref(auxdata2, auxdata1)
     expect_identical(auxdata2a, expected)
-    expect_identical(fill_missing_auxdata_with_ref(auxdata2a, auxdata1),
+    expect_identical(complete_auxdata_with_ref(auxdata2a, auxdata1),
                      auxdata2a)
 })
 

@@ -209,11 +209,12 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### find_discordant_auxdata()
-### fill_missing_auxdata_with_ref()
-### fill_missing_auxdata_with_ref_auxdata()
+### complete_auxdata_with_ref()
+### validate_and_complete_auxdata_with_ref()
 ###
 
 ### Not exported!
+### Has its own unit tests in tests/testthat/test-compute_auxdata.R!
 ### See find_discordant_rows() in R/utils.R for what it returns.
 find_discordant_auxdata <- function(auxdata, ref_auxdata)
 {
@@ -223,21 +224,21 @@ find_discordant_auxdata <- function(auxdata, ref_auxdata)
 }
 
 ### Not exported!
-### See complete_df_with_refdf() in R/utils.R for what it returns.
-fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
-                                          auxdata_label="computed",
-                                          ref_auxdata_label="reference")
+### Has its own unit tests in tests/testthat/test-compute_auxdata.R!
+### See complete_df_with_ref() in R/utils.R for what it returns.
+complete_auxdata_with_ref <- function(auxdata, ref_auxdata,
+                                      auxdata_label="computed",
+                                      ref_label="reference")
 {
     check_auxdata_col2class(auxdata)
     check_auxdata_col2class(ref_auxdata)
-    complete_df_with_refdf(auxdata, ref_auxdata, "allele_name",
-                           "\"auxiliary data\"",
-                           auxdata_label, ref_auxdata_label)
+    complete_df_with_ref(auxdata, ref_auxdata, "allele_name",
+                         "\"auxiliary data\"", auxdata_label, ref_label)
 }
 
-### User-exposed wrapper to fill_missing_auxdata_with_ref().
-fill_missing_auxdata_with_ref_auxdata <- function(auxdata, ref_auxdata)
-    fill_missing_auxdata_with_ref(auxdata, ref_auxdata)
+### User-exposed wrapper to complete_auxdata_with_ref().
+validate_and_complete_auxdata_with_ref <- function(auxdata, ref_auxdata)
+    complete_auxdata_with_ref(auxdata, ref_auxdata)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

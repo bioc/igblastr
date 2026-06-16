@@ -339,9 +339,9 @@ check_locus <- function(locus, what)
             in1string <- "none!"
         } else {
             unsolved_J_alleles <- auxdata[unsolved_idx, "allele_name"]
-            in1string <- paste0(unsolved_J_alleles, collapse=", ")
+            in1string <- paste0(paste(unsolved_J_alleles, collapse=", "), ".")
         }
-        msg <- c("Unsolved J allele(s): ", in1string, ".")
+        msg <- c("Unsolved J allele(s): ", in1string)
         message("         --> ", wmsg(msg, margin=13L))
     }
     complete
@@ -361,23 +361,24 @@ check_locus <- function(locus, what)
     auxdata
 }
 
-### A verbose wrapper to fill_missing_auxdata_with_ref().
+### A verbose wrapper to complete_auxdata_with_ref().
 .compute_auxdata_STEP2 <- function(auxdata, ref_auxdata, verbose=FALSE)
 {
     if (verbose) {
-        ## We say that we're using fill_missing_auxdata_with_ref_auxdata()
-        ## but we actually use fill_missing_auxdata_with_ref(). The former
-        ## is just the user-exposed version of the latter.
-        msg <- c("Use fill_missing_auxdata_with_ref_auxdata() to check ",
-                 "and try to complete the initial auxdata")
+        ## We say that we're using validate_and_complete_auxdata_with_ref()
+        ## even though we're actually using complete_auxdata_with_ref().
+        ## But note that the former is just the user-exposed version of the
+        ## latter.
+        msg <- c("Use validate_and_complete_auxdata_with_ref() to validate ",
+                 "the initial auxdata and try to complete it")
         message("    - STEP2: ", wmsg(msg, margin=13L), " ... ", appendLF=FALSE)
     }
     if (is.null(ref_auxdata)) {
         msg <- "SKIPPED!"
     } else {
-        auxdata <- fill_missing_auxdata_with_ref(auxdata, ref_auxdata,
-                                                 "igblastr-generated",
-                                                 "IgBLAST-provided")
+        auxdata <- complete_auxdata_with_ref(auxdata, ref_auxdata,
+                                             "igblastr-generated",
+                                             "IgBLAST-provided")
         msg <- "ok."
     }
     if (verbose)
