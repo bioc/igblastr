@@ -274,7 +274,7 @@ have_same_rows <- function(df1, df2, key)
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### find_discordant_rows()
 ### df_diff()
-### complete_df_with_refdf()
+### complete_df_with_ref()
 ###
 
 ### Returns a 2-col data.frame with 1 row per discordant row pairs
@@ -341,17 +341,17 @@ df_diff <- function(df1, df2, key, label1, label2)
     .rowpairs_as_strings(disc_df1, disc_df2, label1, label2)
 }
 
-### Replaces missing values in 'df' with corresponding values in 'refdf'.
-### Raises an error that displays the differences if 'df' and 'refdf' are
+### Replaces missing values in 'df' with corresponding values in 'ref'.
+### Raises an error that displays the differences if 'df' and 'ref' are
 ### discordant.
 ### Returns 'df' with possibly some of its missing values replaced with
-### non-NA values taken from 'refdf'.
-complete_df_with_refdf <- function(df, refdf, key, what, df_label, refdf_label)
+### non-NA values taken from 'ref'.
+complete_df_with_ref <- function(df, ref, key, what, df_label, ref_label)
 {
     stopifnot(isSingleNonWhiteString(what))
-    diff <- df_diff(df, refdf, key, df_label, refdf_label)
+    diff <- df_diff(df, ref, key, df_label, ref_label)
     if (length(diff) != 0L) {
-        what <- c(df_label, " and ", refdf_label, " ", what)
+        what <- c(df_label, " and ", ref_label, " ", what)
         msg1 <- c("  Disagreements between ", what, ":\n", diff)
         message(msg1)
         msg2 <- c(what, " contain discordant data (see ",
@@ -359,13 +359,13 @@ complete_df_with_refdf <- function(df, refdf, key, what, df_label, refdf_label)
         stop(wmsg(msg2))
     }
     keys1 <- df[ , key]
-    keys2 <- refdf[ , key]
+    keys2 <- ref[ , key]
     m <- match(keys1, keys2)
     mapped_idx <- which(!is.na(m))
     ans <- df
     for (colname in setdiff(colnames(df), key)) {
         subcol1 <- df[mapped_idx, colname]
-        subcol2 <- refdf[m[mapped_idx] , colname]
+        subcol2 <- ref[m[mapped_idx] , colname]
         subcol1[is.na(subcol1)] <- subcol2[is.na(subcol1)]
         ans[mapped_idx, colname] <- subcol1
     }

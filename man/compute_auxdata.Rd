@@ -1,7 +1,7 @@
 \name{compute_auxdata}
 
 \alias{compute_auxdata}
-\alias{fill_missing_auxdata_with_ref_auxdata}
+\alias{validate_and_complete_auxdata_with_ref}
 \alias{solve_cdr3_ends_using_fwr4_aa_comparisons}
 \alias{solve_cdr3_ends_using_fwr4_dna_comparisons}
 \alias{solve_cdr3_ends_using_fwr4_dna_PWM}
@@ -24,7 +24,7 @@ compute_auxdata(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 ## Additional utilities that can be used to complete the "auxiliary data"
 ## returned by compute_auxdata():
 
-fill_missing_auxdata_with_ref_auxdata(auxdata, ref_auxdata)
+validate_and_complete_auxdata_with_ref(auxdata, ref_auxdata)
 
 solve_cdr3_ends_using_fwr4_aa_comparisons(auxdata, J_alleles,
                                           max.dist=2, standout.by=5)
@@ -91,7 +91,7 @@ solve_cdr3_ends_using_fwr4_dna_PWM(auxdata, J_alleles,
   \code{compute_auxdata()} can contain \code{NA}s in its
   \code{cdr3_end} column. We call these \emph{unsolved CDR3 ends}.
 
-  \code{fill_missing_auxdata_with_ref_auxdata()} and the
+  \code{validate_and_complete_auxdata_with_ref()} and the
   \code{solve_cdr3_ends_using_fwr4_*()} functions are meant to be
   used on the \emph{auxiliary data} returned by \code{compute_auxdata()}
   to complete it, that is, to eliminate \code{NA}s from it when possible.
@@ -168,10 +168,19 @@ solve_cdr3_ends_using_fwr4_dna_PWM(auxdata, J_alleles,
     }
   }
 
-  \subsection{The \code{fill_missing_auxdata_with_ref_auxdata()} function}{
-    \code{fill_missing_auxdata_with_ref_auxdata()} replaces each \code{NA}
-    in \code{auxdata} with the corresponding value in \code{ref_auxdata},
-    if the latter is available.
+  \subsection{The \code{validate_and_complete_auxdata_with_ref()} function}{
+    \code{validate_and_complete_auxdata_with_ref()} does two things:
+    \enumerate{
+      \item Validation: The function validates the \emph{auxiliary data}
+            passed thru its first argument (\code{auxdata}) against the
+            \emph{auxiliary data} passed thru its second argument
+            (\code{ref_auxdata}). This is done by comparing the entries in
+            the former with the entries in the latter for the J alleles that
+            are annotated in both, and by raising an error if they disagree.
+      \item Completion: The function replaces each \code{NA} in \code{auxdata}
+            with the corresponding value in \code{ref_auxdata}, if the latter
+            is available.
+    }
   }
 
   \subsection{The \code{solve_cdr3_ends_using_fwr4_*_comparisons()} functions}{
@@ -363,12 +372,12 @@ auxdata2
 print_J_alleles(J_alleles, auxdata2, translate=TRUE)
 
 ## In the next examples below, we're going to use
-## fill_missing_auxdata_with_ref_auxdata() and the
+## validate_and_complete_auxdata_with_ref() and the
 ## solve_cdr3_ends_using_fwr4_*_comparisons() functions to try
 ## and solve these alleles.
 
 ## ---------------------------------------------------------------------
-## 3. fill_missing_auxdata_with_ref_auxdata()
+## 3. validate_and_complete_auxdata_with_ref()
 ## ---------------------------------------------------------------------
 
 igblast_auxdata <- load_auxdata("mouse")
@@ -378,11 +387,11 @@ igblast_auxdata <- load_auxdata("mouse")
 "IGLJ2P*01" %in% igblast_auxdata[ , "allele_name"]  # FALSE
 "IGLJ3P*01" %in% igblast_auxdata[ , "allele_name"]  # TRUE
 
-## fill_missing_auxdata_with_ref_auxdata() replaces each NA in 'auxdata2'
+## validate_and_complete_auxdata_with_ref() replaces each NA in 'auxdata2'
 ## with the corresponding value in 'igblast_auxdata', if the latter is
 ## available:
 auxdata3 <-
-    fill_missing_auxdata_with_ref_auxdata(auxdata2, igblast_auxdata)
+    validate_and_complete_auxdata_with_ref(auxdata2, igblast_auxdata)
 auxdata3  # IGLJ3P*01 is solved!
 
 ## Note that the function also compares the data in 'auxdata2' with the

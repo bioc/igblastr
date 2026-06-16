@@ -101,7 +101,7 @@ export(
 
     ## compute_auxata.R:
     compute_auxdata,
-    fill_missing_auxdata_with_ref_auxdata,
+    validate_and_complete_auxdata_with_ref,
     solve_cdr3_ends_using_fwr4_aa_comparisons,
     solve_cdr3_ends_using_fwr4_dna_comparisons,
     solve_cdr3_ends_using_fwr4_dna_PWM,
