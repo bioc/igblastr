@@ -346,15 +346,16 @@ df_diff <- function(df1, df2, key, label1, label2)
 ### discordant.
 ### Returns 'df' with possibly some of its missing values replaced with
 ### non-NA values taken from 'refdf'.
-complete_df_with_refdf <- function(df, refdf, key, df_name, refdf_name)
+complete_df_with_refdf <- function(df, refdf, key, what, df_label, refdf_label)
 {
-    diff <- df_diff(df, refdf, key, df_name, refdf_name)
+    stopifnot(isSingleNonWhiteString(what))
+    diff <- df_diff(df, refdf, key, df_label, refdf_label)
     if (length(diff) != 0L) {
-        msg1 <- c("  Disagreements between '", df_name, "' ",
-                  "and '", refdf_name, "':\n", diff)
+        what <- c(df_label, " and ", refdf_label, " ", what)
+        msg1 <- c("  Disagreements between ", what, ":\n", diff)
         message(msg1)
-        msg2 <- c("'", df_name, "' and '", refdf_name, "' contain ",
-                  "discordant data (see above for the details)")
+        msg2 <- c(what, " contain discordant data (see ",
+                  "above for the details)")
         stop(wmsg(msg2))
     }
     keys1 <- df[ , key]

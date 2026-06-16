@@ -33,6 +33,7 @@
     J_names <- names(J_alleles)
     if (is.null(J_names))
         stop(wmsg("'J_alleles' must have names"))
+    J_names <- clean_imgt_fasta_headers(J_names)
     auxdata_allele_names <- .get_auxdata_col(auxdata, "allele_name")
     m <- match(J_names, auxdata_allele_names)
     if (no.NAs) {
@@ -81,8 +82,15 @@
 .extract_cdr3_fwr4_parts_from_J_alleles <-
     function(J_alleles, auxdata, translate=FALSE, igblast_organism=NA)
 {
+    if (!is(J_alleles, "DNAStringSet"))
+        stop(wmsg("'J_alleles' must be DNAStringSet object"))
+    fasta_headers <- names(J_alleles)
+    if (is.null(fasta_headers))
+        stop(wmsg("'J_alleles' must have names"))
+    names(J_alleles) <- clean_imgt_fasta_headers(fasta_headers)
     if (!isTRUEorFALSE(translate))
         stop(wmsg("'translate' must be TRUE or FALSE"))
+
     coding_frame_start <-
             .query_auxdata(auxdata, J_alleles, "coding_frame_start",
                            no.NAs=TRUE)
@@ -107,7 +115,8 @@
         parts[splitidx, ] <- .get_dna_parts(full_seq[splitidx],
                                             cdr3_end[splitidx])
     }
-    ans <- cbind(DataFrame(allele_name=names(J_alleles)),
+    allele_names <- names(J_alleles)
+    ans <- cbind(DataFrame(allele_name=allele_names),
                  parts,
                  DataFrame(full_seq=full_seq))
     if (!identical(igblast_organism, NA)) {
@@ -117,7 +126,7 @@
         igblast_organism <- normalize_igblast_organism(igblast_organism)
         igblast_auxdata <- load_auxdata(igblast_organism)
         ans$also_in_IgBLAST_auxdata <-
-                    names(J_alleles) %in% igblast_auxdata[ , "allele_name"]
+                    allele_names %in% igblast_auxdata[ , "allele_name"]
     }
     extra_cols <- mcols(J_alleles, use.names=FALSE)
     if (length(extra_cols) != 0L)

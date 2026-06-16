@@ -33,6 +33,7 @@ get_intdata_col <- function(intdata, colname)
     V_names <- names(V_alleles)
     if (is.null(V_names))
         stop(wmsg("'V_alleles' must have names"))
+    V_names <- clean_imgt_fasta_headers(V_names)
     intdata_col <- get_intdata_col(intdata, colname)
     setNames(intdata_col[match(V_names, allele_names)], V_names)
 }

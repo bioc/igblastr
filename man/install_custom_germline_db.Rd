@@ -387,7 +387,7 @@ stopifnot(identical(intdataC, load_intdata(db_name0)))
 ##   2. Use these FASTA files to create and install a new germline db.
 ##   3. Install IMGT-202614-2.Mus_musculus.IGH+IGK+IGL and compare it
 ##      with the germline db obtained in 2.
-##   4. Leverage the IgBLAST-provided "auxiliary data" to improve
+##   4. Leverage the IgBLAST-provided "auxiliary data" to complete
 ##      the "auxiliary data" computed by install_IMGT_germline_db().
 
 if (IMGT_is_up()) {
@@ -441,7 +441,7 @@ if (IMGT_is_up()) {
   load_auxdata(db_name)
 
   ## --- 4. Leverage the IgBLAST-provided "auxiliary data" ---
-  ## ---     to improve the "auxiliary data" computed      ---
+  ## ---     to complete the "auxiliary data" computed     ---
   ## ---           by install_IMGT_germline_db()           ---
 
   ## When calling install_IMGT_germline_db(), we can pass some "reference
