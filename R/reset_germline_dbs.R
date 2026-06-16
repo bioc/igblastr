@@ -11,7 +11,8 @@
         return()
 
     if (verbose)
-        message(wmsg("Adding OGRDB auxdata to ", basename(db_path)), " ... ",
+        message(wmsg("Adding the OGRDB-provided auxdata ",
+                     "to ", basename(db_path)), " ... ",
                 appendLF=FALSE)
 
     auxdata_list <- lapply(IG_LOCI,

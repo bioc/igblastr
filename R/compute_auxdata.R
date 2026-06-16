@@ -16,28 +16,6 @@
 .FGXG_motif <- "FG.G"
 .FGXG_motif_dna <- DNAString("TTYGGNNNNGGN")  # reverse-translation of "FGXG"
 
-.normarg_codon_starts <- function(codon_starts, allele_names)
-{
-    if (is.null(codon_starts)) {
-        codon_starts <- setNames(rep.int(NA_integer_, length(allele_names)),
-                                 allele_names)
-        return(codon_starts)
-    }
-    if (!is.numeric(codon_starts))
-        stop(wmsg("'codon_starts' must be NULL or an integer vector"))
-    if (is.null(names(codon_starts)))
-        stop(wmsg("'codon_starts' must carry the names of the J alleles"))
-    if (!identical(names(codon_starts), allele_names))
-        stop(wmsg("the names on 'J_alleles' and 'codon_starts' must ",
-                  "be identical"))
-    if (!is.integer(codon_starts))
-        codon_starts <- setNames(as.integer(codon_starts), names(codon_starts))
-    if (!(all(codon_starts %in% c(1:3, NA_integer_))))
-        stop(wmsg("the non-NA values in 'codon_starts' must ",
-                  "be >= 1 and <= 3"))
-    codon_starts
-}
-
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .find_motif()
@@ -86,6 +64,40 @@
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### compute_auxdata()
 ###
+
+.normarg_codon_starts <- function(codon_starts, allele_names, fasta_headers)
+{
+    if (is.null(codon_starts)) {
+        codon_starts <- setNames(rep.int(NA_integer_, length(allele_names)),
+                                 allele_names)
+        return(codon_starts)
+    }
+    if (!is.numeric(codon_starts))
+        stop(wmsg("'codon_starts' must be NULL or an integer vector"))
+    if (length(codon_starts) != length(allele_names))
+        stop(wmsg("'codon_starts' must have the same length as 'J_alleles'"))
+    codon_starts_names <- names(codon_starts)
+    if (is.null(codon_starts_names))
+        stop(wmsg("'codon_starts' must carry the names of the J alleles"))
+    ## Because of clean_imgt_fasta_headers()'s funky business with the
+    ## IG allele names for Mus spretus, the allele names in 'allele_names'
+    ## are not necessarily the same as in 'fasta_headers[ , "allele_name"]'
+    ## (some allele names in the former can have the _Mus_spretus suffix
+    ## added to them), so we compare 'codon_starts_names' to both.
+    if (!identical(codon_starts_names, allele_names)) {
+        parsed_headers <- parse_imgt_fasta_headers(fasta_headers)
+        if (!identical(codon_starts_names, parsed_headers[ , "allele_name"]))
+            stop(wmsg("'codon_starts' must carry the names of the J alleles, ",
+                      "and be in the same order as 'J_alleles'"))
+        names(codon_starts) <- allele_names
+    }
+    if (!is.integer(codon_starts))
+        codon_starts <- setNames(as.integer(codon_starts), names(codon_starts))
+    if (!(all(codon_starts %in% c(1:3, NA_integer_))))
+        stop(wmsg("the non-NA values in 'codon_starts' must ",
+                  "be >= 1 and <= 3"))
+    codon_starts
+}
 
 ### Not exported!
 J_alleles_with_missing_coding_frame_start <- function(auxdata)
@@ -136,12 +148,11 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 {
     if (!is(J_alleles, "DNAStringSet"))
         stop(wmsg("'J_alleles' must be DNAStringSet object"))
-    allele_names <- names(J_alleles)
-    if (is.null(allele_names))
+    fasta_headers <- names(J_alleles)
+    if (is.null(fasta_headers))
         stop(wmsg("'J_alleles' must have names"))
 
-    names(J_alleles) <- allele_names <- clean_imgt_fasta_headers(allele_names)
-
+    allele_names <- clean_imgt_fasta_headers(fasta_headers)
     allele_loci <- substr(allele_names, 1L, 3L)
     loci_prefix <- extract_loci_prefix(allele_loci)
     if (is.na(loci_prefix))
@@ -150,7 +161,8 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
     if (!all(substr(allele_names, 4L, 4L) == "J"))
         stop(wmsg("the 4th letter in all allele names must be a J"))
 
-    codon_starts <- .normarg_codon_starts(codon_starts, allele_names)
+    codon_starts <- .normarg_codon_starts(codon_starts, allele_names,
+                                          fasta_headers)
 
     if (!isTRUEorFALSE(no.warnings))
         stop(wmsg("'no.warnings' must be TRUE or FALSE"))
@@ -198,6 +210,7 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### find_discordant_auxdata()
 ### fill_missing_auxdata_with_ref()
+### fill_missing_auxdata_with_ref_auxdata()
 ###
 
 ### Not exported!
@@ -212,14 +225,19 @@ find_discordant_auxdata <- function(auxdata, ref_auxdata)
 ### Not exported!
 ### See complete_df_with_refdf() in R/utils.R for what it returns.
 fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
-                                          auxdata_name="auxdata",
-                                          ref_auxdata_name="ref_auxdata")
+                                          auxdata_label="computed",
+                                          ref_auxdata_label="reference")
 {
     check_auxdata_col2class(auxdata)
     check_auxdata_col2class(ref_auxdata)
     complete_df_with_refdf(auxdata, ref_auxdata, "allele_name",
-                           auxdata_name, ref_auxdata_name)
+                           "\"auxiliary data\"",
+                           auxdata_label, ref_auxdata_label)
 }
+
+### User-exposed wrapper to fill_missing_auxdata_with_ref().
+fill_missing_auxdata_with_ref_auxdata <- function(auxdata, ref_auxdata)
+    fill_missing_auxdata_with_ref(auxdata, ref_auxdata)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -503,10 +521,13 @@ fill_missing_auxdata_with_ref <- function(auxdata, ref_auxdata,
     if (!is(J_alleles, "DNAStringSet") || length(J_alleles) != nrow(auxdata))
         stop(wmsg("'J_alleles' must be a DNAStringSet object ",
                   "with one sequence per row in 'auxdata'"))
+    fasta_headers <- names(J_alleles)
+    if (is.null(fasta_headers))
+        stop(wmsg("'J_alleles' must have names"))
+    names(J_alleles) <- clean_imgt_fasta_headers(fasta_headers)
     if (!identical(names(J_alleles), auxdata[ , "allele_name"]))
-        stop(wmsg("'J_alleles' must have names and they must ",
+        stop(wmsg("the allele names on 'J_alleles' must ",
                   "be identical to 'auxdata$allele_name'"))
-
     coding_frame_starts <- auxdata[ , "coding_frame_start"]
     if (anyNA(coding_frame_starts))
         stop(wmsg("'auxdata$coding_frame_start' cannot contain NAs"))

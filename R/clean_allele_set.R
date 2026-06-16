@@ -1,5 +1,5 @@
 ### =========================================================================
-### clean_allele_set() and related
+### clean_allele_set() and family
 ### -------------------------------------------------------------------------
 ###
 ### Nothing in this file is exported.
@@ -232,8 +232,14 @@ check_locus <- function(locus, what)
 ### - carries the names and metadata columns of input object 'allele_set';
 ### - also carries the annotations obtained with compute_V_gene_delineations()
 ###   in additional metadata columns.
-.annotate_V_alleles <- function(allele_set)
+.annotate_V_alleles <- function(allele_set, verbose=FALSE)
 {
+    if (verbose) {
+        msg <- c("Computing the intdata (a.k.a. igblastr-generated ",
+                 "intdata) for the V alleles in the db")
+        message("  o ", wmsg(msg, margin=4L), " ... ", appendLF=FALSE)
+    }
+
     stopifnot(is(allele_set, "DNAStringSet"))
     allele_names <- names(allele_set)
     stopifnot(!is.null(allele_names))
@@ -252,6 +258,10 @@ check_locus <- function(locus, what)
     intdata$chain_type <- make_chain_type("V", locus)
 
     mcols(allele_set) <- cbind(allele_set_mcols, intdata)
+
+    if (verbose)
+        message("ok.\n")
+
     allele_set
 }
 
@@ -320,11 +330,113 @@ check_locus <- function(locus, what)
     setNames(as.integer(codon_starts), names(codon_starts))
 }
 
+.auxdata_completeness <- function(auxdata, verbose=FALSE)
+{
+    unsolved_idx <- which(is.na(auxdata[ , "cdr3_end"]))
+    complete <- length(unsolved_idx) == 0L
+    if (verbose) {
+        if (complete) {
+            in1string <- "none!"
+        } else {
+            unsolved_J_alleles <- auxdata[unsolved_idx, "allele_name"]
+            in1string <- paste0(unsolved_J_alleles, collapse=", ")
+        }
+        msg <- c("Unsolved J allele(s): ", in1string, ".")
+        message("         --> ", wmsg(msg, margin=13L))
+    }
+    complete
+}
+
+### A verbose wrapper to compute_auxdata().
+.compute_auxdata_STEP1 <- function(J_alleles, codon_starts, verbose=FALSE)
+{
+    if (verbose) {
+        msg <- "Use compute_auxdata() to produce initial auxdata"
+        message("    - STEP1: ", wmsg(msg, margin=13L), " ... ", appendLF=FALSE)
+    }
+    auxdata <- compute_auxdata(J_alleles, codon_starts=codon_starts,
+                                          no.warnings=TRUE)
+    if (verbose)
+        message("ok.")
+    auxdata
+}
+
+### A verbose wrapper to fill_missing_auxdata_with_ref().
+.compute_auxdata_STEP2 <- function(auxdata, ref_auxdata, verbose=FALSE)
+{
+    if (verbose) {
+        ## We say that we're using fill_missing_auxdata_with_ref_auxdata()
+        ## but we actually use fill_missing_auxdata_with_ref(). The former
+        ## is just the user-exposed version of the latter.
+        msg <- c("Use fill_missing_auxdata_with_ref_auxdata() to check ",
+                 "and try to complete the initial auxdata")
+        message("    - STEP2: ", wmsg(msg, margin=13L), " ... ", appendLF=FALSE)
+    }
+    if (is.null(ref_auxdata)) {
+        msg <- "SKIPPED!"
+    } else {
+        auxdata <- fill_missing_auxdata_with_ref(auxdata, ref_auxdata,
+                                                 "igblastr-generated",
+                                                 "IgBLAST-provided")
+        msg <- "ok."
+    }
+    if (verbose)
+        message(msg)
+    auxdata
+}
+
+### A verbose wrapper to solve_cdr3_ends_using_fwr4_aa_comparisons().
+.compute_auxdata_STEP3 <- function(auxdata, J_alleles, verbose=FALSE)
+{
+    if (verbose) {
+        msg <- c("Use solve_cdr3_ends_using_fwr4_aa_comparisons() to try ",
+                 "to complete the auxdata obtained at previous step")
+        message("    - STEP3: ", wmsg(msg, margin=13L), " ... ", appendLF=FALSE)
+    }
+    if (anyNA(auxdata[ , "cdr3_end"])) {
+        auxdata <-
+            solve_cdr3_ends_using_fwr4_aa_comparisons(auxdata, J_alleles)
+        msg <- "ok."
+    } else {
+        msg <- "NOT NEEDED!"
+    }
+    if (verbose)
+        message(msg)
+    auxdata
+}
+
+### A verbose wrapper to solve_cdr3_ends_using_fwr4_dna_comparisons().
+.compute_auxdata_STEP4 <- function(auxdata, J_alleles, verbose=FALSE)
+{
+    if (verbose) {
+        msg <- c("Use solve_cdr3_ends_using_fwr4_dna_comparisons() to try ",
+                 "to complete the auxdata obtained at previous step")
+        message("    - STEP4: ", wmsg(msg, margin=13L), " ... ", appendLF=FALSE)
+    }
+    if (anyNA(auxdata[ , "cdr3_end"])) {
+        auxdata <-
+            solve_cdr3_ends_using_fwr4_dna_comparisons(auxdata, J_alleles)
+        msg <- "ok."
+    } else {
+        msg <- "NOT NEEDED!"
+    }
+    if (verbose)
+        message(msg)
+    auxdata
+}
+
 ### 'ref_auxdata' (if provided) is used to "complete" the computed
 ### auxiliary data. Note that the completion process will also verify
 ### that the computed auxiliary data is concordant with 'ref_auxdata'.
-.annotate_J_alleles <- function(allele_set, codon_starts=NULL, ref_auxdata=NULL)
+.annotate_J_alleles <- function(allele_set, codon_starts=NULL, ref_auxdata=NULL,
+                                verbose=FALSE)
 {
+    if (verbose) {
+        msg <- c("Computing the auxdata (a.k.a. igblastr-generated ",
+                 "auxdata) for the J alleles in the db:")
+        message("  o ", wmsg(msg, margin=4L))
+    }
+
     stopifnot(is(allele_set, "DNAStringSet"))
     allele_names <- names(allele_set)
     stopifnot(!is.null(allele_names))
@@ -335,32 +447,31 @@ check_locus <- function(locus, what)
                   "when 'auto.auxdata' is TRUE"))
     check_locus(locus, "the \"locus\" metadata column on 'allele_set'")
 
-    ## STEP 1: Compute the auxiliary data by searching motifs WGXG
-    ## and FGXG.
-    auxdata <- compute_auxdata(allele_set, codon_starts=codon_starts,
-                                           no.warnings=TRUE)
+    auxdata <- .compute_auxdata_STEP1(allele_set, codon_starts, verbose=verbose)
 
     ## Sanity checks.
     stopifnot(identical(auxdata[ , "allele_name"], allele_names))
     expected_chain_type <- make_chain_type("J", locus)
     stopifnot(identical(auxdata[ , "chain_type"], expected_chain_type))
 
-    ## STEP 2: Replace missing values (if any) in 'auxdata' with corresponding
-    ## values in 'ref_auxdata'. Also raise an error that displays the
-    ## differences if 'auxdata' and 'ref_auxdata' are discordant.
-    if (!is.null(ref_auxdata))
-        auxdata <- fill_missing_auxdata_with_ref(auxdata, ref_auxdata,
-                                                 "computed auxdata",
-                                                 "IgBLAST auxdata")
+    auxdata <- .compute_auxdata_STEP2(auxdata, ref_auxdata, verbose=verbose)
+    complete <- .auxdata_completeness(auxdata, verbose=verbose)
 
-    ## STEP 3: Try to get rid of the remaining missing "cdr3_end" values
-    ## in 'auxdata' by comparing the unsolved sequences in 'allele_set' (i.e.
-    ## the sequences with a missing "cdr3_end") with the set of known FWR4
-    ## sequences.
-    auxdata <- solve_cdr3_ends_using_fwr4_aa_comparisons(auxdata, allele_set)
-    auxdata <- solve_cdr3_ends_using_fwr4_dna_comparisons(auxdata, allele_set)
+    if (!complete) {
+        auxdata <- .compute_auxdata_STEP3(auxdata, allele_set, verbose=verbose)
+        complete <- .auxdata_completeness(auxdata, verbose=verbose)
+    }
+
+    if (!complete) {
+        auxdata <- .compute_auxdata_STEP4(auxdata, allele_set, verbose=verbose)
+        complete <- .auxdata_completeness(auxdata, verbose=verbose)
+    }
 
     mcols(allele_set) <- cbind(allele_set_mcols, auxdata)
+
+    if (verbose)
+        message("")
+
     allele_set
 }
 
@@ -466,7 +577,7 @@ clean_V_allele_set <- function(allele_set,
     if (gapped) {
         if (auto.intdata) {
             ## (Bv1) Annotate the V alleles.
-            allele_set <- .annotate_V_alleles(allele_set)
+            allele_set <- .annotate_V_alleles(allele_set, verbose=verbose)
         } else {
             warn_if_allele_sequences_have_no_gaps(ngaps)
         }
@@ -514,7 +625,8 @@ clean_J_allele_set <- function(allele_set, imgt.fasta.headers=FALSE,
         ## (Bj) Annotate the J alleles.
         allele_set <- .annotate_J_alleles(allele_set,
                                           codon_starts=codon_starts,
-                                          ref_auxdata=ref_auxdata)
+                                          ref_auxdata=ref_auxdata,
+                                          verbose=verbose)
         .stop_if_repeated_J_alleles_have_discordant_annotations(allele_set)
     }
 

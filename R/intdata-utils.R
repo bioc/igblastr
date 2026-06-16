@@ -129,15 +129,18 @@ show_intdata_disagreements <- function(db_name)
     check_germline_db_name(db_name)
     igblast_organism <- infer_igblast_organism_from_db_name(db_name)
     if (is.na(igblast_organism))
-        stop(wmsg("the specified germline db not seem to be for ",
-                  "an organism that is supported by IgBLAST"))
-    computed_intdata <- load_intdata(db_name)
+        stop(wmsg("The specified germline db does not seem to be ",
+                  "for an IgBLAST organism. Note that you can use ",
+                  "list_igblast_organisms() to get the list of ",
+                  "IgBLAST organisms. See '?list_igblast_organisms' ",
+                  "for more information."))
+    db_intdata <- load_intdata(db_name)
     igblast_intdata <- load_intdata(igblast_organism)
-    diff <- df_diff(computed_intdata, igblast_intdata, "allele_name",
-                    "computed", "IgBLAST")
-    what <- c("the computed \"internal data\" included in this germline ",
-              "db and the \"internal data\" for ", igblast_organism, " ",
-              "provided by IgBLAST")
+    diff <- df_diff(db_intdata, igblast_intdata, "allele_name",
+                    "igblastr-generated", "IgBLAST-provided")
+    what <- c("the igblastr-generated \"internal data\" included in this ",
+              "germline db and the \"internal data\" provided by IgBLAST ",
+              "for ", igblast_organism)
     if (length(diff) == 0L) {
         msg <- c("No disagreements between ", what, ".")
         cat(wmsg2(msg, margin=0L), "\n", sep="")

@@ -131,14 +131,14 @@
     igblast_organism <- infer_igblast_organism_from_db_name(db_name)
     if (is.na(igblast_organism))
         return()
-    computed_intdata <- load_intdata(db_name)
+    db_intdata <- load_intdata(db_name)
     igblast_intdata <- load_intdata(igblast_organism)
-    disc_rowpairs <- find_discordant_intdata(computed_intdata, igblast_intdata)
+    disc_rowpairs <- find_discordant_intdata(db_intdata, igblast_intdata)
     if (nrow(disc_rowpairs) == 0L)
         return()
-    msg1 <- c("The computed \"internal data\" that we included in the ",
-              "germline db has some disagreements with the \"internal data\" ",
-              "for ", igblast_organism, " provided by IgBLAST.")
+    msg1 <- c("The igblastr-generated \"internal data\" included in the ",
+              "germline db has disagreements with the \"internal data\" ",
+              "provided by IgBLAST for ", igblast_organism, ".")
     msg2 <- c("To display the disagreements, run:")
     msg3 <- c("  show_intdata_disagreements(\"", db_name, "\")")
     warning(wmsg(msg1), "\n  ", wmsg(msg2), "\n  ", msg3)

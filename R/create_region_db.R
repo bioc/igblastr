@@ -1,5 +1,5 @@
 ### =========================================================================
-### create_region_db() and related
+### create_region_db() and family
 ### -------------------------------------------------------------------------
 ###
 ### Nothing in this file is exported.
@@ -163,7 +163,7 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .write_region_db()
+### .write_db_fasta_files()
 ###
 
 ### Write the clean allele set to the final FASTA file.
@@ -171,10 +171,14 @@
                                   verbose=FALSE)
 {
     final_fasta <- .get_db_final_fasta_path(destdir, region_type)
+    if (verbose) {
+        msg <- c("Writing final FASTA file (", basename(final_fasta), ") ",
+                 "to the db")
+        message("  o ", wmsg(msg, margin=4L), " ... ", appendLF=FALSE)
+    }
     writeXStringSet(cleaned_allele_set, final_fasta)
     if (verbose)
-        message("... done. (Final number of ", region_type, " alleles ",
-                "in db = ", length(cleaned_allele_set), ")\n")
+        message("ok.\n")
 }
 
 ### Returns a character vector containing the allele names in the
@@ -282,7 +286,7 @@
               all(allele_names[was_excluded] %in% excluded_alleles))
 }
 
-.write_region_db <-
+.write_db_fasta_files <-
     function(cleaned_allele_set, destdir, region_type,
              fasta_files, DORsummary, excluded_alleles=character(0),
              verbose=FALSE)
@@ -297,6 +301,9 @@
                           verbose=verbose)
     .make_db_original_fasta_dir(fasta_files, destdir, region_type,
                                 DORsummary, excluded_alleles=excluded_alleles)
+    if (verbose)
+        message("... done. (Final number of ", region_type, " alleles ",
+                "in db = ", length(cleaned_allele_set), ")\n")
 }
 
 
@@ -345,15 +352,15 @@ create_region_db <- function(destdir, fasta_files,
         clean_allele_set(allele_set,
                          disambiguate.allele.names=disambiguate.allele.names,
                          verbose=verbose)
-
-    ## Write the db.
     DORsummary <-
         clean_allele_set(allele_set,
                          disambiguate.allele.names=disambiguate.allele.names,
                          summary.only=TRUE)
-    .write_region_db(cleaned_allele_set, destdir, region_type,
-                     fasta_files, DORsummary, excluded_alleles=excluded_alleles,
-                     verbose=verbose)
+
+    ## Write the db.
+    .write_db_fasta_files(cleaned_allele_set, destdir, region_type,
+                          fasta_files, DORsummary,
+                          excluded_alleles=excluded_alleles, verbose=verbose)
 }
 
 
@@ -361,8 +368,12 @@ create_region_db <- function(destdir, fasta_files,
 ### create_V_region_db()
 ###
 
-.add_intdata_to_db <- function(cleaned_allele_set, destdir)
+.add_auto_intdata_to_db <- function(cleaned_allele_set, destdir, verbose=FALSE)
 {
+    if (verbose) {
+        msg <- "Adding the igblastr-generated intdata to the db"
+        message("  o ", wmsg(msg, margin=4L), " ... ", appendLF=FALSE)
+    }
     stopifnot(is(cleaned_allele_set, "DNAStringSet"))
     allele_names <- names(cleaned_allele_set)
     stopifnot(!is.null(allele_names))
@@ -373,6 +384,8 @@ create_region_db <- function(destdir, fasta_files,
     )
     ndm_data <- cleaned_allele_set_mcols[ , names(NDM_DATA_COL2CLASS)]
     write_ndm_data_to_db(as.data.frame(ndm_data), destdir)
+    if (verbose)
+        message("ok.\n")
 }
 
 ### A specialized version of create_region_db() for V alleles.
@@ -405,25 +418,17 @@ create_V_region_db <- function(destdir, fasta_files,
                            gapped=gapped, auto.intdata=auto.intdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            verbose=verbose)
-
-    ## Write the db.
     DORsummary <-
         clean_V_allele_set(allele_set,
                            gapped=gapped, auto.intdata=auto.intdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            summary.only=TRUE)
-    .write_region_db(cleaned_allele_set, destdir, "V",
-                     fasta_files, DORsummary,
-                     verbose=verbose)
-    if (auto.intdata) {
-        if (verbose)
-            message(wmsg("Adding the intdata to the db"), " ... ",
-                    appendLF=FALSE)
-        .add_intdata_to_db(cleaned_allele_set, destdir)
-        if (verbose)
-            message("ok.\n")
-    }
-    cleaned_allele_set
+
+    ## Write the db.
+    if (auto.intdata)
+        .add_auto_intdata_to_db(cleaned_allele_set, destdir, verbose=verbose)
+    .write_db_fasta_files(cleaned_allele_set, destdir, "V",
+                          fasta_files, DORsummary, verbose=verbose)
 }
 
 
@@ -431,11 +436,9 @@ create_V_region_db <- function(destdir, fasta_files,
 ### create_J_region_db()
 ###
 
-### Adds the auxdata to the db ONLY if its "coding_frame_start" column
-### contains no NAs.
-### Returns TRUE if that's actually the case (and therefore the auxdata
-### was added), and FALSE otherwise.
-.add_computed_auxdata_to_db <- function(auxdata, destdir, verbose=FALSE)
+### Adds the igblastr-generated auxdata to the db ONLY if
+### its "coding_frame_start" column contains no NAs.
+.add_auto_auxdata_to_db <- function(auxdata, destdir, verbose=FALSE)
 {
     bad_alleles <- J_alleles_with_missing_coding_frame_start(auxdata)
     if (length(bad_alleles) != 0L) {
@@ -444,14 +447,16 @@ create_V_region_db <- function(destdir, fasta_files,
             message(wmsg2("--> compute_auxdata() could not determine ",
                           "the \"coding frame start\" for J allele(s): ",
                           in1string, margin=4L))
-            message(wmsg("--> NOT adding the auxdata to the db."), "\n")
+            message(wmsg("--> NOT adding the igblastr-generated auxdata ",
+                         "to the db."), "\n")
         }
-        return(FALSE)
+        return()
     }
 
-    if (verbose)
-        message(wmsg("Adding the computed auxdata to the db"), " ... ",
-                appendLF=FALSE)
+    if (verbose) {
+        msg <- "Adding the igblastr-generated auxdata to the db"
+        message("  o ", wmsg(msg, margin=4L), " ... ", appendLF=FALSE)
+    }
 
     auxdata <- auxdata[ , names(AUXDATA_COL2CLASS)]
 
@@ -463,7 +468,6 @@ create_V_region_db <- function(destdir, fasta_files,
 
     if (verbose)
         message("ok.\n")
-    TRUE
 }
 
 ### A specialized version of create_region_db() for J alleles.
@@ -496,23 +500,22 @@ create_J_region_db <- function(destdir, fasta_files, imgt.fasta.headers=FALSE,
                            auto.auxdata=auto.auxdata, ref_auxdata=ref_auxdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            verbose=verbose)
-
-    ## Write the db.
     DORsummary <-
         clean_J_allele_set(allele_set, imgt.fasta.headers=imgt.fasta.headers,
                            auto.auxdata=auto.auxdata, ref_auxdata=ref_auxdata,
                            disambiguate.allele.names=disambiguate.allele.names,
                            summary.only=TRUE)
-    .write_region_db(cleaned_allele_set, destdir, "J",
-                     fasta_files, DORsummary, excluded_alleles=excluded_alleles,
-                     verbose=verbose)
+
+    ## Write the db.
     if (auto.auxdata) {
         allele_names <- names(cleaned_allele_set)
         auxdata <- mcols(cleaned_allele_set, use.names=FALSE)
         stopifnot(identical(allele_names, auxdata[ , "allele_name"]))
         auxdata <- as.data.frame(auxdata)
-        .add_computed_auxdata_to_db(auxdata, destdir, verbose=verbose)
+        .add_auto_auxdata_to_db(auxdata, destdir, verbose=verbose)
     }
-    cleaned_allele_set
+    .write_db_fasta_files(cleaned_allele_set, destdir, "J",
+                          fasta_files, DORsummary,
+                          excluded_alleles=excluded_alleles, verbose=verbose)
 }
 
