@@ -7,8 +7,8 @@
 \title{List cached C-region dbs}
 
 \description{
-  List the \emph{cached C-region dbs}, that is, the C-region databases
-  currently installed in \pkg{igblastr}'s persistent cache.
+  List the \emph{cached C-region dbs}, that is, the IgBLAST-compatible
+  C-region databases currently installed in \pkg{igblastr}'s persistent cache.
 }
 
 \usage{
