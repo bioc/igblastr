@@ -5,11 +5,12 @@
 \title{Install a germline db from user-supplied gene allele sequences}
 
 \description{
-  The \code{install_custom_germline_db()} function creates a germline
-  database from a set of user-supplied FASTA files containing germline
-  V/D/J gene allele sequences (nucleotides), and installs it in
-  \pkg{igblastr}'s persistent cache. The new germline database can
-  then be used later with \code{\link{igblastn}()}.
+  The \code{install_custom_germline_db()} function creates and installs
+  an IgBLAST-compatible germline database from a set of user-supplied FASTA
+  files containing germline V/D/J gene allele sequences (nucleotides).
+
+  The new database gets installed in \pkg{igblastr}'s persistent cache and
+  can be used later with \code{\link{igblastn}()}.
 }
 
 \usage{

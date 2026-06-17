@@ -7,8 +7,8 @@
 \title{List cached germline dbs}
 
 \description{
-  List the \emph{cached germline dbs}, that is, the germline databases
-  currently installed in \pkg{igblastr}'s persistent cache.
+  List the \emph{cached germline dbs}, that is, the IgBLAST-compatible
+  germline databases currently installed in \pkg{igblastr}'s persistent cache.
 }
 
 \usage{

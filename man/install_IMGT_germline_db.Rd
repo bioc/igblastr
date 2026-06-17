@@ -7,9 +7,12 @@
 
 \description{
   The \code{install_IMGT_germline_db()} function creates and installs
-  a blast database for germline V, D, and J gene sequences obtained
-  from the IMGT/V-QUEST download site:
+  an IgBLAST-compatible germline database from germline V, D, and J gene
+  sequences available on IMGT/V-QUEST download site:
   \url{https://www.imgt.org/download/V-QUEST/}
+
+  The new database gets installed in \pkg{igblastr}'s persistent cache and
+  can be used later with \code{\link{igblastn}()}.
 
   CONDITIONS OF USE AND LICENSE: The IMGT data is provided to the academic
   users and NPO's (Not for Profit Organization(s)) under the CC BY-NC-ND 4.0
