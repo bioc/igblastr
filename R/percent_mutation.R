@@ -36,7 +36,41 @@
 ### Note that this deletion messes up the coding frame, with the consequence
 ### that the downstream codons on both nucledotide sequences translate to
 ### completely different amino acid sequences.
+
+### Note that .compute_hamming_dist() is 100x faster or more than
+### .compute_hamming_dist_OLD().
 .compute_hamming_dist <- function(sequence_aln, germline_aln, for.aa=FALSE)
+{
+    stopifnot(is.character(sequence_aln), !anyNA(sequence_aln),
+              is.character(germline_aln), !anyNA(germline_aln),
+              length(sequence_aln) == length(germline_aln),
+              isTRUEorFALSE(for.aa))
+    nc1 <- nchar(sequence_aln)
+    nc2 <- nchar(germline_aln)
+    if (for.aa) {
+        ## When 'for.aa' is TRUE, 'nc1' and 'nc2' are not guaranteed to
+        ## be identical. More precisely, the lengths of some sequences
+        ## in 'sequence_aln' and their corresponding sequences in 'germline_aln'
+        ## can differ by 1. See comment above why.
+        ## To make them the same lengths, we truncate the longest to the
+        ## lengths of the shortest.
+        nc <- pmin(nc1, nc2)
+        sequence_aln <- substr(sequence_aln, 1L, nc)
+        germline_aln <- substr(germline_aln, 1L, nc)
+    } else {
+        stopifnot(identical(nc1, nc2))
+    }
+    vapply(seq_along(sequence_aln),
+        function(i) {
+            r1 <- charToRaw(sequence_aln[[i]])
+            r2 <- charToRaw(germline_aln[[i]])
+            sum(r1 != r2)
+        },
+        integer(1))
+}
+
+### No longer used. Superseded by much faster .compute_hamming_dist() above.
+.compute_hamming_dist_OLD <- function(sequence_aln, germline_aln, for.aa=FALSE)
 {
     stopifnot(is.character(sequence_aln), !anyNA(sequence_aln),
               is.character(germline_aln), !anyNA(germline_aln),
@@ -91,7 +125,9 @@
     d[notna_idx] <- .compute_hamming_dist(sequence_aln[notna_idx],
                                           germline_aln[notna_idx],
                                           for.aa=for.aa)
-    100 * d / nchar(sequence_aln)  # guaranteed to be = nchar(germline_aln)
+    ## See .compute_hamming_dist() for why we do pmin() here.
+    nc <- pmin(nchar(sequence_aln), nchar(germline_aln))
+    100 * d / nc
 }
 
 ### Computes percent mutation in V, D, J segments at the nucleotide or
