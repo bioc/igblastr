@@ -56,9 +56,9 @@ V_allele_has_stop_codon(V_alleles, intdata)
 
 \seealso{
   \itemize{
-    \item \link{intdata_utils} to access IgBLAST \emph{internal data}.
+    \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
 
-    \item \link{auxdata_utils} to access IgBLAST \emph{auxiliary data}.
+    \item \code{\link{load_auxdata}} to access IgBLAST \emph{auxiliary data}.
 
     \item \link{J_alleles_inspect} for basic inspection of J allele sequences.
 

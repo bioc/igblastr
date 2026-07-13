@@ -55,7 +55,7 @@ test_that("compute_auxdata()", {
 
     ## All the J alleles in _OGRDB.human.IGH+IGK+IGL.202605 are annotated
     ## in human_gl.aux so we expect no NAs in 'm' below.
-    orig_auxdata <- load_and_fix_human_auxdata()
+    orig_auxdata <- igblastr:::load_and_fix_igblast_auxdata("human")
     m <- match(names(J_alleles), orig_auxdata[ , "allele_name"])
     expect_false(anyNA(m))
     orig_auxdata <- S4Vectors:::extract_data_frame_rows(orig_auxdata, m)

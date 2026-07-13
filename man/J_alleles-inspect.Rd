@@ -104,9 +104,9 @@ translate_fwr4(J_alleles, auxdata, max.codons=NA)
 
 \seealso{
   \itemize{
-    \item \link{auxdata_utils} to access IgBLAST \emph{auxiliary data}.
+    \item \code{\link{load_auxdata}} to access IgBLAST \emph{auxiliary data}.
 
-    \item \link{intdata_utils} to access IgBLAST \emph{internal data}.
+    \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
 
     \item \link{V_alleles_inspect} for basic inspection of V allele sequences.
 

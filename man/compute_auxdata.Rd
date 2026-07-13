@@ -380,12 +380,12 @@ print_J_alleles(J_alleles, auxdata2, translate=TRUE)
 ## 3. validate_and_complete_auxdata_with_ref()
 ## ---------------------------------------------------------------------
 
-igblast_auxdata <- load_auxdata("mouse")
+igblast_auxdata <- load_auxdata("mouse", which="original")
 
-## Note that IGLJ2P*01 is not annotated in 'igblast_auxdata'
+## Note that IGLJ2P*01 is not annotated in 'igblast_auxdata',
 ## but 'IGLJ3P*01' is:
-"IGLJ2P*01" %in% igblast_auxdata[ , "allele_name"]  # FALSE
-"IGLJ3P*01" %in% igblast_auxdata[ , "allele_name"]  # TRUE
+"IGLJ2P*01" \%in\% igblast_auxdata[ , "allele_name"]  # FALSE
+"IGLJ3P*01" \%in\% igblast_auxdata[ , "allele_name"]  # TRUE
 
 ## validate_and_complete_auxdata_with_ref() replaces each NA in 'auxdata2'
 ## with the corresponding value in 'igblast_auxdata', if the latter is

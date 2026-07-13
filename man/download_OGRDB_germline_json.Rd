@@ -128,9 +128,9 @@ extract_auxdata_from_ogrdb_json(json_path, extra_fields=NULL)
     \item \code{\link{compute_auxdata}} to annotate a set
           of germline J gene allele sequences.
 
-    \item \link{intdata_utils} to access IgBLAST \emph{internal data}.
+    \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
 
-    \item \link{auxdata_utils} to access IgBLAST \emph{auxiliary data}.
+    \item \code{\link{load_auxdata}} to access IgBLAST \emph{auxiliary data}.
 
     \item The OGRDB website: \url{https://ogrdb.airr-community.org/}.
   }

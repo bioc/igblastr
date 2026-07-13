@@ -1,5 +1,5 @@
 ### =========================================================================
-### Access IgBLAST auxiliary data
+### load_auxdata() and related
 ### -------------------------------------------------------------------------
 ###
 
@@ -102,23 +102,5 @@ load_igblast_auxiliary_data <- function(...)
 {
     .Deprecated("load_auxdata")
     load_auxdata(...)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### compute_germline_db_auxdata()
-###
-
-.do_compute_germline_db_auxdata <- function(db_path, ...)
-{
-    J_alleles <- readDNAStringSet(get_db_fasta_file(db_path, "J"))
-    compute_auxdata(J_alleles, ...)
-}
-
-compute_germline_db_auxdata <- function(db_name, ...)
-{
-    check_germline_db_name(db_name)
-    db_path <- get_germline_db_path(db_name)
-    .do_compute_germline_db_auxdata(db_path, ...)
 }
 

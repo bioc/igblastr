@@ -68,7 +68,7 @@ install_IMGT_c_region_db(organism, loci,
     See documentation of the \code{custom_internal_data} argument in
     \code{?\link{igblastn}} for more information.
 
-    Also see \code{?\link{intdata_utils}} for more information about IgBLAST
+    Also see \code{?\link{load_intdata}} for more information about IgBLAST
     \emph{internal data}.
   }
   \item{auto.auxdata}{
@@ -215,26 +215,13 @@ if (IMGT_is_up()) {
   ## a built-in C-region database.
 
   ## -------------------------------------------------------------------
-  ## WARNING about disagreements between the igblastr-generated
-  ## "internal data" that install_IMGT_germline_db() includes in a
-  ## germline db and the "internal data" provided by IgBLAST for the
-  ## corresponding organism
+  ## Disagreements between igblastr-generated and IgBLAST-provided
+  ## "internal data"
   ## -------------------------------------------------------------------
-
-  ## 1. The igblastr-generated "internal data" for the rat and rhesus
-  ##    monkey IG V alleles from IMGT has disagreements with the
-  ##    "internal data" provided by IgBLAST for these organisms!
-  suppressMessages(install_IMGT_germline_db("202614-2", "Rattus norvegicus",
-                                            overwrite=TRUE))
-  suppressMessages(install_IMGT_germline_db("202614-2", "Macaca mulatta",
-                                            overwrite=TRUE))
-
-  ## 2. The igblastr-generated "internal data" for the human and mouse
-  ##    TR V alleles from IMGT has disagreements with the "internal data"
-  ##    provided by IgBLAST for these organisms!
+  ## install_IMGT_germline_db() emits a warning if the igblastr-generated
+  ## "internal data" has disagreements with the "internal data" provided
+  ## by IgBLAST. For example:
   suppressMessages(install_IMGT_germline_db("202614-2", "Homo sapiens",
-                                            tcr.db=TRUE, overwrite=TRUE))
-  suppressMessages(install_IMGT_germline_db("202614-2", "Mus musculus",
                                             tcr.db=TRUE, overwrite=TRUE))
 }
 }

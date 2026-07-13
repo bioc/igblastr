@@ -307,8 +307,9 @@
         stop(wmsg("Don't know how to infer 'organism' from ",
                   "germline db name \"", db_name, "\". Please set ",
                   "the 'organism' argument to the name of the IgBLAST ",
-                  "internal data to use. ",
-                  "Use list_igblast_organisms() to list all valid names."))
+                  "internal data to use (you can list all valid names with ",
+                  "list_igblast_organisms()), or supply your own internal ",
+                  "data thru the 'custom_internal_data' argument."))
     organism
 }
 

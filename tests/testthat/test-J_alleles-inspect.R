@@ -15,7 +15,7 @@ test_that("translate_J_alleles()", {
 
     ## --- for human J alleles (from OGRDB and IMGT) ---
 
-    auxdata <- load_and_fix_human_auxdata()
+    auxdata <- igblastr:::load_and_fix_igblast_auxdata("human")
 
     db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
     J_alleles <- load_germline_sequences(db_name, region_types="J")
@@ -61,7 +61,7 @@ test_that("J_allele_has_stop_codon()", {
 
     ## --- for human J alleles (from OGRDB and IMGT) ---
 
-    auxdata <- load_and_fix_human_auxdata()
+    auxdata <- igblastr:::load_and_fix_igblast_auxdata("human")
 
     db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
     J_alleles <- load_germline_sequences(db_name, region_types="J")
@@ -92,7 +92,7 @@ test_that("translate_fwr4()", {
 
     ## --- for human J alleles (from OGRDB and IMGT) ---
 
-    auxdata <- load_and_fix_human_auxdata()
+    auxdata <- igblastr:::load_and_fix_igblast_auxdata("human")
 
     db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
     J_alleles <- load_germline_sequences(db_name, region_types="J")

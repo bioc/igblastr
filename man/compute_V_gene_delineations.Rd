@@ -1,5 +1,6 @@
 \name{compute_V_gene_delineations}
 
+\alias{IMGT_FWRCDR_ENDS}
 \alias{compute_V_gene_delineations}
 \alias{compute_imgt_intdata}
 
@@ -14,13 +15,20 @@
 }
 
 \usage{
-compute_V_gene_delineations(gapped_V_alleles, as.IRangesList=FALSE)
+compute_V_gene_delineations(gapped_V_alleles,
+                            fwrcdr_ends=IMGT_FWRCDR_ENDS,
+                            as.IRangesList=FALSE)
 }
 
 \arguments{
   \item{gapped_V_alleles}{
     A \link[Biostrings]{DNAStringSet} object containing germline V
     gene allele \emph{gapped} sequences.
+  }
+  \item{fwrcdr_ends}{
+    A named integer vector containing the FWR/CDR fixed end positions w.r.t.
+    the translated V gapped sequences.
+    Set to \code{IMGT_FWRCDR_ENDS} by default.
   }
   \item{as.IRangesList}{
     Experts only! Set to \code{TRUE} to return the delineations in an
@@ -36,11 +44,11 @@ compute_V_gene_delineations(gapped_V_alleles, as.IRangesList=FALSE)
 
 \details{
   See
-  \url{https://www.imgt.org/IMGTScientificChart/Numbering/IMGTIGVLsuperfamily.html}
+  \url{https://www.imgt.org/IMGTScientificChart/Nomenclature/IMGT-FRCDRdefinition.html}
   and
-  \url{https://www.imgt.org/IMGTScientificChart/Numbering/IMGT-Kabat_part1.html}
-  for how gaps are used in the context of "IMGT unique numbering for
-  V-DOMAIN and V-LIKE-DOMAIN".
+  \url{https://www.imgt.org/IMGTScientificChart/Numbering/IMGTIGVLsuperfamily.html}
+  for the role of gaps in the germline V gene allele sequences provided by
+  IMGT.
 
   Note that the annotation returned by \code{compute_V_gene_delineations()}
   can be used by IgBLAST as a substitute to the IgBLAST-provided
@@ -77,9 +85,9 @@ compute_V_gene_delineations(gapped_V_alleles, as.IRangesList=FALSE)
 
 \seealso{
   \itemize{
-    \item \url{https://www.imgt.org/IMGTScientificChart/Numbering/IMGTIGVLsuperfamily.html}
-          for how the "IMGT unique numbering for V-DOMAIN and V-LIKE-DOMAIN"
-          works.
+    \item \url{https://www.imgt.org/IMGTScientificChart/Nomenclature/IMGT-FRCDRdefinition.html}
+          for the role of gaps in the germline V gene allele sequences
+          provided by IMGT.
 
     \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
 

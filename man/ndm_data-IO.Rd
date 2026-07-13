@@ -84,7 +84,7 @@ validate_ndm_rows(ndm_data, allow.repeated.rows=FALSE)
           V gene delineations for the V alleles annotated in an
           AIRR-C JSON file.
 
-    \item \link{intdata_utils} to access IgBLAST \emph{internal data}.
+    \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
 
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This

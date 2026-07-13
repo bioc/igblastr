@@ -107,23 +107,25 @@ rm_germline_db(db_name)
     \code{\link{install_custom_germline_db}}.
   }
   \subsection{AIRR-community/OGRDB built-in cached dbs}{
-    Note that the built-in germline dbs starting with \code{_AIRR}
+    Note that the built-in germline dbs starting with \code{_OGRDB}
     are made of the AIRR-community/OGRDB germline sets available at
     \url{https://ogrdb.airr-community.org/germline_sets/Homo\%20sapiens}
     for human, at
     \url{https://ogrdb.airr-community.org/germline_sets/Mus\%20musculus}
-    for mouse, and at
+    for mouse, at
+    \url{https://ogrdb.airr-community.org/germline_sets/Oncorhynchus\%20mykiss}
+    for rainbow trout, and at
     \url{https://ogrdb.airr-community.org/germline_sets/Macaca\%20mulatta}
     for rhesus monkey.
 
-    Each AIRR db is populated with the latest germline datasets that were
+    Each OGRDB db is populated with the latest germline datasets that were
     available at AIRR-community/OGRDB at the time indicated by the date (in
     YYYYMM format) embedded in the db name.
 
-    The AIRR dbs with the \code{.src} suffix contain the \emph{Source Sets}.
-    The AIRR dbs without the \code{.src} suffix contain the \emph{Reference
+    The OGRDB dbs with the \code{.src} suffix contain the \emph{Source Sets}.
+    The OGRDB dbs without the \code{.src} suffix contain the \emph{Reference
     Sets}.
-    See \url{https://github.com/HyrienLab/igblastr/tree/devel/inst/extdata/germline_sets/AIRR/human/202410/README.md}
+    See \url{https://github.com/HyrienLab/igblastr/tree/devel/inst/extdata/germline_sets/AIRR/human/202605/README.md}
     for more information.
 
     The AIRR-community/OGRDB maintainers recommend to use the
@@ -157,7 +159,7 @@ rm_germline_db(db_name)
     \item \code{\link{install_custom_germline_db}} to install a germline db
           from user-supplied gene allele sequences.
 
-    \item \link{intdata_utils} to access IgBLAST \emph{internal data}.
+    \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
 
     \item \code{\link{reset_germline_dbs}} to reset the cached germline dbs.
 
