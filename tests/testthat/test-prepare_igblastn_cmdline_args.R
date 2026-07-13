@@ -131,7 +131,7 @@ test_that(".normarg_auxiliary_data()", {
     auxiliary_data <- normarg_auxiliary_data("auto", organism=NULL,
                                              germline_db_J=germline_db_J,
                                              no_auto_germline_dbs=FALSE)
-    expect_identical(auxiliary_data, get_auxdata_path("mouse"))
+    expect_identical(auxiliary_data, get_auxdata_path("rabbit"))
 
     expect_error(
         normarg_auxiliary_data("auto", organism=NULL,
