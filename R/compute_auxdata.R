@@ -143,7 +143,7 @@ warn_if_negative_cdr3_end <- function(auxdata, what)
 ### and FGXG.
 ### Returns a data.frame with 1 row per sequence in 'J_alleles' and with
 ### the same columns as the data.frame returned by load_auxdata() (see
-### file R/auxdata-utils.R).
+### file R/load_auxdata.R).
 compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
 {
     if (!is(J_alleles, "DNAStringSet"))
@@ -159,7 +159,7 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
         stop(wmsg("all allele names must start either ",
                   "with 'IG[HKL]' or with 'TR[ABGD]'"))
     if (!all(substr(allele_names, 4L, 4L) == "J"))
-        stop(wmsg("the 4th letter in all allele names must be a J"))
+        stop(wmsg("the 4th letter in every J allele name must be \"J\""))
 
     codon_starts <- .normarg_codon_starts(codon_starts, allele_names,
                                           fasta_headers)
@@ -173,10 +173,10 @@ compute_auxdata <- function(J_alleles, codon_starts=NULL, no.warnings=FALSE)
     fwr4_starts <- rep.int(NA_integer_, length(J_alleles))
     idx1 <- which(allele_loci == "IGH")
     fwr4_starts[idx1] <- .find_motif(J_alleles[idx1], codon_starts[idx1],
-                                    .WGXG_motif_dna, .WGXG_motif)
+                                     .WGXG_motif_dna, .WGXG_motif)
     idx2 <- which(allele_loci != "IGH")
     fwr4_starts[idx2] <- .find_motif(J_alleles[idx2], codon_starts[idx2],
-                                    .FGXG_motif_dna, .FGXG_motif)
+                                     .FGXG_motif_dna, .FGXG_motif)
     cdr3_ends <- fwr4_starts - 1L  # 1-based
 
     ## Compute 'coding_frame_starts'.

@@ -3,7 +3,8 @@
 ### -------------------------------------------------------------------------
 
 
-.add_ogrdb_auxdata_if_missing <- function(db_path, fasta_store, verbose=FALSE)
+.add_ogrdb_auxdata_if_missing <- function(db_path, fasta_store, loci,
+                                          verbose=FALSE)
 {
     stopifnot(isTRUEorFALSE(verbose))
     auxdata_path <- make_germline_db_auxdata_path(db_path)
@@ -11,11 +12,11 @@
         return()
 
     if (verbose)
-        message(wmsg("Adding the OGRDB-provided auxdata ",
+        message(wmsg("Adding OGRDB-provided auxdata ",
                      "to ", basename(db_path)), " ... ",
                 appendLF=FALSE)
 
-    auxdata_list <- lapply(IG_LOCI,
+    auxdata_list <- lapply(loci,
         function(locus) {
             read_auxdata(file.path(fasta_store, paste0(locus, "J_gl.aux")))
         })
@@ -28,13 +29,14 @@
 
 ### Install db only if missing.
 .install_builtin_OGRDB_germline_db <-
-    function(install_dir, db_name, fasta_store, verbose=FALSE)
+    function(install_dir, db_name, fasta_store, loci=IG_LOCI,
+             fwrcdr_ends=IMGT_FWRCDR_ENDS, verbose=FALSE)
 {
-    install_germline_db(install_dir, db_name, fasta_store, IG_LOCI,
-                        gapped=TRUE, intdata="auto",
+    install_germline_db(install_dir, db_name, fasta_store, loci,
+                        gapped=TRUE, intdata="auto", fwrcdr_ends=fwrcdr_ends,
                         if.exists="no-op", verbose=verbose)
     db_path <- file.path(install_dir, db_name)
-    .add_ogrdb_auxdata_if_missing(db_path, fasta_store, verbose=verbose)
+    .add_ogrdb_auxdata_if_missing(db_path, fasta_store, loci, verbose=verbose)
 }
 
 
@@ -126,6 +128,42 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### .install_missing_builtin_OGRDB_rainbow_trout_germline_dbs()
+###
+
+.form_builtin_OGRDB_rainbow_trout_germline_db_name <- function(fasta_store)
+{
+    stopifnot(isSingleNonWhiteString(fasta_store))
+    version <- basename(fasta_store)
+    sprintf("_OGRDB.rainbow_trout.%s.%s", "IGH", version)
+}
+
+### Install db only if missing.
+.install_builtin_OGRDB_rainbow_trout_germline_db <-
+    function(install_dir, fasta_store, verbose=FALSE)
+{
+    db_name <- .form_builtin_OGRDB_rainbow_trout_germline_db_name(fasta_store)
+    .install_builtin_OGRDB_germline_db(install_dir, db_name, fasta_store,
+                                       loci="IGH",
+                                       fwrcdr_ends=RAINBOW_TROUT_FWRCDR_ENDS,
+                                       verbose=verbose)
+}
+
+.install_missing_builtin_OGRDB_rainbow_trout_germline_dbs <-
+    function(install_dir, rainbow_trout_dir, verbose=FALSE)
+{
+    stopifnot(isSingleNonWhiteString(rainbow_trout_dir),
+              dir.exists(rainbow_trout_dir), isTRUEorFALSE(verbose))
+    subdirs <- list.dirs(rainbow_trout_dir, full.names=FALSE, recursive=FALSE)
+    fasta_stores <- file.path(rainbow_trout_dir, subdirs)
+    for (fasta_store in fasta_stores)
+        .install_builtin_OGRDB_rainbow_trout_germline_db(install_dir,
+                                                         fasta_store,
+                                                         verbose=verbose)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### .install_missing_builtin_OGRDB_rhesus_monkey_germline_dbs()
 ###
 
@@ -187,12 +225,15 @@ install_missing_builtin_germline_dbs <- function(install_dir, verbose=FALSE)
     .install_missing_builtin_OGRDB_mouse_germline_dbs(install_dir, mouse_dir,
                                                       verbose=verbose)
 
+    rainbow_trout_dir <- file.path(OGRDB_germline_seq_dir, "rainbow_trout")
+    .install_missing_builtin_OGRDB_rainbow_trout_germline_dbs(install_dir,
+                                                              rainbow_trout_dir,
+                                                              verbose=verbose)
+
     rhesus_monkey_dir <- file.path(OGRDB_germline_seq_dir, "rhesus_monkey")
     .install_missing_builtin_OGRDB_rhesus_monkey_germline_dbs(install_dir,
                                                               rhesus_monkey_dir,
                                                               verbose=verbose)
-
-    ## Any other built-in germline dbs to install?
 }
 
 

@@ -231,7 +231,7 @@ align_vectors_by_names <- function(vectors)
 ### rows_with_same_key_are_identical()
 ###
 
-### Used in tests/testthat/test-auxdata-utils.R!
+### Used in tests/testthat/test-load_auxdata.R!
 rows_with_same_key_are_identical <- function(df, key)
 {
     stopifnot(is.data.frame(df), isSingleNonWhiteString(key))

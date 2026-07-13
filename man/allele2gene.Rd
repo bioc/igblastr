@@ -46,7 +46,7 @@ allele2gene(allele_names)
     \item \code{\link{load_c_region_sequences}} to load the nucleotide
           sequences of the gene alleles stored in a cached C-region db.
 
-    \item \link{intdata_utils} to access IgBLAST \emph{internal data}.
+    \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
   }
 }
 

@@ -1,5 +1,5 @@
 ### =========================================================================
-### Access IgBLAST internal data
+### load_intdata() and related
 ### -------------------------------------------------------------------------
 ###
 
@@ -117,84 +117,5 @@ load_intdata <- function(igblast_organism, for.aa=FALSE,
                                      domain_system=domain_system,
                                      which=which)
     read_ndm_data(intdata_path)
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### show_intdata_disagreements()
-###
-
-show_intdata_disagreements <- function(db_name)
-{
-    check_germline_db_name(db_name)
-    igblast_organism <- infer_igblast_organism_from_db_name(db_name)
-    if (is.na(igblast_organism))
-        stop(wmsg("The specified germline db does not seem to be ",
-                  "for an IgBLAST organism. Note that you can use ",
-                  "list_igblast_organisms() to get the list of ",
-                  "IgBLAST organisms. See '?list_igblast_organisms' ",
-                  "for more information."))
-    db_intdata <- load_intdata(db_name)
-    igblast_intdata <- load_intdata(igblast_organism)
-    diff <- df_diff(db_intdata, igblast_intdata, "allele_name",
-                    "igblastr-generated", "IgBLAST-provided")
-    what <- c("the igblastr-generated \"internal data\" included in this ",
-              "germline db and the \"internal data\" provided by IgBLAST ",
-              "for ", igblast_organism)
-    if (length(diff) == 0L) {
-        msg <- c("No disagreements between ", what, ".")
-        cat(wmsg2(msg, margin=0L), "\n", sep="")
-    } else {
-        msg <- c("Disagreements between ", what, ":")
-        cat(wmsg2(msg, margin=0L), "\n", sep="")
-        cat(diff, sep="")
-    }
-}
-
-
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### V_genes_with_varying_fwrcdr_boundaries()
-###
-
-.extract_gene_names_as_factor <- function(intdata)
-{
-    allele_names <- get_intdata_col(intdata, "allele_name")
-    gene_names <- allele2gene(allele_names)
-    unique_gene_names <- unique(gene_names)
-    factor(gene_names, levels=unique_gene_names)
-}
-
-.check_V_segment <- function(V_segment)
-{
-    if (!isSingleNonWhiteString(V_segment))
-        stop(wmsg("'V_segment' must be a single (non-empty) string"))
-    if (!(V_segment %in% V_GENE_SEGMENTS)) {
-        in1string <- paste0("\"", V_GENE_SEGMENTS, "\"", collapse=", ")
-        stop(wmsg("'V_segment' must be one of ", in1string))
-    }
-}
-
-.V_genes_with_varying_segment_boundaries <- function(intdata, V_segment)
-{
-    f <- .extract_gene_names_as_factor(intdata)
-    .check_V_segment(V_segment)
-    starts <- get_intdata_col(intdata, paste0(V_segment, "_start"))
-    ends <- get_intdata_col(intdata, paste0(V_segment, "_end"))
-    starts_per_gene <- unique(splitAsList(starts, f))
-    ends_per_gene <- unique(splitAsList(ends, f))
-    levels(f)[lengths(starts_per_gene) != 1L | lengths(ends_per_gene) != 1L]
-}
-
-V_genes_with_varying_fwrcdr_boundaries <- function(intdata, V_segment=NULL)
-{
-    if (!is.null(V_segment))
-        return(.V_genes_with_varying_segment_boundaries(intdata, V_segment))
-    found_genes <- lapply(V_GENE_SEGMENTS,
-        function(V_segment)
-            .V_genes_with_varying_segment_boundaries(intdata, V_segment))
-    found_genes <- unique(unlist(found_genes, use.names=FALSE))
-    ## Return the gene names in the same order as they show up in 'intdata'.
-    unique_gene_names <- levels(.extract_gene_names_as_factor(intdata))
-    unique_gene_names[unique_gene_names %in% found_genes]
 }
 

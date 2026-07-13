@@ -1,49 +1,47 @@
-\name{intdata-utils}
+\name{load_intdata}
 
-\alias{intdata-utils}
-\alias{intdata_utils}
 \alias{intdata}
 
 \alias{get_intdata_path}
 \alias{load_intdata}
-\alias{show_intdata_disagreements}
-\alias{V_genes_with_varying_fwrcdr_boundaries}
 
 \title{Access IgBLAST internal data}
 
 \description{
-  IgBLAST \emph{internal data} is expected to annotate all the known
-  germline V gene alleles for a given organism. It is provided by NCBI
-  and is typically included in a standard IgBLAST installation.
+  IgBLAST provides annotations for the germline V and J gene alleles
+  of human, mouse, rabbit, rat, and rhesus monkey. Note that these are
+  the organisms returned by \code{\link{list_igblast_organisms}()}.
+  These annotations are provided by NCBI and are typically included in
+  a standard IgBLAST installation.
+
+  Two types of annotations are provided for each organism:
+  \enumerate{
+    \item The \emph{internal data}: this data is expected to annotate all
+          the known germline V gene alleles for a given organism.
+    \item The \emph{auxiliary data}: this data is expected to annotate all
+          the known germline J gene alleles for a given organism.
+  }
 
   The \emph{internal data} informs about the FWR/CDR boundaries on
   the V allele sequences, also known as the V gene delineations.
   This information is needed and used internally by IgBLAST.
 
+  See \code{?\link{load_auxdata}} for more information about IgBLAST
+  \emph{auxiliary data}.
+
   \code{get_intdata_path()} and \code{load_intdata()} can be used
   to access the \emph{internal data} included in IgBLAST or in
   one of the \emph{cached germline dbs} managed by \pkg{igblastr}.
-
-  \code{V_genes_with_varying_fwrcdr_boundaries()} can be used to identify
-  germline V genes for which the FWR/CDR boundaries are not the same across
-  all alleles.
 }
 
 \usage{
-## Access internal data:
 get_intdata_path(igblast_organism, for.aa=FALSE,
                  domain_system=c("imgt", "kabat"),
                  which=c("live", "original"))
+
 load_intdata(igblast_organism, for.aa=FALSE,
              domain_system=c("imgt", "kabat"),
              which=c("live", "original"))
-
-## Show disagreements (if any) between igblastr-generated "internal data"
-## included in a germline db and IgBLAST-provided "internal data":
-show_intdata_disagreements(db_name)
-
-## Identify V genes with varying FWR/CDR boundaries across alleles:
-V_genes_with_varying_fwrcdr_boundaries(intdata, V_segment=NULL)
 }
 
 \arguments{
@@ -83,22 +81,6 @@ V_genes_with_varying_fwrcdr_boundaries(intdata, V_segment=NULL)
     See \code{?\link{update_live_igdata}} for more information about
     "live" and "original" IgBLAST data.
   }
-  \item{db_name}{
-    A single string specifying the name of a cached germline db.
-  }
-  \item{intdata}{
-    A data.frame as returned by \code{load_intdata()}.
-  }
-  \item{V_segment}{
-    The name of a V gene segment. This can be set to \code{"fwr1"},
-    \code{"cdr1"}, \code{"fwr2"}, \code{"cdr2"}, or \code{"fwr3"}.
-
-    By default (i.e. when \code{V_segment} is omitted or set to \code{NULL}),
-    \code{V_genes_with_varying_fwrcdr_boundaries()} will identify V genes for
-    which any segment has varying boundaries across alleles. Otherwise, it
-    will identify V genes for which the specified segment has varying
-    boundaries.
-  }
 }
 
 \details{
@@ -116,13 +98,6 @@ V_genes_with_varying_fwrcdr_boundaries(intdata, V_segment=NULL)
   with 1 row per germline V gene allele sequence and the same columns
   as the data.frame returned by \code{read_ndm_data()}.
   See \code{?\link{read_ndm_data}} for more information.
-
-  \code{show_intdata_disagreements()} doesn't return anything (i.e.
-  invisible \code{NULL}).
-
-  \code{V_genes_with_varying_fwrcdr_boundaries()} returns a character
-  vector containing the names of the germline V genes for which the
-  FWR/CDR boundaries are not the same across all alleles.
 }
 
 \seealso{
@@ -130,7 +105,9 @@ V_genes_with_varying_fwrcdr_boundaries(intdata, V_segment=NULL)
     \item \code{\link{compute_V_gene_delineations}} to annotate a set of
           germline V gene allele sequences.
 
-    \item \link{auxdata_utils} to access IgBLAST \emph{auxiliary data}.
+    \item \code{\link{load_auxdata}} to access IgBLAST \emph{auxiliary data}.
+
+    \item \link{intdata_misc} for miscellaneous \emph{internal data} utilities.
 
     \item \code{\link{update_live_igdata}} for more information about "live"
           and "original" IgBLAST data.
@@ -192,38 +169,6 @@ get_intdata_path(db_name)
 
 human_intdata <- load_intdata(db_name)
 head(human_intdata)
-
-## ---------------------------------------------------------------------
-## show_intdata_disagreements()
-## ---------------------------------------------------------------------
-
-show_intdata_disagreements(db_name)
-
-## See last examples in '?install_IMGT_germline_db' for some examples
-## of germline dbs with disagreements.
-
-## ---------------------------------------------------------------------
-## V_genes_with_varying_fwrcdr_boundaries()
-## ---------------------------------------------------------------------
-
-## Note that the alleles of a given germline V gene don't necessarily
-## share the same FWR/CDR boundaries. You can use utility function
-## V_genes_with_varying_fwrcdr_boundaries() to identify them:
-human_intdata0 <- load_intdata("human")
-var_genes <- V_genes_with_varying_fwrcdr_boundaries(human_intdata0)
-var_genes  # 4 genes
-
-## Display rows associated with gene IGHV4-31:
-subset(human_intdata0, allele2gene(allele_name) == "IGHV4-31")
-
-## Human germline V genes for which the CDR1 boundaries are not the
-## same across all alleles:
-var_genes <- V_genes_with_varying_fwrcdr_boundaries(human_intdata0,
-                                                    V_segment="cdr1")
-var_genes  # 2 genes
-
-## Display rows associated with the genes in 'var_genes':
-subset(human_intdata0, allele2gene(allele_name) \%in\% var_genes)
 }
 
 \keyword{utilities}

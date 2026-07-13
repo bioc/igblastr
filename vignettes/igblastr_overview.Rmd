@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 17 June 2026"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 11 July 2026"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -176,9 +176,9 @@ together: the V-, D-, and J-region BLAST databases.
 ## Built-in germline databases
 
 The `r Biocpkg("igblastr")` package includes a set of built-in
-IgBLAST-compatible _germline databases_ for human, mouse, and rhesus monkey
-that were obtained from the OGRDB database (AIRR community). To get the list
-of built-in _germline databases_, run:
+IgBLAST-compatible _germline databases_ for human, mouse, rainbow trout,
+and rhesus monkey that were obtained from the OGRDB database (AIRR community).
+To get the list of built-in _germline databases_, run:
 ```{r}
 list_germline_dbs(builtin.only=TRUE)
 ```
@@ -191,20 +191,20 @@ and germline J alleles (`auxdata` column). More on this in the
 "[Internal data and auxiliary data](#internal-data-and-auxiliary-data)"
 section below.
 
-If the BCR sequences to analyze are from human, or one of the mouse strains
-listed above, or rhesus monkey, then we can already select the appropriate
-database with `use_germline_db()` and skip the subsection below.
+If the BCR sequences to analyze are from one of the OGRDB organisms then
+we can already select the appropriate database with `use_germline_db()`
+and skip the subsection below.
 
 ## Install additional IgBLAST-compatible germline databases
 
 AIRR/OGRDB and IMGT/V-QUEST are two providers of germline datasets
 that can be used to create IgBLAST-compatible _germline databases_.
 If, for any reason, none of the built-in AIRR/OGRDB _germline databases_
-is suitable (e.g. the sequences to analyze are not from human, mouse, or
-rhesus monkey), then we can use `install_IMGT_germline_db()` to create and
-install additional IgBLAST-compatible _germline databases_. Below, we show
-how to create and install an IgBLAST-compatible _germline database_ from
-germline V, D, and J gene sequences available on IMGT/V-QUEST download
+is suitable (e.g. the sequences to analyze are not from human, mouse, rainbow
+trout, or rhesus monkey), then we can use `install_IMGT_germline_db()` to
+create and install additional IgBLAST-compatible _germline databases_. Below,
+we show how to create and install an IgBLAST-compatible _germline database_
+from germline V, D, and J gene sequences available on IMGT/V-QUEST download
 site.
 
 ### Install an IgBLAST-compatible germline database from IMGT/V-QUEST

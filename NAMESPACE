@@ -92,6 +92,7 @@ export(
     same_alleles_annot,
 
     ## compute_V_gene_delineations.R:
+    IMGT_FWRCDR_ENDS,
     compute_V_gene_delineations,
     compute_imgt_intdata,
 
@@ -128,15 +129,19 @@ export(
     reset_live_igdata, update_live_igdata,
     time_since_live_igdata_last_checked, igdata_info,
 
-    ## intdata-utils.R:
+    ## load_intdata.R:
     get_intdata_path,
     load_intdata,
-    show_intdata_disagreements,
-    V_genes_with_varying_fwrcdr_boundaries,
 
-    ## auxdata-utils.R:
+    ## load_auxdata.R:
     get_auxdata_path, get_igblast_auxiliary_data,
     load_auxdata, load_igblast_auxiliary_data,
+
+    ## intdata-misc.R:
+    V_genes_with_varying_fwrcdr_boundaries,
+    show_intdata_disagreements,
+
+    ## auxdata-misc.R:
     compute_germline_db_auxdata,
 
     ## install_igblast.R:

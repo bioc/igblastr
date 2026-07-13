@@ -1,12 +1,9 @@
-\name{auxdata-utils}
+\name{load_auxdata}
 
-\alias{auxdata-utils}
-\alias{auxdata_utils}
 \alias{auxdata}
 
 \alias{get_auxdata_path}
 \alias{load_auxdata}
-\alias{compute_germline_db_auxdata}
 
 \alias{get_igblast_auxiliary_data}
 \alias{load_igblast_auxiliary_data}
@@ -14,32 +11,38 @@
 \title{Access IgBLAST auxiliary data}
 
 \description{
-  IgBLAST \emph{auxiliary data} is expected to annotate all the known
-  germline J gene alleles for a given organism. It is provided by NCBI
-  and is typically included in a standard IgBLAST installation.
+  IgBLAST provides annotations for the germline V and J gene alleles
+  of human, mouse, rabbit, rat, and rhesus monkey. Note that these are
+  the organisms returned by \code{\link{list_igblast_organisms}()}.
+  These annotations are provided by NCBI and are typically included in
+  a standard IgBLAST installation.
+
+  Two types of annotations are provided for each organism:
+  \enumerate{
+    \item The \emph{internal data}: this data is expected to annotate all
+          the known germline V gene alleles for a given organism.
+    \item The \emph{auxiliary data}: this data is expected to annotate all
+          the known germline J gene alleles for a given organism.
+  }
 
   The \emph{auxiliary data} informs about the coding frame and CDR3/FWR4
-  boundary on the J allele sequences. Although this information is not
-  strictly needed by IgBLAST, the latter needs it in order to compute
-  some of the AIRR fields like \code{vj_in_frame}, \code{productive},
-  \code{cdr3}, \code{fwr4}, etc...
+  boundary for each J allele sequence. Although this information is not
+  strictly needed by IgBLAST, the latter needs it to compute some of the
+  fields in the AIRR-formatted output like \code{vj_in_frame},
+  \code{productive}, \code{cdr3}, \code{fwr4}, etc...
+
+  See \code{?\link{load_intdata}} for more information about IgBLAST
+  \emph{internal data}.
 
   \code{get_auxdata_path()} and \code{load_auxdata()} can be used
   to access the \emph{auxiliary data} included in IgBLAST or in
   one of the \emph{cached germline dbs} managed by \pkg{igblastr}.
-
-  We also provide \code{compute_germline_db_auxdata()} to compute
-  the \emph{auxiliary data} associated with the J alleles in a
-  cached germline dbs managed by \pkg{igblastr}.
 }
 
 \usage{
-## Access auxiliary data:
 get_auxdata_path(igblast_organism, which=c("live", "original"))
-load_auxdata(igblast_organism, which=c("live", "original"))
 
-## Compute auxiliary data associated with the J alleles in germline db:
-compute_germline_db_auxdata(db_name, ...)
+load_auxdata(igblast_organism, which=c("live", "original"))
 }
 
 \arguments{
@@ -66,16 +69,6 @@ compute_germline_db_auxdata(db_name, ...)
 
     See \code{?\link{update_live_igdata}} for more information about
     "live" and "original" IgBLAST data.
-  }
-  \item{db_name}{
-    A single string specifying the name of a cached germline db.
-    Use \code{\link{list_germline_dbs}()} to get the list of all cached
-    germline dbs.
-  }
-  \item{...}{
-    Extra arguments to be passed to the internal call to
-    \code{compute_auxdata()}. See \code{?\link{compute_auxdata}} for
-    what arguments are supported.
   }
 }
 
@@ -106,12 +99,6 @@ compute_germline_db_auxdata(db_name, ...)
   with 1 row per supplied J allele sequence and the same columns as the
   data.frame returned by \code{read_auxdata()}.
   See \code{?\link{read_auxdata}} for more information.
-
-  \code{compute_germline_db_auxdata()} returns the computed
-  \emph{auxiliary data} in a data.frame with 1 row per J allele in
-  the germline db and the same columns as the data.frame returned
-  by \code{compute_auxdata()} or \code{read_auxdata()}.
-  See \code{?\link{compute_auxdata}} for more information.
 }
 
 \seealso{
@@ -119,7 +106,9 @@ compute_germline_db_auxdata(db_name, ...)
     \item \code{\link{compute_auxdata}} to annotate a set of germline J
           gene allele sequences.
 
-    \item \link{intdata_utils} to access IgBLAST \emph{internal data}.
+    \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
+
+    \item \link{auxdata_misc} for miscellaneous \emph{auxiliary data} utilities.
 
     \item \code{\link{update_live_igdata}} for more information about "live"
           and "original" IgBLAST data.
@@ -173,23 +162,6 @@ get_auxdata_path(db_name)
 
 rhesus_monkey_auxdata <- load_auxdata(db_name)
 head(rhesus_monkey_auxdata)
-
-## ---------------------------------------------------------------------
-## Compute the auxiliary data associated with the J alleles in a
-## germline db
-## ---------------------------------------------------------------------
-
-## The auxiliary data included in germline db
-## _OGRDB.rhesus_monkey.IGH+IGK+IGL.202602 can be computed
-## with compute_germline_db_auxdata():
-auxdata2 <- compute_germline_db_auxdata(db_name)
-
-## Replace the negative "cdr3_end" value with NA:
-replace_idx <- which(auxdata2[ , "cdr3_end"] < 0L)
-auxdata2[replace_idx, "cdr3_end"] <- NA
-
-## Sanity check:
-stopifnot(identical(auxdata2, rhesus_monkey_auxdata))
 }
 
 \keyword{utilities}

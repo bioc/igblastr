@@ -34,7 +34,8 @@ encode_OGRDB_URL_component <- function(component)
 .OGRDB_ORGANISMS <- c(
     "Homo sapiens",
     "Macaca mulatta",
-    "Mus musculus"
+    "Mus musculus",
+    "Oncorhynchus mykiss"
 )
 
 normalize_OGRDB_organism <- function(organism)

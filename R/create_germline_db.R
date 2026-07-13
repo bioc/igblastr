@@ -155,9 +155,10 @@ list_loci_in_germline_fasta_dir <-
 ### Create the three "region dbs": one V-, one D-, and one J-region db.
 .do_create_germline_db <- function(destdir, fasta_dir, loci,
                                    imgt.fasta.headers=FALSE,
-                                   gapped=FALSE, intdata=FALSE,
+                                   gapped=FALSE, intdata=NULL,
+                                   fwrcdr_ends=IMGT_FWRCDR_ENDS,
                                    excluded_J_alleles=character(0),
-                                   auxdata=FALSE, ref_auxdata=NULL,
+                                   auxdata=NULL, ref_auxdata=NULL,
                                    disambiguate.allele.names=FALSE,
                                    verbose=FALSE)
 {
@@ -174,6 +175,7 @@ list_loci_in_germline_fasta_dir <-
     V_fasta_files <- .collect_fasta_files(fasta_dir, "V", loci)
     create_V_region_db(destdir, V_fasta_files,
                        gapped=gapped, auto.intdata=auto_intdata,
+                       fwrcdr_ends=fwrcdr_ends,
                        disambiguate.allele.names=disambiguate.allele.names,
                        verbose=verbose)
 
@@ -229,6 +231,7 @@ list_loci_in_germline_fasta_dir <-
 create_germline_db <- function(destdir, fasta_dir, loci,
                                imgt.fasta.headers=FALSE,
                                gapped=FALSE, intdata=NULL,
+                               fwrcdr_ends=IMGT_FWRCDR_ENDS,
                                excluded_J_alleles=character(0),
                                auxdata=NULL, ref_auxdata=NULL,
                                disambiguate.allele.names=FALSE,
@@ -257,6 +260,7 @@ create_germline_db <- function(destdir, fasta_dir, loci,
     .do_create_germline_db(tmp_destdir, fasta_dir, loci,
                            imgt.fasta.headers=imgt.fasta.headers,
                            gapped=gapped, intdata=intdata,
+                           fwrcdr_ends=fwrcdr_ends,
                            excluded_J_alleles=excluded_J_alleles,
                            auxdata=auxdata, ref_auxdata=ref_auxdata,
                            disambiguate.allele.names=disambiguate.allele.names,

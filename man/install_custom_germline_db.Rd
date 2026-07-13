@@ -17,6 +17,7 @@
 install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
                            imgt.fasta.headers=FALSE,
                            gapped=FALSE, intdata=NULL,
+                           fwrcdr_ends=IMGT_FWRCDR_ENDS,
                            auxdata=NULL, ref_auxdata=NULL,
                            disambiguate.allele.names=FALSE,
                            overwrite=FALSE, verbose=FALSE)
@@ -119,8 +120,14 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
     See documentation of the \code{custom_internal_data} argument in
     \code{?\link{igblastn}} for more information.
 
-    Also see \code{?\link{intdata_utils}} for more information about IgBLAST
+    Also see \code{?\link{load_intdata}} for more information about IgBLAST
     \emph{internal data}.
+  }
+  \item{fwrcdr_ends}{
+    A named integer vector containing the FWR/CDR fixed end positions
+    w.r.t. the translated V gapped sequences.
+    Passed to internal call to \code{\link{compute_V_gene_delineations}()}
+    if \code{intdata} is set to \code{"auto"}. Ignored otherwise.
   }
   \item{auxdata}{
     \code{NULL} (the default), or \code{"auto"}, or a data.frame containing
@@ -161,9 +168,9 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
             \code{\link{list_igblast_organisms}()} (e.g. \code{"mouse"}).
       \item \code{install_custom_germline_db()} will use the
             \code{ref_auxdata} data.frame internally to verify that
-            the computed \emph{auxiliary data} is \emph{concordant} (i.e.
-            in agreement) with \code{ref_auxdata}. An error will be raised
-            that shows the disagreements if there are any.
+            the computed \emph{auxiliary data} is in agreement with
+            \code{ref_auxdata}. An error will be raised that shows the
+            disagreements if there are any.
       \item Furthermore, \code{install_custom_germline_db()} will also use
             the \code{ref_auxdata} data.frame internally to complete the
             computed \emph{auxiliary data}. The completion process consists
@@ -230,8 +237,6 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
 
     \item \code{\link{load_germline_sequences}} to load the nucleotide
           sequences of the gene alleles stored in a cached germline db.
-
-    \item \code{\link{load_intdata}} to access IgBLAST \emph{internal data}.
 
     \item \code{\link{download_OGRDB_germline_sequences}} to download
           germline sequences from OGRDB.
@@ -449,11 +454,11 @@ if (IMGT_is_up()) {
   ## auxiliary data" for mouse to the 'ref_auxdata' argument. The
   ## reference data we will use is the "auxiliary data" provided by IgBLAST
   ## for mouse. install_custom_germline_db() will then use this data
-  ## internally to verify that the computed "auxiliary data" is concordant
+  ## internally to verify that the computed "auxiliary data" is in agreement
   ## with the reference data and to complete it. See documentation of the
   ## 'ref_auxdata' argument above in this man page for more information.
 
-  igblast_mouse_auxdata <- load_auxdata("mouse")
+  igblast_mouse_auxdata <- load_auxdata("mouse", which="original")
   install_custom_germline_db(exD_db_name, exD_fasta_dir,
                              imgt.fasta.headers=TRUE,
                              gapped=TRUE, intdata="auto", auxdata="auto",

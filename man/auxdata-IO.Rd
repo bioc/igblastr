@@ -61,7 +61,7 @@ write_auxdata(auxdata, file="")
           coding frame and CDR3 end information for the J alleles annotated
           in an AIRR-C JSON file.
 
-    \item \link{auxdata_utils} to access IgBLAST \emph{auxiliary data}.
+    \item \code{\link{load_auxdata}} to access IgBLAST \emph{auxiliary data}.
 
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This

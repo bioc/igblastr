@@ -53,6 +53,14 @@
     sprintf("IMGT-%s.%s.%s", release, organism, paste(loci, collapse="+"))
 }
 
+.get_fwrcdr_ends_for_organism <- function(organism)
+{
+    switch(organism,
+        Macaca_mulatta     =RHESUS_MONKEY_FWRCDR_ENDS,
+        Oncorhynchus_mykiss=RAINBOW_TROUT_FWRCDR_ENDS,
+        IMGT_FWRCDR_ENDS)
+}
+
 ### Why does IMGT human J allele IGLJ2A*01 have a codon start set to 1?
 ### This is unexpected because:
 ### - there's no FGXG motif in this coding frame (the allele sequence
@@ -70,60 +78,48 @@
 ### either).
 .EXCLUDED_IMGT_HUMAN_J_ALLELES <- "IGLJ2A*01"
 
-### Loads IgBLAST auxdata for the organism associated with the germline db.
-### Will be used to "complete" the computed auxiliary data and verify
-### agreement with it.
-.load_igblast_auxdata <- function(db_name)
+### Loads (possibly amended) IgBLAST auxdata for the organism associated
+### with 'db_name'. Will be used to verify agreement with the computed
+### auxiliary data and to "complete" it.
+.load_ref_auxdata <- function(db_name)
 {
     igblast_organism <- infer_igblast_organism_from_db_name(db_name)
     if (is.na(igblast_organism))
         return(NULL)
-    auxdata <- load_auxdata(igblast_organism)
-    if (igblast_organism == "human") {
-        allele_names <- auxdata[ , "allele_name"]
-        ## We know that the human auxdata provided by IgBLAST is incorrect
-        ## for alleles IGHJ6*02 and IGHJ6*03, so is discordant with what
-        ## install_germline_db() will compute. So we correct these rows.
-        ## Note that if the user updated their "live" IgBLAST data with
-        ## update_live_igdata(), then these rows should already be correct
-        ## in 'auxdata'.
-        fixme <- allele_names %in% c("IGHJ6*02", "IGHJ6*03")
-        auxdata[fixme, "extra_bps"] <- 1L  # replace 0 with 1
-        ## It's also pretty clear that the cdr3_end for TRDJ3*01 should be
-        ## 24, not 21: the FWR4 starts at position 25, which is where the
-        ## FGXG motif is found. So we fix that too.
-        ## TODO: Report this to the IgBLAST folks at NCBI.
-        fixme <- allele_names == "TRDJ3*01"
-        auxdata[fixme, "cdr3_end"] <- 24L  # replace 21 with 24
+    load_and_fix_igblast_auxdata(igblast_organism)
+}
+
+.from_auto.intdata_to_intdata <- function(auto.intdata, organism, loci_prefix)
+{
+    if (!auto.intdata)
+        return(NULL)
+    ## We set 'intdata' to "auto" only if we know that the intdata that we're
+    ## going to compute is valid. The criteria we use to decide whether the
+    ## intdata is valid is that the percent cysteines at codons 23 and 104
+    ## must both be >= 90. See count_cysteines_for_IMGT_organisms() in
+    ## R/intdata-misc.R for more information.
+    if (loci_prefix == "IG") {
+        ok_IG_organisms <- c("Bos_taurus",
+                             "Gorilla_gorilla_gorilla",
+                             "Homo_sapiens",
+                             "Lemur_catta",
+                             "Mus_musculus",
+                             "Oncorhynchus_mykiss",
+                             "Oryctolagus_cuniculus",
+                             "Sus_scrofa",
+                             "Vicugna_pacos")
+        if (organism %in% ok_IG_organisms)
+            return("auto")
+    } else {
+        ok_TR_organisms <- c("Camelus_dromedarius",
+                             "Heterocephalus_glaber",
+                             "Homo_sapiens",
+                             "Macaca_fascicularis",
+                             "Oryctolagus_cuniculus")
+        if (organism %in% ok_TR_organisms)
+            return("auto")
     }
-    if (igblast_organism == "mouse") {
-        allele_names <- auxdata[ , "allele_name"]
-        ## We know that the mouse auxdata provided by IgBLAST is incorrect
-        ## for alleles TRAJ31*02, TRAJ32*02, TRAJ45*02, and TRAJ59*01,
-        ## so is discordant with what install_germline_db() will compute.
-        ## So we correct these rows.
-        ## I reported the incongruent extra_bps for the 4 alleles below
-        ## to the IgBLAST folks at NCBI on June 2, 2026.
-        fixme <- allele_names == "TRAJ31*02"
-        auxdata[fixme, "extra_bps"] <- 1L  # replace 0 with 1
-        fixme <- allele_names == "TRAJ32*02"
-        auxdata[fixme, "extra_bps"] <- 1L  # replace 0 with 1
-        fixme <- allele_names == "TRAJ45*02"
-        auxdata[fixme, "extra_bps"] <- 0L  # replace 1 with 0
-        fixme <- allele_names == "TRAJ59*01"
-        auxdata[fixme, "extra_bps"] <- 2L  # replace 1 with 2
-    }
-    ## We also remove rows for which the "coding_frame_start" / "cdr3_end"
-    ## combination doesn't make sense. This is the case for example for
-    ## human allele TRAJ31*01 and for mouse alleles TRAJ21*02, TRAJ24*02,
-    ## and TRDJ2*02 (as of May 31, 2026).
-    ## I reported this to the IgBLAST folks at NCBI on June 2, 2026.
-    coding_frame_start <- auxdata[ , "coding_frame_start"]
-    cdr3_end <- auxdata[ , "cdr3_end"]
-    drop_idx <- which(((cdr3_end + 1L - coding_frame_start) %% 3L) != 0L)
-    if (length(drop_idx) != 0L)
-        auxdata <- auxdata[-drop_idx, ]
-    auxdata
+    NULL
 }
 
 .check_concordance_with_igblast_intdata <- function(db_name)
@@ -178,6 +174,9 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
     ## Compute 'db_name'.
     db_name <- .form_IMGT_germline_db_name(fasta_store, loci)
 
+    ## Set 'fwrcdr_ends'.
+    fwrcdr_ends <- .get_fwrcdr_ends_for_organism(organism)
+
     ## Do we need to exclude any J allele known to be problematic?
     if (organism == "Homo_sapiens" && loci_prefix == "IG") {
         excluded_J_alleles <- .EXCLUDED_IMGT_HUMAN_J_ALLELES
@@ -187,25 +186,27 @@ install_IMGT_germline_db <- function(release, organism="Homo sapiens",
 
     ## Create and install germline db.
     install_dir <- get_germline_dbs_home(TRUE)  # guaranteed to exist
-    intdata <- if (auto.intdata) "auto" else NULL
+    intdata <-
+        .from_auto.intdata_to_intdata(auto.intdata, organism, loci_prefix)
     if (auto.auxdata) {
         auxdata <- "auto"
-        igblast_auxdata <- .load_igblast_auxdata(db_name)
+        ref_auxdata <- .load_ref_auxdata(db_name)
     } else {
         auxdata <- NULL
-        igblast_auxdata <- NULL
+        ref_auxdata <- NULL
     }
     if.exists <- if (overwrite) "overwrite" else "error"
     install_germline_db(install_dir, db_name, fasta_store, loci,
                         imgt.fasta.headers=TRUE,
                         gapped=TRUE, intdata=intdata,
+                        fwrcdr_ends=fwrcdr_ends,
                         excluded_J_alleles=excluded_J_alleles,
-                        auxdata=auxdata, ref_auxdata=igblast_auxdata,
+                        auxdata=auxdata, ref_auxdata=ref_auxdata,
                         if.exists=if.exists, verbose=verbose,
                         cheer.if.success=TRUE)
 
     ## Check concordance of computed intdata with IgBLAST intdata.
-    if (auto.intdata)
+    if (identical(intdata, "auto"))
         .check_concordance_with_igblast_intdata(db_name)
 
     invisible(db_name)

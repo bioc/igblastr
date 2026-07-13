@@ -244,7 +244,8 @@ check_locus <- function(locus, what)
 ### - carries the names and metadata columns of input object 'allele_set';
 ### - also carries the annotations obtained with compute_V_gene_delineations()
 ###   in additional metadata columns.
-.annotate_V_alleles <- function(allele_set, verbose=FALSE)
+.annotate_V_alleles <- function(allele_set, fwrcdr_ends=IMGT_FWRCDR_ENDS,
+                                verbose=FALSE)
 {
     if (verbose) {
         msg <- c("Computing the intdata (a.k.a. igblastr-generated ",
@@ -263,7 +264,7 @@ check_locus <- function(locus, what)
     check_locus(locus, "the \"locus\" metadata column on 'allele_set'")
 
     ## Annotate the V alleles based on their gaps.
-    intdata <- compute_V_gene_delineations(allele_set)
+    intdata <- compute_V_gene_delineations(allele_set, fwrcdr_ends=fwrcdr_ends)
     stopifnot(identical(intdata[ , "allele_name"], allele_names))
 
     ## Add "chain_type" column.
@@ -568,6 +569,7 @@ clean_allele_set <- function(allele_set,
 ### additional metadata columns.
 clean_V_allele_set <- function(allele_set,
                                gapped=FALSE, auto.intdata=FALSE,
+                               fwrcdr_ends=IMGT_FWRCDR_ENDS,
                                disambiguate.allele.names=FALSE,
                                verbose=FALSE)
 {
@@ -586,7 +588,9 @@ clean_V_allele_set <- function(allele_set,
     if (gapped) {
         if (auto.intdata) {
             ## (Bv1) Annotate the V alleles.
-            allele_set <- .annotate_V_alleles(allele_set, verbose=verbose)
+            allele_set <- .annotate_V_alleles(allele_set,
+                                              fwrcdr_ends=fwrcdr_ends,
+                                              verbose=verbose)
         } else {
             warn_if_allele_sequences_have_no_gaps(ngaps)
         }
