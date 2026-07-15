@@ -1,0 +1,10 @@
+{
+    "Desease": "Influenza",
+    "Antigen": "different forms of stem-only HA vaccines and control",
+    "Antigen names": ["H1ssF", "H7ssF", "H10ssF", "QIV 2017-2018/H10ssF", "QIV 2017-2018"],
+    "Antigen sequence": "Antigens have been described in several publications (see links in last paragrah of \"Description at 'Details'\"), but sequence is not directly available to us.",
+    "Link to publication": "NA",
+    "Species": "humanised mice",
+    "Paired sequences": 4106,
+    "Binding assay": "NA"
+}

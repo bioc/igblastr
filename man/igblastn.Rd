@@ -334,8 +334,8 @@ igblast_info()
 ## in igblastr contain 250 paired heavy- and light- chain sequences (125
 ## sequences in each file) downloaded from OAS (the Observed Antibody
 ## Space database):
-filenames <- paste0(c("heavy", "light"), "_sequences.fasta")
-query <- system.file(package="igblastr", "extdata", "BCR", filenames)
+fasta_files <- paste0(c("heavy", "light"), "_sequences.fasta")
+query <- system.file(package="igblastr", "extdata", "BCR", fasta_files)
 
 ## Install Human germline db from IMGT:
 db_name <- install_IMGT_germline_db("202614-2", "Homo_sapiens",
@@ -418,8 +418,8 @@ if (.Platform$OS.type != "windows") {
 ## File 'SRR11341217.fasta.gz' included in igblastr contains 10,875 human
 ## beta chain TCR transcripts running from 5' of reverse transcription
 ## reaction to beginning of constant region:
-filename <- "SRR11341217.fasta.gz"
-query <- system.file(package="igblastr", "extdata", "TCR", filename)
+fasta_file <- "SRR11341217.fasta.gz"
+query <- system.file(package="igblastr", "extdata", "TCR", fasta_file)
 
 ## For this example, we're only keeping the first 100 sequences:
 query <- head(readDNAStringSet(query), n=100)

@@ -92,8 +92,8 @@ if (!has_igblast()) install_igblast()
 ## in igblastr contain 250 paired heavy- and light- chain sequences (125
 ## sequences in each file) downloaded from OAS (the Observed Antibody
 ## Space database):
-filenames <- paste0(c("heavy", "light"), "_sequences.fasta")
-query <- system.file(package="igblastr", "extdata", "BCR", filenames)
+fasta_files <- paste0(c("heavy", "light"), "_sequences.fasta")
+query <- system.file(package="igblastr", "extdata", "BCR", fasta_files)
 
 ## Keep only the first 10 sequences from each file:
 query <- c(head(readDNAStringSet(query[[1L]]), n=10),

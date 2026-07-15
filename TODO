@@ -1,10 +1,13 @@
 High-priority TODO list
 =======================
 
-o More testing of combine_germline_dbs() and combine_c_region_dbs(). Improve
-  unit tests. Improve man page and expand examples. Add cross links in other
-  man pages. Add dedicated subsection of the "Advanced usage" section in the
-  vignette.
+o More testing of combine_germline_dbs() and combine_c_region_dbs(). What
+  happens if we try to combine 2 germline dbs with no intdata or 2 germline dbs
+  with no auxdata? Or if we try to combine a germline db with intdata with a
+  germline db without intdata? Or if we try to combine a germline db with
+  auxdata with a germline db without auxdata?
+  Improve unit tests. Improve man page and expand examples. Add cross links
+  in other man pages.
 
 o Fill missing documentation:
   - install_custom_germline_db(): document arg 'imgt.fasta.headers';

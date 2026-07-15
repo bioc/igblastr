@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 11 July 2026"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 15 July 2026"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -346,9 +346,9 @@ arguments in `?igblastn` for more information.
 The `igblastn` _standalone executable_ included in IgBLAST can also use
 constant region (C-region) sequences for sequence annotation. As with the
 germline V, D, and J gene allele sequences, the C-region sequences are
-generally expected to originate from the same organism(s) as the query
-sequences, and must likewise be formatted as a BLAST database. We will
-refer to this database as the C-region database.
+expected to originate from the same organism as the sequences to analyze,
+and must likewise be formatted as a BLAST database. We will refer to this
+database as the C-region database.
 
 The `r Biocpkg("igblastr")` package includes built-in C-region databases
 for human, mouse, rabbit, rat, and rhesus monkey, obtained from IMGT/V-QUEST.
@@ -381,7 +381,10 @@ Now that we have selected the germline and C-region databases to use
 with `igblastn()`, we are almost ready to call `igblastn()` to perform
 the alignment.
 
-## Prepare the _query sequences_
+## Prepare the query sequences
+
+In the context of sequence analysis with IgBLAST, we refer to the set
+of sequences to analyze as the _query sequences_.
 
 The `r Biocpkg("igblastr")` package includes a FASTA file containing
 8,437 paired heavy- and light-chain human antibody sequences (16,874
@@ -389,14 +392,14 @@ individual sequences) retrieved from OAS. This BCR sequencing dataset
 sequences will serve as the _query sequences_ that we analyze in this
 section.
 
-To get the path to the query sequences, use:
+To get the path to the _query sequences_, use:
 ```{r}
 query <- system.file(package="igblastr", "extdata",
                      "BCR", "1279067_1_Paired_sequences.fasta.gz")
 ```
 
 The `r Biocpkg("igblastr")` package also includes a JSON file containing
-metadata associated with the query BCR sequences:
+metadata describing this BCR sequencing dataset:
 ```{r}
 json <- system.file(package="igblastr", "extdata",
                     "BCR", "1279067_1_Paired_All.json")
@@ -409,7 +412,7 @@ donor (age 38) with no known disease or vaccination history.
 The source for these sequences is the Jaffe et al. (2022) study; the
 DOI link to the publication is provided above.
 
-## Call igblastn() on the _query sequences_
+## Call igblastn() on the query sequences
 
 To analyze our _query sequences_, we're going to use the `igblastn()`
 function. This is a wrapper to the `igblastn` _standalone executable_
@@ -423,7 +426,7 @@ use_c_region_db()
 ```
 
 Now, let's call `igblastn()`. Since we are only interested in the best
-V alignment for each query sequence, we set `num_alignments_V` to 1.
+V alignment for each _query sequence_, we set `num_alignments_V` to 1.
 Analyzing this set of 16,874 BCR sequences may take up to around 3 min
 on a standard laptop:
 ```{r}
@@ -431,14 +434,14 @@ AIRR_df <- igblastn(query, num_alignments_V=1)
 ```
 
 By default, the result is an _AIRR-formatted_ tibble, that is, a tibble
-with one row per query sequence and many columns:
+with one row per _query sequence_ and many columns:
 ```{r}
 AIRR_df
 ```
 
 The columns are standard "Rearrangement Schema" fields.
 These fields are defined and documented by the AIRR Community at
-https://docs.airr-community.org/en/latest/datarep/rearrangements.html#fields
+<https://docs.airr-community.org/en/latest/datarep/rearrangements.html#fields>
 
 You can call `igbrowser()` on `AIRR_df` to visualize the annotated
 sequences in a browser. For each sequence, the V, D, J, and C segments
@@ -609,12 +612,80 @@ identifiers must be wrapped in a call to `file()`.
 
 See `?igblastn` for more information.
 
+## Combine germline databases from two different organisms
+
+The `combine_germline_dbs()` function can be used to combine two existing
+_germline databases_, typically (but not necessarily) from two different
+organisms. This can be useful to analyze BCR sequences from a hybrid organism
+like a humanized mouse.
+
+To illustrate this, we're going to analyze BCR sequences from KyDab,
+the Kymouse Antibody Database: <https://kydab.naturalantibody.com/>. More
+precisely, we're going to analyze the Kymouse heavy-chain BCR sequences from
+the [Influenza #1 Project](https://kydab.naturalantibody.com/influenza-01)
+from KyDab.
+
+### Prepare the query sequences
+
+The 3,950 heavy-chain BCR sequences from this project are stored in
+the `Influenza-KV7015_heavy.fasta` file included in `r Biocpkg("igblastr")`:
+```{r}
+fasta_file <- "Influenza-KV7015_heavy.fasta"
+query <- system.file(package="igblastr", "extdata",
+                     "BCR", "KyDab", fasta_file)
+```
+
+### Create the hybrid germline database
+
+For this analysis, we create a hybrid _germline database_ by combining
+_germline databases_ from human and mouse. Note that allele names are not
+unique across species, so we add suffixes to the human and mouse allele names
+to avoid name clashes:
+```{r}
+db_name1 <- "IMGT-202614-2.Homo_sapiens.IGH+IGK+IGL"
+db_name2 <- install_IMGT_germline_db("202614-2", "Mus_musculus")
+
+db_name <- "comb.IMGT-202614-2.human+mouse.IGH+IGK+IGL"
+combine_germline_dbs(db_name, db_name1, db_name2,
+                     suffix1="_Hs", suffix2="_Mm")
+```
+
+Select the new hybrid _germline database_ as the database to use
+with `igblastn()`:
+```{r}
+use_germline_db(db_name)
+
+list_germline_dbs()
+```
+
+### Call igblastn() on the query sequences
+
+```{r}
+AIRR_df <- igblastn(query, num_alignments_V=1,
+                           num_alignments_D=1,
+                           num_alignments_J=1)
+```
+
+### A quick look at columns `v_call`, `d_call`, and `j_call`
+
+In the context of this vignette, we're only going to verify that the Kymouse
+BCR sequences align to human V, D, and J alleles:
+```{r}
+count_suffixes <- function(x) {nc <- nchar(x); table(substr(x, nc-2, nc))}
+count_suffixes(AIRR_df$v_call)
+count_suffixes(AIRR_df$d_call)
+count_suffixes(AIRR_df$j_call)
+```
+As expected, all Kymouse BCR sequences align to human V and J alleles.
+Also most of them align to human D alleles. Only a small fraction of them
+(less than 6%) align to mouse D alleles.
+
 ## A TCR analysis example
 
 Even though NCBI IgBLAST primary use case is BCR analysis, it can also be used
 for TCR sequence analysis, and so does the `r Biocpkg("igblastr")` package.
 
-### Prepare the TCR _query sequences_
+### Prepare the TCR query sequences
 
 File `SRR11341217.fasta.gz` included in the package contains 10,875
 human beta chain TCR transcripts running from 5' of reverse transcription
@@ -676,7 +747,7 @@ use_c_region_db("_IMGT.human.TRA+TRB+TRG+TRD.202605")
 ```
 See `?use_c_region_db` for more information.
 
-### Call igblastn() on the TCR _query sequences_
+### Call igblastn() on the TCR query sequences
 
 Check the selected databases:
 ```{r}
