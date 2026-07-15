@@ -200,7 +200,7 @@ and skip the subsection below.
 AIRR/OGRDB and IMGT/V-QUEST are two providers of germline datasets
 that can be used to create IgBLAST-compatible _germline databases_.
 If, for any reason, none of the built-in AIRR/OGRDB _germline databases_
-is suitable (e.g. the sequences to analyze are not from human, mouse, rainbow
+is suitable (e.g., the sequences to analyze are not from human, mouse, rainbow
 trout, or rhesus monkey), then we can use `install_IMGT_germline_db()` to
 create and install additional IgBLAST-compatible _germline databases_. Below,
 we show how to create and install an IgBLAST-compatible _germline database_
@@ -593,7 +593,7 @@ about using `igblastn()` in parallel.
 Some arguments of particular interest are the `germline_db_[VDJ]_seqidlist`
 arguments. They allow restricting the search of the _germline database_
 to a list of gene alleles supplied by the user. This list can be provided
-as a character vector of gene allele identifiers (e.g. `IGHV3-23*01`,
+as a character vector of gene allele identifiers (e.g., `IGHV3-23*01`,
 `IGHV3-23*04`, etc..), or as the path to a file containing the identifiers
 (one identifier per line). For example:
 ```{r, eval=FALSE}
@@ -639,7 +639,7 @@ query <- system.file(package="igblastr", "extdata",
 For this analysis, we create a hybrid _germline database_ by combining
 _germline databases_ from human and mouse. Note that allele names are not
 unique across species, so we add suffixes to the human and mouse allele names
-to avoid name clashes:
+to avoid name clashes (e.g., `IGHV2-5*01_Hs` vs. `IGHV2-5*01_Mm`):
 ```{r}
 db_name1 <- "IMGT-202614-2.Homo_sapiens.IGH+IGK+IGL"
 db_name2 <- install_IMGT_germline_db("202614-2", "Mus_musculus")
@@ -670,14 +670,16 @@ AIRR_df <- igblastn(query, num_alignments_V=1,
 In the context of this vignette, we're only going to verify that the Kymouse
 BCR sequences align to human V, D, and J alleles:
 ```{r}
+# count_suffixes() assumes suffixes of length 3, e.g. "_Hs"/"_Mm":
 count_suffixes <- function(x) {nc <- nchar(x); table(substr(x, nc-2, nc))}
+
 count_suffixes(AIRR_df$v_call)
 count_suffixes(AIRR_df$d_call)
 count_suffixes(AIRR_df$j_call)
 ```
 As expected, all Kymouse BCR sequences align to human V and J alleles.
-Also most of them align to human D alleles. Only a small fraction of them
-(less than 6%) align to mouse D alleles.
+Most also align to human D alleles, with only a small fraction (less than 6%)
+aligning to mouse D alleles instead.
 
 ## A TCR analysis example
 
