@@ -389,8 +389,7 @@ of sequences to analyze as the _query sequences_.
 The `r Biocpkg("igblastr")` package includes a FASTA file containing
 8,437 paired heavy- and light-chain human antibody sequences (16,874
 individual sequences) retrieved from OAS. This BCR sequencing dataset
-sequences will serve as the _query sequences_ that we analyze in this
-section.
+will serve as the _query sequences_ that we analyze in this section.
 
 To get the path to the _query sequences_, use:
 ```{r}
@@ -406,7 +405,7 @@ json <- system.file(package="igblastr", "extdata",
 query_metadata <- jsonlite::fromJSON(json)
 query_metadata
 ```
-The 8,347 paired sequences come from memory B cells isolated from
+The 8,437 paired sequences come from memory B cells isolated from
 peripheral blood mononuclear cell (PBMC) samples of a single human
 donor (age 38) with no known disease or vaccination history.
 The source for these sequences is the Jaffe et al. (2022) study; the
@@ -776,7 +775,7 @@ argument in `?igblastn` for more information.
 
 At the moment, the `r Biocpkg("igblastr")` package does not provide
 access to the full functionality of the IgBLAST software. Most notably,
-the `igblastp` _standalone executable_ included included in IgBLAST has no
+the `igblastp` _standalone executable_ included in IgBLAST has no
 counterpart in `r Biocpkg("igblastr")`.
 
 Some future developments include:

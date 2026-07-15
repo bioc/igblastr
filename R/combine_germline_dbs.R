@@ -112,7 +112,7 @@
     intdata1$allele_name <- add_suffix(intdata1[ , "allele_name"], suffix1)
     intdata2$allele_name <- add_suffix(intdata2[ , "allele_name"], suffix2)
     intdata <- rbind(intdata1, intdata2)
-    write_ndm_data_to_db(intdata, destdir, check.and.reorder=TRUE)
+    write_intdata_to_db(intdata, destdir, check.and.reorder=TRUE)
     if (verbose)
         message("ok.\n")
 }

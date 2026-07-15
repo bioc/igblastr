@@ -5,6 +5,38 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### write_intdata_to_db()
+###
+
+### Not exported!
+### Note that we don't handle custom "pdm" data at the moment. So the
+### function does not need a 'for.aa' argument. Also the name of the
+### function reflects the fact that it only handles "ndm" data.
+write_intdata_to_db <- function(ndm_data, db_path,
+                                domain_system=c("imgt", "kabat"),
+                                check.and.reorder=FALSE)
+{
+    stopifnot(is.data.frame(ndm_data), isTRUEorFALSE(check.and.reorder))
+    domain_system <- match.arg(domain_system)
+    intdata_path <- make_germline_db_intdata_path(db_path, FALSE, domain_system)
+    intdata_dir <- dirname(intdata_path)
+    stopifnot(!dir.exists(intdata_dir))
+
+    ## Even though write_ndm_data() will call check_ndm_data_col2class()
+    ## internally, we prefer to fail **before** creating the 'intdata_dir'
+    ## folder.
+    check_ndm_data_col2class(ndm_data)
+    if (check.and.reorder) {
+        db_V_fasta_file <- get_db_fasta_file(db_path, "V")
+        db_V_allele_names <- names(fasta.seqlengths(db_V_fasta_file))
+        ndm_data <- check_and_reorder_igdata_rows(ndm_data, db_V_allele_names)
+    }
+    stopifnot(dir.create(intdata_dir))
+    write_ndm_data(ndm_data, intdata_path)
+}
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### V_genes_with_varying_fwrcdr_boundaries()
 ###
 
