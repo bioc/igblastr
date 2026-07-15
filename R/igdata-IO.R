@@ -229,7 +229,7 @@ write_igdata <- function(df, file="")
 ### check_and_reorder_igdata_rows()
 ###
 
-### Used in write_ndm_data_to_db() and write_auxdata_to_db() to put
+### Used in write_intdata_to_db() and write_auxdata_to_db() to put
 ### the rows of the data.frame in the same order as the alleles in the
 ### corresponding region db.
 check_and_reorder_igdata_rows <- function(df, db_allele_names)

@@ -6,7 +6,6 @@
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### make_germline_db_auxdata_path()
-### write_auxdata_to_db()
 ###
 
 ### Not exported!
@@ -15,27 +14,6 @@ make_germline_db_auxdata_path <- function(db_path)
     stopifnot(isSingleNonWhiteString(db_path), dir.exists(db_path))
     ## gl.aux: germline auxiliary file ("gl" in gl.aux stands for germline).
     file.path(db_path, "auxiliary_data", "gl.aux")
-}
-
-### Not exported!
-write_auxdata_to_db <- function(auxdata, db_path, check.and.reorder=FALSE)
-{
-    stopifnot(is.data.frame(auxdata), isTRUEorFALSE(check.and.reorder))
-    auxdata_path <- make_germline_db_auxdata_path(db_path)
-    auxdata_dir <- dirname(auxdata_path)
-    stopifnot(!dir.exists(auxdata_dir))
-
-    ## Even though write_auxdata() will call check_auxdata_col2class()
-    ## internally, we prefer to fail **before** creating the 'auxdata_dir'
-    ## folder.
-    check_auxdata_col2class(auxdata)
-    if (check.and.reorder) {
-        db_J_fasta_file <- get_db_fasta_file(db_path, "J")
-        db_J_allele_names <- names(fasta.seqlengths(db_J_fasta_file))
-        auxdata <- check_and_reorder_igdata_rows(auxdata, db_J_allele_names)
-    }
-    stopifnot(dir.create(auxdata_dir))
-    write_auxdata(auxdata, auxdata_path)
 }
 
 

@@ -197,15 +197,15 @@ list_loci_in_germline_fasta_dir <-
         if (isSingleNonWhiteString(intdata))
             intdata <- read_ndm_data(intdata)
         ## At this point 'intdata' is guaranteed to be a data.frame.
-        ## TODO: Right now write_ndm_data_to_db() fails in a not-so-informative
-        ## way if some J alleles in the db are not annotated in 'intdata' or
-        ## if the latter has more rows than the J alleles in the db.
+        ## TODO: Right now write_intdata_to_db() fails in a not-so-informative
+        ## fashion if some V alleles in the db are not annotated in 'intdata'
+        ## or if the latter has more rows than the V alleles in the db.
         ## It needs to be modified to:
-        ## 1. Fail with an informative error message if some J alleles in
+        ## 1. Fail with an informative error message if some V alleles in
         ##    the db are not annotated in 'intdata'.
         ## 2. Accept an 'intdata' data.frame that has more rows than the
-        ##    J alleles in the db, maybe with a warning.
-        write_ndm_data_to_db(intdata, destdir, check.and.reorder=TRUE)
+        ##    V alleles in the db, maybe with a warning.
+        write_intdata_to_db(intdata, destdir, check.and.reorder=TRUE)
     }
 
     if (!(is.null(auxdata) || auto_auxdata)) {
@@ -214,7 +214,7 @@ list_loci_in_germline_fasta_dir <-
             auxdata <- read_auxdata(auxdata)
         ## At this point 'auxdata' is guaranteed to be a data.frame.
         ## TODO: write_auxdata_to_db() has the same problems as
-        ## write_ndm_data_to_db(). See previous TODO above.
+        ## write_intdata_to_db(). See previous TODO above.
         write_auxdata_to_db(auxdata, destdir, check.and.reorder=TRUE)
     }
 }

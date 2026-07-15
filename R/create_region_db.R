@@ -380,7 +380,7 @@ create_region_db <- function(destdir, fasta_files,
         identical(allele_names, cleaned_allele_set_mcols[ , "allele_name"])
     )
     ndm_data <- cleaned_allele_set_mcols[ , names(NDM_DATA_COL2CLASS)]
-    write_ndm_data_to_db(as.data.frame(ndm_data), destdir)
+    write_intdata_to_db(as.data.frame(ndm_data), destdir)
     if (verbose)
         message("ok.\n")
 }
