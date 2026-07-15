@@ -1,6 +1,8 @@
 High-priority TODO list
 =======================
 
+o Remove vignettes/tmp/ once we're done with the igblastr paper.
+
 o More testing of combine_germline_dbs() and combine_c_region_dbs(). What
   happens if we try to combine 2 germline dbs with no intdata or 2 germline dbs
   with no auxdata? Or if we try to combine a germline db with intdata with a
