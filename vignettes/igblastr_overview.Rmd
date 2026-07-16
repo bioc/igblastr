@@ -18,15 +18,22 @@ output:
     toc_float: true
 ---
 
+<style type="text/css">
+p.caption {
+  text-align: center;
+}
+</style>
 
 ```{r setup, include=FALSE}
 library(BiocStyle)
 library(igblastr)
 reset_germline_dbs()
+reset_c_region_dbs()
 ```
 
 
 # Introduction
+
 
 The Immunoglobulin Basic Local Alignment Search Tool (IgBLAST) is a
 specialized bioinformatics tool developed by the National Center for
@@ -511,7 +518,7 @@ by locus or chain type.
 plot_gene_dist <- function(AIRR_df, loc) {
     df_v_gene <- AIRR_df |>
         filter(locus == loc) |>
-        mutate(v_gene = allele2gene(v_call)) |> # drop allele info
+        mutate(v_gene = allele2gene(v_call)) |>  # drop allele info
         group_by(v_gene) |>
         summarize(n = n(), .groups = "drop") |>
         mutate(frac = n / sum(n))
@@ -619,15 +626,18 @@ organisms. This can be useful to analyze BCR sequences from a hybrid organism
 like a humanized mouse.
 
 To illustrate this, we're going to analyze BCR sequences from KyDab,
-the Kymouse Antibody Database: <https://kydab.naturalantibody.com/>. More
-precisely, we're going to analyze the Kymouse heavy-chain BCR sequences from
-the [Influenza #1 Project](https://kydab.naturalantibody.com/influenza-01)
-from KyDab.
+the Kymouse Antibody Database: <https://kydab.naturalantibody.com/>.
+In Kymab’s Intelliselect Transgenic mouse (Kymouse), a complete set of
+human variable (V), diversity (D), and junction (J) genes of the IGH locus
+as well as the V and J genes of the Igλ and Igκ loci were inserted at the
+sites of the endogenous mouse loci.
 
 ### Prepare the query sequences
 
-The 3,950 heavy-chain BCR sequences from this project are stored in
-the `Influenza-KV7015_heavy.fasta` file included in `r Biocpkg("igblastr")`:
+We're going to analyze the Kymouse heavy-chain BCR sequences from
+the [Influenza #1 Project](https://kydab.naturalantibody.com/influenza-01)
+from KyDab. The 3,950 heavy-chain BCR sequences from this project are stored
+in the `Influenza-KV7015_heavy.fasta` file included in `r Biocpkg("igblastr")`:
 ```{r}
 fasta_file <- "Influenza-KV7015_heavy.fasta"
 query <- system.file(package="igblastr", "extdata",
@@ -668,7 +678,7 @@ AIRR_df <- igblastn(query, num_alignments_V=1,
 ### A quick look at columns `v_call`, `d_call`, and `j_call`
 
 In the context of this vignette, we're only going to verify that the Kymouse
-BCR sequences align to human V, D, and J alleles:
+heavy-chain sequences align to human V, D, and J alleles:
 ```{r}
 # count_suffixes() assumes suffixes of length 3, e.g. "_Hs"/"_Mm":
 count_suffixes <- function(x) {nc <- nchar(x); table(substr(x, nc-2, nc))}
@@ -677,7 +687,41 @@ count_suffixes(AIRR_df$v_call)
 count_suffixes(AIRR_df$d_call)
 count_suffixes(AIRR_df$j_call)
 ```
-As expected, all Kymouse BCR sequences align to human V and J alleles.
+
+These counts are plotted in Figure 1 below.
+
+```{r, echo=FALSE, fig.cap="Number of human vs. mouse V/D/J allele assignments<br>for the 3,950 Kymouse heavy-chain sequences<br>in Influenza-KV7015_heavy.fasta", fig.align="center"}
+library(ggplot2)
+plot_human_vs_mouse_assignments <- function(AIRR_df)
+{
+    is_human <- function(allele_name) igblastr:::has_suffix(allele_name, "_Hs")
+    is_mouse <- function(allele_name) igblastr:::has_suffix(allele_name, "_Mm")
+    gene_type <- factor(rep(c("V", "D", "J"), each=2), levels=c("V", "D", "J"))
+    allele_organism <- rep(c("human (_Hs)", "mouse (_Mm)"), 3)
+    counts <- c(sum(is_human(AIRR_df$v_call)),
+                sum(is_mouse(AIRR_df$v_call)),
+                sum(is_human(AIRR_df$d_call), na.rm=TRUE),
+                sum(is_mouse(AIRR_df$d_call), na.rm=TRUE),
+                sum(is_human(AIRR_df$j_call)),
+                sum(is_mouse(AIRR_df$j_call)))
+    labs <- counts
+    counts[counts == 0L] <- max(counts) * 0.003
+    data <- data.frame(`gene type`=gene_type,
+                       `allele organism`=allele_organism,
+                       `allele assignments`=counts,
+                       lab=labs, check.names=FALSE)
+    ggplot(data, aes(x=`gene type`, y=`allele assignments`,
+                     fill=`allele organism`)) +
+        geom_bar(position="dodge", stat="identity") +
+        coord_cartesian(ylim=c(0, max(counts) * 1.15)) +
+        theme(axis.text=element_text(face="bold")) +
+        geom_text(data=data, aes(x=`gene type`, y=`allele assignments`,
+                                 label=lab),
+                  position=position_dodge(width=0.9), vjust=-1)
+}
+plot_human_vs_mouse_assignments(AIRR_df)
+```
+As expected, all Kymouse heavy-chain sequences align to human V and J alleles.
 Most also align to human D alleles, with only a small fraction (less than 6%)
 aligning to mouse D alleles instead.
 
