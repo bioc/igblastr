@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 15 July 2026"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 17 July 2026"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -667,6 +667,10 @@ use_germline_db(db_name)
 list_germline_dbs()
 ```
 
+Note that the Kymouse BCR sequences from KyDab project Influenza #1 are
+not long enough to reach into the C regions so we're not using any
+C-region database for this analysis.
+
 ### Call igblastn() on the query sequences
 
 ```{r}
@@ -680,12 +684,12 @@ AIRR_df <- igblastn(query, num_alignments_V=1,
 In the context of this vignette, we're only going to verify that the Kymouse
 heavy-chain sequences align to human V, D, and J alleles:
 ```{r}
-# count_suffixes() assumes suffixes of length 3, e.g. "_Hs"/"_Mm":
-count_suffixes <- function(x) {nc <- nchar(x); table(factor(substr(x, nc-2, nc), levels=c("_Hs", "_Mm")))}
+# extract_suffix() assumes suffixes of length 3, e.g. "_Hs"/"_Mm":
+extract_suffix <- function(x) {nc <- nchar(x); factor(substr(x, nc-2, nc), levels=c("_Hs", "_Mm"))}
 
-count_suffixes(AIRR_df$v_call)
-count_suffixes(AIRR_df$d_call)
-count_suffixes(AIRR_df$j_call)
+table(extract_suffix(AIRR_df$v_call))
+table(extract_suffix(AIRR_df$d_call))
+table(extract_suffix(AIRR_df$j_call))
 ```
 
 These counts are plotted in Figure 1 below.
