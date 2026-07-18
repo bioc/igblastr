@@ -208,7 +208,7 @@
     ##      as "repeated" by clean_allele_set() or clean_[VJ]_allele_set().
     ##      In this case the allele name is in 'DORsummary$allele_name' but
     ##      with a corresponding suffix in 'DORsummary$suffix' set to NA.
-    drop_me <- allele_names %notin% DORsummary[ , "allele_name"]
+    drop_me <- !(allele_names %in% DORsummary[ , "allele_name"])
     stopifnot(identical(allele_names[!drop_me], DORsummary[ , "allele_name"]))
     drop_me[!drop_me] <- is.na(DORsummary[ , "suffix"])
 
@@ -281,7 +281,7 @@
     ## Sanity checks.
     DORsummary_allele_name <- DORsummary[ , "allele_name"]
     stopifnot(all(DORsummary_allele_name %in% allele_names))
-    was_excluded <- allele_names %notin% DORsummary_allele_name
+    was_excluded <- !(allele_names %in% DORsummary_allele_name)
     stopifnot(identical(allele_names[!was_excluded], DORsummary_allele_name),
               all(allele_names[was_excluded] %in% excluded_alleles))
 }
