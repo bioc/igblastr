@@ -681,7 +681,7 @@ In the context of this vignette, we're only going to verify that the Kymouse
 heavy-chain sequences align to human V, D, and J alleles:
 ```{r}
 # count_suffixes() assumes suffixes of length 3, e.g. "_Hs"/"_Mm":
-count_suffixes <- function(x) {nc <- nchar(x); table(substr(x, nc-2, nc))}
+count_suffixes <- function(x) {nc <- nchar(x); table(factor(substr(x, nc-2, nc), levels=c("_Hs", "_Mm")))}
 
 count_suffixes(AIRR_df$v_call)
 count_suffixes(AIRR_df$d_call)

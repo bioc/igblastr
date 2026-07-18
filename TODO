@@ -15,6 +15,12 @@ o Fill missing documentation:
   - add example to man/auxdata-IO.Rd;
   - document the *_ndm_data functions (ndm_data-IO.Rd file).
 
+o Provide some facilities to help the user restrict search of germline
+  database to a set of alleles obtained by:
+    (1) selecting only some user-specified alleles for a given gene;
+    (2) keeping all alleles from all other genes.
+  Provide this for V, D, and J alleles.
+
 o Some improvements to internal helper .do_create_germline_db(). See
   TODOs in R/create_germline_db.R. Note that this will impact how
   install_custom_germline_db() behaves when the user supplies their

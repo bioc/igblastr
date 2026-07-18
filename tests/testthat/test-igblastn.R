@@ -194,7 +194,7 @@ test_that("igblastn(): 'auxiliary_data' argument", {
 
     auxdata <- load_auxdata(db_name)
     not_called <- c("IGHJ6*03", "IGLJ7*02")  # not in 'AIRR_df0$j_call'
-    auxdata <- subset(auxdata, allele_name %notin% not_called)
+    auxdata <- subset(auxdata, !(allele_name %in% not_called))
     ## Supplying incomplete auxiliary data triggers a warning.
     expect_warning(
       AIRR_df <- igblastn(query10, auxiliary_data=auxdata, num_alignments_J=1),
@@ -203,7 +203,7 @@ test_that("igblastn(): 'auxiliary_data' argument", {
     expect_identical(AIRR_df, AIRR_df0)
 
     called <- "IGHJ4*02"  # in 'AIRR_df0$j_call'
-    auxdata <- subset(auxdata, allele_name %notin% called)
+    auxdata <- subset(auxdata, !(allele_name %in% called))
     ## Supplying incomplete auxiliary data triggers a warning.
     expect_warning(
       AIRR_df <- igblastn(query10, auxiliary_data=auxdata, num_alignments_J=1),

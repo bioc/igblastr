@@ -36,7 +36,7 @@ normalize_igblast_organism <- function(igblast_organism,
         stop(wmsg("'", argname, "' must be a single (non-empty) string"))
     ans <- gsub(" +", "_", tolower(trimws2(igblast_organism)))
     igblast_organisms <- list_igblast_organisms()
-    if (ans %notin% igblast_organisms) {
+    if (!(ans %in% igblast_organisms)) {
         in1string <- paste0(head(igblast_organisms, n=-1L), collapse=", ")
         in1string <- paste0(in1string, ", and ", tail(igblast_organisms, n=1L))
         msg <- c("\"", igblast_organism, "\" is not an IgBLAST organism. ",

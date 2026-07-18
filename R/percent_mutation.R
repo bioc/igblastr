@@ -104,7 +104,7 @@
                   c("_sequence_alignment", "_germline_alignment"))
     if (for.aa)
         COI <- paste0(COI, "_aa")
-    missing_idx <- which(COI %notin% colnames(AIRR_df))
+    missing_idx <- which(!(COI %in% colnames(AIRR_df)))
     if (length(missing_idx) != 0L)
         .stop_on_missing_AIRR_cols(COI[missing_idx])
     sequence_aln <- AIRR_df[[COI[[1L]]]]
