@@ -15,8 +15,9 @@ percent_mutation(AIRR_df, for.aa=FALSE, as.matrix=FALSE)
 
 \arguments{
   \item{AIRR_df}{
-    The AIRR-formatted data.frame or \link[tibble]{tibble} returned by
-    \code{\link{igblastn}()}.
+    An AIRR-formatted data.frame or \link[tibble]{tibble} representing
+    a set of annotated BCR or TCR sequences. This is typically obtained
+    with \code{\link{igblastn}()}.
   }
   \item{for.aa}{
     By default, the percent mutation is computed at the nucleotide level.
@@ -80,6 +81,13 @@ percent_mutation(AIRR_df, for.aa=FALSE, as.matrix=FALSE)
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This
           is the main function in the \pkg{igblastr} package.
+
+    \item The Rearrangement Schema from the AIRR Standards Working Group
+          is documented at
+    \url{https://docs.airr-community.org/en/latest/datarep/rearrangements.html}.
+
+    \item \code{\link{extract_sequence_region}} to extract a region of
+          interest from a set of analyzed sequences.
 
     \item IgBLAST is described at
           \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.

@@ -302,6 +302,9 @@ igblastn_help(long.help=FALSE, show.in.browser=FALSE)
     \item \code{\link{igbrowser}} to display the annotated sequences
           returned by \code{igblastn()} in a browser.
 
+    \item \code{\link{extract_sequence_region}} to extract a region of
+          interest from a set of analyzed sequences.
+
     \item \code{\link{percent_mutation}} to compute the percent mutation
           in the V, D, J segments of a set of BCR or TCR sequences.
 
