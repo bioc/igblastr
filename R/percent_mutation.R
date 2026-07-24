@@ -3,16 +3,6 @@
 ### -------------------------------------------------------------------------
 
 
-.stop_on_missing_AIRR_cols <- function(missing_colnames)
-{
-    in1string <- paste(paste0("\"", missing_colnames, "\""), collapse=", ")
-    what <- if (length(missing_colnames) == 1L) " is" else "s are"
-    msg <- c("The following column", what, " missing in the supplied ",
-             "data.frame or tibble: ", in1string, ". Was it obtained ",
-             "with igblastn()?")
-    stop(wmsg(msg))
-}
-
 ### In some rare situations, the sequences in 'v_sequence_alignment_aa'
 ### don't have the same lengths as the corresponding sequences
 ### in 'v_germline_alignment_aa'. This can happen for example when, for
@@ -106,7 +96,7 @@
         COI <- paste0(COI, "_aa")
     missing_idx <- which(!(COI %in% colnames(AIRR_df)))
     if (length(missing_idx) != 0L)
-        .stop_on_missing_AIRR_cols(COI[missing_idx])
+        stop_on_missing_AIRR_cols(COI[missing_idx])
     sequence_aln <- AIRR_df[[COI[[1L]]]]
     germline_aln <- AIRR_df[[COI[[2L]]]]
     notna_idx <- which(!is.na(sequence_aln))
@@ -144,7 +134,7 @@ percent_mutation <- function(AIRR_df, for.aa=FALSE, as.matrix=FALSE)
         stop(wmsg("'as.matrix' must be TRUE or FALSE"))
     sequence_id <- AIRR_df[["sequence_id"]]
     if (is.null(sequence_id))
-        .stop_on_missing_AIRR_cols("sequence_id")
+        stop_on_missing_AIRR_cols("sequence_id")
     v_perc_mut <- .region_percent_mutation(AIRR_df, "V", for.aa=for.aa)
     d_perc_mut <- .region_percent_mutation(AIRR_df, "D", for.aa=for.aa)
     j_perc_mut <- .region_percent_mutation(AIRR_df, "J", for.aa=for.aa)
@@ -164,7 +154,7 @@ percent_mutation <- function(AIRR_df, for.aa=FALSE, as.matrix=FALSE)
         return(ans)
     locus <- AIRR_df[["locus"]]
     if (is.null(locus))
-        .stop_on_missing_AIRR_cols("locus")
+        stop_on_missing_AIRR_cols("locus")
     ans <- cbind(data.frame(sequence_id=sequence_id, locus=locus), ans)
     if (is_tibble(AIRR_df))
         ans <- as_tibble(ans)

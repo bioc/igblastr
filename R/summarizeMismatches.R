@@ -25,14 +25,13 @@
 ### let's report the counts of mismatches and/or indels that fall in this
 ### interval in the "c" column of the returned matrix.
 
-.FWRCDR_NAMES <- c("fwr1", "cdr1", "fwr2", "cdr2", "fwr3", "cdr3", "fwr4")
-.FWRCDR_JUNC_NAMES <- paste0(c("", .FWRCDR_NAMES), ".", c(.FWRCDR_NAMES, ""))
+.FWRCDR_JUNC_NAMES <- paste0(c("", FWRCDR_NAMES), ".", c(FWRCDR_NAMES, ""))
 
 .insert_junc_names_between_fwrcdr_names <- function()
 {
-    ans <- character(length(.FWRCDR_JUNC_NAMES) + length(.FWRCDR_NAMES))
+    ans <- character(length(.FWRCDR_JUNC_NAMES) + length(FWRCDR_NAMES))
     ans[c(TRUE, FALSE)] <- .FWRCDR_JUNC_NAMES
-    ans[c(FALSE, TRUE)] <- .FWRCDR_NAMES
+    ans[c(FALSE, TRUE)] <- FWRCDR_NAMES
     ans
 }
 
@@ -70,7 +69,7 @@
         )
         all_ranges <- c(all_ranges, junction_ranges)
         stopifnot(identical(names(all_ranges),
-                            c(.FWRCDR_NAMES, .FWRCDR_JUNC_NAMES)))
+                            c(FWRCDR_NAMES, .FWRCDR_JUNC_NAMES)))
         all_ranges_names <- .insert_junc_names_between_fwrcdr_names()
         all_ranges <- all_ranges[all_ranges_names]
         stopifnot(identical(names(all_ranges), all_ranges_names))
@@ -341,7 +340,7 @@
     function(AIRR_df, region_type, ROI_ranges, germline_db)
 {
     mm_pos <- .compute_mm_pos(AIRR_df, region_type, germline_db)
-    .count_hits_per_ROI(mm_pos, ROI_ranges, .FWRCDR_NAMES)
+    .count_hits_per_ROI(mm_pos, ROI_ranges, FWRCDR_NAMES)
 }
 
 ### Infer nb of single nucleotide insertions in each FWR/CDR region from
@@ -350,7 +349,7 @@
     function(AIRR_df, region_type, ROI_ranges)
 {
     ins_pos <- .compute_ins_pos(AIRR_df, region_type)
-    .count_hits_per_ROI(ins_pos, ROI_ranges, .FWRCDR_NAMES)
+    .count_hits_per_ROI(ins_pos, ROI_ranges, FWRCDR_NAMES)
 }
 
 ### Infer nb of single nucleotide deletions in each FWR/CDR region and

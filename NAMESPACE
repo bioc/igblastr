@@ -218,6 +218,10 @@ export(
     ## igbrowser.R:
     igbrowser, bcr_browser,
 
+    ## extract_sequence_region.R:
+    extract_sequence_region,
+    extract_region_length,
+
     ## percent_mutation.R:
     percent_mutation,
 

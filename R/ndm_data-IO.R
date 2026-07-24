@@ -5,6 +5,9 @@
 
 
 ### Not exported!
+FWRCDR_NAMES <- c("fwr1", "cdr1", "fwr2", "cdr2", "fwr3", "cdr3", "fwr4")
+
+### Not exported!
 ### Not the true colnames used in IgBLAST "ndm" files: ours are all
 ### lowercase and we've replaced spaces with underscores.
 ### Note that many columns are redundant:
@@ -32,6 +35,8 @@ NDM_DATA_COL2CLASS <- c(
 
 ### Not exported!
 V_GENE_SEGMENTS <- c("fwr1", "cdr1", "fwr2", "cdr2", "fwr3")
+stopifnot(identical(V_GENE_SEGMENTS,
+                    head(FWRCDR_NAMES, n=length(V_GENE_SEGMENTS))))
 V_GENE_DELINEATION_COLNAMES <- paste0(rep(V_GENE_SEGMENTS, each=2L),
                                       c("_start", "_end"))
 stopifnot(all(V_GENE_DELINEATION_COLNAMES %in% names(NDM_DATA_COL2CLASS)))
