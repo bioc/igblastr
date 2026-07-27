@@ -78,6 +78,9 @@ extract_region_length(AIRR_df, region_type)
     \item \code{\link{percent_mutation}} to compute the percent mutation
           in the V, D, J segments of a set of BCR or TCR sequences.
 
+    \item \code{\link{net_charge}} to compute the net charges of amino acid
+          sequences.
+
     \item IgBLAST is described at
           \url{https://pubmed.ncbi.nlm.nih.gov/23671333/}.
 

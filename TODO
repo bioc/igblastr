@@ -113,11 +113,13 @@ o NEW FEATURE: Mismatch/indel summarization:
 
 o NEW FEATURE: Add functionality to calculate the following features for
   a set of BCR sequences:
-    1. CDRH3 length (heavy and light)
-    2. net charge
-    3. isoelectric point
-    4. hydrophobicity
+    1. CDRH3 length (heavy and light)               - DONE
+    2. net charge (Peptides::charge())              - DONE
+    3. isoelectric point (Peptides::pI())
+    4. hydrophobicity (Peptides::hydrophobicity())
     5. polyreactivity
+  Note that CRAN package Peptides provides function for 2 (Peptides::charge()),
+  3 (Peptides::pI()), and 4 (Peptides::hydrophobicity()).
   See email thread from April 14, 2026 for the details (thread was started by
   Ollivier and includes Mike, Jason, and myself).
 

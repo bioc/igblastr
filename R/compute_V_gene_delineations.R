@@ -90,6 +90,8 @@ stopifnot(
     }
     if (!is.integer(fwrcdr_ends))
         fwrcdr_ends <- setNames(as.integer(fwrcdr_ends), expected_nms)
+    if (anyNA(fwrcdr_ends))
+        stop(wmsg("'fwrcdr_ends' cannot contain NAs"))
     if (!all(fwrcdr_ends >= 1L))
         stop(wmsg("all values in 'fwrcdr_ends' must be >= 1"))
     if (is.unsorted(fwrcdr_ends, strictly=TRUE))
