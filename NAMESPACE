@@ -230,6 +230,11 @@ export(
     tabulate_insertions,
     tabulate_deletions,
 
+    ## net_charge.R:
+    PKA_VALUES,
+    net_charge,
+    extract_region_net_charge,
+
     ## OAS-utils.R:
     OAS_is_up,
     read_OAS_csv_metadata,
