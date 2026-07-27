@@ -1,5 +1,5 @@
 
-testthat("net_charge()", {
+test_that("net_charge()", {
     use_germline_db("_OGRDB.human.IGH+IGK+IGL.202605")
     query <- system.file(package="igblastr", "extdata",
                          "BCR", "heavy_sequences.fasta")
@@ -48,7 +48,7 @@ testthat("net_charge()", {
     expect_identical(colnames(fwr4_charges), head(names(PKA_VALUES), n=-1))
 })
 
-testthat("extract_region_net_charge()", {
+test_that("extract_region_net_charge()", {
     use_germline_db("_OGRDB.human.IGH+IGK+IGL.202605")
     query <- system.file(package="igblastr", "extdata",
                          "BCR", "light_sequences.fasta")

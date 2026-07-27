@@ -23,7 +23,7 @@ test_that("extract_sequence_region()", {
     expect_identical(concat1, concat2)
 
     for (region_type in igblastr:::VDJ_REGION_TYPES) {
-        regions <- extract_sequence_region(AIRR_df, region_type, as.aa=TRUE)
+        regions <- extract_sequence_region(AIRR_df, region_type)
         expect_true(is.character(regions))
         expect_equal(length(regions), nrow(AIRR_df))
     }
