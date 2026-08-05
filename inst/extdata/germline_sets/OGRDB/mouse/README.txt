@@ -9,21 +9,25 @@ Content
 
 - README.txt:  This file.
 
+- C57BL_6J/:   Germline sequences for mouse strain C57BL/6J. See README.md
+               files in C57BL_6J/ subfolders for more information.
+
 - CAST_EiJ/:   Germline sequences for mouse strain CAST/EiJ. See README.md
-               in CAST_EiJ/ subfolder for more information.
+               files in CAST_EiJ/ subfolders for more information.
 
 - LEWES_EiJ/:  Germline sequences for mouse strain LEWES/EiJ. See README.md
-               in LEWES_EiJ/ subfolder for more information.
+               files in LEWES_EiJ/ subfolders for more information.
 
 - MSM_MsJ/:    Germline sequences for mouse strain MSM/MsJ. See README.md
-               in MSM_MsJ/ subfolder for more information.
+               files in MSM_MsJ/ subfolders for more information.
 
 - NOD_ShiLtJ/: Germline sequences for mouse strain NOD/ShiLtJ. See README.md
-               in NOD_ShiLtJ/ subfolder for more information.
+               files in NOD_ShiLtJ/ subfolders for more information.
 
 - PWD_PhJ/:    Germline sequences for mouse strain PWD/PhJ. See README.md
-               in PWD_PhJ/ subfolder for more information.
+               files in PWD_PhJ/ subfolders for more information.
 
 - download_mouse_germline_sequences.R: The code used to generate all
-           the FASTA files in the strain-specific subfolders of this folder.
+               the FASTA and _gl.aux files in the strain-specific subfolders
+               of this folder.
 
