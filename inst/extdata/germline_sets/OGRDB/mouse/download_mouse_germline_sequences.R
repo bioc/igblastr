@@ -4,6 +4,7 @@
 library(igblastr)
 
 MOUSE_STRAIN_GERMLINE_SETS <- list(
+    C57BL_6J  =list(`202410`=c(IGH=5, IGKV=1, IGLV=1)),
     CAST_EiJ  =list(`202205`=c(IGH=1, IGKV=1, IGLV=1),
                     `202603`=c(IGH=2, IGKV=1, IGLV=2)),
     LEWES_EiJ =list(`202205`=c(IGH=1, IGKV=1, IGLV=1),
@@ -15,6 +16,15 @@ MOUSE_STRAIN_GERMLINE_SETS <- list(
 )
 
 ALL_STRAINS_GERMLINE_SETS <- c(`IGKJ (all strains)`=1, `IGLJ (all strains)`=1)
+
+.normalize_germline_sets <- function(strain, germline_sets)
+{
+    stopifnot(length(germline_sets) >= 1L, length(germline_sets) <= 3L)
+    if (strain == "C57BL/6J")
+        strain <- c("C57BL/6", rep.int(strain, length(germline_sets) - 1L))
+    names(germline_sets) <- paste(strain, names(germline_sets))
+    c(germline_sets, ALL_STRAINS_GERMLINE_SETS)
+}
 
 download_mouse_germline_sequences <- function(overwrite=FALSE)
 {
@@ -28,8 +38,7 @@ download_mouse_germline_sequences <- function(overwrite=FALSE)
             message("Generating FASTA files for ", strain, " ",
                     "version ", version, " ... ", appendLF=FALSE)
             germline_sets <- strain_germline_sets[[j]]
-            names(germline_sets) <- paste(strain, names(germline_sets))
-            germline_sets <- c(germline_sets, ALL_STRAINS_GERMLINE_SETS)
+            germline_sets <- .normalize_germline_sets(strain, germline_sets)
             destdir <- file.path(strain_dir, version)
             filenames <- download_OGRDB_germline_sequences("Mus musculus",
                                         germline_sets,
@@ -41,6 +50,8 @@ download_mouse_germline_sequences <- function(overwrite=FALSE)
     }
 }
 
+download_mouse_germline_sequences()
+
 make_mouse_auxdata <- function(strain_dir, version, germline_sets)
 {
     strain <- chartr("_", "/", strain_dir)
@@ -48,8 +59,7 @@ make_mouse_auxdata <- function(strain_dir, version, germline_sets)
     message("Creating IG[HKL]J_gl.aux files for ", strain, " ",
             "version ", version, " ... ", appendLF=FALSE)
     germline_sets <- c(IGH=germline_sets[["IGH"]])
-    names(germline_sets) <- paste(strain, names(germline_sets))
-    germline_sets <- c(germline_sets, ALL_STRAINS_GERMLINE_SETS)
+    germline_sets <- .normalize_germline_sets(strain, germline_sets)
     filenames <- download_OGRDB_germline_json("Mus musculus",
                                 germline_sets,
                                 destdir=jsondir, overwrite=TRUE)
@@ -63,8 +73,6 @@ make_mouse_auxdata <- function(strain_dir, version, germline_sets)
     }
     message("ok")
 }
-
-download_mouse_germline_sequences()
 
 ### Extract auxdata from the OGRDB json files.
 for (i in seq_along(MOUSE_STRAIN_GERMLINE_SETS)) {
@@ -120,8 +128,8 @@ validate_mouse_intdata <- function()
         strain_germline_sets <- MOUSE_STRAIN_GERMLINE_SETS[[i]]
         for (j in seq_along(strain_germline_sets)) {
             germline_sets <- strain_germline_sets[[j]]
-            names(germline_sets) <- paste(strain, names(germline_sets))
-            for (k in seq_along(germline_sets)) {
+            germline_sets <- .normalize_germline_sets(strain, germline_sets)
+            for (k in 1:3) {
                 germline_set <- germline_sets[k]
                 what <- c(organism, " germline set ",
                           "\"", names(germline_set), "\" ",
