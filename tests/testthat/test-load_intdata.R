@@ -43,7 +43,7 @@ test_that("load_intdata()", {
             expect_identical(colnames(intdata2), expected_colnames)
         }
 
-    ## Test on built-in germline dbs with internal data:
+    ## Test on preinstalled germline dbs with internal data:
 
     #intdata <- load_intdata("_OGRDB.human.IGH+IGK+IGL.202309")
     #ok <- validate_ndm_rows(intdata)

@@ -7,7 +7,7 @@ author:
   affiliation: Fred Hutch Cancer Center, Seattle, WA
 - name: Ollivier Hyrien
   affiliation: Fred Hutch Cancer Center, Seattle, WA
-date: "Compiled `r BiocStyle::doc_date()`; Modified 22 July 2026"
+date: "Compiled `r BiocStyle::doc_date()`; Modified 9 August 2026"
 package: igblastr
 vignette: |
   %\VignetteIndexEntry{igblastr overview}
@@ -74,7 +74,7 @@ the package provides several other features, including:
 - The `install_igblast()` function to conveniently download and
   install a pre-compiled IgBLAST from NCBI.
 
-- A set of built-in IgBLAST-compatible _germline databases_ from
+- A set of preinstalled IgBLAST-compatible _germline databases_ from
   [OGRDB](https://ogrdb.airr-community.org/), the AIRR Community’s
   Open Germline Receptor Database.
 
@@ -88,8 +88,8 @@ the package provides several other features, including:
 - Functions to compute, access, and manipulate IgBLAST _internal data_
   and _auxiliary data_.
 
-- A set of built-in IgBLAST-compatible constant region (C-region) databases
-  from IMGT/V-QUEST.
+- A set of preinstalled IgBLAST-compatible constant region (C-region)
+  databases from IMGT/V-QUEST.
 
 - Utility functions to parse the results returned by `igblastn()`.
 
@@ -180,14 +180,14 @@ against which the sequence to analyze will be aligned. Note that such
 database actually consists of three separate BLAST databases bundled
 together: the V-, D-, and J-region BLAST databases.
 
-## Built-in germline databases
+## Preinstalled germline databases
 
-The `r Biocpkg("igblastr")` package includes a set of built-in
+The `r Biocpkg("igblastr")` package includes a set of preinstalled
 IgBLAST-compatible _germline databases_ for human, mouse, rainbow trout,
 and rhesus monkey that were obtained from the OGRDB database (AIRR community).
-To get the list of built-in _germline databases_, run:
+To get the list of preinstalled _germline databases_, run:
 ```{r}
-list_germline_dbs(builtin.only=TRUE)
+list_germline_dbs(preinstalled.only=TRUE)
 ```
 The last part of the database name indicates the date of the download in
 YYYYMM format.
@@ -206,7 +206,7 @@ and skip the subsection below.
 
 AIRR/OGRDB and IMGT/V-QUEST are two providers of germline datasets
 that can be used to create IgBLAST-compatible _germline databases_.
-If, for any reason, none of the built-in AIRR/OGRDB _germline databases_
+If, for any reason, none of the preinstalled AIRR/OGRDB _germline databases_
 is suitable (e.g., the sequences to analyze are not from human, mouse, rainbow
 trout, or rhesus monkey), then we can use `install_IMGT_germline_db()` to
 create and install additional IgBLAST-compatible _germline databases_. Below,
@@ -322,7 +322,7 @@ See `?load_intdata` and `?load_auxdata` for more information.
 
 ### How is this data generated?
 
-For the built-in OGRDB _germline databases_ (the `_OGRDB.*` databases),
+For the preinstalled OGRDB _germline databases_ (the `_OGRDB.*` databases),
 the _internal data_ and _auxiliary data_ is provided by AIRR/OGRDB.
 
 For a _germline database_ created with `install_IMGT_germline_db()` like
@@ -357,7 +357,7 @@ expected to originate from the same organism as the sequences to analyze,
 and must likewise be formatted as a BLAST database. We will refer to this
 database as the C-region database.
 
-The `r Biocpkg("igblastr")` package includes built-in C-region databases
+The `r Biocpkg("igblastr")` package includes preinstalled C-region databases
 for human, mouse, rabbit, rat, and rhesus monkey, obtained from IMGT/V-QUEST.
 The available databases can be listed using:
 ```{r}

@@ -56,11 +56,11 @@ get_intdata_path <- function(igblast_organism, for.aa=FALSE,
     domain_system <- match.arg(domain_system)
     which <- match.arg(which)
 
-    if (!valid_germline_db_name(igblast_organism))
+    if (!germline_db_exists(igblast_organism))
         return(.get_igblast_intdata_path(which, igblast_organism,
                                          for.aa, domain_system))
 
-    ## Treat 'igblast_organism' as a valid germline db name.
+    ## Treat 'igblast_organism' as the name of an existing germline db.
     db_path <- get_germline_db_path(igblast_organism)
     intdata_path <- make_germline_db_intdata_path(db_path,
                                                   for.aa, domain_system)

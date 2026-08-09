@@ -11,6 +11,6 @@ Content
 
 - 202606/: See README.md in 202606/ subfolder.
 
-- download_rainbow_trout_germline_sequences.R: The code used to generate all
-           the FASTA files in the various subfolders of this folder.
+- make_all_data.R: The R script used to generate all the data files
+           (FASTA + _gl.aux) in the various subfolders of this folder.
 

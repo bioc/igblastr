@@ -13,18 +13,22 @@
 
 \usage{
 ## List the cached C-region dbs:
-list_c_region_dbs(builtin.only=FALSE, names.only=FALSE, long.listing=FALSE)
+list_c_region_dbs(preinstalled.only=FALSE,
+                  names.only=FALSE, long.listing=FALSE,
+                  builtin.only=FALSE)
 
 ## Remove a C-region db from igblastr's persistent cache:
 rm_c_region_db(db_name)
 }
 
 \arguments{
-  \item{builtin.only}{
+  \item{preinstalled.only}{
     By default \code{list_c_region_dbs()} returns the list of all cached
-    C-region dbs, including built-in C-region dbs. Set \code{builtin.only}
-    to \code{TRUE} to return only the list of built-in C-region dbs.
-    Note that built-in dbs are prefixed with an underscore (\code{_}).
+    C-region dbs, including the preinstalled C-region dbs.
+    Set \code{preinstalled.only} to \code{TRUE} to return only the list
+    of preinstalled C-region dbs.
+    Note that the names of the preinstalled dbs are prefixed with an
+    underscore (\code{_}).
   }
   \item{names.only}{
     By default \code{list_c_region_dbs()} returns the list of cached
@@ -40,9 +44,12 @@ rm_c_region_db(db_name)
 
     Ignored if \code{names.only} is set to \code{TRUE}.
   }
+  \item{builtin.only}{
+    Deprecated.
+  }
   \item{db_name}{
     A single string specifying the name of the C-region db to remove
-    from \pkg{igblastr}'s persistent cache. This cannot be a built-in db.
+    from \pkg{igblastr}'s persistent cache. This cannot be a preinstalled db.
   }
 }
 
@@ -65,14 +72,14 @@ rm_c_region_db(db_name)
     See \code{?\link{list_germline_dbs}} for utilities that manage
     cached germline dbs.
   }
-  \subsection{Built-in dbs}{
+  \subsection{Preinstalled dbs}{
     The \pkg{igblastr} package comes with preinstalled cached germline and
-    C-region dbs that are called \emph{built-in dbs}.
+    C-region dbs that are called \emph{preinstalled dbs}.
 
-    Built-in dbs have their name prefixed with an underscore (\code{_}).
+    Preinstalled dbs have their name prefixed with an underscore (\code{_}).
 
-    Note that the built-in C-region dbs from IMGT were downloaded from
-    \url{https://www.imgt.org/vquest/refseqh.html#constant-sets} and
+    Note that the preinstalled C-region dbs from IMGT were downloaded
+    from \url{https://www.imgt.org/vquest/refseqh.html#constant-sets} and
     included in the \pkg{igblastr} package on the date indicated by the
     suffix of the db name.
   }
@@ -107,7 +114,7 @@ rm_c_region_db(db_name)
 \examples{
 if (!has_igblast()) install_igblast()
 
-## 7 built-in C-region dbs (prefixed with an underscore):
+## 9 preinstalled C-region dbs (prefixed with an underscore):
 list_c_region_dbs()
 list_c_region_dbs(names.only=TRUE)    # db names only
 list_c_region_dbs(long.listing=TRUE)  # long listing

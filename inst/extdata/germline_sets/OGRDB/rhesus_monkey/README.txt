@@ -13,6 +13,6 @@ Content
 
 - 202602/: See README.md in 202602/ subfolder.
 
-- download_rhesus_monkey_germline_sequences.R: The code used to generate all
-           the FASTA files in the various subfolders of this folder.
+- make_all_data.R: The R script used to generate all the data files
+           (FASTA + _gl.aux) in the various subfolders of this folder.
 

@@ -12,8 +12,8 @@
   \emph{IMGT group}.
 
   If you use OGRDB in your research, please cite:
-  \preformatted{  The current landscape of adaptive immune receptor genomic and
-  repertoire data: OGRDB and VDJbase
+  \preformatted{  The current landscape of adaptive immune receptor genomic
+  and repertoire data: OGRDB and VDJbase
   Lees, Peres, Klein, Amos et al., Nucleic Acids Research, November 2025.
   https://doi.org/10.1093/nar/gkaf1094}
 }
@@ -116,6 +116,9 @@ download_OGRDB_germline_sequences(organism, germline_sets,
 
 \seealso{
   \itemize{
+    \item \code{\link{install_OGRDB_germline_db}} to install a germline db
+          from OGRDB germline sets.
+
     \item \code{\link{install_custom_germline_db}} to install a germline db
           from user-supplied gene allele sequences.
 

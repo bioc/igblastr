@@ -27,7 +27,6 @@ Content
 - PWD_PhJ/:    Germline sequences for mouse strain PWD/PhJ. See README.md
                files in PWD_PhJ/ subfolders for more information.
 
-- download_mouse_germline_sequences.R: The code used to generate all
-               the FASTA and _gl.aux files in the strain-specific subfolders
-               of this folder.
+- make_all_data.R: The R script used to generate all the data files
+               (FASTA + _gl.aux) in the various subfolders of this folder.
 

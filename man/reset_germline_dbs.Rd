@@ -9,10 +9,10 @@
   pristine state by:
   \enumerate{
     \item Removing \emph{all} the germline dbs currently in \pkg{igblastr}'s
-          persistent cache, including the built-in germline dbs.
-    \item Recreating the predefined set of built-in germline dbs.
+          persistent cache, including the preinstalled germline dbs.
+    \item Recreating the predefined set of preinstalled germline dbs.
   }
-  This means that any non built-in germline db present in the cache WILL
+  This means that any non-preinstalled germline db present in the cache WILL
   BE LOST!
 
   Also note that \code{reset_germline_dbs()} will cancel the current

@@ -161,7 +161,7 @@ db_name <- "_OGRDB.mouse.MSM_MsJ.IGH+IGK+IGL.202603"
 print_J_alleles(db_name, translate=TRUE)
 
 ## The "auxiliary data" included in this germline db is provided by OGRDB.
-## In fact, the "auxiliary data" included in **all** the OGRDB built-in
+## In fact, the "auxiliary data" included in **all** the preinstalled OGRDB
 ## dbs is provided by OGRDB.
 
 ## ---------------------------------------------------------------------
