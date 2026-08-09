@@ -39,10 +39,10 @@ get_auxdata_path <- function(igblast_organism, which=c("live", "original"))
         stop(wmsg("'igblast_organism' must be a single (non-empty) string"))
     which <- match.arg(which)
 
-    if (!valid_germline_db_name(igblast_organism))
+    if (!germline_db_exists(igblast_organism))
         return(.get_igblast_auxdata_path(which, igblast_organism))
 
-    ## Treat 'igblast_organism' as a valid germline db name.
+    ## Treat 'igblast_organism' as the name of an existing germline db.
     db_path <- get_germline_db_path(igblast_organism)
     auxdata_path <- make_germline_db_auxdata_path(db_path)
 

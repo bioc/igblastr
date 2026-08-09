@@ -17,9 +17,9 @@ Content
 
 - 202605/: See README.md in 202605/ subfolder.
 
-- diffs/: A collection of R scripts that show what has changed between
-          versions of the _OGRDB.human.IGH+IGK+IGL.* germline dbs.
+- diffs/:  A collection of R scripts that show what has changed between
+           versions of the _OGRDB.human.IGH+IGK+IGL.* germline dbs.
 
-- download_human_germline_sequences.R: The code used to generate all
-           the FASTA files in the various subfolders of this folder.
+- make_all_data.R: The R script used to generate all the data files
+           (FASTA + _gl.aux) in the various subfolders of this folder.
 

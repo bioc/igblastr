@@ -6,6 +6,18 @@
 ###
 
 
+check_db_name <- function(db_name, argname="db_name")
+{
+    if (!isSingleNonWhiteString(db_name))
+        stop(wmsg("'", argname, "' must be a single (non-empty) string"))
+    if (has_whitespace(db_name))
+        stop(wmsg("'", argname, "' cannot contain whitespace characters"))
+    if (grepl("[/\\]", db_name))
+        stop(wmsg("'", argname, "' cannot contain slahes, forward (/) or ",
+                  "backward (\\)"))
+}
+
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### get_db_fasta_file()
 ### get_db_original_fasta_dir()
@@ -172,14 +184,15 @@ get_db_original_fasta_dir <- function(db_path, region_type=VDJC_REGION_TYPES)
 
 ### 'long.listing' is ignored when 'names.only' is TRUE.
 list_dbs <- function(dbs_home, what=c("germline", "C-region"),
-                     builtin.only=FALSE,
+                     preinstalled.only=FALSE,
                      with.intdata.only=FALSE, with.auxdata.only=FALSE,
-                     names.only=FALSE, long.listing=FALSE)
+                     names.only=FALSE, long.listing=FALSE,
+                     builtin.only=FALSE)
 {
     stopifnot(isSingleNonWhiteString(dbs_home), dir.exists(dbs_home))
     what <- match.arg(what)
-    if (!isTRUEorFALSE(builtin.only))
-        stop(wmsg("'builtin.only' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(preinstalled.only))
+        stop(wmsg("'preinstalled.only' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(with.intdata.only))
         stop(wmsg("'with.intdata.only' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(with.auxdata.only))
@@ -188,8 +201,16 @@ list_dbs <- function(dbs_home, what=c("germline", "C-region"),
         stop(wmsg("'names.only' must be TRUE or FALSE"))
     if (!isTRUEorFALSE(long.listing))
         stop(wmsg("'long.listing' must be TRUE or FALSE"))
+    if (!isTRUEorFALSE(builtin.only))
+        stop(wmsg("'builtin.only' must be TRUE or FALSE"))
+    if (builtin.only) {
+        msg <- c("The 'builtin.only' argument was renamed ",
+                 "'preinstalled.only'. Please use the latter instead.")
+        .Deprecated(msg=wmsg(msg))
+        preinstalled.only <- builtin.only
+    }
     db_names <- list.dirs(dbs_home, full.names=FALSE, recursive=FALSE)
-    if (builtin.only)
+    if (preinstalled.only)
         db_names <- db_names[has_prefix(db_names, "_")]
     db_names <- .sort_db_names(db_names)
     if (what == "germline") {

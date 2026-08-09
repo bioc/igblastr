@@ -170,8 +170,8 @@ set_internal_igblast_root <- function(version)
         stop(wmsg("Anomaly: no '", internal_roots, "'."))
     igblast_root <- file.path(internal_roots, version)
     .check_igblast_installation(igblast_root)
-    using_path <- file.path(internal_roots, "USING")
-    writeLines(version, using_path)
+    USING_path <- file.path(internal_roots, "USING")
+    writeLines(version, USING_path)
     #clean_germline_blastdbs()
     #clean_c_region_blastdbs()
     igblast_root
@@ -186,19 +186,19 @@ get_internal_igblast_root <- function()
     internal_roots <- get_internal_igblast_roots()
     #if (!dir.exists(internal_roots))
     #    return(NA_character_)
-    using_path <- file.path(internal_roots, "USING")
-    if (!file.exists(using_path))
+    USING_path <- file.path(internal_roots, "USING")
+    if (!file.exists(USING_path))
         return(NA_character_)
-    version <- readLines(using_path)
+    version <- readLines(USING_path)
     if (length(version) != 1L)
-        stop(wmsg("Anomaly: file '", using_path, "' is corrupted."),
+        stop(wmsg("Anomaly: file '", USING_path, "' is corrupted."),
              "\n  ",
              wmsg("File should contain exactly one line. ",
                   "Try to repair with set_igblast_root() ",
                   "(see '?set_igblast_root' for more information)."))
     igblast_root <- file.path(internal_roots, version)
     if (!dir.exists(igblast_root))
-        stop(wmsg("Anomaly: file '", using_path, "' is invalid."),
+        stop(wmsg("Anomaly: file '", USING_path, "' is invalid."),
              "\n  ",
              wmsg("File content ('", version, "') is not the version ",
                   "of an igblastr-managed installation of IgBLAST. ",
@@ -238,7 +238,7 @@ get_internal_igblast_root <- function()
 ### above in this file for more information.
 ### Checks the returned installation only if it's an "external" one.
 ### Exported!
-get_igblast_root <- function()
+.get_igblast_root <- function()
 {
     ## 1. Look for an "internal" IgBLAST installation that is in use, and
     ##    return it if any.
@@ -261,8 +261,22 @@ get_igblast_root <- function()
     }
 
     ## All the above have failed!
-    stop("No IgBLAST installation found.\n  ",
-         wmsg(.what_to_do_if_no_internal_installation_yet()))
+    NA_character_
+}
+
+### Returns absolute path to the IgBLAST installation used by igblastr.
+### In case of an "external" installation, the path is returned with
+### the "obtained_via" attribute on it. See .get_external_igblast_root()
+### above in this file for more information.
+### The returned installation gets checked only if it's an "external" one.
+### Exported!
+get_igblast_root <- function()
+{
+    igblast_root <- .get_igblast_root()
+    if (is.na(igblast_root))
+        stop("No IgBLAST installation found.\n  ",
+             wmsg(.what_to_do_if_no_internal_installation_yet()))
+    igblast_root
 }
 
 
@@ -270,16 +284,39 @@ get_igblast_root <- function()
 ### set_igblast_root()
 ###
 
+### Remove the USING file if any.
+.remove_USING_file <- function()
+{
+    internal_roots <- get_internal_igblast_roots()
+    if (dir.exists(internal_roots)) {
+        USING_path <- file.path(internal_roots, "USING")
+        if (file.exists(USING_path))
+            unlink(USING_path)
+    }
+}
+
 ### Sets the path to the IgBLAST installation to use and returns it.
 ### This can be either an "internal" or an "external" installation.
 ### In the former case, 'version_or_path' should be the version of an
 ### existing internal installation.
 ### In the latter case, it should be the full path (absolute or relative)
 ### to the root directory of a valid external installation.
-### Always checks the returned installation.
+### Checks the returned installation.
+### Additionally, 'version_or_path' can be omitted. This has the effect of
+### unselecting the internal installation that is currently in use (it does
+### this by removing the USING file, if any). This is an undocumented feature.
 ### Exported!
 set_igblast_root <- function(version_or_path)
 {
+    if (missing(version_or_path)) {
+        .remove_USING_file()
+        igblast_root <- .get_igblast_root()
+        if (is.na(igblast_root))
+            warning("No IgBLAST installation found.\n  ",
+                    wmsg(.what_to_do_if_no_internal_installation_yet()))
+        return(invisible(igblast_root))
+    }
+
     if (!isSingleNonWhiteString(version_or_path))
         stop(wmsg("'version_or_path' must be a single (non-empty) string"))
 
@@ -309,13 +346,7 @@ set_igblast_root <- function(version_or_path)
         ## 'version_or_path' is the path to an existing directory
         ## expected to contain a valid "external" IgBLAST installation.
         igblast_root <- .set_external_igblast_root(version_or_path)
-        ## Remove the USING file if any.
-        internal_roots <- get_internal_igblast_roots()
-        if (dir.exists(internal_roots)) {
-            using_path <- file.path(internal_roots, "USING")
-            if (file.exists(using_path))
-                unlink(using_path)
-        }
+        .remove_USING_file()
         return(invisible(igblast_root))
     }
     stop(wmsg("'version_or_path' must be either a version number ",

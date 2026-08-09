@@ -6,10 +6,7 @@
 
 .check_comb_db_name <- function(db_name)
 {
-    if (!isSingleNonWhiteString(db_name))
-        stop(wmsg("'db_name' must be a single (non-empty) string"))
-    if (has_whitespace(db_name))
-        stop(wmsg("'db_name' cannot contain whitespace characters"))
+    check_db_name(db_name)
     if (!has_prefix(db_name, "comb"))
         stop(wmsg("'db_name' must start with \"comb\""))
 }

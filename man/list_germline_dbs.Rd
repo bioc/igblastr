@@ -13,21 +13,24 @@
 
 \usage{
 ## List the cached germline dbs:
-list_germline_dbs(builtin.only=FALSE,
+list_germline_dbs(preinstalled.only=FALSE,
                   with.intdata.only=FALSE,
                   with.auxdata.only=FALSE,
-                  names.only=FALSE, long.listing=FALSE)
+                  names.only=FALSE, long.listing=FALSE,
+                  builtin.only=FALSE)
 
 ## Remove a germline db from igblastr's persistent cache:
 rm_germline_db(db_name)
 }
 
 \arguments{
-  \item{builtin.only}{
+  \item{preinstalled.only}{
     By default \code{list_germline_dbs()} returns the list of all cached
-    germline dbs, including built-in germline dbs. Set \code{builtin.only}
-    to \code{TRUE} to return only the list of built-in germline dbs.
-    Note that built-in dbs are prefixed with an underscore (\code{_}).
+    germline dbs, including the preinstalled germline dbs.
+    Set \code{preinstalled.only} to \code{TRUE} to return only the list
+    of preinstalled germline dbs.
+    Note that the names of the preinstalled dbs are prefixed with an
+    underscore (\code{_}).
   }
   \item{with.intdata.only}{
     Set \code{with.intdata.only} to \code{TRUE} to return only the list
@@ -71,9 +74,12 @@ rm_germline_db(db_name)
 
     Ignored if \code{names.only} is set to \code{TRUE}.
   }
+  \item{builtin.only}{
+    Deprecated.
+  }
   \item{db_name}{
     A single string specifying the name of the germline db to remove
-    from \pkg{igblastr}'s persistent cache. This cannot be a built-in db.
+    from \pkg{igblastr}'s persistent cache. This cannot be a preinstalled db.
   }
 }
 
@@ -96,18 +102,18 @@ rm_germline_db(db_name)
     See \code{?\link{list_c_region_dbs}} for utilities that manage
     cached C-region dbs.
   }
-  \subsection{Built-in dbs}{
+  \subsection{Preinstalled dbs}{
     The \pkg{igblastr} package comes with preinstalled cached germline and
-    C-region dbs that are called \emph{built-in dbs}.
+    C-region dbs that are called \emph{preinstalled dbs}.
 
-    Built-in dbs have their name prefixed with an underscore (\code{_}).
+    Preinstalled dbs have their name prefixed with an underscore (\code{_}).
 
     Note that additional dbs can easily be installed with functions
     like \code{\link{install_IMGT_germline_db}} or
     \code{\link{install_custom_germline_db}}.
   }
-  \subsection{AIRR-community/OGRDB built-in cached dbs}{
-    Note that the built-in germline dbs starting with \code{_OGRDB}
+  \subsection{AIRR-community/OGRDB preinstalled dbs}{
+    Note that the preinstalled germline dbs starting with \code{_OGRDB}
     are made of the AIRR-community/OGRDB germline sets available at
     \url{https://ogrdb.airr-community.org/germline_sets/Homo\%20sapiens}
     for human, at
@@ -171,9 +177,9 @@ rm_germline_db(db_name)
 \examples{
 if (!has_igblast()) install_igblast()
 
-## Get list of built-in germline dbs only.
-list_germline_dbs(builtin.only=TRUE)
-list_germline_dbs(builtin.only=TRUE, names.only=TRUE)  # db names only
+## Get list of preinstalled germline dbs only:
+list_germline_dbs(preinstalled.only=TRUE)
+list_germline_dbs(preinstalled.only=TRUE, names.only=TRUE)  # db names only
 
 ## Get list of germline dbs that include their own internal data:
 list_germline_dbs(with.intdata.only=TRUE)

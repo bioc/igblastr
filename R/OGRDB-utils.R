@@ -56,7 +56,7 @@ normalize_OGRDB_organism <- function(organism)
 ### Parse names of OGRDB germline sets
 ###
 
-.IGcomp_is_valid <- function(IGcomp) grepl("^IG[HKL]", IGcomp)
+.IG_part_is_valid <- function(IG_part) grepl("^IG[HKL]", IG_part)
 
 .stop_on_bad_OGRDB_set_name <- function(organism, set_name, what)
 {
@@ -70,13 +70,13 @@ normalize_OGRDB_organism <- function(organism)
 }
 
 ### Returns a 2-column matrix with 1 row per set name. The column names
-### are "strain" and "IGcomp". The valid "IGcomp" values for mouse are IGH,
-### IGKV, IGKJ, IGLV, and IGLJ at the moment.
+### are "strain" and "IG_part". The valid "IG_part" values for mouse are
+### IGH, IGKV, IGKJ, IGLV, and IGLJ at the moment.
 ### Performs various sanity checks that should never fail for valid mouse
 ### germline set names.
 .parse_OGRDB_mouse_set_names <- function(set_names)
 {
-    stopifnot(is.character(set_names))
+    stopifnot(is.character(set_names), length(set_names) != 0L)
 
     stop_if_bad_set_names <- function(bad_idx) {
         if (length(bad_idx) != 0L) {
@@ -86,29 +86,29 @@ normalize_OGRDB_organism <- function(organism)
         }
     }
 
-    list_of_comps <- strsplit(set_names, " ", fixed=TRUE)
-    ncomps <- lengths(list_of_comps)
-    bad_idx <- which(ncomps < 2L | 3L < ncomps)
+    list_of_parts <- strsplit(set_names, " ", fixed=TRUE)
+    nparts <- lengths(list_of_parts)
+    bad_idx <- which(nparts < 2L | 3L < nparts)
     stop_if_bad_set_names(bad_idx)
 
     ## Special cases: "IGKJ (all strains)" and "IGLJ (all strains)".
-    idx3 <- which(ncomps == 3L)
+    idx3 <- which(nparts == 3L)
     if (length(idx3) != 0L) {
         ok <- vapply(idx3,
-                     function(i) identical(list_of_comps[[i]][2:3],
+                     function(i) identical(list_of_parts[[i]][2:3],
                                            c("(all", "strains)")),
                      logical(1))
         stop_if_bad_set_names(idx3[!ok])
-        list_of_comps[idx3] <-
-            lapply(idx3, function(i) c("", list_of_comps[[i]][[1L]]))
+        list_of_parts[idx3] <-
+            lapply(idx3, function(i) c("", list_of_parts[[i]][[1L]]))
     }
 
     ## Construct 2-column matrix.
-    ans <- matrix(unlist(list_of_comps), ncol=2L, byrow=TRUE,
-                  dimnames=list(set_names, c("strain", "IGcomp")))
+    ans <- matrix(unlist(list_of_parts), ncol=2L, byrow=TRUE,
+                  dimnames=list(set_names, c("strain", "IG_part")))
 
-    ## Check "IGcomp" column.
-    bad_idx <- which(!.IGcomp_is_valid(ans[ , "IGcomp"]))
+    ## Check "IG_part" column.
+    bad_idx <- which(!.IG_part_is_valid(ans[ , "IG_part"]))
     stop_if_bad_set_names(bad_idx)
 
     ans
@@ -133,27 +133,27 @@ extract_mouse_strains_from_OGRDB_set_names <- function(set_names)
 ### Note that **all** OGRDB germline set names have an "IG* component" that
 ### is guaranteed to start with a valid IG locus name, that is, with IGH,
 ### IGK, or IGL.
-extract_IGcomps_from_OGRDB_set_names <- function(organism, set_names)
+extract_IG_parts_from_OGRDB_set_names <- function(organism, set_names)
 {
     stopifnot(isSingleNonWhiteString(organism), is.character(set_names))
     if (organism == "Mus musculus") {
-        IGcomps <- .parse_OGRDB_mouse_set_names(set_names)[ , "IGcomp"]
+        IG_parts <- .parse_OGRDB_mouse_set_names(set_names)[ , "IG_part"]
     } else {
-        bad_idx <- which(!.IGcomp_is_valid(set_names))
+        bad_idx <- which(!.IG_part_is_valid(set_names))
         if (length(bad_idx) != 0L) {
             set_name <- set_names[[bad_idx[[1L]]]]
-            .stop_on_bad_OGRDB_set_name(organism, set_name, "\"IG* component\"")
+            .stop_on_bad_OGRDB_set_name(organism, set_name, "\"IG*\" part")
         }
-        IGcomps <- set_names
+        IG_parts <- set_names
     }
-    setNames(IGcomps, set_names)
+    setNames(IG_parts, set_names)
 }
 
 ### Returns a character vector parallel to 'set_names' that is named with
 ### the supplied germline set names.
 extract_loci_from_OGRDB_set_names <- function(organism, set_names)
 {
-    substr(extract_IGcomps_from_OGRDB_set_names(organism, set_names), 1L, 3L)
+    substr(extract_IG_parts_from_OGRDB_set_names(organism, set_names), 1L, 3L)
 }
 
 

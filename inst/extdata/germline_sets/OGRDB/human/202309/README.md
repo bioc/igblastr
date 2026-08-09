@@ -14,6 +14,6 @@ AIRR-community/OGRDB provides two flavors of each dataset, one called
 the "Reference Set" and the other one called the "Source Set". The `ref/`
 subfolder contains the former and `src/` the latter.
 
-See `download_human_germline_sequences.R` in the parent folder for how
-the FASTA files in the `ref/` and `src/` subfolders were created.
+See `make_all_data.R` in the parent folder for how the data files in the
+`ref/` and `src/` subfolders were created.
 

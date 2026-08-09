@@ -25,26 +25,25 @@ download_rainbow_trout_germline_sequences <- function(overwrite=FALSE)
     }
 }
 
-make_rainbow_trout_auxdata <- function(version, germline_sets)
+download_rainbow_trout_germline_sequences()
+
+make_rainbow_trout_auxdata <- function(version, germline_sets, overwrite=FALSE)
 {
-    dir.create(jsondir <- tempfile())
+    dir.create(json_dir <- tempfile())
     message("Creating IG[HKL]J_gl.aux files in ", version, " ... ",
             appendLF=FALSE)
-    filenames <- download_OGRDB_germline_json("Oncorhynchus mykiss",
-                                germline_sets,
-                                destdir=jsondir, overwrite=TRUE)
-    stopifnot(identical(names(filenames), names(germline_sets)))
-    for (filename in filenames) {
-        locus <- substr(filename, 1L, 3L)
-        json_path <- file.path(jsondir, filename)
-        auxdata <- extract_auxdata_from_ogrdb_json(json_path)
-        destfile <- file.path(version, paste0(locus, "J_gl.aux"))
-        write_auxdata(auxdata, destfile)
-    }
+    json_files <- download_OGRDB_germline_json("Oncorhynchus mykiss",
+                                 germline_sets,
+                                 destdir=json_dir, overwrite=TRUE)
+    stopifnot(identical(names(json_files), names(germline_sets)))
+    auxdata_files <-
+        make_auxdata_files_from_ogrdb_jsons(json_dir, destdir=version,
+                                            overwrite=overwrite)
+    #expected_files <- sprintf("IG%sJ_gl.aux", c("H", "K", "L"))
+    expected_files <- "IGHJ_gl.aux"
+    stopifnot(identical(auxdata_files, expected_files))
     message("ok")
 }
-
-download_rainbow_trout_germline_sequences()
 
 ### Extract auxdata from the OGRDB json files.
 for (i in seq_along(RAINBOW_TROUT_GERMLINE_SETS)) {

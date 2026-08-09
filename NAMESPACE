@@ -183,7 +183,9 @@ export(
     extract_auxdata_from_ogrdb_json,
 
     ## install_OGRDB_germline_db.R:
-    #install_OGRDB_germline_db,
+    make_intdata_files_from_ogrdb_jsons,
+    make_auxdata_files_from_ogrdb_jsons,
+    install_OGRDB_germline_db,
 
     ## download_IMGT_germline_sequences.R:
     IMGT_is_up,

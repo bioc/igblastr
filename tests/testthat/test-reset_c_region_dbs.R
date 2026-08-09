@@ -1,7 +1,8 @@
-test_that(".create_all_builtin_c_region_dbs()", {
-    destdir <- tempfile("builtin_c_region_dbs_")
-    igblastr:::.create_all_builtin_c_region_dbs(destdir)
-    db_list <- igblastr:::list_dbs(destdir, what="C-region", long.listing=TRUE)
+test_that(".preinstall_c_region_dbs()", {
+    install_dir <- tempfile("preinstalled_c_region_dbs_")
+    igblastr:::.preinstall_c_region_dbs(install_dir)
+    db_list <- igblastr:::list_dbs(install_dir, what="C-region",
+                                   long.listing=TRUE)
 
     expect_identical(db_list[["_IMGT.human.IGH+IGK+IGL.202605"]],
                      c(IGH=161L, IGK=5L, IGL=14L))

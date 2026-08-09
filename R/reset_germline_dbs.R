@@ -28,7 +28,7 @@
 }
 
 ### Install db only if missing.
-.install_builtin_OGRDB_germline_db <-
+.preinstall_OGRDB_germline_db <-
     function(install_dir, db_name, fasta_store, loci=IG_LOCI,
              fwrcdr_ends=IMGT_FWRCDR_ENDS, verbose=FALSE)
 {
@@ -41,10 +41,10 @@
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .install_missing_builtin_OGRDB_human_germline_dbs()
+### .preinstall_missing_OGRDB_human_germline_dbs()
 ###
 
-.form_builtin_OGRDB_human_germline_db_name <- function(fasta_store)
+.form_preinstalled_OGRDB_human_germline_db_name <- function(fasta_store)
 {
     stopifnot(isSingleNonWhiteString(fasta_store))
     loci_in1string <- paste(IG_LOCI, collapse="+")
@@ -58,41 +58,41 @@
 }
 
 ### Install db only if missing.
-.install_builtin_OGRDB_human_germline_db <-
+.preinstall_OGRDB_human_germline_db <-
     function(install_dir, fasta_store, verbose=FALSE)
 {
-    db_name <- .form_builtin_OGRDB_human_germline_db_name(fasta_store)
-    .install_builtin_OGRDB_germline_db(install_dir, db_name, fasta_store,
-                                       verbose=verbose)
+    db_name <- .form_preinstalled_OGRDB_human_germline_db_name(fasta_store)
+    .preinstall_OGRDB_germline_db(install_dir, db_name, fasta_store,
+                                  verbose=verbose)
 }
 
-.install_missing_builtin_OGRDB_human_germline_dbs <-
+.preinstall_missing_OGRDB_human_germline_dbs <-
     function(install_dir, human_dir, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(human_dir), dir.exists(human_dir),
               isTRUEorFALSE(verbose))
     subdirs <- list.dirs(human_dir, full.names=FALSE, recursive=FALSE)
-    ## Starting with igblastr 1.0.21/1.1.21, versions 202309 and 202401
-    ## are excluded from the list of built-in OGRDB germline dbs for human.
+    ## Starting with igblastr 1.0.21/1.1.21, versions 202309 and 202401 are
+    ## excluded from the list of OGRDB germline dbs for human to preinstall.
     ## The reason for this is that we found out that the internal
     ## data included in OGRDB germline set IGLambda_VJ versions 1 & 2
     ## is inconsistent. See validate_human_intdata() in
-    ## extdata/germline_sets/OGRDB/human/download_human_germline_sequences.R
+    ## extdata/germline_sets/OGRDB/human/make_all_data.R
     ## for more information.
     exclude_list <- c("202309", "202401")
     subdirs <- setdiff(subdirs, c("diffs", exclude_list))
     fasta_stores <- file.path(human_dir, rep(subdirs, each=2L), c("ref", "src"))
     for (fasta_store in fasta_stores)
-        .install_builtin_OGRDB_human_germline_db(install_dir, fasta_store,
-                                                 verbose=verbose)
+        .preinstall_OGRDB_human_germline_db(install_dir, fasta_store,
+                                            verbose=verbose)
 }
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .install_missing_builtin_OGRDB_mouse_germline_dbs()
+### .preinstall_missing_OGRDB_mouse_germline_dbs()
 ###
 
-.form_builtin_OGRDB_mouse_germline_db_name <- function(fasta_store)
+.form_preinstalled_OGRDB_mouse_germline_db_name <- function(fasta_store)
 {
     stopifnot(isSingleNonWhiteString(fasta_store))
     loci_in1string <- paste(IG_LOCI, collapse="+")
@@ -102,15 +102,15 @@
 }
 
 ### Install db only if missing.
-.install_builtin_OGRDB_mouse_germline_db <-
+.preinstall_OGRDB_mouse_germline_db <-
     function(install_dir, fasta_store, verbose=FALSE)
 {
-    db_name <- .form_builtin_OGRDB_mouse_germline_db_name(fasta_store)
-    .install_builtin_OGRDB_germline_db(install_dir, db_name, fasta_store,
-                                       verbose=verbose)
+    db_name <- .form_preinstalled_OGRDB_mouse_germline_db_name(fasta_store)
+    .preinstall_OGRDB_germline_db(install_dir, db_name, fasta_store,
+                                  verbose=verbose)
 }
 
-.install_missing_builtin_OGRDB_mouse_germline_dbs <-
+.preinstall_missing_OGRDB_mouse_germline_dbs <-
     function(install_dir, mouse_dir, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(mouse_dir), dir.exists(mouse_dir),
@@ -121,17 +121,18 @@
         subdirs <- list.dirs(strain_dir, full.names=FALSE, recursive=FALSE)
         versions <- setdiff(subdirs, "diffs")
         fasta_store <- file.path(strain_dir, versions[[length(versions)]])
-        .install_builtin_OGRDB_mouse_germline_db(install_dir, fasta_store,
-                                                 verbose=verbose)
+        .preinstall_OGRDB_mouse_germline_db(install_dir, fasta_store,
+                                            verbose=verbose)
     }
 }
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .install_missing_builtin_OGRDB_rainbow_trout_germline_dbs()
+### .preinstall_missing_OGRDB_rainbow_trout_germline_dbs()
 ###
 
-.form_builtin_OGRDB_rainbow_trout_germline_db_name <- function(fasta_store)
+.form_preinstalled_OGRDB_rainbow_trout_germline_db_name <-
+    function(fasta_store)
 {
     stopifnot(isSingleNonWhiteString(fasta_store))
     version <- basename(fasta_store)
@@ -139,17 +140,17 @@
 }
 
 ### Install db only if missing.
-.install_builtin_OGRDB_rainbow_trout_germline_db <-
+.preinstall_OGRDB_rainbow_trout_germline_db <-
     function(install_dir, fasta_store, verbose=FALSE)
 {
-    db_name <- .form_builtin_OGRDB_rainbow_trout_germline_db_name(fasta_store)
-    .install_builtin_OGRDB_germline_db(install_dir, db_name, fasta_store,
-                                       loci="IGH",
-                                       fwrcdr_ends=RAINBOW_TROUT_FWRCDR_ENDS,
-                                       verbose=verbose)
+    db_name <-
+        .form_preinstalled_OGRDB_rainbow_trout_germline_db_name(fasta_store)
+    .preinstall_OGRDB_germline_db(install_dir, db_name, fasta_store, loci="IGH",
+                                  fwrcdr_ends=RAINBOW_TROUT_FWRCDR_ENDS,
+                                  verbose=verbose)
 }
 
-.install_missing_builtin_OGRDB_rainbow_trout_germline_dbs <-
+.preinstall_missing_OGRDB_rainbow_trout_germline_dbs <-
     function(install_dir, rainbow_trout_dir, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(rainbow_trout_dir),
@@ -157,17 +158,18 @@
     subdirs <- list.dirs(rainbow_trout_dir, full.names=FALSE, recursive=FALSE)
     fasta_stores <- file.path(rainbow_trout_dir, subdirs)
     for (fasta_store in fasta_stores)
-        .install_builtin_OGRDB_rainbow_trout_germline_db(install_dir,
-                                                         fasta_store,
-                                                         verbose=verbose)
+        .preinstall_OGRDB_rainbow_trout_germline_db(install_dir,
+                                                    fasta_store,
+                                                    verbose=verbose)
 }
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### .install_missing_builtin_OGRDB_rhesus_monkey_germline_dbs()
+### .preinstall_missing_OGRDB_rhesus_monkey_germline_dbs()
 ###
 
-.form_builtin_OGRDB_rhesus_monkey_germline_db_name <- function(fasta_store)
+.form_preinstalled_OGRDB_rhesus_monkey_germline_db_name <-
+    function(fasta_store)
 {
     stopifnot(isSingleNonWhiteString(fasta_store))
     loci_in1string <- paste(IG_LOCI, collapse="+")
@@ -176,15 +178,16 @@
 }
 
 ### Install db only if missing.
-.install_builtin_OGRDB_rhesus_monkey_germline_db <-
+.preinstall_OGRDB_rhesus_monkey_germline_db <-
     function(install_dir, fasta_store, verbose=FALSE)
 {
-    db_name <- .form_builtin_OGRDB_rhesus_monkey_germline_db_name(fasta_store)
-    .install_builtin_OGRDB_germline_db(install_dir, db_name, fasta_store,
-                                       verbose=verbose)
+    db_name <-
+        .form_preinstalled_OGRDB_rhesus_monkey_germline_db_name(fasta_store)
+    .preinstall_OGRDB_germline_db(install_dir, db_name, fasta_store,
+                                  verbose=verbose)
 }
 
-.install_missing_builtin_OGRDB_rhesus_monkey_germline_dbs <-
+.preinstall_missing_OGRDB_rhesus_monkey_germline_dbs <-
     function(install_dir, rhesus_monkey_dir, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(rhesus_monkey_dir),
@@ -196,19 +199,19 @@
     subdirs <- setdiff(subdirs, c("diffs", exclude_list))
     fasta_stores <- file.path(rhesus_monkey_dir, subdirs)
     for (fasta_store in fasta_stores)
-        .install_builtin_OGRDB_rhesus_monkey_germline_db(install_dir,
-                                                         fasta_store,
-                                                         verbose=verbose)
+        .preinstall_OGRDB_rhesus_monkey_germline_db(install_dir,
+                                                    fasta_store,
+                                                    verbose=verbose)
 }
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### install_missing_builtin_germline_dbs()
+### preinstall_missing_germline_dbs()
 ###
 
 ### Not exported!
 ### 'install_dir' must exist.
-install_missing_builtin_germline_dbs <- function(install_dir, verbose=FALSE)
+preinstall_missing_germline_dbs <- function(install_dir, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(install_dir), dir.exists(install_dir),
               isTRUEorFALSE(verbose))
@@ -218,22 +221,22 @@ install_missing_builtin_germline_dbs <- function(install_dir, verbose=FALSE)
                                  mustWork=TRUE)
 
     human_dir <- file.path(OGRDB_germline_seq_dir, "human")
-    .install_missing_builtin_OGRDB_human_germline_dbs(install_dir, human_dir,
-                                                      verbose=verbose)
+    .preinstall_missing_OGRDB_human_germline_dbs(install_dir, human_dir,
+                                                 verbose=verbose)
 
     mouse_dir <- file.path(OGRDB_germline_seq_dir, "mouse")
-    .install_missing_builtin_OGRDB_mouse_germline_dbs(install_dir, mouse_dir,
-                                                      verbose=verbose)
+    .preinstall_missing_OGRDB_mouse_germline_dbs(install_dir, mouse_dir,
+                                                 verbose=verbose)
 
     rainbow_trout_dir <- file.path(OGRDB_germline_seq_dir, "rainbow_trout")
-    .install_missing_builtin_OGRDB_rainbow_trout_germline_dbs(install_dir,
-                                                              rainbow_trout_dir,
-                                                              verbose=verbose)
+    .preinstall_missing_OGRDB_rainbow_trout_germline_dbs(install_dir,
+                                                         rainbow_trout_dir,
+                                                         verbose=verbose)
 
     rhesus_monkey_dir <- file.path(OGRDB_germline_seq_dir, "rhesus_monkey")
-    .install_missing_builtin_OGRDB_rhesus_monkey_germline_dbs(install_dir,
-                                                              rhesus_monkey_dir,
-                                                              verbose=verbose)
+    .preinstall_missing_OGRDB_rhesus_monkey_germline_dbs(install_dir,
+                                                         rhesus_monkey_dir,
+                                                         verbose=verbose)
 }
 
 
@@ -246,7 +249,7 @@ install_missing_builtin_germline_dbs <- function(install_dir, verbose=FALSE)
 ### populated directory. In other words, its final content doesn't depend
 ### on whether it already exists or not. Note that the destroy/replace
 ### operation is atomic.
-.install_all_builtin_germline_dbs <- function(install_dir, verbose=FALSE)
+.preinstall_germline_dbs <- function(install_dir, verbose=FALSE)
 {
     stopifnot(isSingleNonWhiteString(install_dir))
     if (!isTRUEorFALSE(verbose))
@@ -255,11 +258,11 @@ install_missing_builtin_germline_dbs <- function(install_dir, verbose=FALSE)
     ## We first create the dbs in a temporary folder, and, only if successful,
     ## rename the temporary folder to 'install_dir'. Otherwise we destroy the
     ## temporary folder and raise an error. This achieves atomicity.
-    tmp_install_dir <- tempfile("builtin_germline_dbs_")
+    tmp_install_dir <- tempfile("preinstalled_germline_dbs_")
     dir.create(tmp_install_dir)
     on.exit(nuke_file(tmp_install_dir))
 
-    install_missing_builtin_germline_dbs(tmp_install_dir, verbose=verbose)
+    preinstall_missing_germline_dbs(tmp_install_dir, verbose=verbose)
 
     ## Everything went fine so we can rename 'tmp_install_dir' to 'install_dir'.
     rename_file(tmp_install_dir, install_dir, replace=TRUE)
@@ -270,6 +273,6 @@ reset_germline_dbs <- function(verbose=FALSE)
 {
     set_db_in_use("germline", "")  # cancel current selection
     germline_dbs_home <- igblastr_cache(GERMLINE_DBS)
-    .install_all_builtin_germline_dbs(germline_dbs_home, verbose=verbose)
+    .preinstall_germline_dbs(germline_dbs_home, verbose=verbose)
 }
 

@@ -31,33 +31,32 @@ download_human_germline_sequences <- function(overwrite=FALSE)
     }
 }
 
-make_human_auxdata <- function(version, germline_sets)
+download_human_germline_sequences()
+
+make_human_auxdata <- function(version, germline_sets, overwrite=FALSE)
 {
-    dir.create(jsondir <- tempfile())
+    dir.create(json_dir <- tempfile())
     for (flavor in c("ref", "src")) {
         source_set <- flavor == "src"
         destdir <- file.path(version, flavor)
         message("Creating IG[HKL]J_gl.aux files in ", destdir, " ... ",
                 appendLF=FALSE)
-        filenames <- download_OGRDB_germline_json("Homo sapiens",
-                                    germline_sets, source_set=source_set,
-                                    destdir=jsondir, overwrite=TRUE)
-        stopifnot(identical(names(filenames), names(germline_sets)))
-        for (filename in filenames) {
-            json_path <- file.path(jsondir, filename)
-            auxdata <- extract_auxdata_from_ogrdb_json(json_path)
-            locus <- substr(filename, 1L, 3L)
-            destfile <- file.path(destdir, paste0(locus, "J_gl.aux"))
-            write_auxdata(auxdata, destfile)
-        }
+        json_files <- download_OGRDB_germline_json("Homo sapiens",
+                                     germline_sets, source_set=source_set,
+                                     destdir=json_dir, overwrite=TRUE)
+        stopifnot(identical(names(json_files), names(germline_sets)))
+        auxdata_files <-
+            make_auxdata_files_from_ogrdb_jsons(json_dir, destdir,
+                                                overwrite=overwrite)
+        expected_files <- sprintf("IG%sJ_gl.aux", c("H", "K", "L"))
+        stopifnot(identical(auxdata_files, expected_files))
         message("ok")
     }
 }
 
-download_human_germline_sequences()
-
 ### Extract auxdata from the OGRDB json files but only for versions 202410
-### and 202605. Older versions break extract_auxdata_from_ogrdb_json()!
+### and 202605. Older versions break extract_auxdata_from_ogrdb_json(), the
+### workhorse behind make_auxdata_files_from_ogrdb_jsons()!
 make_human_auxdata(names(HUMAN_GERMLINE_SETS)[[3]], HUMAN_GERMLINE_SETS[[3]])
 make_human_auxdata(names(HUMAN_GERMLINE_SETS)[[4]], HUMAN_GERMLINE_SETS[[4]])
 

@@ -1,7 +1,8 @@
-test_that(".install_all_builtin_germline_dbs()", {
-    destdir <- tempfile("builtin_germline_dbs_")
-    igblastr:::.install_all_builtin_germline_dbs(destdir)
-    db_list <- igblastr:::list_dbs(destdir, what="germline", long.listing=TRUE)
+test_that(".preinstall_germline_dbs()", {
+    install_dir <- tempfile("preinstalled_germline_dbs_")
+    igblastr:::.preinstall_germline_dbs(install_dir)
+    db_list <- igblastr:::list_dbs(install_dir, what="germline",
+                                   long.listing=TRUE)
 
     current <- db_list[["_OGRDB.human.IGH+IGK+IGL.202410"]]
     expected <- rbind(IGH=c(V=198L, D=31L,  J=7L),

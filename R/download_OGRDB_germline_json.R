@@ -8,20 +8,20 @@
 ### download_OGRDB_germline_json()
 ###
 
-.stop_if_duplicated_IGcomps <- function(IGcomps)
+.stop_if_duplicated_IG_parts <- function(IG_parts)
 {
-    m <- match(IGcomps, IGcomps)
+    m <- match(IG_parts, IG_parts)
     bad_idx <-which(m != seq_along(m))
     if (length(bad_idx) != 0L) {
         idx1 <- bad_idx[[1L]]
-        set_name1 <- names(IGcomps)[[m[[idx1]]]]
-        set_name2 <- names(IGcomps)[[idx1]]
-        msg1 <- c("More than one germline set with the same \"IG* ",
-                  "components\": \"", set_name1, "\" and \"", set_name2, "\" ",
-                  "(both have the \"", IGcomps[[idx1]], "\" component ",
+        set_name1 <- names(IG_parts)[[m[[idx1]]]]
+        set_name2 <- names(IG_parts)[[idx1]]
+        msg1 <- c("More than one germline set with the same \"IG*\" ",
+                  "part: \"", set_name1, "\" and \"", set_name2, "\" ",
+                  "(both have the \"", IG_parts[[idx1]], "\" part ",
                   "in their name).")
         msg2 <- c("The specified germline sets must have unique ",
-                  "\"IG* components\".")
+                  "\"IG*\" parts.")
         stop(wmsg(msg1), "\n  ", wmsg(msg2))
     }
 }
@@ -49,11 +49,11 @@ download_OGRDB_germline_json <- function(organism, germline_sets,
         stop(wmsg("'recache' must be TRUE or FALSE"))
 
     ## We will download one JSON file per supplied germline set and will
-    ## use the "IG* component" of each germline set name in 'set_names' to
-    ## name the corresponding JSON file. Therefore, the "IG* components"
+    ## use the "IG*" part of each germline set name in 'set_names' to
+    ## name the corresponding JSON file. Therefore, the "IG*" parts
     ## of the supplied germline sets must be unique.
-    IGcomps <- extract_IGcomps_from_OGRDB_set_names(organism, set_names)
-    .stop_if_duplicated_IGcomps(IGcomps)
+    IG_parts <- extract_IG_parts_from_OGRDB_set_names(organism, set_names)
+    .stop_if_duplicated_IG_parts(IG_parts)
 
     local_files <- vapply(seq_along(germline_sets),
         function(i) {
@@ -69,7 +69,7 @@ download_OGRDB_germline_json <- function(organism, germline_sets,
         character(1)
     )
 
-    filenames <- paste0(IGcomps, ".json")  # guaranteed to be unique!
+    filenames <- paste0(IG_parts, ".json")  # guaranteed to be unique!
     names(local_files) <- filenames
     copy_files_to_dir(local_files, destdir, overwrite=overwrite)
 

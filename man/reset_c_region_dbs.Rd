@@ -9,10 +9,10 @@
   pristine state by:
   \enumerate{
     \item Removing \emph{all} the C-region dbs currently in \pkg{igblastr}'s
-          persistent cache, including the built-in C-region dbs.
-    \item Recreating the predefined set of built-in C-region dbs.
+          persistent cache, including the preinstalled C-region dbs.
+    \item Recreating the predefined set of preinstalled C-region dbs.
   }
-  This means that any non built-in C-region db present in the cache WILL
+  This means that any non-preinstalled C-region db present in the cache WILL
   BE LOST!
 
   Also note that \code{reset_c_region_dbs()} will cancel the current

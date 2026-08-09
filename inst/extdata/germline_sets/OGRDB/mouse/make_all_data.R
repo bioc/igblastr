@@ -52,25 +52,25 @@ download_mouse_germline_sequences <- function(overwrite=FALSE)
 
 download_mouse_germline_sequences()
 
-make_mouse_auxdata <- function(strain_dir, version, germline_sets)
+make_mouse_auxdata <- function(strain_dir, version, germline_sets,
+                               overwrite=FALSE)
 {
     strain <- chartr("_", "/", strain_dir)
-    dir.create(jsondir <- tempfile())
+    dir.create(json_dir <- tempfile())
     message("Creating IG[HKL]J_gl.aux files for ", strain, " ",
             "version ", version, " ... ", appendLF=FALSE)
     germline_sets <- c(IGH=germline_sets[["IGH"]])
     germline_sets <- .normalize_germline_sets(strain, germline_sets)
-    filenames <- download_OGRDB_germline_json("Mus musculus",
-                                germline_sets,
-                                destdir=jsondir, overwrite=TRUE)
-    stopifnot(identical(names(filenames), names(germline_sets)))
-    for (filename in filenames) {
-        json_path <- file.path(jsondir, filename)
-        auxdata <- extract_auxdata_from_ogrdb_json(json_path)
-        locus <- substr(filename, 1L, 3L)
-        destfile <- file.path(strain_dir, version, paste0(locus, "J_gl.aux"))
-        write_auxdata(auxdata, destfile)
-    }
+    json_files <- download_OGRDB_germline_json("Mus musculus",
+                                 germline_sets,
+                                 destdir=json_dir, overwrite=TRUE)
+    stopifnot(identical(names(json_files), names(germline_sets)))
+    destdir <- file.path(strain_dir, version)
+    auxdata_files <-
+        make_auxdata_files_from_ogrdb_jsons(json_dir, destdir,
+                                            overwrite=overwrite)
+    expected_files <- sprintf("IG%sJ_gl.aux", c("H", "K", "L"))
+    stopifnot(identical(auxdata_files, expected_files))
     message("ok")
 }
 

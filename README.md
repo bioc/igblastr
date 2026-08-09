@@ -147,7 +147,7 @@ Several specialized functions will be provided for that e.g.:
 
 ```r
 install_IMGT_germline_db()   # see '?install_IMGT_germline_db'
-install_OGRDB_germline_db()  # not ready yet!
+install_OGRDB_germline_db()  # see '?install_OGRDB_germline_db'
 # etc...
 ```
 

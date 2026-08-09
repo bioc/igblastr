@@ -226,6 +226,9 @@ install_custom_germline_db(db_name, fasta_dir, tcr.db=FALSE, loci="auto",
     \item \code{\link{install_IMGT_germline_db}} to install a germline db
           from IMGT.
 
+    \item \code{\link{install_OGRDB_germline_db}} to install a germline db
+          from OGRDB germline sets.
+
     \item The \code{\link{igblastn}} function to run the \code{igblastn}
           \emph{standalone executable} included in IgBLAST from R. This
           is the main function in the \pkg{igblastr} package.
@@ -257,11 +260,11 @@ if (!has_igblast()) install_igblast()
 ## ---------------------------------------------------------------------
 
 ## In this admittedly artificial example, we're going to create and
-## install a germline db from the gene allele sequences in built-in
+## install a germline db from the gene allele sequences in preinstalled
 ## germline db _OGRDB.human.IGH+IGK+IGL.202605. More precisely, we're
 ## going to:
-##   1. Dump built-in germline db _OGRDB.human.IGH+IGK+IGL.202605
-##      in 7 FASTA files.
+##   1. Dump allele sequences from preinstalled germline db
+##      _OGRDB.human.IGH+IGK+IGL.202605 in 7 FASTA files.
 ##   2. Use these FASTA files to create and install a new germline db.
 ##   3. Check that the new db contains the same sequences as the
 ##      original db.
@@ -321,7 +324,7 @@ stopifnot(identical(
 ##      one FASTA file per region type.
 ##   2. Use these FASTA files to create and install a new germline db.
 ##   3. Check that the new db contains the same sequences
-##      as built-in germline db _OGRDB.human.IGH+IGK+IGL.202605.
+##      as preinstalled germline db _OGRDB.human.IGH+IGK+IGL.202605.
 
 ## --- 1. Download human gapped sequences from AIRR-community/OGRDB ---
 
@@ -346,9 +349,10 @@ list_germline_dbs()
 ## --- 3. Check that the new db contains the same sequences ---
 ## ---          as _OGRDB.human.IGH+IGK+IGL.202605          ---
 
-## The Reference Sets we used to populate the new db (IGH_VDJ version 10,
-## IGKappa_VJ version 5, IGLambda_VJ version 4) are the same that were
-## used to populate built-in germline db _OGRDB.human.IGH+IGK+IGL.202605.
+## The Reference Sets we used to populate the new db (IGH_VDJ
+## version 10, IGKappa_VJ version 5, IGLambda_VJ version 4) are
+## the same that were used to populate preinstalled germline db
+## _OGRDB.human.IGH+IGK+IGL.202605.
 ## Let's check that the two dbs contain the same sequences:
 stopifnot(identical(
     as.character(load_germline_sequences(db_name0)),

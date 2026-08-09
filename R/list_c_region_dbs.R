@@ -12,7 +12,7 @@
     warning(wmsg(msg))
 }
 
-### The built-in C-region dbs were last updated on May 20, 2026 in
+### The preinstalled C-region dbs were last updated on May 20, 2026 in
 ### igblastr 1.2.3/1.3.3.
 .warn_if_c_region_dbs_need_reset <- function(c_region_dbs_home)
 {
@@ -41,7 +41,7 @@
 ### When 'init.path=TRUE':
 ### - if the path to return exists then no further action is performed;
 ### - if the path to return does NOT exist then it's created and populated
-###   with the built-in C-region dbs.
+###   with the preinstalled C-region dbs.
 ### This means that the returned path is only guaranteed to exist
 ### when 'init.path' is set to TRUE.
 get_c_region_dbs_home <- function(init.path=FALSE)
@@ -60,13 +60,15 @@ get_c_region_dbs_home <- function(init.path=FALSE)
 
 ### 'long.listing' is ignored when 'names.only' is TRUE.
 ### Returns a c_region_dbs_df object (data.frame extension) by default.
-list_c_region_dbs <- function(builtin.only=FALSE,
-                              names.only=FALSE, long.listing=FALSE)
+list_c_region_dbs <- function(preinstalled.only=FALSE,
+                              names.only=FALSE, long.listing=FALSE,
+                              builtin.only=FALSE)
 {
     c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist
     ans <- list_dbs(c_region_dbs_home, what="C-region",
-                    builtin.only=builtin.only,
-                    names.only=names.only, long.listing=long.listing)
+                    preinstalled.only=preinstalled.only,
+                    names.only=names.only, long.listing=long.listing,
+                    builtin.only=builtin.only)
     if (is.data.frame(ans))
         class(ans) <- c("c_region_dbs_df", class(ans))
     .warn_if_c_region_dbs_need_reset(c_region_dbs_home)
@@ -85,37 +87,37 @@ print.c_region_dbs_df <- function(x, ...)
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### valid_c_region_db_name()
+### c_region_db_exists()
 ### check_c_region_db_name()
 ###
 
 .stop_on_no_c_region_dbs_found <- function()
 {
-    msg <- c("You don't have any built-in C-region database. This is an ",
+    msg <- c("You don't have any preinstalled C-region database. This is an ",
              "abnormal situation! Please call 'reset_c_region_dbs()' to ",
-             "restore the built-in C-region dbs.")
+             "restore the preinstalled C-region dbs.")
     stop(wmsg(msg))
 }
 
 .list_c_region_db_names <- function()
 {
     all_db_names <- list_c_region_dbs(names.only=TRUE)
-    ## Should never happen because of the built-in C-region dbs but we keep
-    ## this check anyways just in case we get rid of the built-in C-region dbs
-    ## in the future (unlikely to happen though).
+    ## Should never happen because of the preinstalled C-region dbs but we
+    ## keep this check anyways just in case we get rid of the preinstalled
+    ## C-region dbs in the future (unlikely to happen though).
     if (length(all_db_names) == 0L)
         .stop_on_no_c_region_dbs_found()
     all_db_names
 }
 
 ### Not exported!
-valid_c_region_db_name <- function(db_name)
+c_region_db_exists <- function(db_name)
 {
     stopifnot(isSingleNonWhiteString(db_name))
     db_name %in% .list_c_region_db_names()
 }
 
-.stop_on_invalid_c_region_db_name <- function(db_name)
+.stop_on_nonexisting_c_region_db <- function(db_name)
 {
     msg1 <- c("\"", db_name, "\" is not the name of a cached C-region db.")
     msg2 <- c("Use list_c_region_dbs() to list the C-region dbs currently ",
@@ -128,8 +130,8 @@ check_c_region_db_name <- function(db_name, what="'db_name'")
 {
     if (!isSingleNonWhiteString(db_name))
         stop(wmsg(what, " must be a single (non-empty) string"))
-    if (!valid_c_region_db_name(db_name))
-        .stop_on_invalid_c_region_db_name(db_name)
+    if (!c_region_db_exists(db_name))
+        .stop_on_nonexisting_c_region_db(db_name)
 }
 
 
@@ -157,7 +159,7 @@ rm_c_region_db <- function(db_name)
 {
     check_c_region_db_name(db_name)
     if (has_prefix(db_name, "_"))
-        stop(wmsg("cannot remove a built-in C-region db"))
+        stop(wmsg("cannot remove a preinstalled C-region db"))
 
     c_region_dbs_home <- get_c_region_dbs_home(TRUE)  # guaranteed to exist
     db_in_use_path <- get_db_in_use(c_region_dbs_home, what="C-region")
