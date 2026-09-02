@@ -24,11 +24,11 @@ V_allele_has_stop_codon(V_alleles, intdata)
 \arguments{
   \item{V_alleles}{
     A \link[Biostrings]{DNAStringSet} object containing germline V
-    gene allele sequences.
+    gene allele \emph{ungapped} sequences.
   }
   \item{intdata}{
     A data.frame as returned by \code{\link{load_intdata}(..., for.aa=FALSE)}
-    that contains annotations for the alleles in \code{V_alleles}.
+    that contains the V gene delineations for the alleles in \code{V_alleles}.
   }
   \item{V_segment}{
     The name of a V gene segment. This can be set to \code{"fwr1"},

@@ -16,18 +16,13 @@ translate_codons(dna, offset=0, with.init.codon=FALSE)
 
 ## Used internally by translate_codons():
 extract_codons(dna, offset=0)
-remove_gaps(dna, gap_letter=".")
+remove_gaps(sequences, gap_letter=".")
 }
 
 \arguments{
   \item{dna}{
     A \link[Biostrings]{DNAStringSet} (or \link[Biostrings]{DNAString})
     object containing the codons to translate.
-
-    Note that if the sequences in \code{dna} contain gaps (represented
-    by the \code{.} letter) then \code{translate_codons()} and
-    \code{extract_codons()} will remove them (by calling
-    \code{remove_gaps()} internally) before doing anything else.
   }
   \item{offset}{
     The number of nucleotides that precede the first codon to translate.
@@ -44,6 +39,12 @@ remove_gaps(dna, gap_letter=".")
     See documentation of the \code{no.init.codon} argument in
     \code{?\link[Biostrings]{translate}} in the \pkg{Biostrings} package
     for more information.
+  }
+  \item{sequences}{
+    A \link[Biostrings]{DNAStringSet} or \link[Biostrings]{AAStringSet}
+    object, or other \link[Biostrings]{XStringSet} derivative.
+    Can also be a \link[Biostrings]{DNAString} or \link[Biostrings]{AAString}
+    object, or other \link[Biostrings]{XString} derivative.
   }
   \item{gap_letter}{
     The letter or symbol representing gaps. Note that IMGT and
@@ -70,9 +71,8 @@ remove_gaps(dna, gap_letter=".")
     \item A \link[Biostrings]{DNAString} object if a
           \link[Biostrings]{DNAString} object was supplied.
   }
-  The sequences returned by \code{extract_codons()} are obtained by
-  (1) removing all gaps (i.e. all \code{.} letters) from the input sequences,
-  and (2) trimming the gap-free sequences as follow:
+  The sequences returned by \code{extract_codons()} are obtained by trimming
+  the input sequences as follow:
   \itemize{
     \item On their 5' end, sequences are trimmed by the amount of
           nucleotides specified in \code{offset}.
@@ -101,51 +101,58 @@ remove_gaps(dna, gap_letter=".")
 
 \examples{
 ## ---------------------------------------------------------------------
-## translate_codons()
+## translate_codons(): basic examples
 ## ---------------------------------------------------------------------
 
-## Gaps will be ignored:
-dna1 <- DNAStringSet(c(".TTGTCCTTTAT..A", "GAAT.CATTTATC", "CTGTCGTTTATT"))
+## Handling of gaps (see '?translate' in the Biostrings package for how
+## gaps are handled):
+dna1 <- DNAString("..........TTACTCAGCCAAGCTCT...GTGTCTACGTCTCTAGGA")
 translate_codons(dna1)
 
 ## Handling of initiation codons (see '?translate' in the Biostrings
 ## package for how initiation codons are handled):
-translate_codons(dna1, with.init.codon=TRUE)
+dna2 <- DNAString("TTGATATGGCCC......TTATAA")
+translate_codons(dna2)
+translate_codons(dna2, with.init.codon=TRUE)
 
-## Load germline V gene allele sequences for human:
-list_germline_dbs()
-db_name <- "_OGRDB.human.IGH+IGK+IGL.202605"
-V_alleles <- load_germline_sequences(db_name, region_types="V")
-V_alleles  # DNAStringSet object
+## ---------------------------------------------------------------------
+## translate_codons(): advanced example
+## ---------------------------------------------------------------------
+if (IMGT_is_up()) {
+  dir.create(destdir <- tempfile("fasta_dir_"))
+  download_IMGT_germline_sequences("202614-2", organism="Homo sapiens",
+                                   destdir=destdir)
+  gapped_V_alleles <- readDNAStringSet(file.path(destdir, "IGKV.fasta"))
 
-## Translate them:
-V_aa <- translate_codons(V_alleles)
-V_aa  # AAStringSet object
+  ## Translate the gapped V alleles:
+  gapped_V_alleles_aa <- translate_codons(gapped_V_alleles)
+  gapped_V_alleles_aa
 
-## Some human germline V gene allele sequences have a stop codon:
-has_stop_codon <- grepl("*", as.character(V_aa), fixed=TRUE)
-V_aa[has_stop_codon]
+  ## Cysteins are expected at positions 23 and 104 (see
+  ## https://www.imgt.org/IMGTScientificChart/Nomenclature/IMGT-FRCDRdefinition.html):
+  table(substr(gapped_V_alleles_aa, 23, 23))
+  table(substr(gapped_V_alleles_aa, 104, 104))
+
+  unlink(destdir, recursive=TRUE)
+}
 
 ## ---------------------------------------------------------------------
 ## extract_codons()
 ## ---------------------------------------------------------------------
-extract_codons(dna1)
-extract_codons(dna1, offset=1)
-
-dna2 <- DNAStringSet(c("CCCAAAGGGTTT",
+dna3 <- DNAStringSet(c("CCCAAAGGGTTT",
                        "CCAAAGGGTTT",
                        "CAAAGGGTTT",
                        "AAAGGGTTT"))
-extract_codons(dna2)
-extract_codons(dna2, offset=1)
-extract_codons(dna2, offset=2)
-extract_codons(dna2, offset=3)
-extract_codons(dna2, offset=4)
+extract_codons(dna3)
+extract_codons(dna3, offset=1)
+extract_codons(dna3, offset=2)
+extract_codons(dna3, offset=3)
+extract_codons(dna3, offset=4)
 
-extract_codons(dna2, offset=3:0)
-extract_codons(dna2, offset=4:1)
-extract_codons(dna2, offset=5:2)
-extract_codons(dna2, offset=6:3)
+extract_codons(dna3, offset=3:0)
+extract_codons(dna3, offset=4:1)
+extract_codons(dna3, offset=5:2)
+extract_codons(dna3, offset=6:3)
 
 ## ---------------------------------------------------------------------
 ## remove_gaps()

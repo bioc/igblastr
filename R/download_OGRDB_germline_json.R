@@ -188,6 +188,7 @@ download_OGRDB_germline_json <- function(organism, germline_sets,
     stopifnot(is.list(v_gene_delineations),
               is.null(names(v_gene_delineations)))
     for (v_gene_delineation in v_gene_delineations) {
+        stopifnot(is.list(v_gene_delineation))
         if (!identical(v_gene_delineation$delineation_scheme, "IMGT"))
             next
         stopifnot(all(V_GENE_DELINEATION_COLNAMES %in%
