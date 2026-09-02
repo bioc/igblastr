@@ -92,8 +92,8 @@ install_OGRDB_germline_db(organism, germline_sets,
 \examples{
 if (!has_igblast()) install_igblast()
 
-## See https://ogrdb.airr-community.org/germline_sets/Mus%20musculus
-## for what OGRDB germline sets are available for mouse.
+## See https://ogrdb.airr-community.org/germline_sets/Mus%20musculus for
+## which OGRDB germline sets are available for mouse.
 
 ## Install a germline db for mouse substrain BALB/c/ByJ:
 germline_sets <- c(`BALB/c IGH`=3,

@@ -10,25 +10,21 @@
 
 GAP_LETTER <- "."
 
-### Note that we also accept a BStringSet or BString object so we
-### can use remove_gaps() in the context of redit_imgt_file().
-### See R/edit_imgt_file.R for more information.
-### Names and metadata columns are propagated.
-remove_gaps <- function(dna, gap_letter=".")
+remove_gaps <- function(sequences, gap_letter=".")
 {
     if (!(isSingleString(gap_letter) && nchar(gap_letter) == 1L))
         stop(wmsg("'gap_letter' must be a single letter"))
-    if (is(dna, "DNAStringSet") || is(dna, "BStringSet")) {
-        midx <- vmatchPattern(gap_letter, dna, fixed=TRUE)
+    if (is(sequences, "XStringSet")) {
+        midx <- vmatchPattern(gap_letter, sequences, fixed=TRUE)
         at <- unname(as(midx, "CompressedIRangesList"))
-    } else if (is(dna, "DNAString") || is(dna, "BString")) {
-        v <- matchPattern(gap_letter, dna, fixed=TRUE)
+    } else if (is(sequences, "XString")) {
+        v <- matchPattern(gap_letter, sequences, fixed=TRUE)
         at <- as(v, "IRanges")
     } else {
-        stop(wmsg("'dna' must be a DNAStringSet, or DNAString, ",
-                  "or BStringSet, or BString object"))
+        stop(wmsg("'sequences' must be an XStringSet or XString object"))
     }
-    replaceAt(dna, at, value="")
+    ## replaceAt() propagates the names and metadata on 'sequences'.
+    replaceAt(sequences, at, value="")
 }
 
 
@@ -61,7 +57,7 @@ remove_gaps <- function(dna, gap_letter=".")
         if (is.na(offset) || offset < 0L)
             stop(wmsg("'offset' cannot be NA or negative"))
         offset <- rep.int(offset, nseq)
-	if (any(offset > widths))
+        if (any(offset > widths))
             stop(wmsg("'offset' must be less than the length ",
                       "of the shortest sequence in 'dna'"))
     } else {
@@ -77,15 +73,12 @@ remove_gaps <- function(dna, gap_letter=".")
     offset
 }
 
-### Ignores the gaps in the input sequence(s) if any.
 extract_codons <- function(dna, offset=0)
 {
     if (is(dna, "DNAStringSet")) {
-        dna <- remove_gaps(dna)
         dna_nchar <- nchar(dna)  # same as width(dna)
         offset <- .normarg_offset2(offset, dna_nchar)
     } else if (is(dna, "DNAString")) {
-        dna <- remove_gaps(dna)
         dna_nchar <- nchar(dna)  # same as length(dna)
         offset <- .normarg_offset1(offset, dna_nchar)
     } else {
@@ -101,7 +94,6 @@ extract_codons <- function(dna, offset=0)
 ### translate_codons()
 ###
 
-### Ignores the gaps in the input sequence(s) if any.
 translate_codons <- function(dna, offset=0, with.init.codon=FALSE)
 {
     if (!isTRUEorFALSE(with.init.codon))
